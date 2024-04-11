@@ -2,6 +2,8 @@
 #include"../CharaBase.h"
 
 #define MAX_ENEMY_SPEED -1.5
+#define ATTACK_FORM_RANGE_X 150
+#define ATTACK_FORM_RANGE_Y 50
 
 class NormalEnemy :public CharaBase
 {
@@ -31,5 +33,7 @@ public:
 	//移動処理
 	void Movement();
 
+	//ボックスの中心値を取得
+	float BoxCenter();
 };
 

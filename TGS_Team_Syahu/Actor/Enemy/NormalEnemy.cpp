@@ -18,20 +18,24 @@ void NormalEnemy::Initialize()
 
 	enemy_color = usual_color;
 	
-	area = { 70.f,70.f };
+	area = { 135.f,135.f };
 	location = { 1200,GROUND_LINE - area.height };
 }
 
 void NormalEnemy::Update(GameMainScene* object)
 {
-	/*screenLocation = object->GetCamera()->ConvertScreenPosition(location);
+	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
 
 	if (HitCheck(object->GetPlayer()))
 	{
-		
+		isHit = true;
+	}
+	else
+	{
+		isHit = false;
 	}
 
-	Movement(object->GetPlayer());*/
+	Movement();
 }
 
 void NormalEnemy::Draw() const
@@ -39,27 +43,20 @@ void NormalEnemy::Draw() const
 	DrawBoxAA
 	(
 		screenLocation.x, screenLocation.y,
-		screenLocation.x + area.width + 2, screenLocation.y + area.height,
-		enemy_color, TRUE, 1.0f
+		screenLocation.x + area.width, screenLocation.y + area.height,
+		0xff00ff, FALSE, 1.0f
+	);
+	DrawBoxAA
+	(
+		screenLocation.x + ( area.width / 3.5f ), screenLocation.y + ( area.height / 3.5f),
+		screenLocation.x + area.width, screenLocation.y + area.height,
+		isHit ? attack_color : usual_color, TRUE, 1.0f
 	);
 }
 
 void NormalEnemy::Movement()
 {
-	/*vector.x = MAX_ENEMY_SPEED;
+	vector.x = MAX_ENEMY_SPEED;
 
 	location.x += vector.x;
-	if (
-		(player->GetMinLocation().x - 150) < location.x
-		&& (player->GetMinLocation().y - 50) < location.y
-		&& (player->GetMaxLocation().x + 150) > location.x
-		&& (player->GetMaxLocation().y + 50) > location.y
-		)
-	{
-		enemy_color = attack_color;
-	}
-	else
-	{
-		enemy_color = usual_color;
-	}*/
 }
