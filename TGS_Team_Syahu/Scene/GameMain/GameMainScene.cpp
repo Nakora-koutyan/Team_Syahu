@@ -68,4 +68,10 @@ void GameMainScene::DebugStage() const
 		pos1.x += WORLD_WIDTH / (LINE_NUM);
 		pos2.x += WORLD_WIDTH / (LINE_NUM);
 	}
+
+	//xé≤ÇÃê¸
+	pos1 = { 0.f, GROUND_LINE };
+	pos2 = { WORLD_WIDTH, GROUND_LINE };
+	DrawLineAA(pos1.x, pos1.y, pos2.x, pos2.y, 0xff0000);
+
 }
