@@ -6,6 +6,7 @@ GameMainScene::GameMainScene()
 	player = new Player();
 	camera = new Camera();
 	enemy = new NormalEnemy();
+	enemy->Initialize();
 
 	kari = LoadGraph("Resource/Images/kari.png");
 }
