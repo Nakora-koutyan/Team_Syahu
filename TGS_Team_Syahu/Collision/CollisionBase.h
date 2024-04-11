@@ -1,7 +1,7 @@
 #pragma once
 #include"DxLib.h"
-#include"../../Utility/Vector2D.h"
-#include"../../Utility/Area.h"
+#include"../Utility/Vector2D.h"
+#include"../Utility/Area.h"
 
 enum CollisionType
 {
