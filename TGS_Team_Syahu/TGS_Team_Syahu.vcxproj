@@ -28,8 +28,10 @@
     <ClCompile Include="InputControl\Pad\PadInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Actor\Enemy\NormalEnemy.cpp" />
+    <ClCompile Include="Actor\Player\Weapon\NormalWeapon.cpp" />
     <ClCompile Include="SceneManager\SceneManager.cpp" />
     <ClCompile Include="Scene\GameMain\GameMainScene.cpp" />
+    <ClCompile Include="Collision\Sphere\SphereCollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Camera\Camera.h" />
@@ -40,9 +42,11 @@
     <ClInclude Include="InputControl\Key\KeyInput.h" />
     <ClInclude Include="InputControl\Pad\PadInput.h" />
     <ClInclude Include="Actor\Enemy\NormalEnemy.h" />
+    <ClInclude Include="Actor\Player\Weapon\NormalWeapon.h" />
     <ClInclude Include="SceneManager\SceneManager.h" />
     <ClInclude Include="Scene\GameMain\GameMainScene.h" />
     <ClInclude Include="Scene\SceneBase.h" />
+    <ClInclude Include="Collision\Sphere\SphereCollision.h" />
     <ClInclude Include="Utility\Area.h" />
     <ClInclude Include="Utility\common.h" />
     <ClInclude Include="Utility\Vector2D.h" />

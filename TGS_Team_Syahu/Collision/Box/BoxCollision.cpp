@@ -1,10 +1,11 @@
-#include "BoxCollision.h"
+#include"BoxCollision.h"
+#include"../Sphere/SphereCollision.h"
 
 BoxCollision::BoxCollision()
 {
 	area = { 0.f,0.f };
 
-	type = box;
+	collisionType = CollisionType::Box;
 }
 
 BoxCollision::~BoxCollision()
@@ -36,12 +37,87 @@ bool BoxCollision::HitBox(const BoxCollision* collision) const
 	subX[1] = subX[0] + collision->GetArea().width;
 	subY[1] = subY[0] + collision->GetArea().height;
 
-	if ((myX[0] <= subX[1]) &&
-		(subX[0] <= myX[1]) &&
-		(myY[0] <= subY[1]) &&
-		(subY[0] <= myY[1])) //“–‚½‚è”»’è
+	//‘o•û‚Ìl•Ó‚ª“–‚½‚Á‚Ä‚¢‚é‚©
+	if ((myX[0] < subX[1]) &&
+		(subX[0] < myX[1]) &&
+		(myY[0] < subY[1]) &&
+		(subY[0] < myY[1])) 
 	{
 		ret = true;
 	}
+	return ret;
+}
+
+bool BoxCollision::HitSphere(const SphereCollision* collision) const
+{
+	bool ret = false;		//•Ô‚è’l
+
+	Vector2D min = location;
+	Vector2D max = { location.x + area.width,location.y + area.height };
+
+	float sphereX = collision->GetLocation().x;
+	float sphereY = collision->GetLocation().y;
+	float sphereR = collision->GetRadius();
+
+	// lŠpŒ`‚Ìl•Ó‚É‘Î‚µ‚Ä‰~‚Ì”¼Œa•ª‚¾‚¯‘«‚µ‚½‚Æ‚«‰~‚ªd‚È‚Á‚Ä‚¢‚½‚ç
+	if ((sphereX > min.x - sphereR) &&
+		(sphereX < max.x + sphereR) &&
+		(sphereY > min.y - sphereR) &&
+		(sphereY < max.y + sphereR))
+	{
+		ret = true;
+		float length = sphereR * sphereR;
+
+		//¶
+		if (sphereR < min.x)
+		{
+			//¶ã
+			if (sphereY < min.y)
+			{
+				if (MakeHypotenuse(min.x, min.y, sphereX, sphereY) >= length)
+				{
+					ret = false;
+				}
+			}
+			else
+			{
+				//¶‰º
+				if (sphereY > max.y)
+				{
+					if (MakeHypotenuse(min.x, max.y, sphereX, sphereY) >= length)
+					{
+						ret = false;
+					}
+				}
+			}
+		}
+		else
+		{
+			//‰E
+			if (sphereX > max.x)
+			{
+				//‰Eã
+				if (sphereY < min.x)
+				{
+					if (MakeHypotenuse(max.x, min.y, sphereX, sphereY) >= length)
+					{
+						ret = false;
+					}
+				}
+				else
+				{	
+					//‰E‰º
+					if (sphereY > max.y)
+					{
+						if (MakeHypotenuse(max.x, max.y, sphereX, sphereY) >= length)
+						{
+							ret = false;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	return ret;
 }
