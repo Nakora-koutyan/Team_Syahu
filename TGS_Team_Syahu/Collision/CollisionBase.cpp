@@ -1,12 +1,13 @@
-#include "CollisionBase.h"
+#include"CollisionBase.h"
 #include"Box/BoxCollision.h"
+#include"Sphere/SphereCollision.h"
 
 CollisionBase::CollisionBase()
 {
 	location = { 0.f,0.f };
 	screenLocation = { 0.f,0.f };
 
-	type = Empty;
+	collisionType = CollisionType::Empty;
 }
 
 CollisionBase::~CollisionBase()
@@ -17,20 +18,25 @@ CollisionBase::~CollisionBase()
 bool CollisionBase::HitCheck(const CollisionBase* collision) const
 {
 	bool ret = false;
-	//コリジョンの種類の取得
-	CollisionType collisionType = collision->GetType();
 
-	switch (collisionType)
+	//コリジョンの種類の取得
+	CollisionType type = collision->GetType();
+
+	switch (type)
 	{
 	//空
-	case Empty:
+	case CollisionType::Empty:
 		ret = false;
 		break;
 
-	//有向境界ボックス
-	case box:
+	//ボックス
+	case CollisionType::Box:
 		ret = HitBox(static_cast<const BoxCollision*>(collision));
 		break;
+
+	//スフィア
+	case CollisionType::Sphere:
+		ret = HitSphere(static_cast<const SphereCollision*>(collision));
 
 	//デフォルト
 	default:
@@ -39,4 +45,12 @@ bool CollisionBase::HitCheck(const CollisionBase* collision) const
 	}
 
 	return ret;
+}
+
+float CollisionBase::MakeHypotenuse(const float x1, const float y1, const float x2, const float y2) const
+{
+	float dX = x2 - x1;
+	float dY = y2 - y1;
+
+	return (dX * dX) + (dY * dY);
 }
