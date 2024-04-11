@@ -22,7 +22,7 @@ public:
     Vector2D GetMinLocation()const { return Vector2D{ location.x ,location.y }; }
 
     //右下のワールド座標を取得
-    Vector2D GetMaxLocation()const { return Vector2D{ location.x + area.width / 2,location.y + area.height / 2 }; }
+    Vector2D GetMaxLocation()const { return Vector2D{ location.x + area.width,location.y + area.height }; }
 
 private:
     //ボックスとの当たり判定

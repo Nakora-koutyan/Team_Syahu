@@ -1,5 +1,7 @@
 #pragma once
 
+#define FPS				60					//FPS
+
 #define SCREEN_WIDTH	1280				//‰æ–Ê‚Ì‰¡•
 #define SCREEN_HEIGHT	720					//‰æ–Ê‚Ìc•
 
