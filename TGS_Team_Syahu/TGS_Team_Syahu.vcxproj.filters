@@ -84,6 +84,9 @@
     <ClCompile Include="SceneManager\SceneManager.cpp">
       <Filter>ソース ファイル\SceneManager</Filter>
     </ClCompile>
+    <ClCompile Include="Actor\Enemy\NormalEnemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision\Box\BoxCollision.h">
@@ -124,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="Utility\Area.h">
       <Filter>ヘッダー ファイル\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor\Enemy\NormalEnemy.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
