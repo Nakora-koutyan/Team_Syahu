@@ -13,78 +13,117 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\Collision">
+      <UniqueIdentifier>{9f86b828-53ae-46a5-a6ab-17a03838411a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Collision">
+      <UniqueIdentifier>{1cf5ffdb-4e03-406f-a5c6-3df68af98c73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor">
+      <UniqueIdentifier>{7146eb00-951d-4330-8be3-2844259ea73a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\Character">
+      <UniqueIdentifier>{5681bc86-1ba5-45d6-a34a-e77c79cba17d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Actor">
+      <UniqueIdentifier>{72af1aab-a743-4b40-ac60-bb68beda58a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\Character">
+      <UniqueIdentifier>{dd62d3ca-da71-456c-bc26-c2f1dcb05c71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InputControl">
+      <UniqueIdentifier>{4f36d3c0-f1fc-4fd3-bad4-4f3da22d7679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\InputControl">
+      <UniqueIdentifier>{554deacc-d9be-4a6a-a12a-800dd9afbf2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{cf1bb02d-172d-410a-84d0-a244e1f7f5aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SceneManager">
+      <UniqueIdentifier>{14978ba7-b88f-4f02-bc20-012526757430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene">
+      <UniqueIdentifier>{f08a5219-6e43-4a95-abca-3e0e4ac63df7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\SceneManager">
+      <UniqueIdentifier>{5cd35eca-e297-4f37-95b5-855b09c342b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Utility">
+      <UniqueIdentifier>{3e355aff-10ec-479f-92ab-678b0a0e0589}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Camera\Camera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Actor\Player\Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Actor\CharaBase.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Collision\Box\BoxCollision.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Collision\CollisionBase.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor\CharaBase.cpp">
+      <Filter>ソース ファイル\Actor\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor\Player\Player.cpp">
+      <Filter>ソース ファイル\Actor\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor\Camera\Camera.cpp">
+      <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
     <ClCompile Include="InputControl\Key\KeyInput.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\InputControl</Filter>
     </ClCompile>
     <ClCompile Include="InputControl\Pad\PadInput.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\InputControl</Filter>
     </ClCompile>
     <ClCompile Include="Scene\GameMain\GameMainScene.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager\SceneManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\SceneManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actor\Camera\Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Actor\Player\Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Actor\CharaBase.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Collision\Box\BoxCollision.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Collision\CollisionBase.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor\Camera\Camera.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor\CharaBase.h">
+      <Filter>ヘッダー ファイル\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor\Player\Player.h">
+      <Filter>ヘッダー ファイル\Actor\Character</Filter>
     </ClInclude>
     <ClInclude Include="InputControl\Key\KeyInput.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\InputControl</Filter>
     </ClInclude>
     <ClInclude Include="InputControl\Pad\PadInput.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\GameMain\GameMainScene.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\InputControl</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneBase.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameMain\GameMainScene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager\SceneManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Area.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\SceneManager</Filter>
     </ClInclude>
     <ClInclude Include="Utility\common.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Utility\Vector2D.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Area.h">
+      <Filter>ヘッダー ファイル\Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
