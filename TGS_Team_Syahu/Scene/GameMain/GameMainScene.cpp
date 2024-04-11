@@ -5,12 +5,16 @@ GameMainScene::GameMainScene()
 {
 	player = new Player();
 	camera = new Camera();
+	enemy = new NormalEnemy();
+
+	kari = LoadGraph("Resource/Images/kari.png");
 }
 
 GameMainScene::~GameMainScene()
 {
 	delete player;
 	delete camera;
+	delete enemy;
 }
 
 SceneBase* GameMainScene::Update()
@@ -19,16 +23,22 @@ SceneBase* GameMainScene::Update()
 
 	player->Update(this);
 
+	enemy->Update(this);
+
 	return this;
 }
 
 void GameMainScene::Draw() const
 {
+	DrawGraphF(GetCamera()->ConvertScreenPosition({ 0,0 }).x, GetCamera()->ConvertScreenPosition({ 0,0 }).y, kari, TRUE);
+
 	DebugStage();
 
 	camera->Draw();
 
 	player->Draw();
+
+	enemy->Draw();
 
 }
 

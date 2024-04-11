@@ -2,6 +2,7 @@
 #include "../SceneBase.h"
 #include"../../Actor/Player/Player.h"
 #include"../../Actor/Camera/Camera.h"
+#include"../../Actor/Enemy/NormalEnemy.h"
 
 #define LINE_NUM 12                     // ラインの数
 
@@ -10,6 +11,9 @@ class GameMainScene :public SceneBase
 private:
     Player* player;         //プレイヤーのオブジェクト
     Camera* camera;         //カメラのオブジェクト
+    NormalEnemy* enemy;     //雑魚敵のオブジェクト
+
+    int kari;       //後で消す
 
 public:
     //コンストラクタ
@@ -34,5 +38,8 @@ public:
 
     //カメラオブジェクトの取得
     Camera* GetCamera()const { return camera; }
+
+    //雑魚敵のオブジェクトの取得
+    NormalEnemy* GetNormalEnemy()const { return enemy; }
 
 };
