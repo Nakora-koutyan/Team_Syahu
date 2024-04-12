@@ -8,17 +8,19 @@ Player::Player()
 	location = { 300.f,GROUND_LINE + area.height };
 	area = { 100.f,100.f };
 
-	weaponSlot1 = Ability::Empty;
-	weaponSlot2 = Ability::Empty;
+	weaponSlot = Ability::Empty;
 	normalWeapon = new NormalWeapon();
+
+	guardCount = 0;
 
 	framCount = 0;
 	damageFramCount = 0;
 	parryFram = 0;
 
-	damageInterval = PLAYER_DAMAGE_INTERVAL;
+	guardCoolTime = 0.f;
 
 	isGuard = false;
+	guardCoolTimeFlg = false;
 	parryFlg = false;
 }
 
@@ -34,7 +36,8 @@ void Player::Update(GameMainScene* object)
 	if (parryFlg)
 	{
 		parryFram++;
-		if (parryFram > 120)
+		//2ç§’å¾Œã«å†åº¦ãƒ‘ãƒªã‚£å¯èƒ½
+		if (parryFram > FPS * 2)
 		{
 			parryFlg = false;
 			parryFram = 0;
@@ -64,6 +67,7 @@ void Player::Draw() const
 	);
 
 	DrawFormatString(0, 0, 0xff0000, "%f", hp);
+	DrawFormatString(0, 40, 0xff0000, "%f", guardCoolTime);
 	DrawFormatString(0, 10, 0xff0000, "%s", parryFlg ? "true" : "false");
 	DrawFormatString(0, 20, 0xff0000, "direction x:%f y:%f", direction.x,direction.y);
 
@@ -79,44 +83,46 @@ void Player::Hit(GameMainScene* object)
 {
 	if (isHit)
 	{
-		//PLAYER_DAMAGE_INTERVALŒã‚Éƒqƒbƒgƒtƒ‰ƒO‚ğfalse‚É‚·‚é
+		//PLAYER_DAMAGE_INTERVALã®æ™‚é–“ç„¡æ•µ
 		if (framCount % PLAYER_DAMAGE_INTERVAL == 0)
 		{
 			isHit = false;
 		}
 	}
 
-	//G‹›“G‚Æ‚Ì“–‚½‚è”»’è
+	//é›‘é­šçš„ã«å½“ãŸã£ãŸã‚‰
 	if (HitCheck(object->GetNormalEnemy()))
 	{
-		//‚Ü‚¾ƒ_ƒ[ƒW‚ğó‚¯‚Ä‚¢‚È‚¢‚È‚ç
+		//ã™ã§ã«å½“ãŸã£ã¦ãªã„ãªã‚‰
 		if (!isHit)
 		{
-			//ƒ_ƒ[ƒW‚ğó‚¯‚½‚çŒv‘ª‚·‚é
+			//ãƒ€ãƒ¡ãƒ¼ã‚¸ç”¨ã®ã‚«ã‚¦ãƒ³ãƒˆã‚’è¨ˆæ¸¬ã™ã‚‹
 			damageFramCount++;
 
-			//PLAYER_PARRY_FLAMEˆÈ“à‚ÉƒK[ƒh‚µ‚Ä‚¢‚é‚È‚ç
-			if (damageFramCount <= PLAYER_PARRY_FLAME && KeyInput::GetKey(KEY_INPUT_LSHIFT))
+			//PLAYER_PARRY_FLAMEä»¥å†…ã«ã‚¬ãƒ¼ãƒ‰ã§ããŸã‚‰ã‹ã¤ãƒ‘ãƒªã‚£ã—ã¦ã„ãªã„ãªã‚‰
+			if (damageFramCount <= PLAYER_PARRY_FLAME && 
+				(KeyInput::GetKey(KEY_INPUT_LSHIFT) || PadInput::OnPressed(XINPUT_BUTTON_LEFT_SHOULDER) || PadInput::OnPressed(XINPUT_BUTTON_RIGHT_SHOULDER)) && 
+				!parryFlg)
 			{
 				parryFlg = true;
 			}
 
-			//ƒpƒŠƒB‚Å‚«‚È‚©‚Á‚½‚ç
+			//ãƒ‘ãƒªã‚£ã§ããªã‹ã£ãŸã‚‰
 			if (damageFramCount > PLAYER_PARRY_FLAME && !parryFlg)
 			{
 				isHit = true;
 
-				//ƒK[ƒh‚µ‚Ä‚¢‚È‚¢‚È‚ç
+				//ã‚¬ãƒ¼ãƒ‰ã—ã¦ã„ãªã„ãªã‚‰
 				if (!isGuard)
 				{
 					hp -= object->GetNormalEnemy()->GetDamage();
 				}
-				//ƒK[ƒh‚µ‚Ä‚¢‚é‚È‚ç
+				//ã‚¬ãƒ¼ãƒ‰ã—ã¦ã„ã‚‹ãªã‚‰
 				else
 				{
 					hp -= object->GetNormalEnemy()->GetDamage() * PLAYER_DAMAGE_CUT;
 				}
-				//0‚É‚·‚é
+				//0ã«ã™ã‚‹
 				damageFramCount = 0;
 			}
 		}
@@ -125,7 +131,7 @@ void Player::Hit(GameMainScene* object)
 
 void Player::Movement()
 {
-	//‰E‚ÖˆÚ“®
+	//å³ã¸ç§»å‹•
 	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) && !isGuard && !isAttack)
 	{
 		if (vector.x < PLAYER_MAX_MOVE_SPEED)
@@ -142,7 +148,7 @@ void Player::Movement()
 			direction.x = 1.f;
 		}
 	}
-	//¶‚ÖˆÚ“®
+	//å·¦ã¸ç§»å‹•
 	else if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) && !isGuard && !isAttack)
 	{
 		if (vector.x > -PLAYER_MAX_MOVE_SPEED)
@@ -159,13 +165,13 @@ void Player::Movement()
 			direction.x = -1.f;
 		}
 	}
-	//’â~
+	//åœæ­¢
 	else
 	{
 		vector.x = 0.f;
 	}
 
-	//ƒWƒƒƒ“ƒv
+	//ã‚¸ãƒ£ãƒ³ãƒ—
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) || KeyInput::GetKey(KEY_INPUT_W) || PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isGuard && !isAttack)
 	{
 		vector.y = -JUMP_POWER;
@@ -178,34 +184,34 @@ void Player::Movement()
 		direction.y = 1.f;
 	}
 
-	//d—Í
+	//é‡åŠ›
 	vector.y += GRAVITY;
 
-	//ˆÚ“®—Ê‚ğÀ•W‚É‰ÁZ
+	//åº§æ¨™ã«åŠ ç®—
 	location.x += vector.x;
 	location.y += vector.y;
 
-	//¶’[‚ğ’´‚¦‚È‚¢
+	//å·¦ç«¯ã‚’è¶…ãˆãªã„
 	if (GetMinLocation().x < 0.f)
 	{
 		location.x = 0.f;
 		vector.x = 0.f;
 	}
-	//‰E’[‚ğ’´‚¦‚È‚¢
+	//å³ç«¯ã‚’è¶…ãˆãªã„
 	else if (GetMaxLocation().x > WORLD_WIDTH)
 	{
 		location.x = WORLD_WIDTH - area.width;
 		vector.x = 0.f;
 	}
 
-	//“Vˆä‚ğ’´‚¦‚È‚¢
+	//å¤©äº•ã‚’è¶…ãˆãªã„
 	if (GetMinLocation().y < 0.f)
 	{
 		location.y = 0.f;
 		vector.y = 0.f;
 	}
 
-	//’n–Ê‚ğ’´‚¦‚È‚¢
+	//åœ°é¢ã‚’è¶…ãˆãªã„
 	if (GetMaxLocation().y > GROUND_LINE)
 	{
 		location.y = GROUND_LINE - area.height;
@@ -217,18 +223,39 @@ void Player::Movement()
 
 void Player::Action()
 {
-	//ƒK[ƒhƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚Ä‚¢‚é‚È‚ç
-	if ((KeyInput::GetKeyDown(KEY_INPUT_LSHIFT) || PadInput::OnPressed(XINPUT_BUTTON_LEFT_SHOULDER)|| PadInput::OnPressed(XINPUT_BUTTON_RIGHT_SHOULDER)))
+	//ã‚¬ãƒ¼ãƒ‰ã—ã¦ã„ã‚‹ãªã‚‰
+	if ((KeyInput::GetKeyDown(KEY_INPUT_LSHIFT) || PadInput::OnPressed(XINPUT_BUTTON_LEFT_SHOULDER) || PadInput::OnPressed(XINPUT_BUTTON_RIGHT_SHOULDER)) && guardCoolTime <= 0.f)
 	{
 		isGuard = true;
+		guardCount = 1;
 	}
-	//ƒK[ƒhƒ{ƒ^ƒ“‚ğ—£‚µ‚½‚ç
+	//ã‚¬ãƒ¼ãƒ‰ã—ã¦ã„ãªã„ãªã‚‰
 	else
 	{
 		isGuard = false;
 	}
 
-	//’ÊíUŒ‚ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚Ä‚¢‚é‚È‚ç
+	guardCoolTime--;
+
+	//ã‚¬ãƒ¼ãƒ‰ã¯ã—ã¦ã„ãªã„ãŒä»¥å‰ã«ã‚¬ãƒ¼ãƒ‰ã—ã¦ã„ãŸã‚‰
+	if (guardCount && !isGuard)
+	{
+		//ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ç™ºç”Ÿ
+		if (guardCoolTime < 0 && !guardCoolTimeFlg)
+		{
+			guardCoolTime = PLAYER_GUARD_COOLTIME;
+			guardCoolTimeFlg = true;
+		}
+
+		//ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ çµ‚äº†
+		if (guardCoolTime < 0)
+		{
+			guardCount = 0;
+			guardCoolTimeFlg = false;
+		}
+	}
+
+	//æ”»æ’ƒã—ã¦ã„ã‚‹ãªã‚‰
 	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnPressed(XINPUT_BUTTON_B)))
 	{
 		isAttack = true;
@@ -237,18 +264,18 @@ void Player::Action()
 			normalWeapon->Attack(this);
 		}
 	}
-	//’ÊíUŒ‚ƒ{ƒ^ƒ“‚ğ—£‚µ‚½‚ç
+	//æ”»æ’ƒã—ã¦ã„ãªã„ãªã‚‰
 	else
 	{
-		/*isAttack = false;*/
+		//isAttack = false;
 	}
 
-	//‹zûƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚Ä‚¢‚é‚È‚ç
+	//å¥ªã†æ”»æ’ƒã‚’ã—ã¦ã„ã‚‹ãªã‚‰
 	if ((KeyInput::GetKeyDown(KEY_INPUT_E) || PadInput::OnPressed(XINPUT_BUTTON_Y)))
 	{
 
 	}
-	//‹zûƒ{ƒ^ƒ“‚ğ—£‚µ‚½‚ç
+	//å¥ªã†æ”»æ’ƒã‚’ã—ã¦ã„ãªã„ãªã‚‰
 	else
 	{
 

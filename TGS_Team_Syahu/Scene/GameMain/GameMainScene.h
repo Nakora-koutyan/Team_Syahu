@@ -4,42 +4,42 @@
 #include"../../Actor/Camera/Camera.h"
 #include"../../Actor/Enemy/NormalEnemy.h"
 
-#define LINE_NUM 12                     // ƒ‰ƒCƒ“‚Ì”
+#define LINE_NUM 12                     //ãƒ©ã‚¤ãƒ³ã®æ•°
 
 class GameMainScene :public SceneBase
 {
 private:
-    Player* player;         //ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg
-    Camera* camera;         //ƒJƒƒ‰‚ÌƒIƒuƒWƒFƒNƒg
-    NormalEnemy* enemy;     //G‹›“G‚ÌƒIƒuƒWƒFƒNƒg
+    Player* player;         //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    Camera* camera;         //ã‚«ãƒ¡ãƒ©ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    NormalEnemy* enemy;     //é›‘é­šæ•µã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 
-    int kari;       //Œã‚ÅÁ‚·
+    int kari;       //ã‹ã‚Š
 
 public:
-    //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    //ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     GameMainScene();
 
-    //ƒfƒXƒgƒ‰ƒNƒ^
+    //ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     ~GameMainScene();
 
-    //•`‰æ‚ÉŠÖ‚·‚é‚±‚ÆˆÈŠO‚ÌXV‚ğÀ‘•‚·‚é
+    //æ›´æ–°
     SceneBase* Update()override;
 
-    //•`‰æ‚ÉŠÖ‚·‚é‚±‚Æ‚ÌXV‚ğÀ‘•‚·‚é
+    //æç”»
     void Draw()const override;
 
 private:
-    //ƒfƒoƒbƒOƒXƒe[ƒW‚Ì•`‰æ
+    //ãƒ‡ãƒãƒƒã‚°ã‚¹ãƒ†ãƒ¼ã‚¸
     void DebugStage()const;
 
 public:
-    //ƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+    //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
     Player* GetPlayer()const { return player; }
 
-    //ƒJƒƒ‰ƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+    //ã‚«ãƒ¡ãƒ©ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
     Camera* GetCamera()const { return camera; }
 
-    //G‹›“G‚ÌƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+    //é›‘é­šæ•µã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
     NormalEnemy* GetNormalEnemy()const { return enemy; }
 
 };

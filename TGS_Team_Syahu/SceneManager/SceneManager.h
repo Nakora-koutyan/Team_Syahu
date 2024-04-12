@@ -4,18 +4,18 @@
 class SceenManager :public SceneBase
 {
 private:
-    //現在のシーン
+    //迴ｾ蝨ｨ縺ｮ繧ｷ繝ｼ繝ｳ
     SceneBase* now_sceen;
 public:
-    //コンストラクタ
+    //繧ｳ繝ｳ繧ｹ繝医Λ繧ｯ繧ｿ
     SceenManager(SceneBase* scene) :now_sceen(scene) {};
 
-    //デストラクタ
+    //繝�繧ｹ繝医Λ繧ｯ繧ｿ
     ~SceenManager() { delete now_sceen; }
 
-    //描画に関すること以外の更新を実装する
+    //譖ｴ譁ｰ
     SceneBase* Update()override;
 
-    //描画に関することを
+    //謠冗判
     void Draw()const override;
 };

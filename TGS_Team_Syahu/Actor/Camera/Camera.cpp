@@ -14,26 +14,26 @@ Camera::~Camera()
 
 void Camera::Update(GameMainScene* object)
 {
-	//�v���C���[�̍��W��ǔ�����
+	//プレイヤーを追尾
 	cameraPosition = object->GetPlayer()->GetLocation();
 
-	//��ʍ��[�𒴂��Ȃ�
+	//世界の左端を超えない
 	if (cameraPosition.x - SCREEN_WIDTH / 2.f <= 0.f)
 	{
 		cameraPosition.x = SCREEN_WIDTH / 2.f;
 	}
-	//��ʉE�[�𒴂��Ȃ�
+	//世界の右端を超えない
 	else if (cameraPosition.x + SCREEN_WIDTH / 2.f >= WORLD_WIDTH)
 	{
 		cameraPosition.x = WORLD_WIDTH - SCREEN_WIDTH / 2.f;
 	}
 
-	//��ʏ�𒴂��Ȃ�
+	//世界の天井を超えない
 	if (cameraPosition.y - SCREEN_HEIGHT / 2.f <= 0.f)
 	{
 		cameraPosition.y = SCREEN_HEIGHT / 2.f;
 	}
-	//��ʉ��𒴂��Ȃ�
+	//世界の地面を超えない
 	else if (cameraPosition.y + SCREEN_HEIGHT / 2.f >= WORLD_HEIGHT)
 	{
 		cameraPosition.y = WORLD_HEIGHT - SCREEN_HEIGHT / 2.f;
@@ -47,14 +47,14 @@ void Camera::Draw() const
 
 Vector2D Camera::ConvertScreenPosition(const Vector2D location)
 {
-	//�J�����̍��W����X�N���[���̍��W�̌��_��
+	//カメラの座標をスクリーンの座標に変換
 	Vector2D screenOriginPosition =
 	{
 		cameraPosition.x - SCREEN_WIDTH / 2.f,
 		cameraPosition.y - SCREEN_HEIGHT / 2.f
 	};
 
-	//���[���h�̍��W����X�N���[���̍��W��
+	//ワールドの座標をスクリーンの座標に変換
 	Vector2D screenPosition = { location.x - screenOriginPosition.x, location.y - screenOriginPosition.y };
 
 	return screenPosition;

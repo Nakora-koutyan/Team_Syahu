@@ -5,9 +5,9 @@
 
 enum class CollisionType
 {
-	Empty = 0,		//‹ó
-	Box,			//lŠp
-	Sphere			//‰~
+	Empty = 0,		//ç©º
+	Box,			//å››è§’
+	Sphere			//å††
 };
 
 class BoxCollision;
@@ -16,44 +16,44 @@ class SphereCollision;
 class CollisionBase
 {
 protected:
-	Vector2D location;			//ƒ[ƒ‹ƒhÀ•W
-	Vector2D screenLocation;	//ƒXƒNƒŠ[ƒ“À•W
+	Vector2D location;			//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™
+	Vector2D screenLocation;	//ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™
 
-	CollisionType collisionType;			//ƒRƒŠƒWƒ‡ƒ“‚Ìí—Ş
+	CollisionType collisionType;			//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã®ç¨®é¡
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CollisionBase();
 
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~CollisionBase();
 
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	bool HitCheck(const CollisionBase* collision)const;
 
-	//lŠp‚Æ‰~‚Ì“–‚½‚è”»’è‚É•K—v‚ÈÎ•Ó‚ğì¬‚·‚é
+	//å››è§’ã¨å††ã®å½“ãŸã‚Šåˆ¤å®šã«å¿…è¦ãªæ–œè¾ºã®ä½œæˆ
 	float MakeHypotenuse(const float x1, const float y1, const float x2, const float y2)const;
 
 public:
-	//ƒ[ƒ‹ƒhÀ•W‚ğæ“¾‚·‚é
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã®å–å¾—
 	Vector2D GetLocation()const { return location; }
 
-	//ƒ[ƒ‹ƒhÀ•W‚ğİ’è
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã®è¨­å®š
 	void SetLocation(const Vector2D location) { this->location = location; }
 
-	//ƒXƒNƒŠ[ƒ“À•W‚ğæ“¾‚·‚é
+	//ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã®å–å¾—
 	Vector2D GetScreenLocation()const { return screenLocation; }
 
-	//ƒXƒNƒŠ[ƒ“À•W‚ğİ’è
+	//ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã®è¨­å®š
 	void SetScreenLocation(const Vector2D location) { this->screenLocation = location; }
 
-	//ƒRƒŠƒWƒ‡ƒ“‚Ìí—Ş‚ğæ“¾‚·‚é
+	//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã®ç¨®é¡ã®å–å¾—
 	CollisionType GetType()const { return collisionType; }
 	
 protected:
-	//lŠp‚Æ‚Ì“–‚½‚è”»’è
+	//å››è§’ã®å½“ãŸã‚Šåˆ¤å®š
 	virtual bool HitBox(const BoxCollision* collision)const = 0;
 
-	//‰~‚Æ‚Ì“–‚½‚è”»’è
+	//å††ã®å½“ãŸã‚Šåˆ¤å®š
 	virtual bool HitSphere(const SphereCollision* collision)const = 0;
 
 };

@@ -1,15 +1,14 @@
 #pragma once
 #include"../Collision/Box/BoxCollision.h"
 
-#define NEED_STICK_RATIO	0.2f		//•K—v‚ÈƒXƒeƒBƒbƒN‚ÌŒX‚«Š„‡
-#define MAX_SPEED			10.f		//Å‚‘¬“x	
-#define GRAVITY				0.8f		//—‰º‘¬“x
-#define JUMP_POWER			15.f		//ƒWƒƒƒ“ƒv—Í
+#define NEED_STICK_RATIO	0.2f		//ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å‚¾ãå‰²åˆ
+#define GRAVITY				0.8f		//é‡åŠ›
+#define JUMP_POWER			15.f		//ã‚¸ãƒ£ãƒ³ãƒ—åŠ›
 
 enum class Ability
 {
-	Empty = 0,			//‹ó
-	Slashing			//aŒ‚
+	Empty = 0,			//ç©º
+	Slashing			//æ–¬æ’ƒ
 };
 
 class GameMainScene;
@@ -17,49 +16,49 @@ class GameMainScene;
 class CharaBase :public BoxCollision
 {
 protected:
-	Vector2D vector;			//ˆÚ“®—Ê
-	Vector2D direction;			//•ûŒü
+	Vector2D vector;			//ç§»å‹•é‡
+	Vector2D direction;			//æ–¹å‘
 
-	Ability abilityType;		//”\—Í‚Ìí—Ş
+	Ability abilityType;		//èƒ½åŠ›ã®ç¨®é¡
 
 	float hp;					//HP
-	float damage;				//ƒ_ƒ[ƒW
+	float damage;				//ãƒ€ãƒ¡ãƒ¼ã‚¸
 
-	bool isAir;					//‹ó’†H
-	bool isHit;					//“–‚½‚Á‚½H
-	bool isShow;				//•\¦‚·‚éH
-	bool isAttack;				//UŒ‚”»’è
+	bool isAir;					//ç©ºä¸­ï¼Ÿ
+	bool isHit;					//å½“ãŸã£ã¦ã„ã‚‹ï¼Ÿ
+	bool isShow;				//è¡¨ç¤ºã™ã‚‹ï¼Ÿ
+	bool isAttack;				//æ”»æ’ƒä¸­ï¼Ÿ
 
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CharaBase();
 
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~CharaBase();
 
-	//XV
+	//æ›´æ–°
 	virtual void Update(GameMainScene* object) = 0;
 
-	//•`‰æ
+	//æç”»
 	virtual void Draw()const = 0;
 
-	//HP‚ğæ“¾
+	//HPã‚’å–å¾—
 	float GetHp()const { return hp; }
 
-	//ƒ_ƒ[ƒW‚ğæ“¾
+	//ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å–å¾—
 	float GetDamage()const { return damage; }
 
-	//UŒ‚”»’è‚ğæ“¾
+	//æ”»æ’ƒä¸­ã‹ã©ã†ã‹ã‚’å–å¾—
 	bool GetIsAttack()const { return isAttack; }
 
-	//UŒ‚”»’è‚ğİ’è
+	//æ”»æ’ƒä¸­ã‹ã©ã†ã‹ã‚’è¨­å®š
 	void SetIsAttack(const bool flg) { isAttack = flg; }
 
-	//•ûŒü‚ğæ“¾
+	//æ–¹å‘ã®å–å¾—
 	Vector2D GetDirection()const { return direction; }
 
 protected:
-	//”\—Í‚Ìí—Ş‚ğæ“¾
+	//èƒ½åŠ›ã®ç¨®é¡ã‚’å–å¾—
 	Ability GetAbilityType() { return abilityType; }
 	
 };

@@ -22,39 +22,36 @@ private:
 	static MOUSE_INPUT mouse_vec;
 	static float mouse_sensitivity;
 public:
-	//XVˆ—
+	//æ›´æ–°
 	static void Update();
 
-	//ƒL[‚ğ‰Ÿ‚µ‚½‚Æ‚«‚ğæ“¾‚·‚é
+	//æŠ¼ã—ãŸã‚­ãƒ¼ã‚’å–å¾—
 	static bool GetKey(int key);
 
-	//ƒL[‚ğ‰Ÿ‚µ‚Ä‚¢‚é‚Æ‚«æ“¾‚·‚é
+	//æŠ¼ã—ã¦ã„ã‚‹ã‚­ãƒ¼ã‚’å–å¾—
 	static bool GetKeyDown(int key);
 
-	//ƒL[‚ğ—£‚µ‚½‚Æ‚«‚ğæ“¾‚·‚é
+	//é›¢ã—ãŸã‚­ãƒ¼ã‚’å–å¾—
 	static bool GetKeyUp(int key);
 
-	//ƒ}ƒEƒX‚ÌxÀ•W‚ğæ“¾‚·‚é
+	//ãƒã‚¦ã‚¹ã®xåº§æ¨™ã‚’å–å¾—
 	static int GetMouseLocationX();
 
-	//ƒ}ƒEƒX‚ÌyÀ•W‚ğæ“¾‚·‚é
+	//ãƒã‚¦ã‚¹ã®yåº§æ¨™ã‚’å–å¾—
 	static int GetMouseLocationY();
 
-	//ƒ}ƒEƒX‚ÌˆÚ“®—Êx‚ğæ“¾‚·‚é
+	//ãƒã‚¦ã‚¹ã®ç§»å‹•é‡xã‚’å–å¾—
 	static int GetMouseVecX();
 
-	//ƒ}ƒEƒX‚ÌˆÚ“®—Êy‚ğæ“¾‚·‚é
+	//ãƒã‚¦ã‚¹ã®ç§»å‹•é‡yã‚’å–å¾—
 	static int GetMouseVecY();
 	
-	//ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚Æ‚«‚ğæ“¾‚·‚é
+	//æŠ¼ã—ãŸãƒœã‚¿ãƒ³ã‚’å–å¾—
 	static bool GetButton(int key);
 
-	//ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚Ä‚¢‚é‚Æ‚«‚ğæ“¾‚·‚é
+	//æŠ¼ã—ã¦ã„ã‚‹ãƒœã‚¿ãƒ³ã‚’å–å¾—
 	static bool GetButtonDown(int key);
 
-	//ƒ{ƒ^ƒ“‚ğ—£‚µ‚½‚Æ‚«‚ğæ“¾‚·‚é
+	//é›¢ã—ãŸãƒœã‚¿ãƒ³ã‚’å–å¾—
 	static bool GetButtonUp(int key);
 };
-
-
-

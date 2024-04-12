@@ -48,7 +48,7 @@ void GameMainScene::DebugStage() const
 	Vector2D pos1 = {};
 	Vector2D pos2 = {};
 
-	//xé≤ÇÃê¸
+	//xËª∏
 	pos1 = { 0.f, 0.f };
 	pos2 = { WORLD_WIDTH / 2.0f, 0.f };
 
@@ -59,7 +59,7 @@ void GameMainScene::DebugStage() const
 		pos2.y += WORLD_HEIGHT / (LINE_NUM / 1.5f);
 	}
 
-	//yé≤ÇÃê¸
+	//yËª∏
 	pos1 = { 0.f, 0.f };
 	pos2 = { 0.f, WORLD_HEIGHT };
 	for (int i = 0; i < LINE_NUM; i++)
@@ -69,7 +69,7 @@ void GameMainScene::DebugStage() const
 		pos2.x += WORLD_WIDTH / (LINE_NUM);
 	}
 
-	//xé≤ÇÃê¸
+	//xËª∏
 	pos1 = { 0.f, GROUND_LINE };
 	pos2 = { WORLD_WIDTH, GROUND_LINE };
 	DrawLineAA(pos1.x, pos1.y, pos2.x, pos2.y, 0xff0000);

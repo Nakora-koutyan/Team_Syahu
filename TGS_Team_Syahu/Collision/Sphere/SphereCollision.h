@@ -4,27 +4,27 @@
 class SphereCollision :public CollisionBase
 {
 protected:
-    float radius;           //”¼Œa
+    float radius;           //åŠå¾„
 
 public:
-    //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    //ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     SphereCollision();
 
-    //ƒfƒXƒgƒ‰ƒNƒ^
+    //ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     ~SphereCollision();
 
 public:
-    //”¼Œa‚Ìæ“¾
+    //åŠå¾„ã‚’å–å¾—
     float GetRadius()const { return radius; }
 
-    //”¼Œa‚Ìİ’è
+    //åŠå¾„ã‚’è¨­å®š
     void SetRadius(const float radius) { this->radius = radius; }
 
 private:
-    //‰~‚Æ‚Ì“–‚½‚è”»’è
+    //å††ã®å½“ãŸã‚Šåˆ¤å®š
     bool HitSphere(const SphereCollision* collision)const override;
 
-    //lŠp‚Æ‚Ì“–‚½‚è”»’è
+    //å››è§’ã®å½“ãŸã‚Šåˆ¤å®š
     bool HitBox(const BoxCollision* collision)const override;
 
 };

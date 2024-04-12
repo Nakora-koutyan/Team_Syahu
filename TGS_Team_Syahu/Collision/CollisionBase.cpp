@@ -19,26 +19,26 @@ bool CollisionBase::HitCheck(const CollisionBase* collision) const
 {
 	bool ret = false;
 
-	//�R���W�����̎�ނ̎擾
+	//コリジョンの種類の取得
 	CollisionType type = collision->GetType();
 
 	switch (type)
 	{
-	//��
+	//空
 	case CollisionType::Empty:
 		ret = false;
 		break;
 
-	//�{�b�N�X
+	//四角
 	case CollisionType::Box:
 		ret = HitBox(static_cast<const BoxCollision*>(collision));
 		break;
 
-	//�X�t�B�A
+	//円
 	case CollisionType::Sphere:
 		ret = HitSphere(static_cast<const SphereCollision*>(collision));
 
-	//�f�t�H���g
+	//デフォルト
 	default:
 		ret = false;
 		break;

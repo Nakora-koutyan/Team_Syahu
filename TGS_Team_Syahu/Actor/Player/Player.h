@@ -2,50 +2,52 @@
 #include"../CharaBase.h"
 #include"Weapon/NormalWeapon.h"
 
-#define PLAYER_MOVE_SPEED		3.f				//ƒvƒŒƒCƒ„[‚ÌˆÚ“®‘¬“x
-#define PLAYER_MAX_MOVE_SPEED	9.f				//ƒvƒŒƒCƒ„[‚ÌÅ‚ˆÚ“®‘¬“x
-#define PLAYER_DAMAGE_INTERVAL	FPS * 1			//ƒ_ƒ[ƒWó‚¯‚½‚Æ‚«‚ÉÄ“xƒ_ƒ[ƒW‚ğó‚¯‚é‚Ü‚Å‚ÌŠÔ
-#define PLAYER_DAMAGE_CUT		1.f - 0.25f		//ƒK[ƒh‚µ‚½‚Ìƒ_ƒ[ƒWƒJƒbƒg—¦
-#define PLAYER_PARRY_FLAME		10				//ƒpƒŠƒB‚Ì—P—\ƒtƒŒ[ƒ€
+#define PLAYER_MOVE_SPEED		3.f				//ç§»å‹•ç§»å‹•
+#define PLAYER_MAX_MOVE_SPEED	9.f				//æœ€é«˜é€Ÿåº¦
+#define PLAYER_DAMAGE_INTERVAL	FPS * 1			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå†åº¦ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã‚‹ã¾ã§ã®æ™‚é–“
+#define PLAYER_DAMAGE_CUT		1.f - 0.25f		//ã‚¬ãƒ¼ãƒ‰ä¸­ã®ãƒ€ãƒ¡ãƒ¼ã‚¸
+#define PLAYER_PARRY_FLAME		10				//ãƒ‘ãƒªã‚£ã®çŒ¶äºˆãƒ•ãƒ¬ãƒ¼ãƒ 
+#define	PLAYER_GUARD_COOLTIME	FPS * 0.4		//ã‚¬ãƒ¼ãƒ‰ã®ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
 
 class Player :public CharaBase
 {
 private:
-	Ability weaponSlot1;		//•ŠíƒXƒƒbƒg1
-	Ability weaponSlot2;		//•ŠíƒXƒƒbƒg2
-	NormalWeapon* normalWeapon;	//’ÊíUŒ‚
+	Ability weaponSlot;			//æ­¦å™¨ã‚¹ãƒ­ãƒƒãƒˆ
+	NormalWeapon* normalWeapon;	//é€šå¸¸æ”»æ’ƒ
 
-	int framCount;				//ƒtƒŒ[ƒ€ƒJƒEƒ“ƒg
-	int damageFramCount;		//ƒ_ƒ[ƒW—p‚ÌƒJƒEƒ“ƒg
-	int parryFram;				//ƒpƒŠƒB—p‚ÌƒJƒEƒ“ƒg
+	short guardCount;			//ã‚¬ãƒ¼ãƒ‰ã®ã‚«ã‚¦ãƒ³ãƒˆ	0:ã—ã¦ã„ãªã„ 1:ã—ã¦ã„ãŸ
 
-	float damageInterval;		//ƒ_ƒ[ƒW‚ÌƒCƒ“ƒ^[ƒoƒ‹
+	int framCount;				//ãƒ•ãƒ¬ãƒ¼ãƒ ã‚«ã‚¦ãƒ³ãƒˆ
+	int damageFramCount;		//ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸæ™‚ã®ã‚«ã‚¦ãƒ³ãƒˆ
+	int parryFram;				//ãƒ‘ãƒªã‚£ã®å…¥åŠ›ãƒ•ãƒ¬ãƒ¼ãƒ 
 
-	bool isGuard;				//ƒK[ƒh‚µ‚Ä‚¢‚éH
-	bool parryFlg;				//ƒpƒŠƒB‚Ìƒtƒ‰ƒO
+	float guardCoolTime;		//ã‚¬ãƒ¼ãƒ‰ã®ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ 
+
+	bool isGuard;				//ã‚¬ãƒ¼ãƒ‰ä¸­ï¼Ÿ
+	bool guardCoolTimeFlg;		//ã‚¬ãƒ¼ãƒ‰ã®ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ã®ãƒ•ãƒ©ã‚°
+	bool parryFlg;				//ãƒ‘ãƒªã‚£ãƒ•ãƒ©ã‚°
 
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Player();
 
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~Player();
 
-	//XV
+	//æ›´æ–°
 	void Update(GameMainScene* object)override;
 
-	//•`‰æ
+	//æç”»
 	void Draw()const override;
 
-	//“–‚½‚è”»’è‚Ìˆ—
+	//ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†
 	void Hit(GameMainScene* object);
 
 private:
-	//ˆÚ“®
+	//ç§»å‹•
 	void Movement();
 
-	//ƒAƒNƒVƒ‡ƒ“
+	//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
 	void Action();
 
 };
-

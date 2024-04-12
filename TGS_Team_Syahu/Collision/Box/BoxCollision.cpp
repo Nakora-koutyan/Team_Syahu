@@ -15,29 +15,25 @@ BoxCollision::~BoxCollision()
 
 bool BoxCollision::HitBox(const BoxCollision* collision) const
 {
-	bool ret = false;		//•Ô‚è’l
+	bool ret = false;		//è¿”ã‚Šå€¤
 
-	//©•ª‚Ì“–‚½‚è”»’è‚Ì”ÍˆÍ
 	float myX[2] = {};
 	float myY[2] = {};
 
-	//‘Šè‚Ì“–‚½‚è”»’è‚Ì”ÍˆÍ
 	float subX[2] = {};
 	float subY[2] = {};
 
-	//©•ª‚Ì“–‚½‚è”»’è‚Ì”ÍˆÍ‚ÌŒvZ
 	myX[0] = location.x;
 	myY[0] = location.y;
 	myX[1] = myX[0] + area.width;
 	myY[1] = myY[0] + area.height;
 
-	//‘Šè‚Ì“–‚½‚è”»’è‚Ì”ÍˆÍ‚ÌŒvZ
 	subX[0] = collision->GetLocation().x;
 	subY[0] = collision->GetLocation().y;
 	subX[1] = subX[0] + collision->GetArea().width;
 	subY[1] = subY[0] + collision->GetArea().height;
 
-	//‘o•û‚Ìl•Ó‚ª“–‚½‚Á‚Ä‚¢‚é‚©
+	//å››è¾ºã«é‡ãªã£ã¦ã„ãŸã‚‰
 	if ((myX[0] < subX[1]) &&
 		(subX[0] < myX[1]) &&
 		(myY[0] < subY[1]) &&
@@ -50,7 +46,7 @@ bool BoxCollision::HitBox(const BoxCollision* collision) const
 
 bool BoxCollision::HitSphere(const SphereCollision* collision) const
 {
-	bool ret = false;		//•Ô‚è’l
+	bool ret = false;		//è¿”ã‚Šå€¤
 
 	Vector2D min = location;
 	Vector2D max = { location.x + area.width,location.y + area.height };
@@ -59,7 +55,7 @@ bool BoxCollision::HitSphere(const SphereCollision* collision) const
 	float sphereY = collision->GetLocation().y;
 	float sphereR = collision->GetRadius();
 
-	// lŠpŒ`‚Ìl•Ó‚É‘Î‚µ‚Ä‰~‚Ì”¼Œa•ª‚¾‚¯‘«‚µ‚½‚Æ‚«‰~‚ªd‚È‚Á‚Ä‚¢‚½‚ç
+	//å††ã®åº§æ¨™ãŒå››è¾ºã®åº§æ¨™ã«åŠå¾„ã‚’è¶³ã—ãŸæ•°ã‚ˆã‚Šå¤§ãã„ã¾ãŸã¯å°ã•ã„ãªã‚‰
 	if ((sphereX > min.x - sphereR) &&
 		(sphereX < max.x + sphereR) &&
 		(sphereY > min.y - sphereR) &&
@@ -68,10 +64,10 @@ bool BoxCollision::HitSphere(const SphereCollision* collision) const
 		ret = true;
 		float length = sphereR * sphereR;
 
-		//¶
+		//å³
 		if (sphereR < min.x)
 		{
-			//¶ã
+			//å³ä¸Š
 			if (sphereY < min.y)
 			{
 				if (MakeHypotenuse(min.x, min.y, sphereX, sphereY) >= length)
@@ -81,7 +77,7 @@ bool BoxCollision::HitSphere(const SphereCollision* collision) const
 			}
 			else
 			{
-				//¶‰º
+				//å·¦ä¸‹
 				if (sphereY > max.y)
 				{
 					if (MakeHypotenuse(min.x, max.y, sphereX, sphereY) >= length)
@@ -93,10 +89,10 @@ bool BoxCollision::HitSphere(const SphereCollision* collision) const
 		}
 		else
 		{
-			//‰E
+			//å·¦
 			if (sphereX > max.x)
 			{
-				//‰Eã
+				//å·¦ä¸Š
 				if (sphereY < min.x)
 				{
 					if (MakeHypotenuse(max.x, min.y, sphereX, sphereY) >= length)
@@ -106,7 +102,7 @@ bool BoxCollision::HitSphere(const SphereCollision* collision) const
 				}
 				else
 				{	
-					//‰E‰º
+					//å·¦ä¸‹
 					if (sphereY > max.y)
 					{
 						if (MakeHypotenuse(max.x, max.y, sphereX, sphereY) >= length)

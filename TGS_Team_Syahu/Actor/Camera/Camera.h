@@ -6,23 +6,23 @@ class GameMainScene;
 class Camera
 {
 private:
-	Vector2D cameraPosition;		//ƒJƒƒ‰‚ÌÀ•W
-	Vector2D screenPosition;		//ƒXƒNƒŠ[ƒ“‚ÌÀ•W
+	Vector2D cameraPosition;		//ã‚«ãƒ¡ãƒ©ã®åº§æ¨™
+	Vector2D screenPosition;		//ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®åº§æ¨™
 
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Camera();
 
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~Camera();
 
-	//XV
+	//æ›´æ–°
 	void Update(GameMainScene* object);
 
-	//•`‰æ
+	//æç”»
 	void Draw()const;
 
-	//ƒXƒNƒŠ[ƒ“‚ÌÀ•W‚É•ÏŠ·
+	//ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®åº§æ¨™ã«å¤‰æ›
 	Vector2D ConvertScreenPosition(const Vector2D location);
 
 };

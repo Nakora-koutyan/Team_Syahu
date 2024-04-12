@@ -5,44 +5,44 @@
 class BoxCollision :public CollisionBase
 {
 protected:
-    Area area;          //�̈�
+    Area area;          //領域
 
 public:
-    //�R���X�g���N�^
+    //コンストラクタ
     BoxCollision();
 
-    //�f�X�g���N�^
+    //デストラクタ
     ~BoxCollision();
 
 public:
-    //�̈�̎擾
+    //領域の取得
     Area GetArea()const { return area; }
 
-    //�̈�̐ݒ�
+    //領域の設定
     void SetArea(const Area area) { this->area = area; }
 
-    //����̃��[���h���W��擾
+    //ワールド座標の左上を取得
     Vector2D GetMinLocation()const { return Vector2D{ location.x ,location.y }; }
 
-    //���S�̃��[���h���W��擾
+    //ワールド座標の中心を取得
     Vector2D GetCenterLocation()const { return Vector2D{ location.x + area.width / 2,location.y + area.width / 2 }; }
 
-    //�E���̃��[���h���W��擾
+    //ワールド座標の右下を取得
     Vector2D GetMaxLocation()const { return Vector2D{ location.x + area.width,location.y + area.height }; }
 
-    //����̃X�N���[�����W��擾
+    //スクリーン座標の左上を取得
     Vector2D GetMinScreenLocation()const { return Vector2D{ screenLocation.x ,screenLocation.y }; }
 
-    //���S�̃X�N���[�����W��擾
+    //スクリーン座標の中心を取得
     Vector2D GetCenterScreenLocation()const { return Vector2D{ screenLocation.x + area.width / 2,screenLocation.y + area.width / 2 }; }
 
-    //�E���̃X�N���[�����W��擾
+    //スクリーン座標の右下を取得
     Vector2D GetMaxScreenLocation()const { return Vector2D{ screenLocation.x + area.width,screenLocation.y + area.height }; }
 
 private:
-    //�l�p�Ƃ̓����蔻��
+    //四角の当たり判定
     bool HitBox(const BoxCollision* collision)const override;
 
-    //�~�Ƃ̓����蔻��
+    //円の当たり判定
     bool HitSphere(const SphereCollision* collision)const override;
 };

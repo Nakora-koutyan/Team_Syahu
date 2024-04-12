@@ -4,12 +4,12 @@
 class SceneBase 
 {
 public:
-	//デストラクタ
+	//繝�繧ｹ繝医Λ繧ｯ繧ｿ
 	virtual ~SceneBase() {};
 
-	//描画以外の更新を実装する
+	//譖ｴ譁ｰ
 	virtual SceneBase* Update() = 0;
 
-	//描画に関することを実装する
+	//謠冗判
 	virtual void Draw()const = 0;
 };
