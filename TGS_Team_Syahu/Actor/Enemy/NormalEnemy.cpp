@@ -56,7 +56,14 @@ void NormalEnemy::Draw() const
 
 void NormalEnemy::Movement()
 {
-	vector.x = MAX_ENEMY_SPEED;
+	if(enemy_color == usual_color)
+	{
+		vector.x = MAX_ENEMY_SPEED;
+	}
+	else if (enemy_color == attack_color)
+	{
+		vector.x = (MAX_ENEMY_SPEED + 2);
+	}
 
 	location.x += vector.x;
 }
