@@ -2,8 +2,9 @@
 #include "../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 
-NormalEnemy::NormalEnemy():enemy_color(0),damage_color(0),attack_color(0),usual_color(0)
+NormalEnemy::NormalEnemy():enemy_color(0),damage_color(0),attack_color(0),usual_color(0),attack_range{}
 {
+
 }
 
 NormalEnemy::~NormalEnemy()
@@ -18,15 +19,24 @@ void NormalEnemy::Initialize()
 
 	enemy_color = usual_color;
 	
-	area = { 135.f,135.f };
+	area = { 90.f,90.f };
 	location = { 1200,GROUND_LINE - area.height };
+
+	attack_range[0] = { GetCenterLocation() };
+	attack_range[1] = { GetCenterLocation() };
 }
 
 void NormalEnemy::Update(GameMainScene* object)
 {
 	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
 
-	if (HitCheck(object->GetPlayer()))
+	//エネミーの移動
+	Movement();
+	//エネミーの攻撃範囲
+	AttackRange();
+
+	if (attack_range[0].x < object->GetPlayer()->GetMaxLocation().x &&
+		attack_range[1].x > object->GetPlayer()->GetMinLocation().x)
 	{
 		isHit = true;
 	}
@@ -34,8 +44,6 @@ void NormalEnemy::Update(GameMainScene* object)
 	{
 		isHit = false;
 	}
-
-	Movement();
 }
 
 void NormalEnemy::Draw() const
@@ -43,12 +51,6 @@ void NormalEnemy::Draw() const
 	DrawBoxAA
 	(
 		screenLocation.x, screenLocation.y,
-		screenLocation.x + area.width, screenLocation.y + area.height,
-		0xff00ff, FALSE, 1.0f
-	);
-	DrawBoxAA
-	(
-		screenLocation.x + ( area.width / 3.5f ), screenLocation.y + ( area.height / 3.5f),
 		screenLocation.x + area.width, screenLocation.y + area.height,
 		isHit ? attack_color : usual_color, TRUE, 1.0f
 	);
@@ -66,4 +68,10 @@ void NormalEnemy::Movement()
 	}
 
 	location.x += vector.x;
+}
+
+void NormalEnemy::AttackRange()
+{
+	attack_range[0] = { GetMinLocation().x - 45.f,GetCenterLocation().y };
+	attack_range[1] = { GetMaxLocation().x + 45.f , GetCenterLocation().y };
 }

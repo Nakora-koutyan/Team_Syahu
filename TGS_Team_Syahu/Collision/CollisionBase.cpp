@@ -19,26 +19,26 @@ bool CollisionBase::HitCheck(const CollisionBase* collision) const
 {
 	bool ret = false;
 
-	//ƒRƒŠƒWƒ‡ƒ“‚ÌŽí—Þ‚ÌŽæ“¾
+	//ï¿½Rï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ÌŽï¿½Þ‚ÌŽæ“¾
 	CollisionType type = collision->GetType();
 
 	switch (type)
 	{
-	//‹ó
+	//ï¿½ï¿½
 	case CollisionType::Empty:
 		ret = false;
 		break;
 
-	//ƒ{ƒbƒNƒX
+	//ï¿½{ï¿½bï¿½Nï¿½X
 	case CollisionType::Box:
 		ret = HitBox(static_cast<const BoxCollision*>(collision));
 		break;
 
-	//ƒXƒtƒBƒA
+	//ï¿½Xï¿½tï¿½Bï¿½A
 	case CollisionType::Sphere:
 		ret = HitSphere(static_cast<const SphereCollision*>(collision));
 
-	//ƒfƒtƒHƒ‹ƒg
+	//ï¿½fï¿½tï¿½Hï¿½ï¿½ï¿½g
 	default:
 		ret = false;
 		break;

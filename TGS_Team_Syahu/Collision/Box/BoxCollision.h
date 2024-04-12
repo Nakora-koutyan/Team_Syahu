@@ -5,44 +5,44 @@
 class BoxCollision :public CollisionBase
 {
 protected:
-    Area area;          //—Ìˆæ
+    Area area;          //ï¿½Ìˆï¿½
 
 public:
-    //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    //ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
     BoxCollision();
 
-    //ƒfƒXƒgƒ‰ƒNƒ^
+    //ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
     ~BoxCollision();
 
 public:
-    //—Ìˆæ‚Ìæ“¾
+    //ï¿½Ìˆï¿½Ìæ“¾
     Area GetArea()const { return area; }
 
-    //—Ìˆæ‚Ìİ’è
+    //ï¿½Ìˆï¿½Ìİ’ï¿½
     void SetArea(const Area area) { this->area = area; }
 
-    //¶ã‚Ìƒ[ƒ‹ƒhÀ•W‚ğæ“¾
+    //ï¿½ï¿½ï¿½ï¿½Ìƒï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Wï¿½ï¿½æ“¾
     Vector2D GetMinLocation()const { return Vector2D{ location.x ,location.y }; }
 
-    //’†S‚Ìƒ[ƒ‹ƒhÀ•W‚ğæ“¾
+    //ï¿½ï¿½ï¿½Sï¿½Ìƒï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Wï¿½ï¿½æ“¾
     Vector2D GetCenterLocation()const { return Vector2D{ location.x + area.width / 2,location.y + area.width / 2 }; }
 
-    //‰E‰º‚Ìƒ[ƒ‹ƒhÀ•W‚ğæ“¾
+    //ï¿½Eï¿½ï¿½ï¿½Ìƒï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Wï¿½ï¿½æ“¾
     Vector2D GetMaxLocation()const { return Vector2D{ location.x + area.width,location.y + area.height }; }
 
-    //¶ã‚ÌƒXƒNƒŠ[ƒ“À•W‚ğæ“¾
+    //ï¿½ï¿½ï¿½ï¿½ÌƒXï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½æ“¾
     Vector2D GetMinScreenLocation()const { return Vector2D{ screenLocation.x ,screenLocation.y }; }
 
-    //’†S‚ÌƒXƒNƒŠ[ƒ“À•W‚ğæ“¾
+    //ï¿½ï¿½ï¿½Sï¿½ÌƒXï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½æ“¾
     Vector2D GetCenterScreenLocation()const { return Vector2D{ screenLocation.x + area.width / 2,screenLocation.y + area.width / 2 }; }
 
-    //‰E‰º‚ÌƒXƒNƒŠ[ƒ“À•W‚ğæ“¾
+    //ï¿½Eï¿½ï¿½ï¿½ÌƒXï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½æ“¾
     Vector2D GetMaxScreenLocation()const { return Vector2D{ screenLocation.x + area.width,screenLocation.y + area.height }; }
 
 private:
-    //lŠp‚Æ‚Ì“–‚½‚è”»’è
+    //ï¿½lï¿½pï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
     bool HitBox(const BoxCollision* collision)const override;
 
-    //‰~‚Æ‚Ì“–‚½‚è”»’è
+    //ï¿½~ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
     bool HitSphere(const SphereCollision* collision)const override;
 };

@@ -14,26 +14,26 @@ private:
 	int damage_color;
 	int attack_color;
 
+	Vector2D attack_range[2];
+
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	NormalEnemy();
 
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~NormalEnemy();
 
-	//‰Šú‰»ŠÖ”
+	//åˆæœŸåŒ–å‡¦ç†
 	void Initialize();
 
-	//XV
+	//æ›´æ–°å‡¦ç†
 	void Update(GameMainScene* object)override;
 
-	//•`‰æ
+	//æç”»æ›´æ–°å‡¦ç†
 	void Draw()const override;
 
-	//ˆÚ“®ˆ—
+	//Enemyã®å‹•ã
 	void Movement();
 
-	//ƒ{ƒbƒNƒX‚Ì’†S’l‚ðŽæ“¾
-	float BoxCenter();
+	void AttackRange();
 };
-
