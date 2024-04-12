@@ -1,7 +1,7 @@
 #pragma once
 #include"../CharaBase.h"
 
-#define MAX_ENEMY_SPEED -1.5
+#define ENEMY_SPEED -1.5
 #define ATTACK_FORM_RANGE_X 150
 #define ATTACK_FORM_RANGE_Y 50
 
@@ -15,6 +15,7 @@ private:
 	int attack_color;
 
 	Vector2D attack_range[2];
+	Vector2D attack_censer[2];
 
 public:
 	//コンストラクタ
@@ -32,8 +33,13 @@ public:
 	//描画更新処理
 	void Draw()const override;
 
-	//Enemyの動き
-	void Movement();
+	//パトロール関数
+	void EnemyPatrol(GameMainScene* player);
 
+	//攻撃範囲
 	void AttackRange();
+
+	//プレイヤーを発見するためのセンサー
+	void DiscoveryPlayer();
+
 };
