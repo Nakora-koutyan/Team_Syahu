@@ -42,4 +42,6 @@ public:
 	//プレイヤーを発見するためのセンサー
 	void DiscoveryPlayer();
 
+	//プレイヤーにダメージを与える処理
+	float GiveDamage(GameMainScene* player_hp);
 };

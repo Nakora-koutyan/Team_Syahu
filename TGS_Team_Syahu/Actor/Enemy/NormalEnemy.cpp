@@ -96,3 +96,11 @@ void NormalEnemy::DiscoveryPlayer()
 	attack_censer[0] = { GetMinLocation().x - 100.f,GetCenterLocation().y };
 	attack_censer[1] = { GetMaxLocation().x + 100.f,GetCenterLocation().y };
 }
+
+float NormalEnemy::GiveDamage(GameMainScene* player_hp)
+{
+	if (isHit == true)
+	{
+
+	}
+}
