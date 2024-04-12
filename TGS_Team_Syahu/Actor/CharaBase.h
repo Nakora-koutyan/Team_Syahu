@@ -45,6 +45,9 @@ public:
 	//HPを取得
 	float GetHp()const { return hp; }
 
+	//HPを設定
+	void SetHp(const float hp) { this->hp = hp; }
+
 	//ダメージを取得
 	float GetDamage()const { return damage; }
 

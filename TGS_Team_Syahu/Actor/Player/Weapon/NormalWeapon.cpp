@@ -54,3 +54,11 @@ void NormalWeapon::Attack(const Player* player)
 
 	location.y = player->GetCenterLocation().y;
 }
+
+void NormalWeapon::Hit(GameMainScene* object)
+{
+	if (HitCheck(object->GetNormalEnemy()))
+	{
+		object->GetNormalEnemy()->SetHp(object->GetNormalEnemy()->GetHp() - object->GetPlayer()->GetDamage());
+	}
+}

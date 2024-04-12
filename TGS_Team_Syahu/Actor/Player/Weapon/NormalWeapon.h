@@ -26,5 +26,8 @@ public:
 
 	//攻撃
 	void Attack(const Player* player);
+
+	//ダメージ処理
+	void Hit(GameMainScene* object);
 };
 
