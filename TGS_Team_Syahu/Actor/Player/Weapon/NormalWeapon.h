@@ -1,7 +1,7 @@
 #pragma once
-#include"../../Collision/Sphere/SphereCollision.h"
+#include"../../../Collision/Sphere/SphereCollision.h"
 
-#define NORMAL_WEAPON_ATTACK_TIME	FPS * 0.5f		//UŒ‚ŠÔ
+#define NORMAL_WEAPON_ATTACK_TIME	FPS * 0.5f		//ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 class GameMainScene;
 class Player;
@@ -9,22 +9,22 @@ class Player;
 class NormalWeapon :public SphereCollision
 {
 private:
-	int framCount;			//ƒtƒŒ[ƒ€ƒJƒEƒ“ƒg
+	int framCount;			//ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½g
 
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 	NormalWeapon();
 
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 	~NormalWeapon();
 
-	//XV
+	//ï¿½Xï¿½V
 	void Update(GameMainScene* object);
 
-	//•`‰æ
+	//ï¿½`ï¿½ï¿½
 	void Draw()const;
 
-	//UŒ‚
+	//ï¿½Uï¿½ï¿½
 	void Attack(const Player* player);
 };
 

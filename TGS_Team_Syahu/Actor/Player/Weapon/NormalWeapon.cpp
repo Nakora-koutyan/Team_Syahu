@@ -1,6 +1,6 @@
 #include"NormalWeapon.h"
-#include"../../Scene/GameMain/GameMainScene.h"
-#include"../../Actor/Player/Player.h"
+#include"../../../Scene/GameMain/GameMainScene.h"
+#include"../../../Actor/Player/Player.h"
 
 NormalWeapon::NormalWeapon()
 {
