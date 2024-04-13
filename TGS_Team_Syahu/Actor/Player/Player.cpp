@@ -7,9 +7,11 @@ Player::Player()
 {
 	location = { 300.f,GROUND_LINE + area.height };
 	area = { 100.f,100.f };
+	direction = { 1.f,0.f };
+	damage = 10.f;
 
-	weaponSlot = Ability::Empty;
 	normalWeapon = new NormalWeapon();
+	steal = new Steal();
 
 	guardCount = 0;
 
@@ -18,8 +20,11 @@ Player::Player()
 	parryFram = 0;
 
 	guardCoolTime = 0.f;
+	normalWeaponCoolTime = 0.f;
+	stealCoolTime = 0.f;
 
 	isGuard = false;
+	isSteal = false;
 	guardCoolTimeFlg = false;
 	parryFlg = false;
 }
@@ -27,6 +32,7 @@ Player::Player()
 Player::~Player()
 {
 	delete normalWeapon;
+	delete steal;
 }
 
 void Player::Update(GameMainScene* object)
@@ -46,9 +52,13 @@ void Player::Update(GameMainScene* object)
 
 	Movement();
 
-	Action();
+	Attack();
+
+	Guard();
 
 	normalWeapon->Update(object);
+
+	steal->Update(object);
 
 	Hit(object);
 
@@ -66,65 +76,48 @@ void Player::Draw() const
 		isGuard ? parryFlg ? 0x00ff00 : 0x0000ff : 0xffff00, FALSE
 	);
 
-	DrawFormatString(0, 0, 0xff0000, "%f", hp);
-	DrawFormatString(0, 40, 0xff0000, "%f", guardCoolTime);
-	DrawFormatString(0, 10, 0xff0000, "%s", parryFlg ? "true" : "false");
-	DrawFormatString(0, 20, 0xff0000, "direction x:%f y:%f", direction.x,direction.y);
+	DrawFormatString(0, 0, 0xff0000, "hp :%f", hp);
+	DrawFormatString(0, 15, 0xff0000, "parryFlg :%s", parryFlg ? "true" : "false");
+	DrawFormatString(0, 30, 0xff0000, "direction x:%f y:%f", direction.x,direction.y);
 
 #endif // DEBUG
 
-	if (isAttack)
+	if (normalWeapon->GetIsShow())
 	{
 		normalWeapon->Draw();
+	}
+
+	if (steal->GetIsShow())
+	{
+		steal->Draw();
 	}
 }
 
 void Player::Hit(GameMainScene* object)
 {
-	if (isHit)
-	{
-		//PLAYER_DAMAGE_INTERVALの時間無敵
-		if (framCount % PLAYER_DAMAGE_INTERVAL == 0)
-		{
-			isHit = false;
-		}
-	}
+	DamageInterval(PLAYER_DAMAGE_INTERVAL);
 
 	//雑魚的に当たったら
-	if (HitCheck(object->GetNormalEnemy()))
+	if (object->GetNormalEnemy() != nullptr && HitCheck(object->GetNormalEnemy()))
 	{
 		//すでに当たってないなら
 		if (!isHit)
 		{
-			//ダメージ用のカウントを計測する
-			damageFramCount++;
-
-			//PLAYER_PARRY_FLAME以内にガードできたらかつパリィしていないなら
-			if (damageFramCount <= PLAYER_PARRY_FLAME && 
-				(KeyInput::GetKey(KEY_INPUT_LSHIFT) || PadInput::OnPressed(XINPUT_BUTTON_LEFT_SHOULDER) || PadInput::OnPressed(XINPUT_BUTTON_RIGHT_SHOULDER)) && 
-				!parryFlg)
+			Damage(object);
+		}
+		else
+		{
+			if (GetCenterLocation().x < object->GetNormalEnemy()->GetCenterLocation().x)
 			{
-				parryFlg = true;
+				vector.x = -PLAYER_KNOCKBACK;
+				location.x += vector.x;
+			}
+			else
+			{
+				vector.x = PLAYER_KNOCKBACK;
+				location.x += vector.x;
 			}
 
-			//パリィできなかったら
-			if (damageFramCount > PLAYER_PARRY_FLAME && !parryFlg)
-			{
-				isHit = true;
-
-				//ガードしていないなら
-				if (!isGuard)
-				{
-					hp -= object->GetNormalEnemy()->GetDamage();
-				}
-				//ガードしているなら
-				else
-				{
-					hp -= object->GetNormalEnemy()->GetDamage() * PLAYER_DAMAGE_CUT;
-				}
-				//0にする
-				damageFramCount = 0;
-			}
 		}
 	}
 }
@@ -132,8 +125,10 @@ void Player::Hit(GameMainScene* object)
 void Player::Movement()
 {
 	//右へ移動
-	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) && !isGuard && !isAttack)
+	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) &&
+		!isGuard && !isSteal && !isHit)
 	{
+		//最高速度は超えない
 		if (vector.x < PLAYER_MAX_MOVE_SPEED)
 		{
 			if (isAir)
@@ -147,10 +142,16 @@ void Player::Movement()
 
 			direction.x = 1.f;
 		}
+		else
+		{
+			vector.x = PLAYER_MAX_MOVE_SPEED;
+		}
 	}
 	//左へ移動
-	else if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) && !isGuard && !isAttack)
+	else if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) &&
+		!isGuard && !isSteal && !isHit)
 	{
+		//最高速度は超えない
 		if (vector.x > -PLAYER_MAX_MOVE_SPEED)
 		{
 			if (isAir)
@@ -164,6 +165,10 @@ void Player::Movement()
 
 			direction.x = -1.f;
 		}
+		else
+		{
+			vector.x = -PLAYER_MAX_MOVE_SPEED;
+		}
 	}
 	//停止
 	else
@@ -172,13 +177,16 @@ void Player::Movement()
 	}
 
 	//ジャンプ
-	if ((KeyInput::GetKey(KEY_INPUT_SPACE) || KeyInput::GetKey(KEY_INPUT_W) || PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isGuard && !isAttack)
+	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
+		KeyInput::GetKey(KEY_INPUT_W) ||
+		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isGuard && !isHit)
 	{
 		vector.y = -JUMP_POWER;
 		isAir = true;
 		direction.y = -1.f;
 	}
 
+	//下に落ちているなら
 	if (vector.y > 0)
 	{
 		direction.y = 1.f;
@@ -221,10 +229,49 @@ void Player::Movement()
 	}
 }
 
-void Player::Action()
+void Player::Attack()
+{
+	//通常攻撃をしているなら
+	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) ||
+		PadInput::OnPressed(XINPUT_BUTTON_B)) && normalWeaponCoolTime <= 0.f)
+	{
+		isAttack = true;
+		//能力を持っていないなら
+		if (abilityType == Ability::Empty)
+		{
+			normalWeaponCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
+			normalWeapon->Attack(this);
+			isAttack = false;
+		}
+	}
+
+	normalWeaponCoolTime--;
+
+	//奪う攻撃をしているなら
+	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) || PadInput::OnPressed(XINPUT_BUTTON_Y)) && 
+		stealCoolTime <= 0.f)
+	{
+		isAttack = true;
+		isSteal = true;
+		stealCoolTime = PLAYER_STEAL_COOLTIME;
+		steal->Attack(this);
+		isAttack = false;
+	}
+
+	if (!steal->GetIsShow())
+	{
+		isSteal = false;
+	}
+
+	stealCoolTime--;
+}
+
+void Player::Guard()
 {
 	//ガードしているなら
-	if ((KeyInput::GetKeyDown(KEY_INPUT_LSHIFT) || PadInput::OnPressed(XINPUT_BUTTON_LEFT_SHOULDER) || PadInput::OnPressed(XINPUT_BUTTON_RIGHT_SHOULDER)) && guardCoolTime <= 0.f)
+	if ((KeyInput::GetKeyDown(KEY_INPUT_LSHIFT) ||
+		PadInput::OnPressed(XINPUT_BUTTON_LEFT_SHOULDER) ||
+		PadInput::OnPressed(XINPUT_BUTTON_RIGHT_SHOULDER)) && guardCoolTime <= 0.f)
 	{
 		isGuard = true;
 		guardCount = 1;
@@ -254,31 +301,39 @@ void Player::Action()
 			guardCoolTimeFlg = false;
 		}
 	}
+}
 
-	//攻撃しているなら
-	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnPressed(XINPUT_BUTTON_B)))
+void Player::Damage(GameMainScene* object)
+{
+	//ダメージ用のカウントを計測する
+	damageFramCount++;
+
+	//PLAYER_PARRY_FLAME以内にガードできたらかつパリィしていないなら
+	if (damageFramCount <= PLAYER_PARRY_FLAME &&
+		(KeyInput::GetKey(KEY_INPUT_LSHIFT) ||
+			PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER) ||
+			PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER)) &&
+		!parryFlg)
 	{
-		isAttack = true;
-		if (abilityType == Ability::Empty)
+		parryFlg = true;
+	}
+
+	//パリィできなかったら
+	if (damageFramCount > PLAYER_PARRY_FLAME && !parryFlg)
+	{
+		isHit = true;
+
+		//ガードしていないなら
+		if (!isGuard)
 		{
-			normalWeapon->Attack(this);
+			hp -= object->GetNormalEnemy()->GetDamage();
 		}
+		//ガードしているなら
+		else
+		{
+			hp -= object->GetNormalEnemy()->GetDamage() * PLAYER_DAMAGE_CUT;
+		}
+		//0にする
+		damageFramCount = 0;
 	}
-	//攻撃していないなら
-	else
-	{
-		//isAttack = false;
-	}
-
-	//奪う攻撃をしているなら
-	if ((KeyInput::GetKeyDown(KEY_INPUT_E) || PadInput::OnPressed(XINPUT_BUTTON_Y)))
-	{
-
-	}
-	//奪う攻撃をしていないなら
-	else
-	{
-
-	}
-
 }

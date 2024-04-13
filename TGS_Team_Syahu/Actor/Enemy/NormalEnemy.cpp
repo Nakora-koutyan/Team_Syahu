@@ -24,6 +24,8 @@ void NormalEnemy::Initialize()
 	
 	area = { 90.f,90.f };
 	location = { 1200,GROUND_LINE - area.height };
+	isShow = true;
+	abilityType = Ability::Slashing;	//かり
 
 	attack_range[0] = { GetCenterLocation() };
 	attack_range[1] = { GetCenterLocation() };
@@ -49,14 +51,16 @@ void NormalEnemy::Update(GameMainScene* object)
 	//プレイヤーにダメージを与える処理
 	GiveDamage(object);
 
+	DamageInterval(60);
+
 	if (attack_range[0].x < object->GetPlayer()->GetMaxLocation().x &&
 		attack_range[1].x > object->GetPlayer()->GetMinLocation().x)
 	{
-		isHit = true;
+		isAttack = true;
 	}
 	else
 	{
-		isHit = false;
+		isAttack = false;
 	}
 }
 
@@ -68,7 +72,7 @@ void NormalEnemy::Draw() const
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
-		isHit ? attack_color : usual_color, TRUE, 1.0f
+		isAttack ? attack_color : isHit ? 0xff0000 : usual_color, TRUE, 1.0f
 	);
 	//攻撃範囲表示
 	DrawBoxAA
@@ -91,7 +95,10 @@ void NormalEnemy::EnemyPatrol(GameMainScene* player)
 		vector.x = -ENEMY_SPEED;
 	}
 
-	location.x += vector.x;
+	if (!player->GetPlayer()->GetParryFlg())
+	{
+		location.x += vector.x;
+	}
 }
 
 //攻撃範囲

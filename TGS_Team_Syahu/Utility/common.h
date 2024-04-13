@@ -8,7 +8,7 @@
 #define WORLD_WIDTH		2560				//ワールドの横幅
 #define WORLD_HEIGHT	1440				//ワールドの縦幅
 
-#define GROUND_LINE		630 * 2				//地面
+#define GROUND_LINE		WORLD_HEIGHT - 100	//地面
 #define _USE_MATH_DEFINES
 #include<math.h>
 

@@ -28,10 +28,6 @@ public:
     //描画
     void Draw()const override;
 
-private:
-    //デバッグステージ
-    void DebugStage()const;
-
 public:
     //プレイヤーオブジェクトの取得
     Player* GetPlayer()const { return player; }

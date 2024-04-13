@@ -7,6 +7,8 @@ CharaBase::CharaBase()
 
 	abilityType = Ability::Empty;
 
+	framCount = 0;
+
 	hp = 100.f;
 	damage = 10.f;
 
@@ -19,4 +21,20 @@ CharaBase::CharaBase()
 CharaBase::~CharaBase()
 {
 
+}
+
+void CharaBase::DamageInterval(const int interval)
+{
+	framCount++;
+
+	//当たっているなら
+	if (isHit)
+	{
+		//intervalの時間無敵
+		if (framCount % interval == 0)
+		{
+			//無敵解除
+			isHit = false;
+		}
+	}
 }

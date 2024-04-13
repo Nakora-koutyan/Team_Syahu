@@ -21,6 +21,8 @@ protected:
 
 	Ability abilityType;		//能力の種類
 
+	int framCount;				//フレーム計測用
+
 	float hp;					//HP
 	float damage;				//ダメージ
 
@@ -51,6 +53,18 @@ public:
 	//ダメージを取得
 	float GetDamage()const { return damage; }
 
+	//当たっているかどうかを取得
+	bool GetIsHit()const { return isHit; }
+
+	//当たっているかどうかを設定
+	void SetIsHit(const bool flg) { isHit = flg; }
+
+	//表示フラグを取得
+	bool GetIsShow()const { return isShow; }
+
+	//表示フラグを設定
+	void SetIsShow(const bool flg) { isShow = flg; }
+
 	//攻撃中かどうかを取得
 	bool GetIsAttack()const { return isAttack; }
 
@@ -60,8 +74,14 @@ public:
 	//方向の取得
 	Vector2D GetDirection()const { return direction; }
 
-protected:
 	//能力の種類を取得
-	Ability GetAbilityType() { return abilityType; }
+	Ability GetAbilityType()const { return abilityType; }
+
+	//能力の種類を設定
+	void SetAbilityType(const Ability ability) { abilityType = ability; }
+
+protected:
+	//ダメージのインターバルを設定
+	void DamageInterval(const int interval);
 	
 };

@@ -1,40 +1,32 @@
-#include"NormalWeapon.h"
+#include "Steal.h"
 #include"../../../Scene/GameMain/GameMainScene.h"
 #include"../../../Actor/Player/Player.h"
 
-NormalWeapon::NormalWeapon()
+Steal::Steal()
 {
 	location = { 300.f,GROUND_LINE + radius };
-	radius = 30.f;
+	radius = 50.f;
 
 	direction = 0;
 
 	framCount = 0;
 
 	isShow = false;
+
 }
 
-NormalWeapon::~NormalWeapon()
+Steal::~Steal()
 {
 
 }
 
-void NormalWeapon::Update(GameMainScene* object)
+void Steal::Update(GameMainScene* object)
 {
 	if (isShow)
 	{
 		framCount++;
 
 		Hit(object);
-
-		if (direction < 0)
-		{
-			location.x -= NORMAL_WEAPON_SPEED;
-		}
-		else
-		{
-			location.x += NORMAL_WEAPON_SPEED;
-		}
 	}
 	else
 	{
@@ -43,7 +35,7 @@ void NormalWeapon::Update(GameMainScene* object)
 	}
 
 	//攻撃時間を超えたら
-	if (framCount > NORMAL_WEAPON_ATTACK_TIME)
+	if (framCount > STEAL_ATTACK_TIME)
 	{
 		framCount = 0;
 		direction = 0;
@@ -53,12 +45,12 @@ void NormalWeapon::Update(GameMainScene* object)
 	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
 }
 
-void NormalWeapon::Draw() const
+void Steal::Draw() const
 {
-	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0xff0000, TRUE);
+	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0x00ff00, TRUE);
 }
 
-void NormalWeapon::Attack(const Player* player)
+void Steal::Attack(const Player* player)
 {
 	//出現させる
 	isShow = true;
@@ -79,23 +71,41 @@ void NormalWeapon::Attack(const Player* player)
 	//まだ方向が決まってないなら
 	if (direction == 0)
 	{
-		direction =player->GetDirection().x;
+		//プレイヤーの方向情報を保持する
+		direction = player->GetDirection().x;
 	}
+
 }
 
-void NormalWeapon::Hit(GameMainScene* object)
+void Steal::Hit(GameMainScene* object)
 {
 	if (isShow)
 	{
 		if (object->GetNormalEnemy() != nullptr &&
 			HitCheck(object->GetNormalEnemy()) && object->GetNormalEnemy()->GetIsShow())
 		{
-			object->GetNormalEnemy()->SetHp(object->GetNormalEnemy()->GetHp() - object->GetPlayer()->GetDamage());
-			object->GetNormalEnemy()->SetIsHit(true);
+			StealAttack(object->GetNormalEnemy(), object->GetPlayer());
 
 			framCount = 0;
 			direction = 0;
-			isShow = false;
+			//isShow = false;
+		}
+	}
+}
+
+void Steal::StealAttack(CharaBase* enemy, Player* player)
+{
+	enemy->SetHp(enemy->GetHp() - player->GetDamage());
+	enemy->SetIsHit(true);
+
+	//HPが0以下なら
+	if (enemy->GetHp() <= 0.f)
+	{
+		//能力の種類が空ではないなら
+		if (enemy->GetAbilityType() != Ability::Empty)
+		{
+			//敵の能力をプレイヤーの能力にする
+			player->SetAbilityType(enemy->GetAbilityType());
 		}
 	}
 }
