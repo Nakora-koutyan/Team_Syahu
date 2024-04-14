@@ -79,7 +79,7 @@ void NormalWeapon::Attack(const Player* player)
 	//まだ方向が決まってないなら
 	if (direction == 0)
 	{
-		direction =player->GetDirection().x;
+		direction =(short)player->GetDirection().x;
 	}
 }
 

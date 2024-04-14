@@ -72,7 +72,7 @@ void Steal::Attack(const Player* player)
 	if (direction == 0)
 	{
 		//プレイヤーの方向情報を保持する
-		direction = player->GetDirection().x;
+		direction = (short)player->GetDirection().x;
 	}
 
 }
