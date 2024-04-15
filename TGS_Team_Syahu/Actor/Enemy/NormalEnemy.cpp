@@ -88,7 +88,7 @@ void NormalEnemy::Draw() const
 	DrawFormatStringF(500.f, 550.f, GetColor(255, 0, 255), "%f", GetMinLocation().x);
 	
 	//プレイヤーを発見した場合、「！」を表示する
-	if (isHit == true)
+	if (isAttack == true)
 	{
 		DrawGraphF
 		(
