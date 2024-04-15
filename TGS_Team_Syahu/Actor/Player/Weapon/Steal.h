@@ -1,13 +1,12 @@
 #pragma once
-#include"../../../Collision/Sphere/SphereCollision.h"
+#include "../../../Collision/Sphere/SphereCollision.h"
 
-#define NORMAL_WEAPON_ATTACK_TIME	FPS * 0.5f		//通常攻撃の時間
-#define NORMAL_WEAPON_SPEED				15.f		//弾の速さ
+#define STEAL_ATTACK_TIME	FPS * 0.5		//奪う攻撃の時間
 
 class GameMainScene;
 class Player;
 
-class NormalWeapon :public SphereCollision
+class Steal :public SphereCollision
 {
 private:
 	short direction;		//方向
@@ -18,10 +17,10 @@ private:
 
 public:
 	//コンストラクタ
-	NormalWeapon();
+	Steal();
 
 	//デストラクタ
-	~NormalWeapon();
+	~Steal();
 
 	//更新
 	void Update(GameMainScene* object);
@@ -37,5 +36,9 @@ public:
 
 	//表示フラグを取得
 	bool GetIsShow()const { return isShow; }
-};
 
+private:
+	//奪う攻撃
+	void StealAttack(class CharaBase* enemy, Player* player);
+
+};

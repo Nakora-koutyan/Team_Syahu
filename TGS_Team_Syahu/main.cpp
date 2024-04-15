@@ -3,50 +3,53 @@
 #include"Utility/common.h"
 
 /************************************************
-* �v���O�����̊J�n
+* プログラムの開始
 *************************************************/
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine, int nCmdShow)
 {
-	double nextTime = GetNowCount();	//�V�X�e�����Ԃ̎擾
+	double nextTime = GetNowCount();	//システム時間の取得
 
-	//�^�C�g��
+	//Log.txtを作成しない
+	SetOutApplicationLogValidFlag(FALSE);
+
+	//タイトル
 	SetMainWindowText("");
 
-	//�E�B���h�E���[�h�ŋN��
-	ChangeWindowMode(TRUE);	
+	//ウィンドウモードで起動
+	ChangeWindowMode(TRUE);
 
-	//��ɃA�N�e�B�u��Ԃɂ���
+	//常にアクティブ状態にする
 	//SetAlwaysRunFlag(TRUE);	
 
-	//��ʃT�C�Y�̐ݒ�
-	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);	
+	//画面サイズの設定
+	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);
 
-	//DX���C�u�����̏���������
-	if (DxLib_Init() == -1)return -1;	
+	//DXライブラリの初期化処理
+	if (DxLib_Init() == -1)return -1;
 
-	//�`���𗠂ɂ���
-	SetDrawScreen(DX_SCREEN_BACK);		
+	//描画先を裏にする
+	SetDrawScreen(DX_SCREEN_BACK);
 
-	//�w�i�̐F��D�F�ɂ���
+	//背景の色を灰色にする
 	SetBackgroundColor(128, 128, 128);
 
-	//�}�E�X�J�[�\�����ʒ����ɐݒ�
+	//マウスカーソルを画面中央に設定
 	SetMousePoint(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
-	//�}�E�X�J�[�\����\�����Ȃ�
+	//マウスカーソルを表示しない
 	SetMouseDispFlag(FALSE);
 
 	try
 	{
 		SceenManager* sceenManager = new SceenManager(dynamic_cast<SceneBase*>(new GameMainScene()));
 
-		//�Q�[�����[�v
+		//ゲームループ
 		while ((ProcessMessage() == 0) &&
 			sceenManager->Update() != nullptr &&
 			!(CheckHitKey(KEY_INPUT_ESCAPE)))
 
-		{	//��ʂ̏�����
+		{	//画面の初期化
 			ClearDrawScreen();
 
 			KeyInput::Update();
@@ -56,7 +59,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 			sceenManager->Draw();
 
 
-			nextTime += 1.0 / 60.0 * 1000.0;		//�t���[�����[�g�̐ݒ�{�~���P�ʂɍ��킹��
+			nextTime += 1.0 / 60.0 * 1000.0;		//フレームレートの設定＋ミリ単位に合わせる
 
 			if (nextTime > GetNowCount())
 			{
@@ -67,7 +70,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				nextTime = GetNowCount();
 			}
 
-			//����ʂ̓�e��\��ʂɔ��f
+			//裏画面の内容を表画面に反映
 			ScreenFlip();
 		}
 	}
@@ -78,8 +81,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return -1;
 	}
 
-	//DX���C�u�����g�p�̏I������
-	DxLib_End();		
+	//DXライブラリ使用の終了処理
+	DxLib_End();
 
 	return 0;
 }

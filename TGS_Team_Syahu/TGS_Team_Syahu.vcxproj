@@ -32,6 +32,7 @@
     <ClCompile Include="SceneManager\SceneManager.cpp" />
     <ClCompile Include="Scene\GameMain\GameMainScene.cpp" />
     <ClCompile Include="Collision\Sphere\SphereCollision.cpp" />
+    <ClCompile Include="Actor\Player\Weapon\Steal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Camera\Camera.h" />
@@ -47,6 +48,7 @@
     <ClInclude Include="Scene\GameMain\GameMainScene.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Collision\Sphere\SphereCollision.h" />
+    <ClInclude Include="Actor\Player\Weapon\Steal.h" />
     <ClInclude Include="Utility\Area.h" />
     <ClInclude Include="Utility\common.h" />
     <ClInclude Include="Utility\Vector2D.h" />
