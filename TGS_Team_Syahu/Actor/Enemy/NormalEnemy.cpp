@@ -55,7 +55,7 @@ void NormalEnemy::Update(GameMainScene* object)
 	//プレイヤーにダメージを与える処理
 	//GiveDamage(object);
 
-	DamageInterval(60);
+	DamageInterval(FPS * 2);
 
 	if (attack_range[0].x < object->GetPlayer()->GetMaxLocation().x &&
 		attack_range[1].x > object->GetPlayer()->GetMinLocation().x)

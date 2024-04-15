@@ -1,5 +1,6 @@
 #include"SphereCollision.h"
 #include"../Box/BoxCollision.h"
+#include"../Line/LineCollision.h"
 
 SphereCollision::SphereCollision()
 {
@@ -105,6 +106,57 @@ bool SphereCollision::HitBox(const BoxCollision* collision) const
 						}
 					}
 				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+bool SphereCollision::HitLine(const LineCollision* collision) const
+{
+	bool ret = false;		//返り値
+
+	Vector2D sphereLoc = location;
+	float sphereR = radius;
+
+	Vector2D lineLoc = collision->GetLocation();
+	Vector2D lineVec = collision->GetDirectionVector();
+
+	//始点から中心点へのベクトル
+	Vector2D vec1 = Vec2DSub(sphereLoc, lineLoc);
+	//始点から中心点へのベクトルの大きさ
+	float magnitudeVec1 = sqrtf(vec1.x * vec1.x + vec1.y * vec1.y);
+
+	//終点から中心点へのベクトル
+	Vector2D vec2 = Vec2DSub(sphereLoc, Vec2DAdd(lineLoc, lineVec));
+	//終点から中心点へのベクトルの大きさ
+	float magnitudeVec2 = sqrtf(vec2.x * vec2.x + vec2.y * vec2.y);
+
+	//線分のベクトルの大きさ
+	float magnitudeSegment = sqrtf(lineVec.x * lineVec.x + lineVec.y * lineVec.y);
+	//線分のベクトルの正規化
+	Vector2D identity = {};
+	identity.x = lineVec.x / magnitudeSegment;
+	identity.y = lineVec.y / magnitudeSegment;
+
+	//中心点と線分の距離
+	float length = identity.x * vec1.y - vec1.x * identity.y;
+
+	//中心点から線分までの距離が半径以下なら
+	if (length <= sphereR)
+	{
+		//鈍角なら
+		if (Vec2Dot(vec1, lineVec) * Vec2Dot(vec2, lineVec) <= 0)
+		{
+			ret = true;
+		}
+		else
+		{
+			//始点から中心点へのベクトルや終点から中心点へのベクトルの長さが半径よりも短いなら
+			if (sphereR > magnitudeVec1 || sphereR > magnitudeVec2)
+			{
+				ret = true;
 			}
 		}
 	}

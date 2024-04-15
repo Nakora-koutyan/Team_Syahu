@@ -7,11 +7,13 @@ enum class CollisionType
 {
 	Empty = 0,		//空
 	Box,			//四角
-	Sphere			//円
+	Sphere,			//円
+	Line
 };
 
 class BoxCollision;
 class SphereCollision;
+class LineCollision;
 
 class CollisionBase
 {
@@ -55,6 +57,9 @@ protected:
 
 	//円の当たり判定
 	virtual bool HitSphere(const SphereCollision* collision)const = 0;
+
+	//線の当たり判定
+	virtual bool HitLine(const LineCollision* collision)const = 0;
 
 };
 

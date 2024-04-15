@@ -1,5 +1,6 @@
 #include"BoxCollision.h"
 #include"../Sphere/SphereCollision.h"
+#include"../Line/LineCollision.h"
 
 BoxCollision::BoxCollision()
 {
@@ -112,6 +113,45 @@ bool BoxCollision::HitSphere(const SphereCollision* collision) const
 					}
 				}
 			}
+		}
+	}
+
+	return ret;
+}
+
+bool BoxCollision::HitLine(const LineCollision* collision) const
+{
+	bool ret = false;		//返り値
+
+	LineCollision* segment[4] = {};
+
+	Vector2D min = location;
+	Vector2D max = { location.x + area.width,location.y + area.height };
+	Area area = { this->area.width,this->area.height };
+
+	//上
+	segment[0]->SetLocation(min);
+	segment[0]->SetDirectionVector({ area.width,0.f });
+
+	//左
+	segment[1]->SetLocation(min);
+	segment[1]->SetDirectionVector({ 0.f,area.height });
+
+	//右
+	segment[2]->SetLocation({ max.x,min.y });
+	segment[2]->SetDirectionVector({ 0.f,area.height });
+
+	//下
+	segment[3]->SetLocation({ min.x,max.y });
+	segment[3]->SetDirectionVector({ area.width,0.f });
+
+	for (int i = 0; i < 3; i++)
+	{
+		//四辺のいずれかと交差していたら
+		if (collision->HitLine(segment[i]))
+		{
+			ret = true;
+			break;
 		}
 	}
 

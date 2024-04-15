@@ -1,6 +1,7 @@
 #include"CollisionBase.h"
 #include"Box/BoxCollision.h"
 #include"Sphere/SphereCollision.h"
+#include"Line/LineCollision.h"
 
 CollisionBase::CollisionBase()
 {
@@ -37,6 +38,11 @@ bool CollisionBase::HitCheck(const CollisionBase* collision) const
 	//円
 	case CollisionType::Sphere:
 		ret = HitSphere(static_cast<const SphereCollision*>(collision));
+		break;
+	//線
+	case CollisionType::Line:
+		ret = HitLine(static_cast<const LineCollision*>(collision));
+		break;
 
 	//デフォルト
 	default:

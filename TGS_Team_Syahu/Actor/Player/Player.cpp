@@ -37,13 +37,11 @@ Player::~Player()
 
 void Player::Update(GameMainScene* object)
 {
-	framCount++;
-
 	if (parryFlg)
 	{
 		parryFram++;
-		//2秒後に再度パリィ可能
-		if (parryFram > FPS * 2)
+		//PLAYER_PARRY_TIME後に再度パリィ可能
+		if (parryFram > PLAYER_PARRY_TIME)
 		{
 			parryFlg = false;
 			parryFram = 0;
@@ -73,7 +71,7 @@ void Player::Draw() const
 	(
 		GetMinScreenLocation().x, GetMinScreenLocation().y,
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
-		isGuard ? parryFlg ? 0x00ff00 : 0x0000ff : 0xffff00, FALSE
+		isGuard ? parryFlg ? 0x00ff00 : 0x0000ff : isHit ? 0xff0000 : 0xffff00, FALSE
 	);
 
 	DrawFormatString(0, 0, 0xff0000, "hp :%f", hp);
@@ -97,6 +95,17 @@ void Player::Hit(GameMainScene* object)
 {
 	DamageInterval(PLAYER_DAMAGE_INTERVAL);
 
+	if (isKnockBack)
+	{
+		knockBackCount++;
+		location.x += vector.x;
+		if (knockBackCount > PLAYER_KNOCKBACK_TIME)
+		{
+			isKnockBack = false;
+			knockBackCount = 0;
+		}
+	}
+
 	//雑魚的に当たったら
 	if (object->GetNormalEnemy() != nullptr && HitCheck(object->GetNormalEnemy()))
 	{
@@ -104,20 +113,6 @@ void Player::Hit(GameMainScene* object)
 		if (!isHit)
 		{
 			Damage(object);
-		}
-		else
-		{
-			if (GetCenterLocation().x < object->GetNormalEnemy()->GetCenterLocation().x)
-			{
-				vector.x = -PLAYER_KNOCKBACK;
-				location.x += vector.x;
-			}
-			else
-			{
-				vector.x = PLAYER_KNOCKBACK;
-				location.x += vector.x;
-			}
-
 		}
 	}
 }
@@ -173,7 +168,7 @@ void Player::Movement()
 	//停止
 	else
 	{
-		vector.x = 0.f;
+		if (!isKnockBack)vector.x = 0.f;
 	}
 
 	//ジャンプ
@@ -327,6 +322,15 @@ void Player::Damage(GameMainScene* object)
 		if (!isGuard)
 		{
 			hp -= object->GetNormalEnemy()->GetDamage();
+			isKnockBack = true;
+			if (GetCenterLocation().x < object->GetNormalEnemy()->GetCenterLocation().x)
+			{
+				vector.x = -PLAYER_KNOCKBACK;
+			}
+			else
+			{
+				vector.x = PLAYER_KNOCKBACK;
+			}
 		}
 		//ガードしているなら
 		else

@@ -20,12 +20,15 @@ public:
     //半径を設定
     void SetRadius(const float radius) { this->radius = radius; }
 
-private:
+public:
     //円の当たり判定
     bool HitSphere(const SphereCollision* collision)const override;
 
     //四角の当たり判定
     bool HitBox(const BoxCollision* collision)const override;
+
+    //線の当たり判定
+    bool HitLine(const LineCollision* collision)const override;
 
 };
 

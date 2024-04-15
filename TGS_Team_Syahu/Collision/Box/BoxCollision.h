@@ -1,5 +1,5 @@
 #pragma once
-#include "../CollisionBase.h"
+#include"../CollisionBase.h"
 #include"../../Utility/common.h"
 
 class BoxCollision :public CollisionBase
@@ -39,10 +39,13 @@ public:
     //スクリーン座標の右下を取得
     Vector2D GetMaxScreenLocation()const { return Vector2D{ screenLocation.x + area.width,screenLocation.y + area.height }; }
 
-private:
+public:
     //四角の当たり判定
     bool HitBox(const BoxCollision* collision)const override;
 
     //円の当たり判定
     bool HitSphere(const SphereCollision* collision)const override;
+
+    //線の当たり判定
+    bool HitLine(const LineCollision* collision)const override;
 };

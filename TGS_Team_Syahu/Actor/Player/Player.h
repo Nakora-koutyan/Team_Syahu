@@ -8,10 +8,12 @@
 #define PLAYER_DAMAGE_INTERVAL			FPS * 1			//プレイヤーが再度ダメージを受けるまでの時間
 #define PLAYER_DAMAGE_CUT				1.f - 0.25f		//ガード中のダメージ
 #define PLAYER_PARRY_FLAME				4				//パリィの猶予フレーム
+#define PLAYER_PARRY_TIME				FPS * 2			//パリィの効果時間
 #define	PLAYER_GUARD_COOLTIME			FPS * 0.4		//ガードのクールタイム
 #define PLAYER_NORMALWEAPON_COOLTIME	FPS * 1.f		//通常攻撃のクールタイム
 #define PLAYER_STEAL_COOLTIME			FPS * 1.2f		//奪うのクールタイム
-#define PLAYER_KNOCKBACK				35.f				//ノックバック
+#define PLAYER_KNOCKBACK				7.f				//ノックバックの移動距離/f
+#define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
 
 class Player :public CharaBase
 {
