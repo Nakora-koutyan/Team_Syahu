@@ -3,9 +3,9 @@
 #include "../Player/Player.h"
 
 //コンストラクタ
-NormalEnemy::NormalEnemy():enemy_color(0),damage_color(0),attack_color(0),usual_color(0),attack_range{},attack_censer{}
+NormalEnemy::NormalEnemy():enemy_color(0),damage_color(0),attack_color(0),usual_color(0),
+attack_range{},attack_censer{},hp(100),find_mark(NULL)
 {
-
 }
 
 //デストラクタ
@@ -30,6 +30,10 @@ void NormalEnemy::Initialize()
 
 	attack_censer[0] = { GetCenterLocation() };
 	attack_censer[1] = { GetCenterLocation() };
+
+	find_mark = LoadGraph("Resource/Images/Exclamation.png");
+
+	hp = 100;
 }
 
 //描画以外の内容を更新
@@ -47,7 +51,7 @@ void NormalEnemy::Update(GameMainScene* object)
 	DiscoveryPlayer();
 
 	//プレイヤーにダメージを与える処理
-	GiveDamage(object);
+	//GiveDamage(object);
 
 	if (attack_range[0].x < object->GetPlayer()->GetMaxLocation().x &&
 		attack_range[1].x > object->GetPlayer()->GetMinLocation().x)
@@ -77,20 +81,31 @@ void NormalEnemy::Draw() const
 		attack_range[1].x,attack_range[1].y + 45,
 		GetColor(255,0,255),FALSE,1.f
 	);
+	DrawFormatStringF(500.f, 550.f, GetColor(255, 0, 255), "%f", GetMinLocation().x);
+	
+	//プレイヤーを発見した場合、「！」を表示する
+	if (isHit == true)
+	{
+		DrawGraphF
+		(
+			screenLocation.x + 75, screenLocation.y - 30,
+			find_mark, TRUE
+		);
+	}
 }
 
 //プレイヤーのいる方向に向かう
 void NormalEnemy::EnemyPatrol(GameMainScene* player)
 {
-	if (player->GetPlayer()->GetCenterLocation().x < location.x)
+	if (player->GetPlayer()->GetMaxLocation().x + 25 < location.x)
 	{
 		vector.x = ENEMY_SPEED;
 	}
-	else if (player->GetPlayer()->GetCenterLocation().x >= location.x)
+	else if (player->GetPlayer()->GetMinLocation().x - 125 > location.x)
 	{
 		vector.x = -ENEMY_SPEED;
 	}
-
+	
 	location.x += vector.x;
 }
 

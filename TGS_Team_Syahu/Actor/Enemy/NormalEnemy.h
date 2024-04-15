@@ -5,7 +5,7 @@
 #define ATTACK_FORM_RANGE_X 150
 #define ATTACK_FORM_RANGE_Y 50
 
-#define GIVE_DAMAGE		10.f			//プレイヤーへ与えるダメ―ジ
+#define GIVE_DAMAGE		10.f			//プレイヤーへ与えるダメ―ジad
 
 class NormalEnemy :public CharaBase
 {
@@ -17,6 +17,7 @@ private:
 	int attack_color;	//攻撃時の色(確認用)
 
 	int hp;				//自身のHP
+	int find_mark;		//プレイヤーを発見した際に出現する画像
 
 	Vector2D attack_range[2];
 	Vector2D attack_censer[2];
