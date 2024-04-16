@@ -14,6 +14,7 @@
 #define PLAYER_STEAL_COOLTIME			FPS * 1.2f		//奪うのクールタイム
 #define PLAYER_KNOCKBACK				7.f				//ノックバックの移動距離/f
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
+#define PLAYER_ABILITY_TIME				FPS * 5			//奪った能力の使用時間
 
 class Player :public CharaBase
 {
@@ -25,13 +26,15 @@ private:
 
 	int damageFramCount;			//ダメージを受けた時のカウント
 	int parryFram;					//パリィの入力フレーム
+	int abilityFramCount;			//能力のカウント用
 
 	float guardCoolTime;			//ガードのクールタイム
 	float normalWeaponCoolTime;		//通常攻撃のクールタイム
 	float stealCoolTime;			//奪うのクールタイム
 
 	bool isGuard;					//ガード中？
-	bool isSteal;					//奪うをした？
+	bool stealFlg;					//奪った？
+	bool isEquipment;				//装備中？
 	bool guardCoolTimeFlg;			//ガードのクールタイムのフラグ
 	bool parryFlg;					//パリィフラグ
 
@@ -51,6 +54,12 @@ public:
 public:
 	//パリィフラグを取得
 	bool GetParryFlg()const { return parryFlg; }
+
+	//奪ったかどうかを取得
+	bool GetStealFlg()const { return stealFlg; }
+
+	//奪ったかどうかを設定
+	void SetStealFlg(const bool flg) { stealFlg = flg; }
 
 private:
 	//当たり判定

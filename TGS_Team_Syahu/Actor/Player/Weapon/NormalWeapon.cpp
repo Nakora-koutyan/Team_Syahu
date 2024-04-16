@@ -48,6 +48,7 @@ void NormalWeapon::Update(GameMainScene* object)
 		framCount = 0;
 		direction = 0;
 		isShow = false;
+		object->GetPlayer()->SetIsAttack(false);
 	}
 
 	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
@@ -88,7 +89,8 @@ void NormalWeapon::Hit(GameMainScene* object)
 	if (isShow)
 	{
 		if (object->GetNormalEnemy() != nullptr &&
-			HitCheck(object->GetNormalEnemy()) && object->GetNormalEnemy()->GetIsShow())
+			HitCheck(object->GetNormalEnemy()) && object->GetNormalEnemy()->GetIsShow() &&
+			!object->GetNormalEnemy()->GetIsHit())
 		{
 			object->GetNormalEnemy()->SetHp(object->GetNormalEnemy()->GetHp() - object->GetPlayer()->GetDamage());
 			object->GetNormalEnemy()->SetIsHit(true);

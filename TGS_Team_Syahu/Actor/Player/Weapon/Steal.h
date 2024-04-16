@@ -1,7 +1,8 @@
 #pragma once
 #include "../../../Collision/Sphere/SphereCollision.h"
+#include"../../CharaBase.h"
 
-#define STEAL_ATTACK_TIME	FPS * 0.5		//奪う攻撃の時間
+#define STEAL_ATTACK_TIME	FPS * 0.1		//奪う攻撃の時間
 
 class GameMainScene;
 class Player;
@@ -9,6 +10,8 @@ class Player;
 class Steal :public SphereCollision
 {
 private:
+	Ability keepType;		//能力の保存用
+
 	short direction;		//方向
 
 	int framCount;			//フレームカウント
@@ -36,6 +39,9 @@ public:
 
 	//表示フラグを取得
 	bool GetIsShow()const { return isShow; }
+
+	//能力の保存用を取得
+	Ability GetKeepType()const { return keepType; }
 
 private:
 	//奪う攻撃

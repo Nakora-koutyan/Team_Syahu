@@ -24,16 +24,16 @@ bool LineCollision::HitLine(const LineCollision* collision) const
 	Vector2D argVec = collision->GetDirectionVector();
 
 	//ベクトルを求める
-	Vector2D v = Vec2DSub(argLoc, location);
+	Vector2D v = Vec2DSub(argLoc, this->location);
 
-	float crossVec = Vec2Cross(location, argLoc);
+	float crossVec = Vec2Cross(this->location, argLoc);
 	if (crossVec == 0.f)
 	{
 		//平行状態
 		ret = false;
 	}
 
-	float crossDirectV1 = Vec2Cross(v, directionVector);
+	float crossDirectV1 = Vec2Cross(v, this->directionVector);
 	float crossDirectV2 = Vec2Cross(v, argVec);
 
 	//内分比
@@ -60,28 +60,28 @@ bool LineCollision::HitBox(const BoxCollision* collision) const
 	Vector2D max = collision->GetMaxLocation();
 	Area area = collision->GetArea();
 
-	LineCollision* segment[4] = {};
+	LineCollision segment[4] = {};
 
 	//上
-	segment[0]->SetLocation(min);
-	segment[0]->SetDirectionVector({ area.width,0.f });
+	segment[0].SetLocation(min);
+	segment[0].SetDirectionVector({ area.width,0.f });
 
 	//左
-	segment[1]->SetLocation(min);
-	segment[1]->SetDirectionVector({ 0.f,area.height });
+	segment[1].SetLocation(min);
+	segment[1].SetDirectionVector({ 0.f,area.height });
 
 	//右
-	segment[2]->SetLocation({ max.x,min.y });
-	segment[2]->SetDirectionVector({ 0.f,area.height });
+	segment[2].SetLocation({ max.x,min.y });
+	segment[2].SetDirectionVector({ 0.f,area.height });
 
 	//下
-	segment[3]->SetLocation({ min.x,max.y });
-	segment[3]->SetDirectionVector({ area.width,0.f });
+	segment[3].SetLocation({ min.x,max.y });
+	segment[3].SetDirectionVector({ area.width,0.f });
 
 	for (int i = 0; i < 3; i++)
 	{
 		//四辺のいずれかと交差していたら
-		if (collision->HitLine(segment[i]))
+		if (collision->HitLine(&segment[i]))
 		{
 			ret = true;
 			break;

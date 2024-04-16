@@ -7,6 +7,8 @@ Steal::Steal()
 	location = { 300.f,GROUND_LINE + radius };
 	radius = 50.f;
 
+	keepType = Ability::Empty;
+
 	direction = 0;
 
 	framCount = 0;
@@ -40,6 +42,7 @@ void Steal::Update(GameMainScene* object)
 		framCount = 0;
 		direction = 0;
 		isShow = false;
+		object->GetPlayer()->SetIsAttack(false);
 	}
 
 	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
@@ -82,13 +85,13 @@ void Steal::Hit(GameMainScene* object)
 	if (isShow)
 	{
 		if (object->GetNormalEnemy() != nullptr &&
-			HitCheck(object->GetNormalEnemy()) && object->GetNormalEnemy()->GetIsShow())
+			HitCheck(object->GetNormalEnemy()) && object->GetNormalEnemy()->GetIsShow() &&
+			!object->GetNormalEnemy()->GetIsHit())
 		{
 			StealAttack(object->GetNormalEnemy(), object->GetPlayer());
 
 			framCount = 0;
 			direction = 0;
-			//isShow = false;
 		}
 	}
 }
@@ -98,14 +101,14 @@ void Steal::StealAttack(CharaBase* enemy, Player* player)
 	enemy->SetHp(enemy->GetHp() - player->GetDamage());
 	enemy->SetIsHit(true);
 
-	//HPが0以下なら
-	if (enemy->GetHp() <= 0.f)
+	//能力の種類が空ではないなら
+	if (enemy->GetAbilityType() != Ability::Empty)
 	{
-		//能力の種類が空ではないなら
-		if (enemy->GetAbilityType() != Ability::Empty)
-		{
-			//敵の能力をプレイヤーの能力にする
-			player->SetAbilityType(enemy->GetAbilityType());
-		}
+		//敵の能力を奪う
+		keepType = enemy->GetAbilityType();
+		//敵は無能力になる
+		enemy->SetAbilityType(Ability::Empty);
+		
+		player->SetStealFlg(true);
 	}
 }
