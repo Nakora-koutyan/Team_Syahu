@@ -26,6 +26,7 @@ Player::Player()
 
 	isGuard = false;
 	stealFlg = false;
+	isEquipment = false;
 	guardCoolTimeFlg = false;
 	parryFlg = false;
 }
@@ -241,7 +242,7 @@ void Player::Attack()
 		PadInput::OnPressed(XINPUT_BUTTON_X)) && normalWeaponCoolTime <= 0.f)
 	{
 		//能力を持っているなら
-		if (stealFlg)
+		if (stealFlg && abilityType == Ability::Empty)
 		{		
 			isAttack = true;
 			normalWeaponCoolTime = PLAYER_NORMALWEAPON_COOLTIME;

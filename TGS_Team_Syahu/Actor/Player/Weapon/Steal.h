@@ -1,13 +1,15 @@
 #pragma once
 #include "../../../Collision/Sphere/SphereCollision.h"
+#include "../../../Collision/Line/LineCollision.h"
 #include"../../CharaBase.h"
 
 #define STEAL_ATTACK_TIME	FPS * 0.1		//奪う攻撃の時間
+#define STEAL_DISTANCE		20				//プレイヤーから奪うを出す距離
 
 class GameMainScene;
 class Player;
 
-class Steal :public SphereCollision
+class Steal :public LineCollision
 {
 private:
 	Ability keepType;		//能力の保存用

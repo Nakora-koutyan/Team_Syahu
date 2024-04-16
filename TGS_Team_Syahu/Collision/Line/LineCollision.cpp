@@ -26,7 +26,7 @@ bool LineCollision::HitLine(const LineCollision* collision) const
 	//ベクトルを求める
 	Vector2D v = Vec2DSub(argLoc, this->location);
 
-	float crossVec = Vec2Cross(this->location, argLoc);
+	float crossVec = Vec2Cross(this->directionVector, argVec);
 	if (crossVec == 0.f)
 	{
 		//平行状態
@@ -78,10 +78,10 @@ bool LineCollision::HitBox(const BoxCollision* collision) const
 	segment[3].SetLocation({ min.x,max.y });
 	segment[3].SetDirectionVector({ area.width,0.f });
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		//四辺のいずれかと交差していたら
-		if (collision->HitLine(&segment[i]))
+		if (HitLine(&segment[i]))
 		{
 			ret = true;
 			break;

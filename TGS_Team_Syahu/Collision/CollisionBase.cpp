@@ -39,6 +39,7 @@ bool CollisionBase::HitCheck(const CollisionBase* collision) const
 	case CollisionType::Sphere:
 		ret = HitSphere(static_cast<const SphereCollision*>(collision));
 		break;
+
 	//線
 	case CollisionType::Line:
 		ret = HitLine(static_cast<const LineCollision*>(collision));

@@ -1,12 +1,13 @@
 #include "Steal.h"
 #include"../../../Scene/GameMain/GameMainScene.h"
 #include"../../../Actor/Player/Player.h"
+#include"../../../Utility/common.h"
 
 Steal::Steal()
 {
-	location = { 300.f,GROUND_LINE + radius };
-	radius = 50.f;
-
+	location = { 0.f,0.f };
+	directionVector = { 70.f ,-70.f };
+	
 	keepType = Ability::Empty;
 
 	direction = 0;
@@ -14,7 +15,6 @@ Steal::Steal()
 	framCount = 0;
 
 	isShow = false;
-
 }
 
 Steal::~Steal()
@@ -50,7 +50,10 @@ void Steal::Update(GameMainScene* object)
 
 void Steal::Draw() const
 {
-	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0x00ff00, TRUE);
+	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
+		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
+		0x00ff00, 1);
+
 }
 
 void Steal::Attack(const Player* player)
@@ -61,13 +64,17 @@ void Steal::Attack(const Player* player)
 	//右に出す
 	if (player->GetDirection().x > 0)
 	{
-		location.x = player->GetMaxLocation().x + radius;
+		location.x = player->GetMaxLocation().x + STEAL_DISTANCE;
+
+		directionVector.x = 70.f;
 	}
 	//左に出す
 	else
 	{
-		location.x = player->GetMinLocation().x - radius;
-	}
+		location.x = player->GetMinLocation().x - STEAL_DISTANCE;
+	
+		directionVector.x = -70.f;
+	}		
 
 	location.y = player->GetCenterLocation().y;
 
