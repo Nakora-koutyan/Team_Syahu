@@ -32,6 +32,7 @@ private:
 
 	bool isGuard;					//ガード中？
 	bool isSteal;					//奪うをした？
+	bool stealFlg;					//奪った？
 	bool guardCoolTimeFlg;			//ガードのクールタイムのフラグ
 	bool parryFlg;					//パリィフラグ
 
@@ -51,6 +52,18 @@ public:
 public:
 	//パリィフラグを取得
 	bool GetParryFlg()const { return parryFlg; }
+
+	//奪うをしたかどうか取得
+	bool GetIsSteal()const { return isSteal; }
+
+	//奪うをしたかどうかを設定
+	void SetIsSteal(const bool flg) { isSteal = flg; }
+
+	//奪ったかどうかを取得
+	bool GetStealFlg()const { return stealFlg; }
+
+	//奪ったかどうかを設定
+	void SetStealFlg(const bool flg) { stealFlg = flg; }
 
 private:
 	//当たり判定
