@@ -1,7 +1,9 @@
 #pragma once
 #include"../CharaBase.h"
 
-#define ENEMY_SPEED -1.5
+#define ENEMY_SPEED 1.5f
+#define RUSH_DIAMETER 2.f
+
 #define ATTACK_FORM_RANGE_X 150
 #define ATTACK_FORM_RANGE_Y 50
 
