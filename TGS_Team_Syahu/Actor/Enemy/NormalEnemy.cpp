@@ -62,7 +62,7 @@ void NormalEnemy::Update(GameMainScene* object)
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
-	DamageInterval(60);
+	DamageInterval(FPS * 2);
 
 	//エネミーの移動
 	EnemyPatrol(object);
