@@ -28,7 +28,7 @@ void NormalEnemy::Initialize()
 	enemy_color = usual_color;
 	
 	//サイズ{ x , y }
-	area = { 90.f,90.f };
+	area = { 45.f,45.f };
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
@@ -99,7 +99,7 @@ void NormalEnemy::Draw() const
 		{
 			DrawGraphF
 			(
-				screenLocation.x + 75, screenLocation.y - 30,
+				screenLocation.x + 25, screenLocation.y - 30,
 				isAttack ? angry_mark:find_mark, TRUE
 			);
 		}
@@ -119,25 +119,25 @@ void NormalEnemy::EnemyPatrol(GameMainScene* player)
 {
 	if (player->GetPlayer()->GetCenterLocation().x < location.x)
 	{
-		if (isChase == true)
+		if (isAttack == true)
 		{
-			vector.x = (ENEMY_SPEED * 1.5);
+			vector.x = -(ENEMY_SPEED * RUSH_DIAMETER);
 		}
 		else
 		{
-			vector.x = ENEMY_SPEED;
+			vector.x = -ENEMY_SPEED;
 		}
 		direction = DIRECTION_LEFT;
 	}
 	else if (player->GetPlayer()->GetCenterLocation().x > location.x)
 	{
-		if (isChase == true)
+		if (isAttack == true)
 		{
-			vector.x =  -(ENEMY_SPEED * 1.5);
+			vector.x = (ENEMY_SPEED * RUSH_DIAMETER);
 		}
 		else
 		{
-			vector.x = -ENEMY_SPEED;
+			vector.x = ENEMY_SPEED;
 		}
 		direction = DIRECTION_RIGHT;
 	}
@@ -152,8 +152,8 @@ void NormalEnemy::EnemyPatrol(GameMainScene* player)
 //攻撃範囲
 void NormalEnemy::AttackRange()
 {
-	attack_range[0] = { GetMinLocation().x - 45.f,GetCenterLocation().y };
-	attack_range[1] = { GetMaxLocation().x + 45.f , GetCenterLocation().y };
+	attack_range[0] = { GetMinLocation().x - 300.f,GetCenterLocation().y };
+	attack_range[1] = { GetMaxLocation().x + 300.f , GetCenterLocation().y };
 }
 
 //戦闘態勢に入る範囲
