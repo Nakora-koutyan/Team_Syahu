@@ -26,6 +26,7 @@
     <ClCompile Include="Collision\CollisionBase.cpp" />
     <ClCompile Include="InputControl\Key\KeyInput.cpp" />
     <ClCompile Include="InputControl\Pad\PadInput.cpp" />
+    <ClCompile Include="Collision\Line\LineCollision.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Actor\Enemy\NormalEnemy.cpp" />
     <ClCompile Include="Actor\Player\Weapon\NormalWeapon.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="InputControl\Pad\PadInput.h" />
     <ClInclude Include="Actor\Enemy\NormalEnemy.h" />
     <ClInclude Include="Actor\Player\Weapon\NormalWeapon.h" />
+    <ClInclude Include="Collision\Line\LineCollision.h" />
     <ClInclude Include="SceneManager\SceneManager.h" />
     <ClInclude Include="Scene\GameMain\GameMainScene.h" />
     <ClInclude Include="Scene\SceneBase.h" />

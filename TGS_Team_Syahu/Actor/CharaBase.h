@@ -22,6 +22,7 @@ protected:
 	Ability abilityType;		//能力の種類
 
 	int framCount;				//フレーム計測用
+	int knockBackCount;			//ノックバック用のカウント
 
 	float hp;					//HP
 	float damage;				//ダメージ
@@ -30,6 +31,7 @@ protected:
 	bool isHit;					//当たっている？
 	bool isShow;				//表示する？
 	bool isAttack;				//攻撃中？
+	bool isKnockBack;			//ノックバックする？
 
 public:
 	//コンストラクタ
