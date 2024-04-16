@@ -18,13 +18,13 @@ Player::Player()
 	framCount = 0;
 	damageFramCount = 0;
 	parryFram = 0;
+	abilityFramCount = 0;
 
 	guardCoolTime = 0.f;
 	normalWeaponCoolTime = 0.f;
 	stealCoolTime = 0.f;
 
 	isGuard = false;
-	isSteal = false;
 	stealFlg = false;
 	guardCoolTimeFlg = false;
 	parryFlg = false;
@@ -46,6 +46,15 @@ void Player::Update(GameMainScene* object)
 		{
 			parryFlg = false;
 			parryFram = 0;
+		}
+	}
+
+	if (stealFlg)
+	{
+		abilityFramCount++;
+		if (abilityFramCount > PLAYER_ABILITY_TIME)
+		{
+
 		}
 	}
 
@@ -74,7 +83,7 @@ void Player::Draw() const
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
 		isGuard ? parryFlg ? 0x00ff00 : 0x0000ff : isHit ? 0xff0000 : 0xffff00, FALSE
 	);
-
+	steal->Draw();
 	DrawFormatString(0, 0, 0xff0000, "hp :%f", hp);
 	DrawFormatString(0, 15, 0xff0000, "parryFlg :%s", parryFlg ? "true" : "false");
 	DrawFormatString(0, 30, 0xff0000, "direction x:%f y:%f", direction.x,direction.y);
@@ -254,7 +263,6 @@ void Player::Attack()
 		stealCoolTime <= 0.f)
 	{
 		isAttack = true;
-		isSteal = true;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;
 		steal->Attack(this);
 	}
