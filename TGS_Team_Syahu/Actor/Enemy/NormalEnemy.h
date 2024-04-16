@@ -5,7 +5,8 @@
 #define ATTACK_FORM_RANGE_X 150
 #define ATTACK_FORM_RANGE_Y 50
 
-#define GIVE_DAMAGE		10.f			//プレイヤーへ与えるダメ―ジad
+#define DIRECTION_LEFT 0
+#define DIRECTION_RIGHT 1
 
 class NormalEnemy :public CharaBase
 {
@@ -17,15 +18,20 @@ private:
 	int attack_color;	//攻撃時の色(確認用)
 
 	int hp;				//自身のHP
-	int find_mark;		//プレイヤーを発見した際に出現する画像
+
+	int direction;		//進行方向
+
+	bool isChase;		//追跡
 
 	Vector2D attack_range[2];
-	Vector2D attack_censer[2];
+	Vector2D chase_censer[2];		//0:左センサー	1:右センサー
+
+	int find_mark;		//プレイヤーを発見した際に出現する画像
+	int angry_mark;		//プレイヤーに攻撃する際の画像
 
 public:
 	//コンストラクタ
 	NormalEnemy();
-
 	//デストラクタ
 	~NormalEnemy();
 
@@ -34,19 +40,19 @@ public:
 
 	//更新処理
 	void Update(GameMainScene* object)override;
-
 	//描画更新処理
 	void Draw()const override;
 
 	//パトロール関数
 	void EnemyPatrol(GameMainScene* player);
-
 	//攻撃範囲
 	void AttackRange();
-
 	//プレイヤーを発見するためのセンサー
-	void DiscoveryPlayer();
+	void ChaseRange();
 
-	//プレイヤーにダメージを与える処理
-	float GiveDamage(GameMainScene* player_hp);
+	//追跡を行うか？
+	void ChaseToPlayer(GameMainScene* object);
+
+	//攻撃を行うか？
+	void AttackToPlayer(GameMainScene* object);
 };
