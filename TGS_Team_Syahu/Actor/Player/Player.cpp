@@ -1,13 +1,16 @@
 #include "Player.h"
-#include"../../Scene/GameMain/GameMainScene.h"
+#include"../Camera/Camera.h"
 
 #define DEBUG
 
 Player::Player()
 {
-	location = { 300.f,GROUND_LINE + area.height };
-	area = { 100.f,100.f };
-	direction = { 1.f,0.f };
+	location.x = 300.f;
+	location.y = GROUND_LINE;
+	area.width = 100.f;
+	area.height = 100.f;
+	direction.x = 1.f;
+	direction.y = 0.f;
 	damage = 10.f;
 
 	normalWeapon = new NormalWeapon();
@@ -37,7 +40,7 @@ Player::~Player()
 	delete steal;
 }
 
-void Player::Update(GameMainScene* object)
+void Player::Update()
 {
 	if (parryFlg)
 	{
@@ -59,19 +62,21 @@ void Player::Update(GameMainScene* object)
 		}
 	}
 
+	DamageInterval(PLAYER_DAMAGE_INTERVAL);
+
+	KnockBack(PLAYER_KNOCKBACK_TIME);
+
 	Movement();
 
 	Attack();
 
 	Guard();
 
-	normalWeapon->Update(object);
+	normalWeapon->Update(this);
 
-	steal->Update(object);
+	steal->Update(this);
 
-	Hit(object);
-
-	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
+	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void Player::Draw() const
@@ -102,29 +107,12 @@ void Player::Draw() const
 	}
 }
 
-void Player::Hit(GameMainScene* object)
+void Player::Hit(CharaBase* chara)
 {
-	DamageInterval(PLAYER_DAMAGE_INTERVAL);
-
-	if (isKnockBack)
+	//すでに当たってないなら
+	if (!isHit)
 	{
-		knockBackCount++;
-		location.x += vector.x;
-		if (knockBackCount > PLAYER_KNOCKBACK_TIME)
-		{
-			isKnockBack = false;
-			knockBackCount = 0;
-		}
-	}
-
-	//雑魚的に当たったら
-	if (object->GetNormalEnemy() != nullptr && HitCheck(object->GetNormalEnemy()))
-	{
-		//すでに当たってないなら
-		if (!isHit)
-		{
-			Damage(object);
-		}
+		Damage(chara);
 	}
 }
 
@@ -308,7 +296,7 @@ void Player::Guard()
 	}
 }
 
-void Player::Damage(GameMainScene* object)
+void Player::Damage(CharaBase* chara)
 {
 	//ダメージ用のカウントを計測する
 	damageFramCount++;
@@ -331,9 +319,9 @@ void Player::Damage(GameMainScene* object)
 		//ガードしていないなら
 		if (!isGuard)
 		{
-			hp -= object->GetNormalEnemy()->GetDamage();
+			hp -= chara->GetDamage();
 			isKnockBack = true;
-			if (GetCenterLocation().x < object->GetNormalEnemy()->GetCenterLocation().x)
+			if (GetCenterLocation().x < chara->GetCenterLocation().x)
 			{
 				vector.x = -PLAYER_KNOCKBACK;
 			}
@@ -345,7 +333,7 @@ void Player::Damage(GameMainScene* object)
 		//ガードしているなら
 		else
 		{
-			hp -= object->GetNormalEnemy()->GetDamage() * PLAYER_DAMAGE_CUT;
+			hp -= chara->GetDamage() * PLAYER_DAMAGE_CUT;
 		}
 		//0にする
 		damageFramCount = 0;

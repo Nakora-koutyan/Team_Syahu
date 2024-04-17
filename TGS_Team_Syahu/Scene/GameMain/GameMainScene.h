@@ -38,4 +38,8 @@ public:
     //雑魚敵オブジェクトの取得
     NormalEnemy* GetNormalEnemy()const { return enemy; }
 
+private:
+    //ヒットチェック
+    void HitCheck();
+
 };

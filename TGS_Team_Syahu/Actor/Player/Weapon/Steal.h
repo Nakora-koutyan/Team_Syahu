@@ -6,7 +6,6 @@
 #define STEAL_ATTACK_TIME	FPS * 0.1		//奪う攻撃の時間
 #define STEAL_DISTANCE		20				//プレイヤーから奪うを出す距離
 
-class GameMainScene;
 class Player;
 
 class Steal :public LineCollision
@@ -28,7 +27,7 @@ public:
 	~Steal();
 
 	//更新
-	void Update(GameMainScene* object);
+	void Update(Player* player);
 
 	//描画
 	void Draw()const;
@@ -36,8 +35,8 @@ public:
 	//攻撃
 	void Attack(const Player* player);
 
-	//当たり判定
-	void Hit(GameMainScene* object);
+	//当たった時の処理
+	void Hit(class CharaBase* enemy, Player* player);
 
 	//表示フラグを取得
 	bool GetIsShow()const { return isShow; }

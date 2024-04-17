@@ -2,8 +2,10 @@
 
 CharaBase::CharaBase()
 {
-	vector = { 0.f,0.f };
-	direction = { 0.f,0.f };
+	vector.x = 0.f;
+	vector.y = 0.f;
+	direction.x = 0.f;
+	direction.y = 0.f;
 
 	abilityType = Ability::Empty;
 
@@ -37,6 +39,20 @@ void CharaBase::DamageInterval(const int interval)
 		{
 			//無敵解除
 			isHit = false;
+		}
+	}
+}
+
+void CharaBase::KnockBack(const double time)
+{
+	if (isKnockBack)
+	{
+		knockBackCount++;
+		location.x += vector.x;
+		if (knockBackCount > time)
+		{
+			isKnockBack = false;
+			knockBackCount = 0;
 		}
 	}
 }

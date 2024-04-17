@@ -19,7 +19,7 @@
 class Player :public CharaBase
 {
 private:
-	NormalWeapon* normalWeapon;		//通常攻撃
+	NormalWeapon* normalWeapon;		//投げる
 	Steal* steal;					//奪う
 
 	short guardCount;				//ガードのカウント	0:していない 1:していた
@@ -46,12 +46,21 @@ public:
 	~Player();
 
 	//更新
-	void Update(GameMainScene* object)override;
+	void Update();
 
 	//描画
-	void Draw()const override;
+	void Draw()const;
+
+	//ヒット処理
+	void Hit(CharaBase* chara);
 
 public:
+	//投げるを取得
+	NormalWeapon* GetNormalWeapon()const { return normalWeapon; }
+
+	//奪うを取得
+	Steal* GetSteal()const { return steal; }
+
 	//パリィフラグを取得
 	bool GetParryFlg()const { return parryFlg; }
 
@@ -62,9 +71,6 @@ public:
 	void SetStealFlg(const bool flg) { stealFlg = flg; }
 
 private:
-	//当たり判定
-	void Hit(GameMainScene* object);
-
 	//移動
 	void Movement();
 
@@ -75,6 +81,6 @@ private:
 	void Guard();
 
 	//ダメージ
-	void Damage(GameMainScene* object);
+	void Damage(CharaBase* chara);
 
 };

@@ -4,10 +4,7 @@
 #include"../../../Utility/common.h"
 
 Steal::Steal()
-{
-	location = { 0.f,0.f };
-	directionVector = { 70.f ,-70.f };
-	
+{	
 	keepType = Ability::Empty;
 
 	direction = 0;
@@ -22,18 +19,16 @@ Steal::~Steal()
 
 }
 
-void Steal::Update(GameMainScene* object)
+void Steal::Update(Player* player)
 {
 	if (isShow)
 	{
 		framCount++;
 
-		Hit(object);
 	}
 	else
 	{
-		location = object->GetPlayer()->GetCenterLocation();
-		screenLocation = object->GetCamera()->ConvertScreenPosition(location);
+		location = player->GetCenterLocation();
 	}
 
 	//攻撃時間を超えたら
@@ -42,10 +37,10 @@ void Steal::Update(GameMainScene* object)
 		framCount = 0;
 		direction = 0;
 		isShow = false;
-		object->GetPlayer()->SetIsAttack(false);
+		player->SetIsAttack(false);
 	}
 
-	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
+	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void Steal::Draw() const
@@ -87,15 +82,13 @@ void Steal::Attack(const Player* player)
 
 }
 
-void Steal::Hit(GameMainScene* object)
+void Steal::Hit(CharaBase* enemy, Player* player)
 {
 	if (isShow)
 	{
-		if (object->GetNormalEnemy() != nullptr &&
-			HitCheck(object->GetNormalEnemy()) && object->GetNormalEnemy()->GetIsShow() &&
-			!object->GetNormalEnemy()->GetIsHit())
+		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			StealAttack(object->GetNormalEnemy(), object->GetPlayer());
+			StealAttack(enemy, player);
 
 			framCount = 0;
 			direction = 0;

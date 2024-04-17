@@ -1,10 +1,15 @@
 #include"Camera.h"
 #include"../../Scene/GameMain/GameMainScene.h"
 
+Vector2D Camera::cameraPosition;
+Vector2D Camera::screenPosition;
+
 Camera::Camera()
 {	
-	cameraPosition = { WORLD_WIDTH / 2.f,WORLD_HEIGHT / 2.f };
-	screenPosition = { SCREEN_WIDTH / 2.f,SCREEN_HEIGHT / 2.f };
+	cameraPosition.x = WORLD_WIDTH / 2.f;
+	cameraPosition.y = WORLD_HEIGHT / 2.f;
+	screenPosition.x = SCREEN_WIDTH / 2.f;
+	screenPosition.y = SCREEN_HEIGHT / 2.f;
 }
 
 Camera::~Camera()
@@ -12,10 +17,10 @@ Camera::~Camera()
 
 }
 
-void Camera::Update(GameMainScene* object)
+void Camera::Update(Vector2D location)
 {
 	//プレイヤーを追尾
-	cameraPosition = object->GetPlayer()->GetLocation();
+	cameraPosition = location;
 
 	//世界の左端を超えない
 	if (cameraPosition.x - SCREEN_WIDTH / 2.f <= 0.f)
@@ -48,14 +53,15 @@ void Camera::Draw() const
 Vector2D Camera::ConvertScreenPosition(const Vector2D location)
 {
 	//カメラの座標をスクリーンの座標に変換
-	Vector2D screenOriginPosition =
-	{
-		cameraPosition.x - SCREEN_WIDTH / 2.f,
-		cameraPosition.y - SCREEN_HEIGHT / 2.f
-	};
+	Vector2D screenOriginPosition = {};
+	screenOriginPosition.x = cameraPosition.x - SCREEN_WIDTH / 2.f;
+	screenOriginPosition.y = cameraPosition.y - SCREEN_HEIGHT / 2.f;
 
 	//ワールドの座標をスクリーンの座標に変換
-	Vector2D screenPosition = { location.x - screenOriginPosition.x, location.y - screenOriginPosition.y };
+	Vector2D screenPosition = {};
+	screenPosition.x = location.x - screenOriginPosition.x;
+	screenPosition.y = location.y - screenOriginPosition.y;
+
 
 	return screenPosition;
 }

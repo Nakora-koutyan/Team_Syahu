@@ -4,7 +4,8 @@
 
 BoxCollision::BoxCollision()
 {
-	area = { 0.f,0.f };
+	area.width = 0.f;
+	area.height = 0.f;
 
 	collisionType = CollisionType::Box;
 }
@@ -50,7 +51,9 @@ bool BoxCollision::HitSphere(const SphereCollision* collision) const
 	bool ret = false;		//返り値
 
 	Vector2D min = location;
-	Vector2D max = { location.x + area.width,location.y + area.height };
+	Vector2D max = {};
+	max.x = location.x + area.width;
+	max.y = location.y + area.height;
 
 	float sphereX = collision->GetLocation().x;
 	float sphereY = collision->GetLocation().y;
@@ -126,8 +129,12 @@ bool BoxCollision::HitLine(const LineCollision* collision) const
 	LineCollision segment[4] = {};
 
 	Vector2D min = location;
-	Vector2D max = { location.x + area.width,location.y + area.height };
-	Area area = { this->area.width,this->area.height };
+	Vector2D max = {};
+	max.x = location.x + area.width;
+	max.y = location.y + area.height;
+	Area area = {};
+	area.width = this->area.width;
+	area.height = this->area.height;
 
 	//上
 	segment[0].SetLocation(min);
