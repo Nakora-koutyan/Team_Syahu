@@ -121,11 +121,11 @@ void NormalEnemy::EnemyPatrol(Player* player)
 	{
 		if (isAttack == true)
 		{
-			vector.x = -(ENEMY_SPEED * RUSH_DIAMETER);
+			move.x = -(ENEMY_SPEED * RUSH_DIAMETER);
 		}
 		else
 		{
-			vector.x = -ENEMY_SPEED;
+			move.x = -ENEMY_SPEED;
 		}
 		direction = DIRECTION_LEFT;
 	}
@@ -133,11 +133,11 @@ void NormalEnemy::EnemyPatrol(Player* player)
 	{
 		if (isAttack == true)
 		{
-			vector.x = (ENEMY_SPEED * RUSH_DIAMETER);
+			move.x = (ENEMY_SPEED * RUSH_DIAMETER);
 		}
 		else
 		{
-			vector.x = ENEMY_SPEED;
+			move.x = ENEMY_SPEED;
 		}
 		direction = DIRECTION_RIGHT;
 	}
@@ -145,7 +145,7 @@ void NormalEnemy::EnemyPatrol(Player* player)
 	//パリィ状態でなければ進行する
 	if (!player->GetParryFlg())
 	{
-		location.x += vector.x;
+		location.x += move.x;
 	}
 }
 

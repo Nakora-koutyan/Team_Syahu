@@ -123,22 +123,22 @@ void Player::Movement()
 		!isGuard && !isHit)
 	{
 		//最高速度は超えない
-		if (vector.x < PLAYER_MAX_MOVE_SPEED)
+		if (move.x < PLAYER_MAX_MOVE_SPEED)
 		{
 			if (isAir)
 			{
-				vector.x += 0.5f;
+				move.x += 0.5f;
 			}
 			else
 			{
-				vector.x += PLAYER_MOVE_SPEED;
+				move.x += PLAYER_MOVE_SPEED;
 			}
 
 			direction.x = 1.f;
 		}
 		else
 		{
-			vector.x = PLAYER_MAX_MOVE_SPEED;
+			move.x = PLAYER_MAX_MOVE_SPEED;
 		}
 	}
 	//左へ移動
@@ -146,28 +146,28 @@ void Player::Movement()
 		!isGuard && !isHit)
 	{
 		//最高速度は超えない
-		if (vector.x > -PLAYER_MAX_MOVE_SPEED)
+		if (move.x > -PLAYER_MAX_MOVE_SPEED)
 		{
 			if (isAir)
 			{
-				vector.x += -0.5f;
+				move.x += -0.5f;
 			}
 			else
 			{
-				vector.x += -PLAYER_MOVE_SPEED;
+				move.x += -PLAYER_MOVE_SPEED;
 			}
 
 			direction.x = -1.f;
 		}
 		else
 		{
-			vector.x = -PLAYER_MAX_MOVE_SPEED;
+			move.x = -PLAYER_MAX_MOVE_SPEED;
 		}
 	}
 	//停止
 	else
 	{
-		if (!isKnockBack)vector.x = 0.f;
+		if (!isKnockBack)move.x = 0.f;
 	}
 
 	//ジャンプ
@@ -175,49 +175,49 @@ void Player::Movement()
 		KeyInput::GetKey(KEY_INPUT_W) ||
 		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isGuard && !isHit)
 	{
-		vector.y = -JUMP_POWER;
+		move.y = -JUMP_POWER;
 		isAir = true;
 		direction.y = -1.f;
 	}
 
 	//下に落ちているなら
-	if (vector.y > 0)
+	if (move.y > 0)
 	{
 		direction.y = 1.f;
 	}
 
 	//重力
-	vector.y += GRAVITY;
+	move.y += GRAVITY;
 
 	//座標に加算
-	location.x += vector.x;
-	location.y += vector.y;
+	location.x += move.x;
+	location.y += move.y;
 
 	//左端を超えない
 	if (GetMinLocation().x < 0.f)
 	{
 		location.x = 0.f;
-		vector.x = 0.f;
+		move.x = 0.f;
 	}
 	//右端を超えない
 	else if (GetMaxLocation().x > WORLD_WIDTH)
 	{
 		location.x = WORLD_WIDTH - area.width;
-		vector.x = 0.f;
+		move.x = 0.f;
 	}
 
 	//天井を超えない
 	if (GetMinLocation().y < 0.f)
 	{
 		location.y = 0.f;
-		vector.y = 0.f;
+		move.y = 0.f;
 	}
 
 	//地面を超えない
 	if (GetMaxLocation().y > GROUND_LINE)
 	{
 		location.y = GROUND_LINE - area.height;
-		vector.y = 0.f;
+		move.y = 0.f;
 		isAir = false;
 		direction = { direction.x,0.f };
 	}
@@ -323,11 +323,11 @@ void Player::Damage(CharaBase* chara)
 			isKnockBack = true;
 			if (GetCenterLocation().x < chara->GetCenterLocation().x)
 			{
-				vector.x = -PLAYER_KNOCKBACK;
+				move.x = -PLAYER_KNOCKBACK;
 			}
 			else
 			{
-				vector.x = PLAYER_KNOCKBACK;
+				move.x = PLAYER_KNOCKBACK;
 			}
 		}
 		//ガードしているなら

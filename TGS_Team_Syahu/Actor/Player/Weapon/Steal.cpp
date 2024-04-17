@@ -72,6 +72,7 @@ void Steal::Attack(const Player* player)
 	}		
 
 	location.y = player->GetCenterLocation().y;
+	directionVector.y = -70.f;
 
 	//まだ方向が決まってないなら
 	if (direction == 0)

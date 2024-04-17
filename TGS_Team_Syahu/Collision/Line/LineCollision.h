@@ -18,7 +18,7 @@ public:
 	Vector2D GetDirectionVector()const { return directionVector; }
 
 	//方向ベクトルを設定
-	void SetDirectionVector(const Vector2D vector) { directionVector = vector; }
+	void SetDirectionVector(const Vector2D move) { directionVector = move; }
 
 	//線分の終点を取得
 	Vector2D GetLineEnd()const { return { location.x + directionVector.x,location.y + directionVector.y }; }

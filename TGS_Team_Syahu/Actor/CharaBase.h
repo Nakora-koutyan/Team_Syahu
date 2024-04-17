@@ -16,7 +16,7 @@ class GameMainScene;
 class CharaBase :public BoxCollision
 {
 protected:
-	Vector2D vector;			//移動量
+	Vector2D move;				//移動量
 	Vector2D direction;			//方向
 
 	Ability abilityType;		//能力の種類

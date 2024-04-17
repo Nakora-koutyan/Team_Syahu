@@ -2,8 +2,8 @@
 
 CharaBase::CharaBase()
 {
-	vector.x = 0.f;
-	vector.y = 0.f;
+	move.x = 0.f;
+	move.y = 0.f;
 	direction.x = 0.f;
 	direction.y = 0.f;
 
@@ -48,7 +48,7 @@ void CharaBase::KnockBack(const double time)
 	if (isKnockBack)
 	{
 		knockBackCount++;
-		location.x += vector.x;
+		location.x += move.x;
 		if (knockBackCount > time)
 		{
 			isKnockBack = false;
