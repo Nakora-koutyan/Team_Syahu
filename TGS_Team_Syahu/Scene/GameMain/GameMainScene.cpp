@@ -83,9 +83,12 @@ void GameMainScene::HitCheck()
 		}
 
 		//雑魚敵と奪うが当たったら
-		if (player->GetSteal()->CollisionCheck(enemy))
+		for (int i = 0; i < STEAL_VALUE; i++)
 		{
-			player->GetSteal()->Hit(enemy, player);
+			if (player->GetSteal(i)->CollisionCheck(enemy))
+			{
+				player->GetSteal(i)->Hit(enemy, player);
+			}
 		}
 	}
 }

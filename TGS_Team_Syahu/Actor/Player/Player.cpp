@@ -14,7 +14,10 @@ Player::Player()
 	damage = 10.f;
 
 	normalWeapon = new NormalWeapon();
-	steal = new Steal();
+	for (int i = 0; i < STEAL_VALUE; i++)
+	{
+		steal[i] = new Steal();
+	}
 
 	guardCount = 0;
 
@@ -37,7 +40,10 @@ Player::Player()
 Player::~Player()
 {
 	delete normalWeapon;
-	delete steal;
+	for (int i = 0; i < STEAL_VALUE; i++)
+	{
+		delete steal[i];
+	}
 }
 
 void Player::Update()
@@ -73,8 +79,11 @@ void Player::Update()
 	Guard();
 
 	normalWeapon->Update(this);
-
-	steal->Update(this);
+	
+	for (int i = 0; i < STEAL_VALUE; i++)
+	{
+		steal[i]->Update(this);
+	}
 
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
@@ -89,7 +98,12 @@ void Player::Draw() const
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
 		isGuard ? parryFlg ? 0x00ff00 : 0x0000ff : isHit ? 0xff0000 : 0xffff00, FALSE
 	);
-	steal->Draw();
+
+	for (int i = 0; i < STEAL_VALUE; i++)
+	{
+		steal[i]->Draw();
+	}
+
 	DrawFormatString(0, 0, 0xff0000, "hp :%f", hp);
 	DrawFormatString(0, 15, 0xff0000, "parryFlg :%s", parryFlg ? "true" : "false");
 	DrawFormatString(0, 30, 0xff0000, "direction x:%f y:%f", direction.x,direction.y);
@@ -101,9 +115,12 @@ void Player::Draw() const
 		normalWeapon->Draw();
 	}
 
-	if (steal->GetIsShow())
+	for (int i = 0; i < STEAL_VALUE; i++)
 	{
-		steal->Draw();
+		if (steal[i]->GetIsShow())
+		{
+			steal[i]->Draw();
+		}
 	}
 }
 
@@ -244,7 +261,15 @@ void Player::Attack()
 	if (stealFlg &&
 		(KeyInput::GetKeyDown(KEY_INPUT_E) || PadInput::OnPressed(XINPUT_BUTTON_Y)))
 	{
-		abilityType = steal->GetKeepType();
+		for (int i = 0; i < STEAL_VALUE; i++)
+		{
+			if (steal[i]->GetKeepType() != Ability::Empty)
+			{
+				abilityType = steal[i]->GetKeepType();
+				steal[i]->SetKeepType(Ability::Empty);
+			}
+		}
+
 	}
 
 	//奪う攻撃をしているなら
@@ -253,7 +278,12 @@ void Player::Attack()
 	{
 		isAttack = true;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;
-		steal->Attack(this);
+		//真ん中
+		steal[0]->Attack(this, STEAL_DISTANCE - 10.f, 90.f, 90.f, 20.f);
+		//上
+		steal[1]->Attack(this, STEAL_DISTANCE - 10.f, 60.f, 60.f, 0.f);
+		//下
+		steal[2]->Attack(this, STEAL_DISTANCE + 10.f, 70.f, 70.f, 30.f);
 	}
 
 	stealCoolTime--;

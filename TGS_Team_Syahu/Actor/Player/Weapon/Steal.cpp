@@ -51,7 +51,7 @@ void Steal::Draw() const
 
 }
 
-void Steal::Attack(const Player* player)
+void Steal::Attack(const Player* player, const float distance, const float direX, const float direY, const float locY)
 {
 	//出現させる
 	isShow = true;
@@ -59,20 +59,20 @@ void Steal::Attack(const Player* player)
 	//右に出す
 	if (player->GetDirection().x > 0)
 	{
-		location.x = player->GetMaxLocation().x + STEAL_DISTANCE;
+		location.x = player->GetMaxLocation().x + distance;
 
-		directionVector.x = 70.f;
+		directionVector.x = direX;
 	}
 	//左に出す
 	else
 	{
-		location.x = player->GetMinLocation().x - STEAL_DISTANCE;
+		location.x = player->GetMinLocation().x - distance;
 	
-		directionVector.x = -70.f;
+		directionVector.x = -direX;
 	}		
 
-	location.y = player->GetCenterLocation().y;
-	directionVector.y = -70.f;
+	location.y = player->GetCenterLocation().y + locY;
+	directionVector.y = -direY;
 
 	//まだ方向が決まってないなら
 	if (direction == 0)
