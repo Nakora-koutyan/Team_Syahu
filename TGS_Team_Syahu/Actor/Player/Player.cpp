@@ -279,7 +279,7 @@ void Player::Attack()
 		isAttack = true;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;
 		//真ん中
-		steal[0]->Attack(this, STEAL_DISTANCE - 10.f, 90.f, 90.f, 20.f);
+		steal[0]->Attack(this, STEAL_DISTANCE - 20.f, 100.f, 100.f, 30.f);
 		//上
 		steal[1]->Attack(this, STEAL_DISTANCE - 10.f, 60.f, 60.f, 0.f);
 		//下
