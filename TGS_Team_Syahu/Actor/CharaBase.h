@@ -8,10 +8,10 @@
 enum class Ability
 {
 	Empty = 0,			//空
-	Slashing			//斬撃
+	LargeSword,			//大剣
+	Dagger,				//ダガー
+	Saber				//サーベル
 };
-
-class GameMainScene;
 
 class CharaBase :public BoxCollision
 {
@@ -67,6 +67,12 @@ public:
 
 	//攻撃中かどうかを設定
 	void SetIsAttack(const bool flg) { isAttack = flg; }
+
+	//ノックバックフラグを取得
+	bool GetIsKnockBack()const { return isKnockBack; }
+
+	//ノックバックフラグを設定
+	void SetIsKnockBack(const bool flg) { isKnockBack = flg; }
 
 	//方向の取得
 	Vector2D GetDirection()const { return direction; }
