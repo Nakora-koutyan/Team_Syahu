@@ -18,6 +18,7 @@ Player::Player()
 	{
 		steal[i] = new Steal();
 	}
+	largeSword = new LargeSword();
 
 	guardCount = 0;
 
@@ -27,7 +28,7 @@ Player::Player()
 	abilityFramCount = 0;
 
 	guardCoolTime = 0.f;
-	normalWeaponCoolTime = 0.f;
+	attackCoolTime = 0.f;
 	stealCoolTime = 0.f;
 
 	isGuard = false;
@@ -44,6 +45,7 @@ Player::~Player()
 	{
 		delete steal[i];
 	}
+	delete largeSword;
 }
 
 void Player::Update()
@@ -85,6 +87,8 @@ void Player::Update()
 		steal[i]->Update(this);
 	}
 
+	largeSword->Update(this);
+
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
@@ -99,29 +103,21 @@ void Player::Draw() const
 		isGuard ? parryFlg ? 0x00ff00 : 0x0000ff : isHit ? 0xff0000 : 0xffff00, FALSE
 	);
 
-	for (int i = 0; i < STEAL_VALUE; i++)
-	{
-		steal[i]->Draw();
-	}
-
 	DrawFormatString(0, 0, 0xff0000, "hp :%f", hp);
 	DrawFormatString(0, 15, 0xff0000, "parryFlg :%s", parryFlg ? "true" : "false");
 	DrawFormatString(0, 30, 0xff0000, "direction x:%f y:%f", direction.x,direction.y);
 
 #endif // DEBUG
 
-	if (normalWeapon->GetIsShow())
-	{
-		normalWeapon->Draw();
-	}
+	normalWeapon->Draw();
 
 	for (int i = 0; i < STEAL_VALUE; i++)
 	{
-		if (steal[i]->GetIsShow())
-		{
-			steal[i]->Draw();
-		}
+		steal[i]->Draw();
 	}
+
+	largeSword->Draw();
+
 }
 
 void Player::Hit(CharaBase* chara)
@@ -242,22 +238,34 @@ void Player::Movement()
 
 void Player::Attack()
 {
-	//通常攻撃をしているなら
+	//投げるまたは武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
-		PadInput::OnPressed(XINPUT_BUTTON_X)) && normalWeaponCoolTime <= 0.f)
+		PadInput::OnPressed(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f)
 	{
-		//能力を持っているなら
+		//能力を持っているないなら投げる
 		if (stealFlg && abilityType == Ability::Empty)
 		{		
 			isAttack = true;
-			normalWeaponCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
+			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
 			normalWeapon->Attack(this);
 			stealFlg = false;
 		}
+
+		//武器攻撃
+		if (abilityType != Ability::Empty)
+		{
+			if (abilityType == Ability::LargeSword)
+			{
+				isAttack = true;
+				attackCoolTime = PLAYER_LARGESWORD_COOLTIME;
+				largeSword->Attack(this);
+			}
+		}
 	}
 
-	normalWeaponCoolTime--;
+	attackCoolTime--;
 
+	//装備
 	if (stealFlg &&
 		(KeyInput::GetKeyDown(KEY_INPUT_E) || PadInput::OnPressed(XINPUT_BUTTON_Y)))
 	{
@@ -269,10 +277,10 @@ void Player::Attack()
 				steal[i]->SetKeepType(Ability::Empty);
 			}
 		}
-
+		stealFlg = false;
 	}
 
-	//奪う攻撃をしているなら
+	//奪う
 	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnPressed(XINPUT_BUTTON_B)) && 
 		stealCoolTime <= 0.f)
 	{

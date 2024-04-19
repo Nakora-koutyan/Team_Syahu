@@ -32,7 +32,7 @@ void NormalEnemy::Initialize()
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
-	abilityType = Ability::Slashing;	//かり
+	abilityType = Ability::LargeSword;	//かり
 
 	//攻撃範囲
 	attack_range[0] = { GetCenterLocation() };
@@ -64,6 +64,8 @@ void NormalEnemy::Update(Player* player)
 	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 2);
 
+	KnockBack(FPS * 1);
+
 	//エネミーの移動
 	EnemyPatrol(player);
 
@@ -88,7 +90,7 @@ void NormalEnemy::Draw() const
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
-		isAttack ? attack_color : isHit ? 0xff0000 : usual_color, TRUE, 1.0f
+		isHit ? 0xff0000 : isAttack ? attack_color : usual_color, TRUE, 1.0f
 	);
 	DrawFormatStringF(500.f, 550.f, GetColor(255, 0, 255), "%f", GetMinLocation().x);
 	

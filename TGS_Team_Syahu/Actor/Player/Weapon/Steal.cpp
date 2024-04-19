@@ -24,7 +24,6 @@ void Steal::Update(Player* player)
 	if (isShow)
 	{
 		framCount++;
-
 	}
 	else
 	{
@@ -80,7 +79,6 @@ void Steal::Attack(const Player* player, const float distance, const float direX
 		//プレイヤーの方向情報を保持する
 		direction = (short)player->GetDirection().x;
 	}
-
 }
 
 void Steal::Hit(CharaBase* enemy, Player* player)
