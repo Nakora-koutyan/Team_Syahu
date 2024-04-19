@@ -16,7 +16,7 @@ class GameMainScene;
 class CharaBase :public BoxCollision
 {
 protected:
-	Vector2D vector;			//移動量
+	Vector2D move;				//移動量
 	Vector2D direction;			//方向
 
 	Ability abilityType;		//能力の種類
@@ -40,12 +40,7 @@ public:
 	//デストラクタ
 	~CharaBase();
 
-	//更新
-	virtual void Update(GameMainScene* object) = 0;
-
-	//描画
-	virtual void Draw()const = 0;
-
+public:
 	//HPを取得
 	float GetHp()const { return hp; }
 
@@ -83,7 +78,10 @@ public:
 	void SetAbilityType(const Ability ability) { abilityType = ability; }
 
 protected:
-	//ダメージのインターバルを設定
+	//ダメージのインターバル処理
 	void DamageInterval(const int interval);
+
+	//ノックバック処理
+	void KnockBack(const double time);
 	
 };

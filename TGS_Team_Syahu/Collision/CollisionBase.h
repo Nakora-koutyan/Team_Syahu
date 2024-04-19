@@ -30,7 +30,7 @@ public:
 	~CollisionBase();
 
 	//当たり判定
-	bool HitCheck(const CollisionBase* collision)const;
+	bool CollisionCheck(const CollisionBase* collision)const;
 
 	//四角と円の当たり判定に必要な斜辺の作成
 	float MakeHypotenuse(const float x1, const float y1, const float x2, const float y2)const;

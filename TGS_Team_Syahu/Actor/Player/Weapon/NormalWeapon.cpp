@@ -4,7 +4,8 @@
 
 NormalWeapon::NormalWeapon()
 {
-	location = { 300.f,GROUND_LINE + radius };
+	location.x = 300.f;
+	location.y = GROUND_LINE + radius;
 	radius = 30.f;
 
 	direction = 0;
@@ -19,13 +20,11 @@ NormalWeapon::~NormalWeapon()
 
 }
 
-void NormalWeapon::Update(GameMainScene* object)
+void NormalWeapon::Update(Player* player)
 {
 	if (isShow)
 	{
 		framCount++;
-
-		Hit(object);
 
 		if (direction < 0)
 		{
@@ -38,8 +37,7 @@ void NormalWeapon::Update(GameMainScene* object)
 	}
 	else
 	{
-		location = object->GetPlayer()->GetCenterLocation();
-		screenLocation = object->GetCamera()->ConvertScreenPosition(location);
+		location = player->GetCenterLocation();
 	}
 
 	//攻撃時間を超えたら
@@ -48,10 +46,10 @@ void NormalWeapon::Update(GameMainScene* object)
 		framCount = 0;
 		direction = 0;
 		isShow = false;
-		object->GetPlayer()->SetIsAttack(false);
+		player->SetIsAttack(false);
 	}
 
-	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
+	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void NormalWeapon::Draw() const
@@ -84,16 +82,14 @@ void NormalWeapon::Attack(const Player* player)
 	}
 }
 
-void NormalWeapon::Hit(GameMainScene* object)
+void NormalWeapon::Hit(CharaBase* enemy, Player* player)
 {
 	if (isShow)
 	{
-		if (object->GetNormalEnemy() != nullptr &&
-			HitCheck(object->GetNormalEnemy()) && object->GetNormalEnemy()->GetIsShow() &&
-			!object->GetNormalEnemy()->GetIsHit())
+		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			object->GetNormalEnemy()->SetHp(object->GetNormalEnemy()->GetHp() - object->GetPlayer()->GetDamage());
-			object->GetNormalEnemy()->SetIsHit(true);
+			enemy->SetHp(enemy->GetHp() - player->GetDamage());
+			enemy->SetIsHit(true);
 
 			framCount = 0;
 			direction = 0;

@@ -58,14 +58,14 @@ void NormalEnemy::Initialize()
 }
 
 //描画以外の内容を更新
-void NormalEnemy::Update(GameMainScene* object)
+void NormalEnemy::Update(Player* player)
 {
 	//現在の座標をスクリーン座標へ変換
-	screenLocation = object->GetCamera()->ConvertScreenPosition(location);
+	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 2);
 
 	//エネミーの移動
-	EnemyPatrol(object);
+	EnemyPatrol(player);
 
 	//エネミーの攻撃範囲
 	AttackRange();
@@ -74,10 +74,10 @@ void NormalEnemy::Update(GameMainScene* object)
 	ChaseRange();
 
 	//プレイヤーへの追跡
-	ChaseToPlayer(object);
+	ChaseToPlayer(player);
 
 	//プレイヤーへの攻撃
-	AttackToPlayer(object);
+	AttackToPlayer(player);
 }
 
 //描画に関する更新
@@ -115,37 +115,37 @@ void NormalEnemy::Draw() const
 }
 
 //プレイヤーのいる方向に向かう
-void NormalEnemy::EnemyPatrol(GameMainScene* player)
+void NormalEnemy::EnemyPatrol(Player* player)
 {
-	if (player->GetPlayer()->GetCenterLocation().x < location.x)
+	if (player->GetCenterLocation().x < location.x)
 	{
 		if (isAttack == true)
 		{
-			vector.x = -(ENEMY_SPEED * RUSH_DIAMETER);
+			move.x = -(ENEMY_SPEED * RUSH_DIAMETER);
 		}
 		else
 		{
-			vector.x = -ENEMY_SPEED;
+			move.x = -ENEMY_SPEED;
 		}
 		direction = DIRECTION_LEFT;
 	}
-	else if (player->GetPlayer()->GetCenterLocation().x > location.x)
+	else if (player->GetCenterLocation().x > location.x)
 	{
 		if (isAttack == true)
 		{
-			vector.x = (ENEMY_SPEED * RUSH_DIAMETER);
+			move.x = (ENEMY_SPEED * RUSH_DIAMETER);
 		}
 		else
 		{
-			vector.x = ENEMY_SPEED;
+			move.x = ENEMY_SPEED;
 		}
 		direction = DIRECTION_RIGHT;
 	}
 
 	//パリィ状態でなければ進行する
-	if (!player->GetPlayer()->GetParryFlg())
+	if (!player->GetParryFlg())
 	{
-		location.x += vector.x;
+		location.x += move.x;
 	}
 }
 
@@ -163,11 +163,11 @@ void NormalEnemy::ChaseRange()
 	chase_censer[1] = { GetMaxLocation().x + 500.f,GetCenterLocation().y };
 }
 
-void NormalEnemy:: ChaseToPlayer(GameMainScene* object)
+void NormalEnemy:: ChaseToPlayer(Player* player)
 {
 	//プレイヤーが追跡範囲内にいるかのチェック
-	if (chase_censer[0].x < object->GetPlayer()->GetMaxLocation().x &&
-		chase_censer[1].x > object->GetPlayer()->GetMinLocation().x)
+	if (chase_censer[0].x < player->GetMaxLocation().x &&
+		chase_censer[1].x > player->GetMinLocation().x)
 	{
 		isChase = true;
 	}
@@ -177,11 +177,11 @@ void NormalEnemy:: ChaseToPlayer(GameMainScene* object)
 	}
 }
 
-void NormalEnemy::AttackToPlayer(GameMainScene* object)
+void NormalEnemy::AttackToPlayer(Player* player)
 {
 	//プレイヤーが攻撃範囲にいるかのチェック
-	if (attack_range[0].x < object->GetPlayer()->GetMaxLocation().x &&
-		attack_range[1].x > object->GetPlayer()->GetMinLocation().x)
+	if (attack_range[0].x < player->GetMaxLocation().x &&
+		attack_range[1].x > player->GetMinLocation().x)
 	{
 		isAttack = true;
 	}

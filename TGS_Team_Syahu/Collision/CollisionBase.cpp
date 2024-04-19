@@ -5,8 +5,10 @@
 
 CollisionBase::CollisionBase()
 {
-	location = { 0.f,0.f };
-	screenLocation = { 0.f,0.f };
+	location.x = 0.f;
+	location.y = 0.f;
+	screenLocation.x = 0.f;
+	screenLocation.y = 0.f;
 
 	collisionType = CollisionType::Empty;
 }
@@ -16,7 +18,7 @@ CollisionBase::~CollisionBase()
 
 }
 
-bool CollisionBase::HitCheck(const CollisionBase* collision) const
+bool CollisionBase::CollisionCheck(const CollisionBase* collision) const
 {
 	bool ret = false;
 

@@ -20,13 +20,15 @@ GameMainScene::~GameMainScene()
 
 SceneBase* GameMainScene::Update()
 {
-	camera->Update(this);
+	camera->Update(player->GetLocation());
 
-	player->Update(this);
+	player->Update();
+
+	HitCheck();
 		
 	if (enemy != nullptr)
 	{
-		enemy->Update(this);
+		enemy->Update(player);
 
 		//deleteしなくてもいい
 		if (enemy->GetHp() <= 0.f)
@@ -48,8 +50,8 @@ void GameMainScene::Draw() const
 	Vector2D pos2 = { WORLD_WIDTH, GROUND_LINE };
 	DrawLineAA
 	(GetCamera()->ConvertScreenPosition(pos1).x, GetCamera()->ConvertScreenPosition(pos1).y,
-	GetCamera()->ConvertScreenPosition(pos2).x, GetCamera()->ConvertScreenPosition(pos2).y,
-	0xffffff
+		GetCamera()->ConvertScreenPosition(pos2).x, GetCamera()->ConvertScreenPosition(pos2).y,
+		0xffffff
 	);
 
 	camera->Draw();
@@ -61,4 +63,32 @@ void GameMainScene::Draw() const
 		enemy->Draw();
 	}
 
+}
+
+void GameMainScene::HitCheck()
+{
+	//雑魚敵がnullじゃないなら
+	if (enemy != nullptr)
+	{	
+		//雑魚敵とプレイヤーが当たったら
+		if (player->CollisionCheck(enemy))
+		{
+			player->Hit(enemy);
+		}
+
+		//雑魚敵と投げるが当たったら
+		if (player->GetNormalWeapon()->CollisionCheck(enemy))
+		{
+			player->GetNormalWeapon()->Hit(enemy, player);
+		}
+
+		//雑魚敵と奪うが当たったら
+		for (int i = 0; i < STEAL_VALUE; i++)
+		{
+			if (player->GetSteal(i)->CollisionCheck(enemy))
+			{
+				player->GetSteal(i)->Hit(enemy, player);
+			}
+		}
+	}
 }

@@ -10,6 +10,8 @@
 #define DIRECTION_LEFT 0
 #define DIRECTION_RIGHT 1
 
+class Player;
+
 class NormalEnemy :public CharaBase
 {
 private:
@@ -41,20 +43,20 @@ public:
 	void Initialize();
 
 	//更新処理
-	void Update(GameMainScene* object)override;
+	void Update(Player* player);
 	//描画更新処理
-	void Draw()const override;
+	void Draw()const;
 
 	//パトロール関数
-	void EnemyPatrol(GameMainScene* player);
+	void EnemyPatrol(Player* player);
 	//攻撃範囲
 	void AttackRange();
 	//プレイヤーを発見するためのセンサー
 	void ChaseRange();
 
 	//追跡を行うか？
-	void ChaseToPlayer(GameMainScene* object);
+	void ChaseToPlayer(Player* player);
 
 	//攻撃を行うか？
-	void AttackToPlayer(GameMainScene* object);
+	void AttackToPlayer(Player* player);
 };

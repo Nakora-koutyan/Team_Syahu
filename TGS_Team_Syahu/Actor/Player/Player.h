@@ -15,12 +15,14 @@
 #define PLAYER_KNOCKBACK				7.f				//ノックバックの移動距離/f
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
 #define PLAYER_ABILITY_TIME				FPS * 5			//奪った能力の使用時間
+#define STEAL_VALUE						3				//奪うの数
+#define STEAL_DISTANCE					25.f			//プレイヤーから奪うを出す距離
 
 class Player :public CharaBase
 {
 private:
-	NormalWeapon* normalWeapon;		//通常攻撃
-	Steal* steal;					//奪う
+	NormalWeapon* normalWeapon;		//投げる
+	Steal* steal[STEAL_VALUE];		//奪う
 
 	short guardCount;				//ガードのカウント	0:していない 1:していた
 
@@ -46,12 +48,21 @@ public:
 	~Player();
 
 	//更新
-	void Update(GameMainScene* object)override;
+	void Update();
 
 	//描画
-	void Draw()const override;
+	void Draw()const;
+
+	//ヒット処理
+	void Hit(CharaBase* chara);
 
 public:
+	//投げるを取得
+	NormalWeapon* GetNormalWeapon()const { return normalWeapon; }
+
+	//奪うを取得
+	Steal* GetSteal(const int element)const { return steal[element]; }
+
 	//パリィフラグを取得
 	bool GetParryFlg()const { return parryFlg; }
 
@@ -62,9 +73,6 @@ public:
 	void SetStealFlg(const bool flg) { stealFlg = flg; }
 
 private:
-	//当たり判定
-	void Hit(GameMainScene* object);
-
 	//移動
 	void Movement();
 
@@ -75,6 +83,6 @@ private:
 	void Guard();
 
 	//ダメージ
-	void Damage(GameMainScene* object);
+	void Damage(CharaBase* chara);
 
 };

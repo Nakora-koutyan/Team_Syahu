@@ -6,7 +6,8 @@
 
 LineCollision::LineCollision()
 {
-	directionVector = { 0.f,0.f };
+	directionVector.x = 0.f;
+	directionVector.y = 0.f;
 
 	collisionType = CollisionType::Line;
 }

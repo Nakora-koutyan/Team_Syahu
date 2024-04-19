@@ -4,7 +4,7 @@
 #define NORMAL_WEAPON_ATTACK_TIME	FPS * 0.5f		//通常攻撃の時間
 #define NORMAL_WEAPON_SPEED				15.f		//弾の速さ
 
-class GameMainScene;
+class CharaBase;
 class Player;
 
 class NormalWeapon :public SphereCollision
@@ -24,7 +24,7 @@ public:
 	~NormalWeapon();
 
 	//更新
-	void Update(GameMainScene* object);
+	void Update(Player* player);
 
 	//描画
 	void Draw()const;
@@ -32,8 +32,8 @@ public:
 	//攻撃
 	void Attack(const Player* player);
 
-	//当たり判定
-	void Hit(GameMainScene* object);
+	//当たった時の処理
+	void Hit(CharaBase* enemy, Player* player);
 
 	//表示フラグを取得
 	bool GetIsShow()const { return isShow; }
