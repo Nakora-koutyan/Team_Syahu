@@ -46,8 +46,4 @@ public:
 	//能力の保存用を設定
 	void SetKeepType(const Ability ability) { keepType = ability; }
 
-private:
-	//奪う攻撃
-	void StealAttack(class CharaBase* enemy, Player* player);
-
 };

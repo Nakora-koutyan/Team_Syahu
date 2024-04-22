@@ -17,6 +17,7 @@
 #define PLAYER_KNOCKBACK				5.f				//ノックバックの移動距離/f
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
 #define PLAYER_ABILITY_TIME				FPS * 5			//奪った能力の使用時間
+#define PLAYER_MAX_STOCK				5				//最大ストック数
 #define STEAL_VALUE						3				//奪うの数
 #define STEAL_DISTANCE					25.f			//プレイヤーから奪うを出す距離
 #define LARGESWORD_DISTANCE				20				//プレイヤーから離す距離
@@ -24,25 +25,27 @@
 class Player :public CharaBase
 {
 private:
-	NormalWeapon* normalWeapon;		//投げる
-	Steal* steal[STEAL_VALUE];		//奪う
-	LargeSword* largeSword;			//大剣
+	Ability stock[PLAYER_MAX_STOCK];		//ストック
+	NormalWeapon* normalWeapon;				//投げる
+	Steal* steal[STEAL_VALUE];				//奪う
+	LargeSword* largeSword;					//大剣
 
-	short guardCount;				//ガードのカウント	0:していない 1:していた
+	short guardCount;						//ガードのカウント	0:していない 1:していた
+	short stockCount;						//現在のストックの番号
 
-	int damageFramCount;			//ダメージを受けた時のカウント
-	int parryFram;					//パリィの入力フレーム
-	int abilityFramCount;			//能力のカウント用
+	int damageFramCount;					//ダメージを受けた時のフレームカウント
+	int parryFram;							//パリィの入力フレーム
+	int abilityFramCount;					//能力のフレームカウント
 
-	float guardCoolTime;			//ガードのクールタイム
-	float attackCoolTime;			//攻撃のクールタイム
-	float stealCoolTime;			//奪うのクールタイム
+	float guardCoolTime;					//ガードのクールタイム
+	float attackCoolTime;					//攻撃のクールタイム
+	float stealCoolTime;					//奪うのクールタイム
 
-	bool isGuard;					//ガード中？
-	bool stealFlg;					//奪った？
-	bool isEquipment;				//装備中？
-	bool guardCoolTimeFlg;			//ガードのクールタイムのフラグ
-	bool parryFlg;					//パリィフラグ
+	bool isGuard;							//ガード中？
+	bool stealFlg;							//奪った？
+	bool isEquipment;						//装備中？
+	bool guardCoolTimeFlg;					//ガードのクールタイムのフラグ
+	bool parryFlg;							//パリィフラグ
 
 public:
 	//コンストラクタ
