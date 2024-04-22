@@ -11,6 +11,8 @@ LargeSword::LargeSword()
 
 	framCount = 0;
 
+	angle = 0.f;
+
 	isShow = false;
 }
 
@@ -24,14 +26,19 @@ void LargeSword::Update(Player* player)
 	if (isShow)
 	{
 		framCount++;
+		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
+		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
+		
 	}
 	else
 	{
 		location = player->GetCenterLocation();
+		directionVector.x = 100.f;
+		directionVector.y = 0.f;
 	}
 
 	//攻撃時間を超えたら
-	if (framCount > STEAL_ATTACK_TIME)
+	if (framCount > LARGESWORD_ATTACK_TIME)
 	{
 		framCount = 0;
 		direction = 0;
@@ -61,7 +68,8 @@ void LargeSword::Attack(const Player* player)
 	//左に出す
 	else
 	{
-		location.x = player->GetMinLocation().x - directionVector.x - LARGESWORD_DISTANCE;
+		location.x = player->GetMinLocation().x - LARGESWORD_DISTANCE;
+		directionVector.x = -100.f;
 	}
 
 	location.y = player->GetCenterLocation().y;

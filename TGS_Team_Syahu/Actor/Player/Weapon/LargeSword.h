@@ -1,7 +1,7 @@
 #pragma once
 #include"../../../Collision/Line/LineCollision.h"
 
-#define LARGESWORD_ATTACK_TIME	FPS * 0.5		//大剣攻撃の時間
+#define LARGESWORD_ATTACK_TIME	FPS * 2.5		//大剣攻撃の時間
 
 class CharaBase;
 class Player;
@@ -12,6 +12,8 @@ private:
 	short direction;		//方向
 
 	int framCount;			//フレームカウント
+
+	float angle;			//角度
 
 	bool isShow;			//表示させる？
 
