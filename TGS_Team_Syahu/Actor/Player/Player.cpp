@@ -134,7 +134,7 @@ void Player::Movement()
 {
 	//右へ移動
 	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) &&
-		!isGuard && !isHit)
+		!isGuard && !isHit && !isAttack)
 	{
 		//最高速度は超えない
 		if (move.x < PLAYER_MAX_MOVE_SPEED)
@@ -157,7 +157,7 @@ void Player::Movement()
 	}
 	//左へ移動
 	else if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) &&
-		!isGuard && !isHit)
+		!isGuard && !isHit && !isAttack)
 	{
 		//最高速度は超えない
 		if (move.x > -PLAYER_MAX_MOVE_SPEED)
@@ -187,7 +187,7 @@ void Player::Movement()
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isGuard && !isHit)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isGuard && !isHit && !isAttack)
 	{
 		move.y = -JUMP_POWER;
 		isAir = true;
@@ -264,7 +264,7 @@ void Player::Attack()
 		}
 	}
 
-	attackCoolTime--;
+	if (attackCoolTime > 0)attackCoolTime--;
 
 	//装備
 	if (stealFlg &&
@@ -295,7 +295,7 @@ void Player::Attack()
 		steal[2]->Attack(this, STEAL_DISTANCE + 10.f, 70.f, 70.f, 30.f);
 	}
 
-	stealCoolTime--;
+	if (stealCoolTime > 0)stealCoolTime--;
 }
 
 void Player::Guard()
