@@ -3,8 +3,8 @@
 #include "../Player/Player.h"
 
 //コンストラクタ
-NormalEnemy::NormalEnemy():enemy_color(0),damage_color(0),attack_color(0),usual_color(0),
-attack_range{},chase_censer{},hp(100),find_mark(NULL),angry_mark(NULL),direction(0),isChase(false)
+NormalEnemy::NormalEnemy():enemyColor(0),damageColor(0),attackColor(0),usualColor(0),
+attackRange{},chaseCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),isChase(false)
 {
 }
 
@@ -18,14 +18,14 @@ void NormalEnemy::Initialize()
 {
 	//仮の色付け
 	//通常のカラー
-	usual_color = GetColor(0, 255, 0);
+	usualColor = GetColor(0, 255, 0);
 	//ダメージを受けた時の色
-	damage_color = GetColor(255, 0, 0);
+	damageColor = GetColor(255, 0, 0);
 	//攻撃をするときの色
-	attack_color = GetColor(0, 0, 255);
+	attackColor = GetColor(0, 0, 255);
 
 	//体の色の情報を受け取る変数
-	enemy_color = usual_color;
+	enemyColor = usualColor;
 	
 	//サイズ{ x , y }
 	area = { 45.f,45.f };
@@ -35,16 +35,16 @@ void NormalEnemy::Initialize()
 	abilityType = Ability::Slashing;	//かり
 
 	//攻撃範囲
-	attack_range[0] = { GetCenterLocation() };
-	attack_range[1] = { GetCenterLocation() };
+	attackRange[0] = { GetCenterLocation() };
+	attackRange[1] = { GetCenterLocation() };
 
 	//プレイヤーを追跡する範囲
-	chase_censer[0] = { GetCenterLocation() };
-	chase_censer[1] = { GetCenterLocation() };
+	chaseCenser[0] = { GetCenterLocation() };
+	chaseCenser[1] = { GetCenterLocation() };
 
 	//プレイヤーを見つけた際の座標
-	find_mark = LoadGraph("Resource/Images/Exclamation.png");
-	angry_mark = LoadGraph("Resource/images/Angry.png");
+	findMark = LoadGraph("Resource/Images/Exclamation.png");
+	angryMark = LoadGraph("Resource/images/Angry.png");
 
 	//体の向き
 	direction = DIRECTION_LEFT;
@@ -55,6 +55,10 @@ void NormalEnemy::Initialize()
 	/*　状態　*/
 	//表示するか?
 	isShow = true;
+
+	//攻撃時間
+	attackTime = MAX_ATTACK_TIME;
+	attackCoolTime = MAX_COOL_TIME;
 }
 
 //描画以外の内容を更新
@@ -88,9 +92,13 @@ void NormalEnemy::Draw() const
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
-		isAttack ? attack_color : isHit ? 0xff0000 : usual_color, TRUE, 1.0f
+		isAttack ? attackColor : isHit ? 0xff0000 : usualColor, TRUE, 1.0f
 	);
-	DrawFormatStringF(500.f, 550.f, GetColor(255, 0, 255), "%f", GetMinLocation().x);
+	DrawFormatStringF(50.f, 80.f, GetColor(255, 0, 255), "%f GetMinLocation().x", GetMinLocation().x);
+	DrawFormatStringF(50.f, 100.f, GetColor(255, 0, 255), "%d AttackCoolTime", attackCoolTime);
+	DrawFormatStringF(50.f, 120.f, GetColor(255, 0, 255), "%d attackTime", attackTime);
+	DrawFormatStringF(50.f, 140.f, GetColor(255, 0, 255), "%s noMove", noMove ? "true" : "false");
+	DrawFormatStringF(50.f, 160.f, GetColor(255, 0, 255), "%s isAttack", isAttack ? "true" : "false");
 	
 	//プレイヤーを発見した場合、「！」を表示する
 	if (isChase == true)
@@ -100,7 +108,7 @@ void NormalEnemy::Draw() const
 			DrawGraphF
 			(
 				screenLocation.x + 25, screenLocation.y - 30,
-				isAttack ? angry_mark:find_mark, TRUE
+				isAttack ? angryMark:findMark, TRUE
 			);
 		}
 		if (direction == DIRECTION_RIGHT)
@@ -108,7 +116,7 @@ void NormalEnemy::Draw() const
 			DrawGraphF
 			(
 				screenLocation.x - 25, screenLocation.y - 30,
-				isAttack ? angry_mark : find_mark, TRUE
+				isAttack ? angryMark : findMark, TRUE
 			);
 		}
 	}
@@ -117,57 +125,68 @@ void NormalEnemy::Draw() const
 //プレイヤーのいる方向に向かう
 void NormalEnemy::EnemyPatrol(Player* player)
 {
-	if (player->GetCenterLocation().x < location.x)
+	//行動が禁止じゃなければ
+	if (noMove == false)
 	{
-		if (isAttack == true)
+		if (player->GetCenterLocation().x < location.x)
 		{
-			move.x = -(ENEMY_SPEED * RUSH_DIAMETER);
+			if (isAttack == true)
+			{
+				move.x = -(ENEMY_SPEED * RUSH_DIAMETER);
+			}
+			else
+			{
+				move.x = -ENEMY_SPEED;
+			}
+			direction = DIRECTION_LEFT;
 		}
-		else
+		else if (player->GetCenterLocation().x > location.x)
 		{
-			move.x = -ENEMY_SPEED;
+			if (isAttack == true)
+			{
+				move.x = (ENEMY_SPEED * RUSH_DIAMETER);
+			}
+			else
+			{
+				move.x = ENEMY_SPEED;
+			}
+			direction = DIRECTION_RIGHT;
 		}
-		direction = DIRECTION_LEFT;
-	}
-	else if (player->GetCenterLocation().x > location.x)
-	{
-		if (isAttack == true)
-		{
-			move.x = (ENEMY_SPEED * RUSH_DIAMETER);
-		}
-		else
-		{
-			move.x = ENEMY_SPEED;
-		}
-		direction = DIRECTION_RIGHT;
-	}
 
-	//パリィ状態でなければ進行する
-	if (!player->GetParryFlg())
-	{
-		location.x += move.x;
+		//パリィ状態でなければ進行する
+		if (!player->GetParryFlg())
+		{
+			location.x += move.x;
+		}
 	}
 }
 
 //攻撃範囲
 void NormalEnemy::AttackRange()
 {
-	attack_range[0] = { GetMinLocation().x - 300.f,GetCenterLocation().y };
-	attack_range[1] = { GetMaxLocation().x + 300.f , GetCenterLocation().y };
+	attackRange[0].x = GetMinLocation().x - 300.f;
+	attackRange[0].y = GetCenterLocation().y;
+
+	attackRange[1].x = GetMaxLocation().x + 300.f;
+	attackRange[1].y = GetCenterLocation().y;
 }
 
 //戦闘態勢に入る範囲
 void NormalEnemy::ChaseRange()
 {
-	chase_censer[0] = { GetMinLocation().x - 500.f,GetCenterLocation().y };
-	chase_censer[1] = { GetMaxLocation().x + 500.f,GetCenterLocation().y };
+	chaseCenser[0].x = GetMinLocation().x - 500.f;
+	chaseCenser[0].y = GetCenterLocation().y;
+
+	chaseCenser[1].x = GetMaxLocation().x + 500.f; 
+	chaseCenser[1].y = GetCenterLocation().y;
 }
 
 void NormalEnemy:: ChaseToPlayer(Player* player)
 {
 	//プレイヤーが追跡範囲内にいるかのチェック
-	if (chase_censer[0].x < player->GetMaxLocation().x &&
-		chase_censer[1].x > player->GetMinLocation().x)
+	if (chaseCenser[0].x < player->GetMaxLocation().x &&
+		chaseCenser[1].x > player->GetMinLocation().x &&
+		attackTime >= 0)
 	{
 		isChase = true;
 	}
@@ -179,14 +198,47 @@ void NormalEnemy:: ChaseToPlayer(Player* player)
 
 void NormalEnemy::AttackToPlayer(Player* player)
 {
-	//プレイヤーが攻撃範囲にいるかのチェック
-	if (attack_range[0].x < player->GetMaxLocation().x &&
-		attack_range[1].x > player->GetMinLocation().x)
+	if (noMove == false)
 	{
-		isAttack = true;
+		//プレイヤーが攻撃範囲にいるかのチェック
+		if (attackRange[0].x < player->GetMaxLocation().x &&
+			attackRange[1].x > player->GetMinLocation().x )
+		{
+			isAttack = true;
+		}
+		else
+		{
+			isAttack = false;
+		}
 	}
-	else
+
+	//攻撃してもOKかつ攻撃時間が０以上であれば
+	if (isAttack == true && attackTime >= 0)
 	{
+		//攻撃時間のカウントダウン
+		attackTime -= 1;
+	}
+	//攻撃時間が０以下になって行動が許可されている場合
+	if (attackTime <= 0 && noMove == false)
+	{
+		//攻撃する？->しない
 		isAttack = false;
+		//行動禁止？->する
+		noMove = true;
+	}
+	//行動禁止でクールダウンが０秒以上の場合
+	if (noMove == true && attackCoolTime >= 0)
+	{
+		//クールタイムのカウントダウンの開始
+		attackCoolTime -= 1;
+	}
+	//クールタイムが０秒以下なら
+	if (attackCoolTime <= 0)
+	{
+		//動けない状態を解除
+		noMove = false;
+
+		attackCoolTime = MAX_COOL_TIME;
+		attackTime = MAX_ATTACK_TIME;
 	}
 }
