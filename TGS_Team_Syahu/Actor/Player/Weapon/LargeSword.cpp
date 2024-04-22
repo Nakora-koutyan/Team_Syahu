@@ -4,8 +4,8 @@
 
 LargeSword::LargeSword()
 {
-	directionVector.x = 100.f;
-	directionVector.y = 0.f;
+	directionVector.x = LARGRSWORD_LENGTH;
+	directionVector.y = -50.f;
 
 	direction = 0;
 
@@ -28,13 +28,10 @@ void LargeSword::Update(Player* player)
 		framCount++;
 		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
 		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
-		
 	}
 	else
 	{
 		location = player->GetCenterLocation();
-		directionVector.x = 100.f;
-		directionVector.y = 0.f;
 	}
 
 	//攻撃時間を超えたら
@@ -42,6 +39,7 @@ void LargeSword::Update(Player* player)
 	{
 		framCount = 0;
 		direction = 0;
+		angle = 0.f;
 		isShow = false;
 		player->SetIsAttack(false);
 	}
@@ -64,15 +62,19 @@ void LargeSword::Attack(const Player* player)
 	if (player->GetDirection().x > 0)
 	{
 		location.x = player->GetMaxLocation().x + LARGESWORD_DISTANCE;
+		directionVector.x = LARGRSWORD_LENGTH;
+		angle = LARGESWORD_ANGLE;
 	}
 	//左に出す
 	else
 	{
 		location.x = player->GetMinLocation().x - LARGESWORD_DISTANCE;
-		directionVector.x = -100.f;
+		directionVector.x = -LARGRSWORD_LENGTH;
+		angle = -LARGESWORD_ANGLE;
 	}
 
 	location.y = player->GetCenterLocation().y;
+	directionVector.y = -50.f;
 
 	//まだ方向が決まってないなら
 	if (direction == 0)

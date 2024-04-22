@@ -13,7 +13,7 @@
 #define	PLAYER_GUARD_COOLTIME			FPS * 0.4		//ガードのクールタイム
 #define PLAYER_NORMALWEAPON_COOLTIME	FPS * 1.f		//投げるのクールタイム
 #define PLAYER_STEAL_COOLTIME			FPS * 1.2f		//奪うのクールタイム
-#define PLAYER_LARGESWORD_COOLTIME		FPS * 1.9f		//大剣のクールタイム
+#define PLAYER_LARGESWORD_COOLTIME		FPS * 1.7f		//大剣のクールタイム
 #define PLAYER_KNOCKBACK				7.f				//ノックバックの移動距離/f
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
 #define PLAYER_ABILITY_TIME				FPS * 5			//奪った能力の使用時間
