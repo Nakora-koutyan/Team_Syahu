@@ -50,6 +50,7 @@ public:
 	//パリィフラグを取得
 	bool GetParryFlg()const { return parryFlg; }
 
+
 private:
 	//当たり判定
 	void Hit(GameMainScene* object);

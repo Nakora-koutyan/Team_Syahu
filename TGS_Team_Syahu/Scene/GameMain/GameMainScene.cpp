@@ -7,6 +7,7 @@ GameMainScene::GameMainScene()
 	camera = new Camera();
 	enemy = new NormalEnemy();
 	enemy->Initialize();
+	map = new Map();
 
 	kari = LoadGraph("Resource/Images/kari.png");
 }
@@ -16,6 +17,7 @@ GameMainScene::~GameMainScene()
 	delete player;
 	delete camera;
 	delete enemy;
+	delete map;
 }
 
 SceneBase* GameMainScene::Update()
@@ -35,6 +37,8 @@ SceneBase* GameMainScene::Update()
 			enemy = nullptr;
 		}
 	}
+
+	map->Update();
 
 	return this;
 }
@@ -61,4 +65,5 @@ void GameMainScene::Draw() const
 		enemy->Draw();
 	}
 
+	map->Draw();
 }
