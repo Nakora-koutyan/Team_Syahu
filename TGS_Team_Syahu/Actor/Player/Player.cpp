@@ -14,6 +14,10 @@ Player::Player()
 	damage = 10.f;
 	abilityType = Ability::LargeSword;
 
+	for (int i = 0; i < PLAYER_MAX_STOCK; i++)
+	{
+		stock[i] = Ability::Empty;
+	}
 	normalWeapon = new NormalWeapon();
 	for (int i = 0; i < STEAL_VALUE; i++)
 	{
@@ -22,6 +26,7 @@ Player::Player()
 	largeSword = new LargeSword();
 
 	guardCount = 0;
+	stockCount = 0;
 
 	framCount = 0;
 	damageFramCount = 0;
@@ -119,6 +124,7 @@ void Player::Draw() const
 	DrawFormatString(0, 30, 0x000000, "stealCoolTime :%f", stealCoolTime);
 	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
 	DrawFormatString(0, 60, 0x000000, "weaponCount :%d", abilityFramCount);
+	DrawFormatString(0, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
 	if (abilityType == Ability::Empty)
 	{
 		DrawFormatString(0, 45, 0x000000, "WeaponType:None");
@@ -272,14 +278,15 @@ void Player::Attack()
 {
 	//投げるまたは武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
-		PadInput::OnPressed(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isHit)
+		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isHit)
 	{
 		//能力を持っているないなら投げる
-		if (stealFlg && abilityType == Ability::Empty)
+		if (stealFlg && stock[stockCount] != Ability::Empty)
 		{		
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
 			normalWeapon->Attack(this,0.f);
 			stealFlg = false;
+			stock[stockCount] = Ability::Empty;
 		}
 
 		//武器攻撃
@@ -298,22 +305,19 @@ void Player::Attack()
 
 	//装備
 	if (stealFlg && !isHit &&
-		(KeyInput::GetKeyDown(KEY_INPUT_E) || PadInput::OnPressed(XINPUT_BUTTON_Y)))
+		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
 	{
-		for (int i = 0; i < STEAL_VALUE; i++)
+		if (stock[stockCount] != Ability::Empty)
 		{
-			if (steal[i]->GetKeepType() != Ability::Empty)
-			{
-				abilityType = steal[i]->GetKeepType();
-				steal[i]->SetKeepType(Ability::Empty);
-				isEquipment = true;
-			}
+			abilityType = stock[stockCount];
+			stock[stockCount] = Ability::Empty;
+			isEquipment = true;
+			stealFlg = false;
 		}
-		stealFlg = false;
 	}
 
 	//奪う
-	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnPressed(XINPUT_BUTTON_B)) &&
+	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)) &&
 		stealCoolTime <= 0.f && !isHit)
 	{
 		isAttack = true;
@@ -324,6 +328,27 @@ void Player::Attack()
 		steal[1]->Attack(this, STEAL_DISTANCE - 10.f, 60.f, 60.f, 0.f);
 		//下
 		steal[2]->Attack(this, STEAL_DISTANCE + 10.f, 70.f, 70.f, 30.f);
+	}
+
+	bool once = false;
+
+	for (int i = 0; i < STEAL_VALUE; i++)
+	{
+		//鉤爪のいずれかが能力を奪えている
+		if (steal[i]->GetKeepType() != Ability::Empty)
+		{
+			for (int j = 0; j < PLAYER_MAX_STOCK; j++)
+			{
+				//ストックに空きがある
+				if (stock[j] == Ability::Empty)
+				{
+					stock[j] = steal[i]->GetKeepType();
+					once = true;
+					break;
+				}
+			}
+			steal[i]->SetKeepType(Ability::Empty);
+		}
 	}
 
 	if (stealCoolTime > 0)stealCoolTime--;
