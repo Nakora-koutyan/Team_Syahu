@@ -74,6 +74,9 @@ public:
 	//ノックバックフラグを設定
 	void SetIsKnockBack(const bool flg) { isKnockBack = flg; }
 
+	//移動量の取得
+	Vector2D GetMove()const { return move; }
+
 	//方向の取得
 	Vector2D GetDirection()const { return direction; }
 

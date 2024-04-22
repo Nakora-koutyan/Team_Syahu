@@ -12,6 +12,7 @@ Player::Player()
 	direction.x = 1.f;
 	direction.y = 0.f;
 	damage = 10.f;
+	abilityType = Ability::LargeSword;
 
 	normalWeapon = new NormalWeapon();
 	for (int i = 0; i < STEAL_VALUE; i++)
