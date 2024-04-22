@@ -3,6 +3,7 @@
 #include"../../Actor/Player/Player.h"
 #include"../../Actor/Camera/Camera.h"
 #include"../../Actor/Enemy/NormalEnemy.h"
+#include"../../Map/Map.h"
 
 #define LINE_NUM 12                     //ラインの数
 
@@ -12,6 +13,7 @@ private:
     Player* player;         //プレイヤーのオブジェクト
     Camera* camera;         //カメラのオブジェクト
     NormalEnemy* enemy;     //雑魚敵のオブジェクト
+    Map* map;
 
     int kari;       //かり
 
