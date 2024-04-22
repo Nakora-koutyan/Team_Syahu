@@ -2,7 +2,7 @@
 #include"../../../Collision/Line/LineCollision.h"
 
 #define LARGESWORD_ATTACK_TIME	FPS * 0.5		//大剣攻撃の時間
-#define LARGESWORD_ANGLE		2.f				//大剣の振る角度
+#define LARGESWORD_ANGLE		2.5f			//大剣の振る角度
 #define LARGRSWORD_LENGTH		100.f			//大剣の長さ
 
 class CharaBase;
