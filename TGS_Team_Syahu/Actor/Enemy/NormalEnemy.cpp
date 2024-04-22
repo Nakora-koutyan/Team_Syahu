@@ -94,7 +94,7 @@ void NormalEnemy::Draw() const
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
-		isHit ? 0xff0000 : isAttack ? attack_color : usual_color, TRUE, 1.0f
+		isHit ? 0xff0000 : isAttack ? attackColor : usualColor, TRUE, 1.0f
 	);
 	DrawFormatStringF(50.f, 80.f, GetColor(255, 0, 255), "%f GetMinLocation().x", GetMinLocation().x);
 	DrawFormatStringF(50.f, 100.f, GetColor(255, 0, 255), "%d AttackCoolTime", attackCoolTime);
