@@ -55,6 +55,7 @@ void Player::Update()
 	if (KeyInput::GetKey(KEY_INPUT_1))abilityType = Ability::LargeSword;
 	if (KeyInput::GetKey(KEY_INPUT_2))abilityType = Ability::Dagger;
 	if (KeyInput::GetKey(KEY_INPUT_3))abilityType = Ability::Rapier;
+	if (KeyInput::GetKey(KEY_INPUT_4))stealFlg = true;
 	if (abilityType != Ability::Empty)isEquipment = true;
 #endif // DEBUG
 
@@ -117,7 +118,7 @@ void Player::Draw() const
 	DrawFormatString(0, 15, 0x000000, "attackCoolTime :%f", attackCoolTime);
 	DrawFormatString(0, 30, 0x000000, "stealCoolTime :%f", stealCoolTime);
 	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
-	DrawFormatString(0, 60, 0x000000, "%d", abilityFramCount);
+	DrawFormatString(0, 60, 0x000000, "weaponCount :%d", abilityFramCount);
 	if (abilityType == Ability::Empty)
 	{
 		DrawFormatString(0, 45, 0x000000, "WeaponType:None");
@@ -277,7 +278,7 @@ void Player::Attack()
 		if (stealFlg && abilityType == Ability::Empty)
 		{		
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
-			normalWeapon->Attack(this);
+			normalWeapon->Attack(this,0.f);
 			stealFlg = false;
 		}
 

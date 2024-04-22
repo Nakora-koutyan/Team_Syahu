@@ -5,7 +5,7 @@
 LargeSword::LargeSword()
 {
 	directionVector.x = LARGRSWORD_LENGTH;
-	directionVector.y = -50.f;
+	directionVector.y = -100.f;
 
 	direction = 0;
 
@@ -28,6 +28,17 @@ void LargeSword::Update(Player* player)
 		framCount++;
 		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
 		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
+	
+		//右に出す
+		if (direction > 0)
+		{
+			location.x = player->GetMaxLocation().x + LARGESWORD_DISTANCE;
+		}
+		//左に出す
+		else
+		{
+			location.x = player->GetMinLocation().x - LARGESWORD_DISTANCE;
+		}
 	}
 	else
 	{
@@ -44,6 +55,7 @@ void LargeSword::Update(Player* player)
 		player->SetIsAttack(false);
 	}
 
+	location.y = player->GetCenterLocation().y;
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
@@ -58,30 +70,27 @@ void LargeSword::Attack(const Player* player)
 {
 	isShow = true;
 
-	//右に出す
-	if (player->GetDirection().x > 0)
-	{
-		location.x = player->GetMaxLocation().x + LARGESWORD_DISTANCE;
-		directionVector.x = LARGRSWORD_LENGTH;
-		angle = LARGESWORD_ANGLE;
-	}
-	//左に出す
-	else
-	{
-		location.x = player->GetMinLocation().x - LARGESWORD_DISTANCE;
-		directionVector.x = -LARGRSWORD_LENGTH;
-		angle = -LARGESWORD_ANGLE;
-	}
-
-	location.y = player->GetCenterLocation().y;
-	directionVector.y = -50.f;
-
 	//まだ方向が決まってないなら
 	if (direction == 0)
 	{
 		//プレイヤーの方向情報を保持する
 		direction = (short)player->GetDirection().x;
 	}
+
+	//右に出す
+	if (direction > 0)
+	{
+		directionVector.x = LARGRSWORD_LENGTH;
+		angle = LARGESWORD_ANGLE;
+	}
+	//左に出す
+	else
+	{
+		directionVector.x = -LARGRSWORD_LENGTH;
+		angle = -LARGESWORD_ANGLE;
+	}
+
+	directionVector.y = -100.f;
 }
 
 void LargeSword::Hit(CharaBase* enemy, Player* player)
@@ -92,6 +101,7 @@ void LargeSword::Hit(CharaBase* enemy, Player* player)
 		{
 			enemy->SetHp(enemy->GetHp() - player->GetDamage());
 			enemy->SetIsHit(true);
+			player->SetIsAttack(false);
 
 			framCount = 0;
 			direction = 0;

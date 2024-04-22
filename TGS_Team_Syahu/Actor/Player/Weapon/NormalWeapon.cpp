@@ -8,9 +8,16 @@ NormalWeapon::NormalWeapon()
 	location.y = GROUND_LINE + radius;
 	radius = 30.f;
 
+	move.x = 0.f;
+	move.y = 0.f;
+
 	direction = 0;
 
 	framCount = 0;
+
+	angle = DEGREE_TO_RADIAN(20.f);
+	gravityVelocity = 0.f;
+	weaponWeight = 0.f;
 
 	isShow = false;
 }
@@ -26,16 +33,7 @@ void NormalWeapon::Update(Player* player)
 	{
 		framCount++;
 
-		if (direction < 0)
-		{
-			location.x -= NORMAL_WEAPON_SPEED;
-		}
-		else
-		{
-			location.x += NORMAL_WEAPON_SPEED;
-		}
-
-		location.y += GRAVITY;
+		gravityVelocity += NORMAL_WEAPON_GRAVITY + weaponWeight;
 	}
 	else
 	{
@@ -47,10 +45,16 @@ void NormalWeapon::Update(Player* player)
 	{
 		framCount = 0;
 		direction = 0;
+		move.x = 0.f;
+		move.y = 0.f;
+		gravityVelocity = 0.f;
+		weaponWeight = 0.f;
 		isShow = false;
 		player->SetIsAttack(false);
 	}
 
+	location.x += move.x;
+	location.y += gravityVelocity;
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
@@ -59,29 +63,32 @@ void NormalWeapon::Draw() const
 	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0xff0000, TRUE);
 }
 
-void NormalWeapon::Attack(const Player* player)
+void NormalWeapon::Attack(const Player* player, const float weight)
 {
 	//出現させる
 	isShow = true;
 
-	//右に出す
-	if (player->GetDirection().x > 0)
-	{
-		location.x = player->GetMaxLocation().x + radius;
-	}
-	//左に出す
-	else
-	{
-		location.x = player->GetMinLocation().x - radius;
-	}
-
-	location.y = player->GetCenterLocation().y;
-
 	//まだ方向が決まってないなら
 	if (direction == 0)
 	{
-		direction =(short)player->GetDirection().x;
+		direction = (short)player->GetDirection().x;
 	}
+
+	if (direction < 0)
+	{
+		move.x = -NORMAL_WEAPON_SPEED * cos(angle);
+		location.x = player->GetMinLocation().x - radius;
+	}
+	else
+	{
+		move.x = NORMAL_WEAPON_SPEED * cos(angle);
+		location.x = player->GetMaxLocation().x + radius;
+	}
+
+	move.y = NORMAL_WEAPON_SPEED * sin(angle);
+	location.y = player->GetCenterLocation().y;
+
+	weaponWeight = weight;
 }
 
 void NormalWeapon::Hit(CharaBase* enemy, Player* player)
@@ -95,6 +102,10 @@ void NormalWeapon::Hit(CharaBase* enemy, Player* player)
 
 			framCount = 0;
 			direction = 0;
+			move.x = 0.f;
+			move.y = 0.f;
+			gravityVelocity = 0.f;
+			weaponWeight = 0.f;
 			isShow = false;
 		}
 	}
