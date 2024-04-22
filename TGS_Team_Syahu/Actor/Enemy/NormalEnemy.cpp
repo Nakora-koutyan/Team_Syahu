@@ -66,9 +66,9 @@ void NormalEnemy::Update(Player* player)
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
-	DamageInterval(FPS * 2);
+	DamageInterval(FPS * 0.5);
 
-	KnockBack(FPS * 1);
+	KnockBack(FPS * 0.5);
 
 	//エネミーの移動
 	EnemyPatrol(player);
@@ -128,7 +128,7 @@ void NormalEnemy::Draw() const
 void NormalEnemy::EnemyPatrol(Player* player)
 {
 	//行動が禁止じゃなければ
-	if (noMove == false)
+	if (noMove == false && !isKnockBack)
 	{
 		if (player->GetCenterLocation().x < location.x)
 		{

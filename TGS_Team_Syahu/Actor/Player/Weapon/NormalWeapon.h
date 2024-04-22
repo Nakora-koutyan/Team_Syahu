@@ -1,7 +1,7 @@
 #pragma once
 #include"../../../Collision/Sphere/SphereCollision.h"
 
-#define NORMAL_WEAPON_ATTACK_TIME	FPS * 0.5f		//通常攻撃の時間
+#define NORMAL_WEAPON_ATTACK_TIME	FPS * 5.5f		//通常攻撃の時間
 #define NORMAL_WEAPON_SPEED				15.f		//弾の速さ
 
 class CharaBase;

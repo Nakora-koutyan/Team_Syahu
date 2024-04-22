@@ -35,7 +35,7 @@ void LargeSword::Update(Player* player)
 	}
 
 	//攻撃時間を超えたら
-	if (framCount > LARGESWORD_ATTACK_TIME)
+	if (framCount > LARGESWORD_ATTACK_TIME || player->GetIsHit())
 	{
 		framCount = 0;
 		direction = 0;
@@ -51,7 +51,7 @@ void LargeSword::Draw() const
 {
 	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
 		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
-		0x00ffff, 1);
+		0x000000, 1);
 }
 
 void LargeSword::Attack(const Player* player)

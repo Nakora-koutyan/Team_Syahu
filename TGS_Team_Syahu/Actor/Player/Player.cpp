@@ -55,6 +55,7 @@ void Player::Update()
 	if (KeyInput::GetKey(KEY_INPUT_1))abilityType = Ability::LargeSword;
 	if (KeyInput::GetKey(KEY_INPUT_2))abilityType = Ability::Dagger;
 	if (KeyInput::GetKey(KEY_INPUT_3))abilityType = Ability::Rapier;
+	if (abilityType != Ability::Empty)isEquipment = true;
 #endif // DEBUG
 
 	if (parryFlg)
@@ -68,16 +69,18 @@ void Player::Update()
 		}
 	}
 
-	if (stealFlg)
+	if (isEquipment)
 	{
-		abilityFramCount++;
-		if (abilityFramCount > PLAYER_ABILITY_TIME)
+		abilityFramCount--;
+		if (abilityFramCount < 0)
 		{
-
+			abilityType = Ability::Empty;
+			abilityFramCount = PLAYER_ABILITY_TIME;
+			isEquipment = false;
 		}
 	}
 
-	DamageInterval(PLAYER_DAMAGE_INTERVAL);
+	DamageInterval(int(PLAYER_DAMAGE_INTERVAL));
 
 	KnockBack(PLAYER_KNOCKBACK_TIME);
 
@@ -114,6 +117,7 @@ void Player::Draw() const
 	DrawFormatString(0, 15, 0x000000, "attackCoolTime :%f", attackCoolTime);
 	DrawFormatString(0, 30, 0x000000, "stealCoolTime :%f", stealCoolTime);
 	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
+	DrawFormatString(0, 60, 0x000000, "%d", abilityFramCount);
 	if (abilityType == Ability::Empty)
 	{
 		DrawFormatString(0, 45, 0x000000, "WeaponType:None");
@@ -267,12 +271,11 @@ void Player::Attack()
 {
 	//投げるまたは武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
-		PadInput::OnPressed(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f)
+		PadInput::OnPressed(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isHit)
 	{
 		//能力を持っているないなら投げる
 		if (stealFlg && abilityType == Ability::Empty)
 		{		
-			isAttack = true;
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
 			normalWeapon->Attack(this);
 			stealFlg = false;
@@ -293,7 +296,7 @@ void Player::Attack()
 	if (attackCoolTime > 0)attackCoolTime--;
 
 	//装備
-	if (stealFlg &&
+	if (stealFlg && !isHit &&
 		(KeyInput::GetKeyDown(KEY_INPUT_E) || PadInput::OnPressed(XINPUT_BUTTON_Y)))
 	{
 		for (int i = 0; i < STEAL_VALUE; i++)
@@ -302,14 +305,15 @@ void Player::Attack()
 			{
 				abilityType = steal[i]->GetKeepType();
 				steal[i]->SetKeepType(Ability::Empty);
+				isEquipment = true;
 			}
 		}
 		stealFlg = false;
 	}
 
 	//奪う
-	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnPressed(XINPUT_BUTTON_B)) && 
-		stealCoolTime <= 0.f)
+	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnPressed(XINPUT_BUTTON_B)) &&
+		stealCoolTime <= 0.f && !isHit)
 	{
 		isAttack = true;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;

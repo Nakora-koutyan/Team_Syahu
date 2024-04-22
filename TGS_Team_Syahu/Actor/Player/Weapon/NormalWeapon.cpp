@@ -34,6 +34,8 @@ void NormalWeapon::Update(Player* player)
 		{
 			location.x += NORMAL_WEAPON_SPEED;
 		}
+
+		location.y += GRAVITY;
 	}
 	else
 	{
@@ -41,7 +43,7 @@ void NormalWeapon::Update(Player* player)
 	}
 
 	//攻撃時間を超えたら
-	if (framCount > NORMAL_WEAPON_ATTACK_TIME)
+	if (framCount > NORMAL_WEAPON_ATTACK_TIME || location.y > GROUND_LINE)
 	{
 		framCount = 0;
 		direction = 0;
