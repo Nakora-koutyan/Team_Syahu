@@ -2,7 +2,7 @@
 #include "../CharaBase.h"
 #include "../Player/Player.h"
 
-#define MAX_COOL_TIME 40
+#define MAX_COOL_TIME 100
 #define MAX_ATTACK_TIME 50
 
 class EnemyBase :public CharaBase
@@ -46,5 +46,8 @@ public:
 
 	//攻撃を行うか？
 	void AttackToPlayer(Player* player);
+
+	//プレイヤーとの当たり判定
+	void HitToPlayer(Player* player);
 };
 

@@ -3,7 +3,7 @@
 
 #define NEED_STICK_RATIO	0.2f		//スティックの傾き割合
 #define GRAVITY				0.8f		//重力
-#define JUMP_POWER			15.f		//ジャンプ力
+#define JUMP_POWER			20.f		//ジャンプ力
 
 enum class Ability
 {

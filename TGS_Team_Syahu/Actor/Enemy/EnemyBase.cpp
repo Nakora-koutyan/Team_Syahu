@@ -35,3 +35,7 @@ void EnemyBase::ChaseToPlayer(Player* player)
 void EnemyBase::AttackToPlayer(Player* player)
 {
 }
+
+void EnemyBase::HitToPlayer(Player* player)
+{
+}
