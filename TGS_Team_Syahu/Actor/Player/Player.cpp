@@ -51,6 +51,12 @@ Player::~Player()
 
 void Player::Update()
 {
+#ifdef DEBUG
+	if (KeyInput::GetKey(KEY_INPUT_1))abilityType = Ability::LargeSword;
+	if (KeyInput::GetKey(KEY_INPUT_2))abilityType = Ability::Dagger;
+	if (KeyInput::GetKey(KEY_INPUT_3))abilityType = Ability::Rapier;
+#endif // DEBUG
+
 	if (parryFlg)
 	{
 		parryFram++;
@@ -104,9 +110,29 @@ void Player::Draw() const
 		isGuard ? parryFlg ? 0x00ff00 : 0x0000ff : isHit ? 0xff0000 : 0xffff00, FALSE
 	);
 
-	DrawFormatString(0, 0, 0xff0000, "hp :%f", hp);
-	DrawFormatString(0, 15, 0xff0000, "parryFlg :%s", parryFlg ? "true" : "false");
-	DrawFormatString(0, 30, 0xff0000, "direction x:%f y:%f", direction.x,direction.y);
+	DrawFormatString(0, 0, 0x000000, "hp :%f", hp);
+	DrawFormatString(0, 15, 0x000000, "attackCoolTime :%f", attackCoolTime);
+	DrawFormatString(0, 30, 0x000000, "stealCoolTime :%f", stealCoolTime);
+	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
+	if (abilityType == Ability::Empty)
+	{
+		DrawFormatString(0, 45, 0x000000, "WeaponType:None");
+	}
+	else
+	{
+		if (abilityType == Ability::LargeSword)
+		{
+			DrawFormatString(0, 45, 0x000000, "WeaponType:LargeSword");
+		}
+		if (abilityType == Ability::Dagger)
+		{
+			DrawFormatString(0, 45, 0x000000, "WeaponType:Dagger");
+		}
+		if (abilityType == Ability::Rapier)
+		{
+			DrawFormatString(0, 45, 0x000000, "WeaponType:Rapier");
+		}
+	}
 
 #endif // DEBUG
 

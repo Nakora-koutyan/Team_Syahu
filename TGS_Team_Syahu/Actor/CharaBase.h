@@ -10,7 +10,7 @@ enum class Ability
 	Empty = 0,			//空
 	LargeSword,			//大剣
 	Dagger,				//ダガー
-	Saber				//サーベル
+	Rapier				//レイピア
 };
 
 class CharaBase :public BoxCollision
