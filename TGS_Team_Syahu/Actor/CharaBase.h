@@ -77,6 +77,9 @@ public:
 	//移動量の取得
 	Vector2D GetMove()const { return move; }
 
+	//移動量の設定
+	void SetMove(const Vector2D move) { this->move.x = move.x, this->move.y = move.y; }
+
 	//方向の取得
 	Vector2D GetDirection()const { return direction; }
 
