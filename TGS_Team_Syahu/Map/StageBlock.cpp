@@ -18,7 +18,6 @@ StageBlock::~StageBlock() {
 void StageBlock::Update() {
 	screenLocation = Camera::ConvertScreenPosition(location);
 
-	if(HitBox())
 };
 
 void StageBlock::Draw()const {
