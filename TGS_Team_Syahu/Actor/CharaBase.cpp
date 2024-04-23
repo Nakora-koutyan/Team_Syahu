@@ -53,6 +53,8 @@ void CharaBase::KnockBack(const double time)
 		{
 			isKnockBack = false;
 			knockBackCount = 0;
+			move.x = 0.f;
+			move.y = 0.f;
 		}
 	}
 }

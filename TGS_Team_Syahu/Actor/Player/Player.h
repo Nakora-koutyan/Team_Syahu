@@ -6,7 +6,7 @@
 
 #define PLAYER_MOVE_SPEED				3.f				//移動移動
 #define PLAYER_MAX_MOVE_SPEED			9.f				//最高速度
-#define PLAYER_DAMAGE_INTERVAL			FPS * 0.5		//プレイヤーが再度ダメージを受けるまでの時間
+#define PLAYER_DAMAGE_INTERVAL			FPS * 1.5		//プレイヤーが再度ダメージを受けるまでの時間
 #define PLAYER_DAMAGE_CUT				1.f - 0.25f		//ガード中のダメージ
 #define PLAYER_PARRY_FLAME				4				//パリィの猶予フレーム
 #define PLAYER_PARRY_TIME				FPS * 2			//パリィの効果時間

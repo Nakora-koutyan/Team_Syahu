@@ -152,6 +152,8 @@ void Player::Hit(CharaBase* chara)
 		//ダメージ用のカウントを計測する
 		damageFramCount++;
 
+		isHit = true;
+
 		hp -= chara->GetDamage();
 		isKnockBack = true;
 
@@ -173,7 +175,7 @@ void Player::Movement()
 {
 	//右へ移動
 	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) &&
-		!isHit && !isAttack)
+		!isKnockBack && !isAttack)
 	{
 		//最高速度は超えない
 		if (move.x < PLAYER_MAX_MOVE_SPEED)
@@ -196,7 +198,7 @@ void Player::Movement()
 	}
 	//左へ移動
 	else if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) &&
-		!isHit && !isAttack)
+		!isKnockBack && !isAttack)
 	{
 		//最高速度は超えない
 		if (move.x > -PLAYER_MAX_MOVE_SPEED)
@@ -226,7 +228,7 @@ void Player::Movement()
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isHit && !isAttack)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack)
 	{
 		move.y = -JUMP_POWER;
 		isAir = true;
