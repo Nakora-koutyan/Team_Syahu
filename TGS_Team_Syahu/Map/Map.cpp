@@ -3,10 +3,13 @@
 #include "../Actor/Player/Player.h"
 
 Map::Map() {
-	Location_1.x = 1000;
-	Location_1.y = 520;
-	Location_2.x = 1100;
-	Location_2.y = 620;
+	
+
+	location.x = 1000;
+	location.y = 1300;
+
+	area.height = 100;
+	area.width = 100;
 };
 
 Map::~Map() {
@@ -21,8 +24,8 @@ void Map::Draw()const {
 
 	DrawBoxAA
 	(
-		Location_1.x, Location_1.y,
-		Location_2.x, Location_2.y,
+		GetMinScreenLocation().x, GetMinScreenLocation().y,
+		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
 		0xffffff , FALSE
 	);
 };
