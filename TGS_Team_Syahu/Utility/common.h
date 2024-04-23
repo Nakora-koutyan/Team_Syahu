@@ -10,8 +10,8 @@
 
 #define GROUND_LINE		WORLD_HEIGHT - 100	//地面
 
-#define DEGREE_TO_RADIAN(_deg)	_deg * (DX_PI_F / 180)		//角度からラジアンへ
-#define RADIAN_TO_DEGREE(_rad)	_rad * (180 / DX_PI_F)		//ラジアンから角度へ
+#define DEGREE_TO_RADIAN(_deg)	_deg * (DX_PI_F / 180.f)		//角度からラジアンへ
+#define RADIAN_TO_DEGREE(_rad)	_rad * (180.f / DX_PI_F)		//ラジアンから角度へ
 
 #define _USE_MATH_DEFINES
 #include<math.h>

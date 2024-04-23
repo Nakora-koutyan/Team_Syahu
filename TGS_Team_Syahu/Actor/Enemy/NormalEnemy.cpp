@@ -66,9 +66,9 @@ void NormalEnemy::Update(Player* player)
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
-	DamageInterval(FPS * 2);
+	DamageInterval(int(FPS * 0.5));
 
-	KnockBack(FPS * 1);
+	KnockBack(FPS * 0.5);
 
 	//エネミーの移動
 	EnemyPatrol(player);
@@ -167,17 +167,14 @@ void NormalEnemy::EnemyPatrol(Player* player)
 			{
 				direction = DIRECTION_LEFT;
 			}
+			else
+			{
+				move.x = ENEMY_SPEED;
+			}
+			direction = DIRECTION_RIGHT;
 		}
-	}
-	
-	//行動が禁止じゃなければ
-	if (noMove == false)
-	{
-		//パリィ状態でなければ進行する
-		if (!player->GetParryFlg())
-		{
-			location.x += move.x;
-		}
+
+		location.x += move.x;
 	}
 }
 
