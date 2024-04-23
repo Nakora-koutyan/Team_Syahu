@@ -97,7 +97,7 @@ void NormalEnemy::Draw() const
 		screenLocation.x + area.width, screenLocation.y + area.height,
 		isHit ? 0xff0000 : isAttack ? attackColor : usualColor, TRUE, 1.0f
 	);
-	/*DrawFormatStringF(50.f, 80.f, GetColor(255, 0, 255), "%f GetMinLocation().x", GetMinLocation().x);
+	DrawFormatStringF(50.f, 80.f, GetColor(255, 0, 255), "%f GetMinLocation().x", GetMinLocation().x);
 	DrawFormatStringF(50.f, 180.f, GetColor(255, 0, 255), "%s isChase", isChase ? "true" : "false");
 	DrawFormatStringF(50.f, 100.f, GetColor(255, 0, 255), "%d AttackCoolTime", attackCoolTime);
 	DrawFormatStringF(50.f, 120.f, GetColor(255, 0, 255), "%d attackTime", attackTime);
@@ -105,7 +105,7 @@ void NormalEnemy::Draw() const
 	DrawFormatStringF(50.f, 160.f, GetColor(255, 0, 255), "%s isAttack", isAttack ? "true" : "false");
 	DrawFormatStringF(50.f, 180.f, GetColor(255, 0, 255), "%s isChase", isChase ? "true" : "false");
 	DrawFormatStringF(50.f, 200.f, GetColor(255, 0, 255), "%s isPatrol", isPatrol ? "true" : "false");
-	DrawFormatStringF(50.f, 220.f, GetColor(255, 0, 255), "%f patrolCounter", patrolCounter);*/
+	DrawFormatStringF(50.f, 220.f, GetColor(255, 0, 255), "%f patrolCounter", patrolCounter);
 	
 	//プレイヤーを発見した場合、「！」を表示する
 	if (isChase == true)
@@ -167,15 +167,10 @@ void NormalEnemy::EnemyPatrol(Player* player)
 			{
 				direction = DIRECTION_LEFT;
 			}
-			else
-			{
-				move.x = ENEMY_SPEED;
-			}
-			direction = DIRECTION_RIGHT;
 		}
-
-		location.x += move.x;
 	}
+
+	location.x += move.x;
 }
 
 //攻撃範囲
