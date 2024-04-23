@@ -10,6 +10,8 @@ GameMainScene::GameMainScene()
 	stageblock = new StageBlock();
 
 	kari = LoadGraph("Resource/Images/kari.png");
+
+	debugModeFlg = false;
 }
 
 GameMainScene::~GameMainScene()
@@ -22,7 +24,9 @@ GameMainScene::~GameMainScene()
 
 SceneBase* GameMainScene::Update()
 {
-	camera->Update(player->GetLocation());
+	if (KeyInput::GetKey(KEY_INPUT_G))debugModeFlg = !debugModeFlg;
+
+	camera->Update(player->GetLocation(),debugModeFlg);
 
 	player->Update();
 

@@ -10,12 +10,14 @@
 class GameMainScene :public SceneBase
 {
 private:
-    Player* player;         //プレイヤーのオブジェクト
-    Camera* camera;         //カメラのオブジェクト
-    NormalEnemy* enemy;     //雑魚敵のオブジェクト
+    Player* player;                     //プレイヤーのオブジェクト
+    Camera* camera;                     //カメラのオブジェクト
+    NormalEnemy* enemy;                 //雑魚敵のオブジェクト
     StageBlock* stageblock;
 
-    int kari;       //かり
+    int kari;                           //かり
+
+    bool debugModeFlg;                  //デバッグ状態にする？ 
 
 public:
     //コンストラクタ
