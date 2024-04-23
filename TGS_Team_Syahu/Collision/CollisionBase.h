@@ -18,10 +18,10 @@ class LineCollision;
 class CollisionBase
 {
 protected:
-	Vector2D location;			//ワールド座標
-	Vector2D screenLocation;	//スクリーン座標
+	Vector2D location;					//ワールド座標
+	Vector2D screenLocation;			//スクリーン座標
 
-	CollisionType collisionType;			//コリジョンの種類
+	CollisionType collisionType;		//コリジョンの種類
 public:
 	//コンストラクタ
 	CollisionBase();

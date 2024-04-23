@@ -15,8 +15,8 @@ Player::Player()
 
 	for (int i = 0; i < PLAYER_MAX_STOCK; i++)
 	{
-		stock[i] = Ability::Empty;
-		weaponFramCount[i] = PLAYER_ABILITY_TIME;
+		stock[i] = Weapon::Empty;
+		weaponFramCount[i] = PLAYER_WEAPON_TIME;
 	}
 	normalWeapon = new NormalWeapon();
 	for (int i = 0; i < STEAL_VALUE; i++)
@@ -50,24 +50,24 @@ Player::~Player()
 void Player::Update()
 {
 #ifdef DEBUG
-	if (KeyInput::GetKey(KEY_INPUT_1))abilityType = Ability::LargeSword;
-	if (KeyInput::GetKey(KEY_INPUT_2))abilityType = Ability::Dagger;
-	if (KeyInput::GetKey(KEY_INPUT_3))abilityType = Ability::Rapier;
+	if (KeyInput::GetKey(KEY_INPUT_1))weaponType = Weapon::LargeSword;
+	if (KeyInput::GetKey(KEY_INPUT_2))weaponType = Weapon::Dagger;
+	if (KeyInput::GetKey(KEY_INPUT_3))weaponType = Weapon::Rapier;
 	if (KeyInput::GetKey(KEY_INPUT_4))
 	{
-		stock[0] = Ability::LargeSword;
+		stock[0] = Weapon::LargeSword;
 	}
-	if (abilityType != Ability::Empty)isEquipment = true;
+	//if (weaponType != Weapon::Empty)isEquipment = true;
 #endif // DEBUG
 
-	if (isEquipment)
+	if (isEquipment && stock[stockCount] != Weapon::Empty)
 	{
 		weaponFramCount[stockCount]--;
 		if (weaponFramCount[stockCount] < 0)
 		{
-			abilityType = Ability::Empty;
-			weaponFramCount[stockCount] = PLAYER_ABILITY_TIME;
-			stock[stockCount] = Ability::Empty;
+			weaponType = Weapon::Empty;
+			weaponFramCount[stockCount] = PLAYER_WEAPON_TIME;
+			stock[stockCount] = Weapon::Empty;
 			isEquipment = false;
 		}
 	}
@@ -111,21 +111,21 @@ void Player::Draw() const
 	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
 	DrawFormatString(0, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponFramCount[stockCount]);
 	DrawFormatString(0, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
-	if (abilityType == Ability::Empty)
+	if (weaponType == Weapon::Empty)
 	{
 		DrawFormatString(0, 45, 0x000000, "WeaponType:None");
 	}
 	else
 	{
-		if (abilityType == Ability::LargeSword)
+		if (weaponType == Weapon::LargeSword)
 		{
 			DrawFormatString(0, 45, 0x000000, "WeaponType:LargeSword");
 		}
-		if (abilityType == Ability::Dagger)
+		if (weaponType == Weapon::Dagger)
 		{
 			DrawFormatString(0, 45, 0x000000, "WeaponType:Dagger");
 		}
-		if (abilityType == Ability::Rapier)
+		if (weaponType == Weapon::Rapier)
 		{
 			DrawFormatString(0, 45, 0x000000, "WeaponType:Rapier");
 		}
@@ -282,20 +282,20 @@ void Player::Attack()
 {
 	//投げるまたは武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
-		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isHit)
+		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack)
 	{
 		//武器を持っているないなら投げる
-		if (stock[stockCount] != Ability::Empty && !isEquipment)
+		if (stock[stockCount] != Weapon::Empty && !isEquipment)
 		{		
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
 			normalWeapon->Attack(this,0.f);
-			stock[stockCount] = Ability::Empty;
+			stock[stockCount] = Weapon::Empty;
 		}
 
 		//武器攻撃
-		if (abilityType != Ability::Empty)
+		if (weaponType != Weapon::Empty)
 		{
-			if (stock[stockCount] == Ability::LargeSword)
+			if (stock[stockCount] == Weapon::LargeSword)
 			{
 				isAttack = true;
 				attackCoolTime = PLAYER_LARGESWORD_COOLTIME;
@@ -307,19 +307,19 @@ void Player::Attack()
 	if (attackCoolTime > 0)attackCoolTime--;
 
 	//装備
-	if (!isHit &&
+	if (!isKnockBack &&
 		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
 	{
-		if (stock[stockCount] != Ability::Empty)
+		if (stock[stockCount] != Weapon::Empty)
 		{
-			abilityType = stock[stockCount];
+			weaponType = stock[stockCount];
 			isEquipment = true;
 		}
 	}
 
 	//奪う
 	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)) &&
-		stealCoolTime <= 0.f && !isHit)
+		stealCoolTime <= 0.f && !isKnockBack)
 	{
 		isAttack = true;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;
@@ -337,7 +337,7 @@ void Player::Attack()
 	for (int i = 0; i < STEAL_VALUE; i++)
 	{
 		//鉤爪のいずれかが能力を奪えている
-		if (steal[i]->GetKeepType() != Ability::Empty)
+		if (steal[i]->GetKeepType() != Weapon::Empty)
 		{
 			//1度武器をストックしたら他の爪に武器があってもストックしない
 			if (!once)
@@ -345,7 +345,7 @@ void Player::Attack()
 				for (int j = 0; j < PLAYER_MAX_STOCK; j++)
 				{
 					//ストックに空きがある
-					if (stock[j] == Ability::Empty)
+					if (stock[j] == Weapon::Empty)
 					{
 						stock[j] = steal[i]->GetKeepType();
 						once = true;
@@ -353,7 +353,7 @@ void Player::Attack()
 					}
 				}
 			}
-			steal[i]->SetKeepType(Ability::Empty);
+			steal[i]->SetKeepType(Weapon::Empty);
 		}
 	}
 
@@ -365,6 +365,7 @@ void Player::StockSelect()
 	//stockカウントを減らす
 	if ((KeyInput::GetKey(KEY_INPUT_Q)) || PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER))
 	{
+		isEquipment = false;
 		stockCount--;
 		if (stockCount < 0)
 		{
@@ -375,6 +376,7 @@ void Player::StockSelect()
 	//stockカウントを増やす
 	if ((KeyInput::GetKey(KEY_INPUT_E)) || PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER))
 	{
+		isEquipment = false;
 		stockCount++;
 		if (stockCount >= PLAYER_MAX_STOCK)
 		{

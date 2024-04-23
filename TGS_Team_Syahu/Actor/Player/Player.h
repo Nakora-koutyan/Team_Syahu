@@ -6,7 +6,7 @@
 
 #define PLAYER_MOVE_SPEED				3.f				//移動移動
 #define PLAYER_MAX_MOVE_SPEED			9.f				//最高速度
-#define PLAYER_DAMAGE_INTERVAL			FPS * 1.5		//プレイヤーが再度ダメージを受けるまでの時間
+#define PLAYER_DAMAGE_INTERVAL			FPS * 1.0		//プレイヤーが再度ダメージを受けるまでの時間
 #define PLAYER_DAMAGE_CUT				1.f - 0.25f		//ガード中のダメージ
 #define PLAYER_PARRY_FLAME				4				//パリィの猶予フレーム
 #define PLAYER_PARRY_TIME				FPS * 2			//パリィの効果時間
@@ -16,7 +16,7 @@
 #define PLAYER_LARGESWORD_COOLTIME		FPS * 1.7f		//大剣のクールタイム
 #define PLAYER_KNOCKBACK				5.f				//ノックバックの移動距離/f
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
-#define PLAYER_ABILITY_TIME				FPS * 5			//奪った能力の使用時間
+#define PLAYER_WEAPON_TIME				FPS * 30		//武器の使用時間
 #define PLAYER_MAX_STOCK				5				//最大ストック数
 #define STEAL_VALUE						3				//奪うの数
 #define STEAL_DISTANCE					25.f			//プレイヤーから奪うを出す距離
@@ -25,7 +25,7 @@
 class Player :public CharaBase
 {
 private:
-	Ability stock[PLAYER_MAX_STOCK];		//ストック
+	Weapon stock[PLAYER_MAX_STOCK];			//ストック
 	NormalWeapon* normalWeapon;				//投げる
 	Steal* steal[STEAL_VALUE];				//奪う
 	LargeSword* largeSword;					//大剣

@@ -46,7 +46,7 @@ void LargeSword::Update(Player* player)
 	}
 
 	//攻撃時間を超えたら
-	if (framCount > LARGESWORD_ATTACK_TIME || player->GetIsHit())
+	if (framCount > LARGESWORD_ATTACK_TIME || player->GetIsKnockBack())
 	{
 		framCount = 0;
 		direction = 0;
