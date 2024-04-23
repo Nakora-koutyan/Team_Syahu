@@ -1,4 +1,4 @@
-#include "Player.h"
+#include"Player.h"
 #include"../Camera/Camera.h"
 
 #define DEBUG
@@ -50,14 +50,22 @@ Player::~Player()
 void Player::Update()
 {
 #ifdef DEBUG
-	if (KeyInput::GetKey(KEY_INPUT_1))weaponType = Weapon::LargeSword;
-	if (KeyInput::GetKey(KEY_INPUT_2))weaponType = Weapon::Dagger;
-	if (KeyInput::GetKey(KEY_INPUT_3))weaponType = Weapon::Rapier;
+	if (KeyInput::GetKey(KEY_INPUT_1))
+	{
+		stock[stockCount] = Weapon::LargeSword;
+	}
+	if (KeyInput::GetKey(KEY_INPUT_2))
+	{ 
+		stock[stockCount] = Weapon::Dagger;
+	}
+	if (KeyInput::GetKey(KEY_INPUT_3)) 
+	{ 
+		stock[stockCount] = Weapon::Rapier;
+	}
 	if (KeyInput::GetKey(KEY_INPUT_4))
 	{
-		stock[0] = Weapon::LargeSword;
+		stock[stockCount] = Weapon::LargeSword;
 	}
-	//if (weaponType != Weapon::Empty)isEquipment = true;
 #endif // DEBUG
 
 	if (isEquipment && stock[stockCount] != Weapon::Empty)
@@ -288,8 +296,9 @@ void Player::Attack()
 		if (stock[stockCount] != Weapon::Empty && !isEquipment)
 		{		
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
-			normalWeapon->Attack(this,0.f);
+			normalWeapon->Attack(this, GetWeaponWeight(stock[stockCount]));
 			stock[stockCount] = Weapon::Empty;
+			weaponFramCount[stockCount] = PLAYER_WEAPON_TIME;
 		}
 
 		//武器攻撃
@@ -367,6 +376,7 @@ void Player::StockSelect()
 	{
 		isEquipment = false;
 		stockCount--;
+		weaponType = Weapon::Empty;
 		if (stockCount < 0)
 		{
 			stockCount = PLAYER_MAX_STOCK - 1;
@@ -378,9 +388,41 @@ void Player::StockSelect()
 	{
 		isEquipment = false;
 		stockCount++;
+		weaponType = Weapon::Empty;
 		if (stockCount >= PLAYER_MAX_STOCK)
 		{
 			stockCount = 0;
 		}
 	}
+}
+
+float Player::GetWeaponWeight(const Weapon type)
+{
+	Weapon checkType = type;
+	float weight = 0.f;
+
+	switch (checkType)
+	{
+	case Weapon::Empty:
+		weight = 0.f;
+		break;
+
+	case Weapon::LargeSword:
+		weight = LARGESWORD_WEIGHT;
+		break;
+
+	case Weapon::Dagger:
+		weight = DAGGER_WEIGHT;
+		break;
+
+	case Weapon::Rapier:
+		weight = RAPIER_WEIGHT;
+		break;
+
+	default:
+		weight = 0.f;
+		break;
+	}
+
+	return weight;
 }
