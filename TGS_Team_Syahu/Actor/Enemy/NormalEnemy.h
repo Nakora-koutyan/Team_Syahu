@@ -46,20 +46,20 @@ public:
 	//描画更新処理
 	void Draw()const;
 
-protected:
+private:
 
 	//パトロール関数
-	void EnemyPatrol(Player* player);
+	void EnemyPatrol(Player* player) override;
 
 	//攻撃範囲
-	void AttackRange();
+	void AttackRange() override;
 
 	//プレイヤーを発見するためのセンサー
-	void ChaseRange();
+	void ChaseRange() override;
 
 	//追跡を行うか？
-	void ChaseToPlayer(Player* player);
+	void ChaseToPlayer(Player* player) override;
 
 	//攻撃を行うか？
-	void AttackToPlayer(Player* player);
+	void AttackToPlayer(Player* player) override;
 };

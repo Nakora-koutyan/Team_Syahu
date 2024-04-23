@@ -84,6 +84,7 @@ void NormalEnemy::Update(Player* player)
 
 	//プレイヤーへの攻撃
 	AttackToPlayer(player);
+
 }
 
 //描画に関する更新
@@ -96,11 +97,15 @@ void NormalEnemy::Draw() const
 		screenLocation.x + area.width, screenLocation.y + area.height,
 		isHit ? 0xff0000 : isAttack ? attackColor : usualColor, TRUE, 1.0f
 	);
-	DrawFormatStringF(50.f, 80.f, GetColor(255, 0, 255), "%f GetMinLocation().x", GetMinLocation().x);
+	/*DrawFormatStringF(50.f, 80.f, GetColor(255, 0, 255), "%f GetMinLocation().x", GetMinLocation().x);
+	DrawFormatStringF(50.f, 180.f, GetColor(255, 0, 255), "%s isChase", isChase ? "true" : "false");
 	DrawFormatStringF(50.f, 100.f, GetColor(255, 0, 255), "%d AttackCoolTime", attackCoolTime);
 	DrawFormatStringF(50.f, 120.f, GetColor(255, 0, 255), "%d attackTime", attackTime);
 	DrawFormatStringF(50.f, 140.f, GetColor(255, 0, 255), "%s noMove", noMove ? "true" : "false");
 	DrawFormatStringF(50.f, 160.f, GetColor(255, 0, 255), "%s isAttack", isAttack ? "true" : "false");
+	DrawFormatStringF(50.f, 180.f, GetColor(255, 0, 255), "%s isChase", isChase ? "true" : "false");
+	DrawFormatStringF(50.f, 200.f, GetColor(255, 0, 255), "%s isPatrol", isPatrol ? "true" : "false");
+	DrawFormatStringF(50.f, 220.f, GetColor(255, 0, 255), "%f patrolCounter", patrolCounter);*/
 	
 	//プレイヤーを発見した場合、「！」を表示する
 	if (isChase == true)
@@ -127,34 +132,47 @@ void NormalEnemy::Draw() const
 //プレイヤーのいる方向に向かう
 void NormalEnemy::EnemyPatrol(Player* player)
 {
+	//パトロール条件(攻撃・追跡の範囲にプレイヤーが存在しない場合)
+	if (isChase == false && isAttack == false)
+	{
+		//パトロールをする
+		isPatrol = true;
+	}
+	else
+	{
+		//パトロールを中止する
+		isPatrol = false;
+	}
+	//パトロール処理
+	if (isPatrol == true)
+	{
+		//左向きの場合
+		if(direction == DIRECTION_LEFT)
+		{
+			move.x = -ENEMY_SPEED;
+			patrolCounter -= ENEMY_SPEED;
+			//左に50進んだら向きを右にする
+			if (patrolCounter <= -150.f)
+			{
+				direction = DIRECTION_RIGHT;
+			}
+		}
+		//右向きの場合
+		if (direction == DIRECTION_RIGHT)
+		{
+			move.x = ENEMY_SPEED;
+			patrolCounter += ENEMY_SPEED;
+			//右に50進んだら向きを左にする
+			if (patrolCounter >= 150.f)
+			{
+				direction = DIRECTION_LEFT;
+			}
+		}
+	}
+	
 	//行動が禁止じゃなければ
 	if (noMove == false)
 	{
-		if (player->GetCenterLocation().x < location.x)
-		{
-			if (isAttack == true)
-			{
-				move.x = -(ENEMY_SPEED * RUSH_DIAMETER);
-			}
-			else
-			{
-				move.x = -ENEMY_SPEED;
-			}
-			direction = DIRECTION_LEFT;
-		}
-		else if (player->GetCenterLocation().x > location.x)
-		{
-			if (isAttack == true)
-			{
-				move.x = (ENEMY_SPEED * RUSH_DIAMETER);
-			}
-			else
-			{
-				move.x = ENEMY_SPEED;
-			}
-			direction = DIRECTION_RIGHT;
-		}
-
 		//パリィ状態でなければ進行する
 		if (!player->GetParryFlg())
 		{
@@ -166,20 +184,20 @@ void NormalEnemy::EnemyPatrol(Player* player)
 //攻撃範囲
 void NormalEnemy::AttackRange()
 {
-	attackRange[0].x = GetMinLocation().x - 300.f;
+	attackRange[0].x = GetMinLocation().x - 200.f;
 	attackRange[0].y = GetCenterLocation().y;
 
-	attackRange[1].x = GetMaxLocation().x + 300.f;
+	attackRange[1].x = GetMaxLocation().x + 200.f;
 	attackRange[1].y = GetCenterLocation().y;
 }
 
-//戦闘態勢に入る範囲
+//追跡に入る範囲
 void NormalEnemy::ChaseRange()
 {
-	chaseCenser[0].x = GetMinLocation().x - 500.f;
+	chaseCenser[0].x = GetMinLocation().x - 300.f;
 	chaseCenser[0].y = GetCenterLocation().y;
 
-	chaseCenser[1].x = GetMaxLocation().x + 500.f; 
+	chaseCenser[1].x = GetMaxLocation().x + 300.f; 
 	chaseCenser[1].y = GetCenterLocation().y;
 }
 
@@ -195,6 +213,34 @@ void NormalEnemy:: ChaseToPlayer(Player* player)
 	else
 	{
 		isChase = false;
+	}
+
+	//追跡処理
+	if (player->GetCenterLocation().x < location.x
+		&& isChase == true)
+	{
+		if (isAttack == true)
+		{
+			move.x = -(ENEMY_SPEED * RUSH_DIAMETER);
+		}
+		else
+		{
+			move.x = -ENEMY_SPEED;
+		}
+		direction = DIRECTION_LEFT;
+	}
+	if (player->GetCenterLocation().x > location.x
+		&& isChase == true)
+	{
+		if (isAttack == true)
+		{
+			move.x = (ENEMY_SPEED * RUSH_DIAMETER);
+		}
+		else
+		{
+			move.x = ENEMY_SPEED;
+		}
+		direction = DIRECTION_RIGHT;
 	}
 }
 
@@ -229,7 +275,7 @@ void NormalEnemy::AttackToPlayer(Player* player)
 		noMove = true;
 	}
 	//行動禁止でクールダウンが０秒以上の場合
-	if (noMove == true && attackCoolTime >= 0)
+	if (noMove == true)
 	{
 		//クールタイムのカウントダウンの開始
 		attackCoolTime -= 1;
