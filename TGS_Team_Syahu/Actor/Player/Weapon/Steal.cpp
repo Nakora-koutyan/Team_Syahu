@@ -87,27 +87,20 @@ void Steal::Hit(CharaBase* enemy, Player* player)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			StealAttack(enemy, player);
+			enemy->SetHp(enemy->GetHp() - player->GetDamage());
+			enemy->SetIsHit(true);
+
+			//能力の種類が空ではないなら
+			if (enemy->GetAbilityType() != Ability::Empty)
+			{
+				//敵の能力を奪う
+				keepType = enemy->GetAbilityType();
+				//敵は無能力になる
+				//enemy->SetAbilityType(Ability::Empty);
+			}
 
 			framCount = 0;
 			direction = 0;
 		}
-	}
-}
-
-void Steal::StealAttack(CharaBase* enemy, Player* player)
-{
-	enemy->SetHp(enemy->GetHp() - player->GetDamage());
-	enemy->SetIsHit(true);
-
-	//能力の種類が空ではないなら
-	if (enemy->GetAbilityType() != Ability::Empty)
-	{
-		//敵の能力を奪う
-		keepType = enemy->GetAbilityType();
-		//敵は無能力になる
-		enemy->SetAbilityType(Ability::Empty);
-		
-		player->SetStealFlg(true);
 	}
 }

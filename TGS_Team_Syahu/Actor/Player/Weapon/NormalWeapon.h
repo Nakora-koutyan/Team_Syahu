@@ -2,7 +2,8 @@
 #include"../../../Collision/Sphere/SphereCollision.h"
 
 #define NORMAL_WEAPON_ATTACK_TIME	FPS * 5.5f		//通常攻撃の時間
-#define NORMAL_WEAPON_SPEED				15.f		//弾の速さ
+#define NORMAL_WEAPON_SPEED			20.f			//弾の速さ
+#define NORMAL_WEAPON_GRAVITY		0.09f			//弾の重力
 
 class CharaBase;
 class Player;
@@ -10,9 +11,15 @@ class Player;
 class NormalWeapon :public SphereCollision
 {
 private:
+	Vector2D move;			//移動量
+
 	short direction;		//方向
 
 	int framCount;			//フレームカウント
+
+	float angle;			//角度
+	float gravityVelocity;	//重力速度
+	float weaponWeight;		//武器の重さ
 
 	bool isShow;			//表示させる？
 
@@ -30,7 +37,7 @@ public:
 	void Draw()const;
 
 	//攻撃
-	void Attack(const Player* player);
+	void Attack(const Player* player, const float weight);
 
 	//当たった時の処理
 	void Hit(CharaBase* enemy, Player* player);

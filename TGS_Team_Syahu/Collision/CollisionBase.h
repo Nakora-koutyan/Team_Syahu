@@ -8,7 +8,7 @@ enum class CollisionType
 	Empty = 0,		//空
 	Box,			//四角
 	Sphere,			//円
-	Line
+	Line			//線
 };
 
 class BoxCollision;
