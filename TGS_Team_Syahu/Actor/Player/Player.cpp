@@ -12,11 +12,11 @@ Player::Player()
 	direction.x = 1.f;
 	direction.y = 0.f;
 	damage = 10.f;
-	abilityType = Ability::LargeSword;
 
 	for (int i = 0; i < PLAYER_MAX_STOCK; i++)
 	{
 		stock[i] = Ability::Empty;
+		weaponFramCount[i] = PLAYER_ABILITY_TIME;
 	}
 	normalWeapon = new NormalWeapon();
 	for (int i = 0; i < STEAL_VALUE; i++)
@@ -30,18 +30,11 @@ Player::Player()
 
 	framCount = 0;
 	damageFramCount = 0;
-	parryFram = 0;
-	abilityFramCount = 0;
 
-	guardCoolTime = 0.f;
 	attackCoolTime = 0.f;
 	stealCoolTime = 0.f;
 
-	isGuard = false;
-	stealFlg = false;
 	isEquipment = false;
-	guardCoolTimeFlg = false;
-	parryFlg = false;
 }
 
 Player::~Player()
@@ -60,31 +53,21 @@ void Player::Update()
 	if (KeyInput::GetKey(KEY_INPUT_1))abilityType = Ability::LargeSword;
 	if (KeyInput::GetKey(KEY_INPUT_2))abilityType = Ability::Dagger;
 	if (KeyInput::GetKey(KEY_INPUT_3))abilityType = Ability::Rapier;
+	if (KeyInput::GetKey(KEY_INPUT_4))
 	{
-		if (KeyInput::GetKey(KEY_INPUT_4))stealFlg = true;
 		stock[0] = Ability::LargeSword;
 	}
 	if (abilityType != Ability::Empty)isEquipment = true;
 #endif // DEBUG
 
-	if (parryFlg)
-	{
-		parryFram++;
-		//PLAYER_PARRY_TIME後に再度パリィ可能
-		if (parryFram > PLAYER_PARRY_TIME)
-		{
-			parryFlg = false;
-			parryFram = 0;
-		}
-	}
-
 	if (isEquipment)
 	{
-		abilityFramCount--;
-		if (abilityFramCount < 0)
+		weaponFramCount[stockCount]--;
+		if (weaponFramCount[stockCount] < 0)
 		{
 			abilityType = Ability::Empty;
-			abilityFramCount = PLAYER_ABILITY_TIME;
+			weaponFramCount[stockCount] = PLAYER_ABILITY_TIME;
+			stock[stockCount] = Ability::Empty;
 			isEquipment = false;
 		}
 	}
@@ -97,7 +80,7 @@ void Player::Update()
 
 	Attack();
 
-	Guard();
+	StockSelect();
 
 	normalWeapon->Update(this);
 	
@@ -119,14 +102,14 @@ void Player::Draw() const
 	(
 		GetMinScreenLocation().x, GetMinScreenLocation().y,
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
-		isGuard ? parryFlg ? 0x00ff00 : 0x0000ff : isHit ? 0xff0000 : 0xffff00, FALSE
+		isHit ? 0xff0000 : 0xffff00, FALSE
 	);
 
 	DrawFormatString(0, 0, 0x000000, "hp :%f", hp);
 	DrawFormatString(0, 15, 0x000000, "attackCoolTime :%f", attackCoolTime);
 	DrawFormatString(0, 30, 0x000000, "stealCoolTime :%f", stealCoolTime);
 	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
-	DrawFormatString(0, 60, 0x000000, "weaponCount :%d", abilityFramCount);
+	DrawFormatString(0, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponFramCount[stockCount]);
 	DrawFormatString(0, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
 	if (abilityType == Ability::Empty)
 	{
@@ -166,7 +149,23 @@ void Player::Hit(CharaBase* chara)
 	//すでに当たってないなら
 	if (!isHit)
 	{
-		Damage(chara);
+		//ダメージ用のカウントを計測する
+		damageFramCount++;
+
+		hp -= chara->GetDamage();
+		isKnockBack = true;
+
+		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		{
+			move.x = -PLAYER_KNOCKBACK;
+		}
+		else
+		{
+			move.x = PLAYER_KNOCKBACK;
+		}
+
+		//0にする
+		damageFramCount = 0;
 	}
 }
 
@@ -174,7 +173,7 @@ void Player::Movement()
 {
 	//右へ移動
 	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) &&
-		!isGuard && !isHit && !isAttack)
+		!isHit && !isAttack)
 	{
 		//最高速度は超えない
 		if (move.x < PLAYER_MAX_MOVE_SPEED)
@@ -197,7 +196,7 @@ void Player::Movement()
 	}
 	//左へ移動
 	else if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) &&
-		!isGuard && !isHit && !isAttack)
+		!isHit && !isAttack)
 	{
 		//最高速度は超えない
 		if (move.x > -PLAYER_MAX_MOVE_SPEED)
@@ -227,7 +226,7 @@ void Player::Movement()
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isGuard && !isHit && !isAttack)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isHit && !isAttack)
 	{
 		move.y = -JUMP_POWER;
 		isAir = true;
@@ -283,19 +282,18 @@ void Player::Attack()
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
 		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isHit)
 	{
-		//能力を持っているないなら投げる
-		if (stealFlg && stock[stockCount] != Ability::Empty)
+		//武器を持っているないなら投げる
+		if (stock[stockCount] != Ability::Empty && !isEquipment)
 		{		
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
 			normalWeapon->Attack(this,0.f);
-			stealFlg = false;
 			stock[stockCount] = Ability::Empty;
 		}
 
 		//武器攻撃
-		if (!stealFlg && abilityType != Ability::Empty)
+		if (abilityType != Ability::Empty)
 		{
-			if (abilityType == Ability::LargeSword)
+			if (stock[stockCount] == Ability::LargeSword)
 			{
 				isAttack = true;
 				attackCoolTime = PLAYER_LARGESWORD_COOLTIME;
@@ -307,15 +305,13 @@ void Player::Attack()
 	if (attackCoolTime > 0)attackCoolTime--;
 
 	//装備
-	if (stealFlg && !isHit &&
+	if (!isHit &&
 		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
 	{
 		if (stock[stockCount] != Ability::Empty)
 		{
 			abilityType = stock[stockCount];
-			stock[stockCount] = Ability::Empty;
 			isEquipment = true;
-			stealFlg = false;
 		}
 	}
 
@@ -333,6 +329,7 @@ void Player::Attack()
 		steal[2]->Attack(this, STEAL_DISTANCE + 10.f, 70.f, 70.f, 30.f);
 	}
 
+	//一回だけ
 	bool once = false;
 
 	for (int i = 0; i < STEAL_VALUE; i++)
@@ -340,14 +337,18 @@ void Player::Attack()
 		//鉤爪のいずれかが能力を奪えている
 		if (steal[i]->GetKeepType() != Ability::Empty)
 		{
-			for (int j = 0; j < PLAYER_MAX_STOCK; j++)
+			//1度武器をストックしたら他の爪に武器があってもストックしない
+			if (!once)
 			{
-				//ストックに空きがある
-				if (stock[j] == Ability::Empty)
+				for (int j = 0; j < PLAYER_MAX_STOCK; j++)
 				{
-					stock[j] = steal[i]->GetKeepType();
-					once = true;
-					break;
+					//ストックに空きがある
+					if (stock[j] == Ability::Empty)
+					{
+						stock[j] = steal[i]->GetKeepType();
+						once = true;
+						break;
+					}
 				}
 			}
 			steal[i]->SetKeepType(Ability::Empty);
@@ -357,83 +358,25 @@ void Player::Attack()
 	if (stealCoolTime > 0)stealCoolTime--;
 }
 
-void Player::Guard()
+void Player::StockSelect()
 {
-	//ガードしているなら
-	if ((KeyInput::GetKeyDown(KEY_INPUT_LSHIFT) ||
-		PadInput::OnPressed(XINPUT_BUTTON_LEFT_SHOULDER) ||
-		PadInput::OnPressed(XINPUT_BUTTON_RIGHT_SHOULDER)) && guardCoolTime <= 0.f)
+	//stockカウントを減らす
+	if ((KeyInput::GetKey(KEY_INPUT_Q)) || PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER))
 	{
-		isGuard = true;
-		guardCount = 1;
-	}
-	//ガードしていないなら
-	else
-	{
-		isGuard = false;
-	}
-
-	guardCoolTime--;
-
-	//ガードはしていないが以前にガードしていたら
-	if (guardCount && !isGuard)
-	{
-		//クールタイム発生
-		if (guardCoolTime < 0 && !guardCoolTimeFlg)
+		stockCount--;
+		if (stockCount < 0)
 		{
-			guardCoolTime = PLAYER_GUARD_COOLTIME;
-			guardCoolTimeFlg = true;
-		}
-
-		//クールタイム終了
-		if (guardCoolTime < 0)
-		{
-			guardCount = 0;
-			guardCoolTimeFlg = false;
+			stockCount = PLAYER_MAX_STOCK - 1;
 		}
 	}
-}
 
-void Player::Damage(CharaBase* chara)
-{
-	//ダメージ用のカウントを計測する
-	damageFramCount++;
-
-	//PLAYER_PARRY_FLAME以内にガードできたらかつパリィしていないなら
-	if (damageFramCount <= PLAYER_PARRY_FLAME &&
-		(KeyInput::GetKey(KEY_INPUT_LSHIFT) ||
-			PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER) ||
-			PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER)) &&
-		!parryFlg)
+	//stockカウントを増やす
+	if ((KeyInput::GetKey(KEY_INPUT_E)) || PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER))
 	{
-		parryFlg = true;
-	}
-
-	//パリィできなかったら
-	if (damageFramCount > PLAYER_PARRY_FLAME && !parryFlg)
-	{
-		isHit = true;
-
-		//ガードしていないなら
-		if (!isGuard)
+		stockCount++;
+		if (stockCount >= PLAYER_MAX_STOCK)
 		{
-			hp -= chara->GetDamage();
-			isKnockBack = true;
-			if (GetCenterLocation().x < chara->GetCenterLocation().x)
-			{
-				move.x = -PLAYER_KNOCKBACK;
-			}
-			else
-			{
-				move.x = PLAYER_KNOCKBACK;
-			}
+			stockCount = 0;
 		}
-		//ガードしているなら
-		else
-		{
-			hp -= chara->GetDamage() * PLAYER_DAMAGE_CUT;
-		}
-		//0にする
-		damageFramCount = 0;
 	}
 }

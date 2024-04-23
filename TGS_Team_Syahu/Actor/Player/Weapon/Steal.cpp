@@ -97,8 +97,6 @@ void Steal::Hit(CharaBase* enemy, Player* player)
 				keepType = enemy->GetAbilityType();
 				//敵は無能力になる
 				//enemy->SetAbilityType(Ability::Empty);
-
-				player->SetStealFlg(true);
 			}
 
 			framCount = 0;

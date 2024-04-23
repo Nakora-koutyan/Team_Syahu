@@ -34,18 +34,12 @@ private:
 	short stockCount;						//現在のストックの番号
 
 	int damageFramCount;					//ダメージを受けた時のフレームカウント
-	int parryFram;							//パリィの入力フレーム
-	int abilityFramCount;					//能力のフレームカウント
+	int weaponFramCount[PLAYER_MAX_STOCK];	//武器のフレームカウント
 
-	float guardCoolTime;					//ガードのクールタイム
 	float attackCoolTime;					//攻撃のクールタイム
 	float stealCoolTime;					//奪うのクールタイム
 
-	bool isGuard;							//ガード中？
-	bool stealFlg;							//奪った？
 	bool isEquipment;						//装備中？
-	bool guardCoolTimeFlg;					//ガードのクールタイムのフラグ
-	bool parryFlg;							//パリィフラグ
 
 public:
 	//コンストラクタ
@@ -73,15 +67,6 @@ public:
 	//大剣を取得
 	LargeSword* GetLargeSword()const { return largeSword; }
 
-	//パリィフラグを取得
-	bool GetParryFlg()const { return parryFlg; }
-
-	//奪ったかどうかを取得
-	bool GetStealFlg()const { return stealFlg; }
-
-	//奪ったかどうかを設定
-	void SetStealFlg(const bool flg) { stealFlg = flg; }
-
 private:
 	//移動
 	void Movement();
@@ -89,10 +74,6 @@ private:
 	//攻撃
 	void Attack();
 
-	//ガード
-	void Guard();
-
-	//ダメージ
-	void Damage(CharaBase* chara);
-
+	//ストックの選択
+	void StockSelect();
 };
