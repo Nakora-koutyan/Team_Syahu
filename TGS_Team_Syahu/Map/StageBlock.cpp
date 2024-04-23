@@ -1,26 +1,27 @@
-#include "Map.h"
+#include "StageBlock.h"
 #include "../Scene/GameMain/GameMainScene.h"
 #include "../Actor/Player/Player.h"
 #include "../Actor/Camera/Camera.h"
 
-Map::Map() {
+StageBlock::StageBlock() {
 	location.x = 1000.f;
-	location.y = 1300.f;
+	location.y = 1240.f;
 
 	area.width = 100.f;
 	area.height = 100.f;
 };
 
-Map::~Map() {
+StageBlock::~StageBlock() {
 
 };
 
-void Map::Update() {
-		//location.x += vector.x;
+void StageBlock::Update() {
 	screenLocation = Camera::ConvertScreenPosition(location);
+
+	if(HitBox())
 };
 
-void Map::Draw()const {
+void StageBlock::Draw()const {
 
 	DrawBoxAA
 	(

@@ -1,15 +1,15 @@
 #pragma once
 #include "../Collision/Box/BoxCollision.h"
-class Map : public BoxCollision
+class StageBlock : public BoxCollision
 {
 private:
 
 public:
 	//コンストラクタ
-	Map();
+	StageBlock();
 
 	//デストラクタ
-	~Map();
+	~StageBlock();
 
 	//更新
 	void Update();
