@@ -3,7 +3,7 @@
 
 #define NORMAL_WEAPON_ATTACK_TIME	FPS * 5.5f		//通常攻撃の時間
 #define NORMAL_WEAPON_SPEED			20.f			//弾の速さ
-#define NORMAL_WEAPON_GRAVITY		0.07f			//弾の重力
+#define NORMAL_WEAPON_GRAVITY		0.09f			//弾の重力
 
 class CharaBase;
 class Player;

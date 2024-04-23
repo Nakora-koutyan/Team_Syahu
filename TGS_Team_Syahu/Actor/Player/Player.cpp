@@ -60,7 +60,10 @@ void Player::Update()
 	if (KeyInput::GetKey(KEY_INPUT_1))abilityType = Ability::LargeSword;
 	if (KeyInput::GetKey(KEY_INPUT_2))abilityType = Ability::Dagger;
 	if (KeyInput::GetKey(KEY_INPUT_3))abilityType = Ability::Rapier;
-	if (KeyInput::GetKey(KEY_INPUT_4))stealFlg = true;
+	{
+		if (KeyInput::GetKey(KEY_INPUT_4))stealFlg = true;
+		stock[0] = Ability::LargeSword;
+	}
 	if (abilityType != Ability::Empty)isEquipment = true;
 #endif // DEBUG
 
@@ -290,7 +293,7 @@ void Player::Attack()
 		}
 
 		//武器攻撃
-		if (abilityType != Ability::Empty)
+		if (!stealFlg && abilityType != Ability::Empty)
 		{
 			if (abilityType == Ability::LargeSword)
 			{
