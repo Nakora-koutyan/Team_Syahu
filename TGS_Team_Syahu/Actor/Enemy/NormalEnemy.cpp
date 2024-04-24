@@ -32,7 +32,7 @@ void NormalEnemy::Initialize()
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
-	abilityType = Ability::LargeSword;	//かり
+	weaponType = Weapon::LargeSword;	//かり
 
 	//攻撃範囲
 	attackRange[0] = { GetCenterLocation() };

@@ -31,7 +31,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Actor\Enemy\NormalEnemy.cpp" />
     <ClCompile Include="Actor\Player\Weapon\NormalWeapon.cpp" />
-    <ClCompile Include="Map\Map.cpp" />
+    <ClCompile Include="Map\StageBlock.cpp" />
     <ClCompile Include="SceneManager\SceneManager.cpp" />
     <ClCompile Include="Scene\GameMain\GameMainScene.cpp" />
     <ClCompile Include="Collision\Sphere\SphereCollision.cpp" />
@@ -50,7 +50,7 @@
     <ClInclude Include="Actor\Enemy\NormalEnemy.h" />
     <ClInclude Include="Actor\Player\Weapon\NormalWeapon.h" />
     <ClInclude Include="Collision\Line\LineCollision.h" />
-    <ClInclude Include="Map\Map.h" />
+    <ClInclude Include="Map\StageBlock.h" />
     <ClInclude Include="SceneManager\SceneManager.h" />
     <ClInclude Include="Scene\GameMain\GameMainScene.h" />
     <ClInclude Include="Scene\SceneBase.h" />

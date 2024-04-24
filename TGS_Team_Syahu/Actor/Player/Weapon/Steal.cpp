@@ -5,7 +5,7 @@
 
 Steal::Steal()
 {	
-	keepType = Ability::Empty;
+	keepType = Weapon::Empty;
 
 	direction = 0;
 
@@ -31,7 +31,7 @@ void Steal::Update(Player* player)
 	}
 
 	//攻撃時間を超えたら
-	if (framCount > STEAL_ATTACK_TIME || player->GetIsHit())
+	if (framCount > STEAL_ATTACK_TIME || player->GetIsKnockBack())
 	{
 		framCount = 0;
 		direction = 0;
@@ -91,12 +91,12 @@ void Steal::Hit(CharaBase* enemy, Player* player)
 			enemy->SetIsHit(true);
 
 			//能力の種類が空ではないなら
-			if (enemy->GetAbilityType() != Ability::Empty)
+			if (enemy->GetWeaponType() != Weapon::Empty)
 			{
 				//敵の能力を奪う
-				keepType = enemy->GetAbilityType();
+				keepType = enemy->GetWeaponType();
 				//敵は無能力になる
-				//enemy->SetAbilityType(Ability::Empty);
+				//enemy->SetWeaponType(Weapon::Empty);
 			}
 
 			framCount = 0;

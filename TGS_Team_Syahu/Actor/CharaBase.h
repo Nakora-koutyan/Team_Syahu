@@ -5,7 +5,7 @@
 #define GRAVITY				0.8f		//重力
 #define JUMP_POWER			20.f		//ジャンプ力
 
-enum class Ability
+enum class Weapon
 {
 	Empty = 0,			//空
 	LargeSword,			//大剣
@@ -19,7 +19,7 @@ protected:
 	Vector2D move;				//移動量
 	Vector2D direction;			//方向
 
-	Ability abilityType;		//能力の種類
+	Weapon weaponType;			//武器の種類
 
 	int framCount;				//フレーム計測用
 	int knockBackCount;			//ノックバック用のカウント
@@ -83,11 +83,11 @@ public:
 	//方向の取得
 	Vector2D GetDirection()const { return direction; }
 
-	//能力の種類を取得
-	Ability GetAbilityType()const { return abilityType; }
+	//武器の種類を取得
+	Weapon GetWeaponType()const { return weaponType; }
 
-	//能力の種類を設定
-	void SetAbilityType(const Ability ability) { abilityType = ability; }
+	//武器の種類を設定
+	void SetWeaponType(const Weapon ability) { weaponType = ability; }
 
 protected:
 	//ダメージのインターバル処理

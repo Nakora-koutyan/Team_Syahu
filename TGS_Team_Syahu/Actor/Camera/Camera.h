@@ -17,7 +17,7 @@ public:
 	~Camera();
 
 	//更新
-	void Update(Vector2D location);
+	void Update(Vector2D location, const bool debugFlg = false);
 
 	//描画
 	void Draw()const;

@@ -9,7 +9,7 @@ class Player;
 class Steal :public LineCollision
 {
 private:
-	Ability keepType;		//能力の保存用
+	Weapon keepType;		//能力の保存用
 
 	short direction;		//方向
 
@@ -41,9 +41,9 @@ public:
 	bool GetIsShow()const { return isShow; }
 
 	//能力の保存用を取得
-	Ability GetKeepType()const { return keepType; }
+	Weapon GetKeepType()const { return keepType; }
 
 	//能力の保存用を設定
-	void SetKeepType(const Ability ability) { keepType = ability; }
+	void SetKeepType(const Weapon ability) { keepType = ability; }
 
 };

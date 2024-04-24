@@ -7,7 +7,7 @@ CharaBase::CharaBase()
 	direction.x = 0.f;
 	direction.y = 0.f;
 
-	abilityType = Ability::Empty;
+	weaponType = Weapon::Empty;
 
 	framCount = 0;
 	knockBackCount = 0;
@@ -53,6 +53,8 @@ void CharaBase::KnockBack(const double time)
 		{
 			isKnockBack = false;
 			knockBackCount = 0;
+			move.x = 0.f;
+			move.y = 0.f;
 		}
 	}
 }

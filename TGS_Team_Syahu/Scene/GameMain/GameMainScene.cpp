@@ -7,9 +7,11 @@ GameMainScene::GameMainScene()
 	camera = new Camera();
 	enemy = new NormalEnemy();
 	enemy->Initialize();
-	map = new Map();
+	stageblock = new StageBlock();
 
 	kari = LoadGraph("Resource/Images/kari.png");
+
+	debugModeFlg = false;
 }
 
 GameMainScene::~GameMainScene()
@@ -17,12 +19,14 @@ GameMainScene::~GameMainScene()
 	delete player;
 	delete camera;
 	delete enemy;
-	delete map;
+	delete stageblock;
 }
 
 SceneBase* GameMainScene::Update()
 {
-	camera->Update(player->GetLocation());
+	if (KeyInput::GetKey(KEY_INPUT_G))debugModeFlg = !debugModeFlg;
+
+	camera->Update(player->GetLocation(),debugModeFlg);
 
 	player->Update();
 
@@ -40,7 +44,7 @@ SceneBase* GameMainScene::Update()
 		}
 	}
 
-	map->Update();
+	stageblock->Update();
 
 	return this;
 }
@@ -67,7 +71,7 @@ void GameMainScene::Draw() const
 		enemy->Draw();
 	}
 
-	map->Draw();
+	stageblock->Draw();
 }
 
 void GameMainScene::HitCheck()

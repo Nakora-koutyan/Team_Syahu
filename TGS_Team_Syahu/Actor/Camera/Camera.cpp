@@ -17,10 +17,19 @@ Camera::~Camera()
 
 }
 
-void Camera::Update(Vector2D location)
+void Camera::Update(Vector2D location, const bool debugFlg)
 {
-	//プレイヤーを追尾
-	cameraPosition = location;
+	if (!debugFlg)
+	{
+		//対象を追尾
+		cameraPosition = location;
+	}
+	else
+	{
+		//マウスでカメラ移動
+		cameraPosition.x += (float)KeyInput::GetMouseVecX();
+		cameraPosition.y += (float)KeyInput::GetMouseVecY();
+	}
 
 	//世界の左端を超えない
 	if (cameraPosition.x - SCREEN_WIDTH / 2.f <= 0.f)
