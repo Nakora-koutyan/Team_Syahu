@@ -179,6 +179,18 @@ void Player::Hit(CharaBase* chara)
 	}
 }
 
+void Player::Landing(const float height)
+{
+	//地面を超えない
+	if (GetMaxLocation().y > height)
+	{
+		location.y = height - area.height;
+		move.y = 0.f;
+		isAir = false;
+		direction = { direction.x,0.f };
+	}
+}
+
 void Player::Movement()
 {
 	//右へ移動
@@ -276,14 +288,7 @@ void Player::Movement()
 		move.y = 0.f;
 	}
 
-	//地面を超えない
-	if (GetMaxLocation().y > GROUND_LINE)
-	{
-		location.y = GROUND_LINE - area.height;
-		move.y = 0.f;
-		isAir = false;
-		direction = { direction.x,0.f };
-	}
+	Landing(GROUND_LINE);
 }
 
 void Player::Attack()
