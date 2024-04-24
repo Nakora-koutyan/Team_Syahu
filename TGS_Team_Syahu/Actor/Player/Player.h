@@ -56,6 +56,9 @@ public:
 	//ヒット処理
 	void Hit(CharaBase* chara);
 
+	//着地
+	void Landing(const float height);
+
 public:
 	//投げるを取得
 	NormalWeapon* GetNormalWeapon()const { return normalWeapon; }
