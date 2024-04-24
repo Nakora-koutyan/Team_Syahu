@@ -18,6 +18,7 @@ NormalWeapon::NormalWeapon()
 	angle = DEGREE_TO_RADIAN(20.f);
 	gravityVelocity = 0.f;
 	weaponWeight = 0.f;
+	weaponDamage = 0.f;
 
 	isShow = false;
 }
@@ -63,7 +64,7 @@ void NormalWeapon::Draw() const
 	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0xff0000, TRUE);
 }
 
-void NormalWeapon::Attack(const Player* player, const float weight)
+void NormalWeapon::Attack(const Player* player, const float weight, const float damage)
 {
 	//出現させる
 	isShow = true;
@@ -89,6 +90,7 @@ void NormalWeapon::Attack(const Player* player, const float weight)
 	location.y = player->GetCenterLocation().y;
 
 	weaponWeight = weight;
+	weaponDamage = damage;
 }
 
 void NormalWeapon::Hit(CharaBase* enemy, Player* player)
@@ -97,7 +99,7 @@ void NormalWeapon::Hit(CharaBase* enemy, Player* player)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			enemy->SetHp(enemy->GetHp() - player->GetDamage());
+			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + weaponDamage));
 			enemy->SetIsHit(true);
 
 			framCount = 0;
@@ -106,6 +108,7 @@ void NormalWeapon::Hit(CharaBase* enemy, Player* player)
 			move.y = 0.f;
 			gravityVelocity = 0.f;
 			weaponWeight = 0.f;
+			weaponDamage = 0.f;
 			isShow = false;
 		}
 	}

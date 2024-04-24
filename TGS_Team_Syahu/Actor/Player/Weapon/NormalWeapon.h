@@ -20,6 +20,7 @@ private:
 	float angle;			//角度
 	float gravityVelocity;	//重力速度
 	float weaponWeight;		//武器の重さ
+	float weaponDamage;		//武器のダメージ
 
 	bool isShow;			//表示させる？
 
@@ -37,7 +38,7 @@ public:
 	void Draw()const;
 
 	//攻撃
-	void Attack(const Player* player, const float weight);
+	void Attack(const Player* player, const float weight, const float damage);
 
 	//当たった時の処理
 	void Hit(CharaBase* enemy, Player* player);
