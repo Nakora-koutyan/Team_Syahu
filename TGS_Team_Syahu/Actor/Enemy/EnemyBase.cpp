@@ -1,6 +1,6 @@
 #include "EnemyBase.h"
 
-EnemyBase::EnemyBase():isChase(false),attackCoolTime(0),attackTime(0),noMove(false),isPatrol(true),
+EnemyBase::EnemyBase():isClash(false),statusChangeTime(0),attackWaitingTime(0),noMove(false),isPatrol(true),
 patrolCounter(0.f)
 {
 }

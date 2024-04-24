@@ -4,7 +4,7 @@
 
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyColor(0),damageColor(0),attackColor(0),usualColor(0),
-attackRange{},chaseCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),isChase(false)
+attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),isChase(false),markStatus(NULL)
 {
 }
 
@@ -39,8 +39,8 @@ void NormalEnemy::Initialize()
 	attackRange[1] = { GetCenterLocation() };
 
 	//プレイヤーを追跡する範囲
-	chaseCenser[0] = { GetCenterLocation() };
-	chaseCenser[1] = { GetCenterLocation() };
+	attackCenser[0] = { GetCenterLocation() };
+	attackCenser[1] = { GetCenterLocation() };
 
 	//プレイヤーを見つけた際の座標
 	findMark = LoadGraph("Resource/Images/Exclamation.png");
@@ -57,8 +57,10 @@ void NormalEnemy::Initialize()
 	isShow = true;
 
 	//攻撃時間
-	attackTime = MAX_ATTACK_TIME;
-	attackCoolTime = MAX_COOL_TIME;
+	attackWaitingTime = MAX_WAITING_TIME;
+	statusChangeTime = MAX_COOL_TIME;
+
+	enemyStatus = Patrol;
 }
 
 //描画以外の内容を更新
@@ -70,32 +72,39 @@ void NormalEnemy::Update(Player* player)
 	KnockBack(FPS * 0.5);
 
 	//エネミーの攻撃範囲
-	AttackRange();
+	AttackCenser();
 	//プレイヤーを検知するセンサー
-	ChaseRange();
+	AttackRange();
 
-	if (noMove != true)
+	//状態遷移
+	switch (enemyStatus)
 	{
-		//エネミーの徘徊処理
+		//パトロール処理
+	case EnemyStatus::Patrol:
 		EnemyPatrol(player);
-		if (isAttack != true)
-		{
-			//プレイヤーへの追跡
-			AttackStandBy(player);
-		}
-		//プレイヤーへの攻撃
-		AttackStart(player);
+		markStatus = NULL;
+		break;
 
-		location.x += move.x;
+		//攻撃の予備動作
+	case EnemyStatus::AttackStandBy:
+		AttackStandBy(player);
+		markStatus = findMark;
+		break;
+
+		//攻撃開始
+	case EnemyStatus::AttackStart:
+		AttackStart(player);
+		markStatus = angryMark;
+		break;
+
+		//攻撃終了
+	case EnemyStatus::AttackEnd:
+		AttackEnd();
+		markStatus = NULL;
+		break;
 	}
-	else if (noMove == true)
-	{
-		attackCoolTime--;
-		if (attackCoolTime <= 0)
-		{
-			noMove = false;
-		}
-	}
+
+	location.x += move.x;
 }
 
 //描画に関する更新
@@ -108,165 +117,181 @@ void NormalEnemy::Draw() const
 		screenLocation.x + area.width, screenLocation.y + area.height,
 		isHit ? 0xff0000 : isAttack ? attackColor : usualColor, TRUE, 1.0f
 	);
-	DrawFormatStringF(50.f, 80.f, GetColor(255, 0, 255), "%f GetMinLocation().x", GetMinLocation().x);
+	/*DrawFormatStringF(50.f, 80.f, GetColor(255, 0, 255), "%f GetMinLocation().x", GetMinLocation().x);
 	DrawFormatStringF(50.f, 180.f, GetColor(255, 0, 255), "%s isChase", isChase ? "true" : "false");
-	DrawFormatStringF(50.f, 100.f, GetColor(255, 0, 255), "%d AttackCoolTime", attackCoolTime);
-	DrawFormatStringF(50.f, 120.f, GetColor(255, 0, 255), "%d attackTime", attackTime);
+	DrawFormatStringF(50.f, 100.f, GetColor(255, 0, 255), "%d AttackCoolTime", statusChangeTime);
+	DrawFormatStringF(50.f, 120.f, GetColor(255, 0, 255), "%d attackTime", attackWaitingTime);
 	DrawFormatStringF(50.f, 140.f, GetColor(255, 0, 255), "%s noMove", noMove ? "true" : "false");
 	DrawFormatStringF(50.f, 160.f, GetColor(255, 0, 255), "%s isAttack", isAttack ? "true" : "false");
 	DrawFormatStringF(50.f, 180.f, GetColor(255, 0, 255), "%s isChase", isChase ? "true" : "false");
 	DrawFormatStringF(50.f, 200.f, GetColor(255, 0, 255), "%s isPatrol", isPatrol ? "true" : "false");
 	DrawFormatStringF(50.f, 220.f, GetColor(255, 0, 255), "%f patrolCounter", patrolCounter);
+	DrawFormatStringF(50.f, 240.f, GetColor(255, 0, 255), "%d enemyStatus", enemyStatus);*/
 	
-	//プレイヤーを発見した場合、「！」を表示する
-	if (isChase == true)
+	if (markStatus != NULL)
 	{
+		//プレイヤーを発見した場合、状態に応じて符号を表示する
 		if (direction == DIRECTION_LEFT)
 		{
-			DrawGraphF
-			(
-				screenLocation.x + 25, screenLocation.y - 30,
-				isAttack ? angryMark:findMark, TRUE
-			);
+			DrawGraphF(screenLocation.x + 75, screenLocation.y - 30, markStatus, TRUE);
 		}
 		if (direction == DIRECTION_RIGHT)
 		{
-			DrawGraphF
-			(
-				screenLocation.x - 25, screenLocation.y - 30,
-				isAttack ? angryMark : findMark, TRUE
-			);
+			DrawGraphF(screenLocation.x - 25, screenLocation.y - 30, markStatus, TRUE);
 		}
 	}
 }
 
 //攻撃範囲
-void NormalEnemy::AttackRange()
+void NormalEnemy::AttackCenser()
 {
-	attackRange[0].x = GetMinLocation().x - 250.f;
+	attackRange[0].x = GetMinLocation().x - 400.f;
 	attackRange[0].y = GetCenterLocation().y;
 
-	attackRange[1].x = GetMaxLocation().x + 250.f;
+	attackRange[1].x = GetMaxLocation().x + 400.f;
 	attackRange[1].y = GetCenterLocation().y;
 }
 
 //追跡に入る範囲
-void NormalEnemy::ChaseRange()
+void NormalEnemy::AttackRange()
 {
-	chaseCenser[0].x = GetMinLocation().x - 400.f;
-	chaseCenser[0].y = GetCenterLocation().y;
+	attackCenser[0].x = GetMinLocation().x - 350.f;
+	attackCenser[0].y = GetCenterLocation().y;
 
-	chaseCenser[1].x = GetMaxLocation().x + 400.f;
-	chaseCenser[1].y = GetCenterLocation().y;
+	attackCenser[1].x = GetMaxLocation().x + 350.f;
+	attackCenser[1].y = GetCenterLocation().y;
 }
 
 //プレイヤーのいる方向に向かう
 void NormalEnemy::EnemyPatrol(Player* player)
 {
-	//パトロール条件(攻撃・追跡の範囲にプレイヤーが存在しない場合)
-	if (isChase == false && isAttack == false)
+	//左向きの場合
+	if (direction == DIRECTION_LEFT)
 	{
-		//パトロールをする
-		isPatrol = true;
+		move.x = -WALK_SPEED;
+		patrolCounter -= WALK_SPEED;
+		//左に50進んだら向きを右にする
+		if (patrolCounter <= -150.f)
+		{
+			direction = DIRECTION_RIGHT;
+		}
 	}
-	else
+	//右向きの場合
+	if (direction == DIRECTION_RIGHT)
 	{
-		//パトロールを中止する
-		isPatrol = false;
+		move.x = WALK_SPEED;
+		patrolCounter += WALK_SPEED;
+		//右に50進んだら向きを左にする
+		if (patrolCounter >= 150.f)
+		{
+			direction = DIRECTION_LEFT;
+		}
 	}
 
-	//パトロール処理
-	if (isPatrol == true)
+	if (attackCenser[0].x < player->GetMaxLocation().x &&
+		attackCenser[1].x > player->GetMinLocation().x )
 	{
-		//左向きの場合
-		if(direction == DIRECTION_LEFT)
-		{
-			move.x = -WALK_SPEED;
-			patrolCounter -= WALK_SPEED;
-			//左に50進んだら向きを右にする
-			if (patrolCounter <= -150.f)
-			{
-				direction = DIRECTION_RIGHT;
-			}
-		}
-		//右向きの場合
-		if (direction == DIRECTION_RIGHT)
-		{
-			move.x = WALK_SPEED;
-			patrolCounter += WALK_SPEED;
-			//右に50進んだら向きを左にする
-			if (patrolCounter >= 150.f)
-			{
-				direction = DIRECTION_LEFT;
-			}
-		}
+		//攻撃準備の状態にする
+		enemyStatus = EnemyStatus::AttackStandBy;
 	}
 }
 
 void NormalEnemy:: AttackStandBy(Player* player)
 {
-	//プレイヤーが追跡範囲内にいるかのチェック
-	if (chaseCenser[0].x < player->GetMaxLocation().x &&
-		chaseCenser[1].x > player->GetMinLocation().x &&
-		attackTime >= 0)
+	//方向変化処理
+	if (location.x >= player->GetCenterLocation().x)
 	{
-		isChase = true;
+		direction = DIRECTION_LEFT;
 	}
-	else
+	else if (location.x <= player->GetCenterLocation().x)
 	{
-		isChase = false;
+		direction = DIRECTION_RIGHT;
 	}
 
-	//追跡処理
-	//プレイヤーが自身よりも左側にいる場合
-	if (player->GetCenterLocation().x < location.x
-		&& isChase == true)
+	//攻撃準備処理
+	if (attackWaitingTime >= 0)
 	{
-		//左を向く
-		direction = DIRECTION_LEFT;
-		//左方向に進む
-		move.x = -(WALK_SPEED * CHASE_SPEED);
+		//エネミーの移動を０にする
+		move.x = 0;
+		//攻撃待機時間を減算していく
+		attackWaitingTime--;
 	}
-	//プレイヤーが自身よりも右側にいる場合
-	if (player->GetCenterLocation().x > location.x
-		&& isChase == true)
+	if (attackWaitingTime <= 0)
 	{
-		//右を向く
-		direction = DIRECTION_RIGHT;
-		//左方向に進む
-		move.x = (WALK_SPEED * CHASE_SPEED);
+		//エネミーの状態を「攻撃開始」に遷移する
+		enemyStatus = EnemyStatus::AttackStart;
+		//攻撃待機時間をリセットする
+		attackWaitingTime = MAX_WAITING_TIME;
+	}
+
+	//攻撃範囲からプレイヤーが離れた場合
+	if (attackCenser[0].x > player->GetMaxLocation().x &&
+		attackCenser[1].x < player->GetMinLocation().x)
+	{
+		//パトロール状態にする
+		enemyStatus = EnemyStatus::Patrol;
 	}
 }
 
 void NormalEnemy::AttackStart(Player* player)
 {
-	//プレイヤーが攻撃範囲にいるかのチェック
-	if (attackRange[0].x < player->GetMaxLocation().x &&
-		attackRange[1].x > player->GetMinLocation().x )
+	//プレイヤーがこの範囲内にいるなら攻撃を続行する
+	if (attackRange[0].x <= player->GetCenterLocation().x && 
+		attackRange[1].x >= player->GetCenterLocation().x)
 	{
+		//攻撃を続行
 		isAttack = true;
 	}
 	else
 	{
+		//攻撃を中止
 		isAttack = false;
 	}
 
-	//左向きに攻撃を行う
-	if (direction == DIRECTION_LEFT && isAttack == true)
+	if (isAttack == true)
 	{
-		move.x = -(WALK_SPEED*ATTACK_SPEED);
-	}
-	//右向きに攻撃を行う
-	if (direction == DIRECTION_RIGHT && isAttack == true)
-	{
-		move.x = (WALK_SPEED * ATTACK_SPEED);
+		//左向きに攻撃を行う
+		if (direction == DIRECTION_LEFT)
+		{
+			move.x = -(WALK_SPEED * ATTACK_SPEED);
+		}
+		//右向きに攻撃を行う
+		if (direction == DIRECTION_RIGHT)
+		{
+			move.x = (WALK_SPEED * ATTACK_SPEED);
+		}
 	}
 	//プレイヤーと接触した場合
-	if (CollisionCheck(player) == true && noMove == false)
+	if (CollisionCheck(player) == true)
 	{
-		isAttack = false;
-		noMove = true;
-		attackCoolTime = MAX_COOL_TIME;
+		//ノックバック処理
+		KnockBack(MAX_COOL_TIME);
+		//衝突している
+		isClash = true;
+	}
+	else
+	{
+		//衝突していない
+		isClash = false;
+	}
+
+	//攻撃を続行しない場合またはプレイヤーと衝突した場合
+	if (isAttack == false || isClash == true)
+	{
+		//エネミーの状態を攻撃終了に遷移する
+		enemyStatus = EnemyStatus::AttackEnd;
+	}
+}
+
+void NormalEnemy::AttackEnd()
+{
+	statusChangeTime--;
+	move.x = 0;
+	if (statusChangeTime <= 0)
+	{
+		enemyStatus = EnemyStatus::Patrol;
+		statusChangeTime = MAX_COOL_TIME;
+
 	}
 }
 
@@ -276,8 +301,4 @@ void NormalEnemy::ClashToPlayer(Player* player)
 	{
 
 	}
-}
-
-void NormalEnemy::AttackEnd()
-{
 }

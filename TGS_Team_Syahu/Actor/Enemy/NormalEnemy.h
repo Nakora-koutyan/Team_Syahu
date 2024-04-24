@@ -26,8 +26,10 @@ private:
 	bool isChase;		//追跡
 
 	Vector2D attackRange[2];
-	Vector2D chaseCenser[2];		//0:左センサー	1:右センサー
+	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
 
+
+	int markStatus;		//符号の状態遷移
 	int findMark;		//プレイヤーを発見した際に出現する画像
 	int angryMark;		//プレイヤーに攻撃する際の画像
 
@@ -50,10 +52,10 @@ private:
 	void EnemyPatrol(Player* player) override;
 
 	//攻撃範囲
-	void AttackRange() override;
+	void AttackCenser() override;
 
 	//プレイヤーを発見するためのセンサー
-	void ChaseRange() override;
+	void AttackRange() override;
 
 	//追跡を行うか？
 	void AttackStandBy(Player* player) override;
