@@ -17,9 +17,12 @@
 #define STEAL_VALUE						3				//奪うの数
 #define STEAL_DISTANCE					25.f			//プレイヤーから奪うを出す距離
 #define LARGESWORD_DISTANCE				20				//プレイヤーから大剣を離す距離
-#define LARGESWORD_WEIGHT				0.7f			//大剣の重さ
-#define DAGGER_WEIGHT					0.1f			//ダガーの重さ
-#define RAPIER_WEIGHT					0.5f			//レイピアの重さ
+#define LARGESWORD_WEIGHT				0.75f			//大剣の重さ
+#define LARGESWORD_DAMAGE				5.f				//大剣のダメージ
+#define DAGGER_WEIGHT					0.05f			//ダガーの重さ
+#define DAGGER_DAMAGE					1.5f			//ダガーのダメージ
+#define RAPIER_WEIGHT					0.35f			//レイピアの重さ
+#define RAPIER_DAMAGE					3.f				//レイピアのダメージ
 
 class Player :public CharaBase
 {
@@ -81,4 +84,7 @@ private:
 
 	//武器の重さを取得
 	float GetWeaponWeight(const Weapon type);
+
+	//武器のダメージを取得
+	float GetWeaponDamage(const Weapon type);
 };

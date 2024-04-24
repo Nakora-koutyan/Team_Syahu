@@ -99,13 +99,11 @@ void LargeSword::Hit(CharaBase* enemy, Player* player)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			enemy->SetHp(enemy->GetHp() - player->GetDamage());
+			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + LARGESWORD_DAMAGE));
 			enemy->SetIsHit(true);
 			player->SetIsAttack(false);
 
 			framCount = 0;
-			direction = 0;
-			isShow = false;
 		}
 	}
 }
