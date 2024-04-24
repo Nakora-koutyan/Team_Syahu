@@ -1,14 +1,12 @@
 #pragma once
 #include"EnemyBase.h"
 
-#define ENEMY_SPEED 1.5f
-#define RUSH_DIAMETER 3.5f
+#define WALK_SPEED 1.f			//徘徊時のスピード
+#define CHASE_SPEED 2.f		//追跡時のスピード
+#define ATTACK_SPEED 8.f		//攻撃時のスピード
 
-#define ATTACK_FORM_RANGE_X 150
-#define ATTACK_FORM_RANGE_Y 50
-
-#define DIRECTION_LEFT 0
-#define DIRECTION_RIGHT 1
+#define DIRECTION_LEFT 0		//左向き
+#define DIRECTION_RIGHT 1		//右向き
 
 class Player;
 
@@ -58,8 +56,12 @@ private:
 	void ChaseRange() override;
 
 	//追跡を行うか？
-	void ChaseToPlayer(Player* player) override;
+	void AttackStandBy(Player* player) override;
 
 	//攻撃を行うか？
-	void AttackToPlayer(Player* player) override;
+	void AttackStart(Player* player) override;
+
+	void AttackEnd() override;
+
+	void ClashToPlayer(Player* player)override;
 };

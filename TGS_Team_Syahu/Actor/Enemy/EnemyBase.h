@@ -5,6 +5,11 @@
 #define MAX_COOL_TIME 100
 #define MAX_ATTACK_TIME 100
 
+struct EnemyStatus
+{
+	int AttackStandBy;
+};
+
 class EnemyBase :public CharaBase
 {
 protected:
@@ -49,13 +54,16 @@ protected:
 	//プレイヤーを発見するためのセンサー
 	virtual void ChaseRange() = 0;
 
-	//追跡を行うか？
-	virtual void ChaseToPlayer(Player* player) = 0;
+	//攻撃準備
+	virtual void AttackStandBy(Player* player) = 0;
 
-	//攻撃を行うか？
-	virtual void AttackToPlayer(Player* player) = 0;
+	//攻撃開始
+	virtual void AttackStart(Player* player) = 0;
+
+	//攻撃終了
+	virtual void AttackEnd() = 0;
 
 	//プレイヤーとの当たり判定
-	void HitToPlayer(Player* player);
+	virtual void ClashToPlayer(Player* player) = 0;
 };
 
