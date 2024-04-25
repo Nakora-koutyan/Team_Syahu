@@ -7,8 +7,8 @@ Player::Player()
 {
 	location.x = 300.f;
 	location.y = GROUND_LINE;
-	area.width = 100.f;
-	area.height = 100.f;
+	area.width = 56.f;
+	area.height = 96.f;
 	direction.x = 1.f;
 	direction.y = 0.f;
 	damage = 10.f;
@@ -30,6 +30,20 @@ Player::Player()
 
 	framCount = 0;
 	damageFramCount = 0;
+	playerAnimFramCount = 0;
+	playerAnim = 0;
+	int playerImageOld[72];
+	LoadDivGraph("Resource/Images/Player/AnimationSheet_Character_resize.png", 72, 8, 9, 96, 96, playerImageOld);
+	for (int i = 0; i < 72; i++)
+	{
+		if ((i >= 2 && i <= 7) || (i >= 10 && i <= 15) || (i >= 20 && i <= 23) || (i >= 38 && i <= 39) || (i >= 52 && i <= 55))
+		{
+			continue;
+		}
+		playerImage[playerAnim] = playerImageOld[i];
+		playerAnim++;
+	}
+	playerAnim = 0;
 
 	attackCoolTime = 0.f;
 	stealCoolTime = 0.f;
@@ -65,6 +79,11 @@ void Player::Update()
 	if (KeyInput::GetKey(KEY_INPUT_4))
 	{
 		stock[stockCount] = Weapon::LargeSword;
+	}
+	if (KeyInput::GetKey(KEY_INPUT_P))
+	{
+		playerAnim++;
+		if (playerAnim > 49)playerAnim = 0;
 	}
 #endif // DEBUG
 
@@ -112,6 +131,7 @@ void Player::Draw() const
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
 		isHit ? 0xff0000 : 0xffff00, FALSE
 	);
+	DrawGraphF(GetMinScreenLocation().x - PLAYER_IMAGE_ALIGN_THE_ORIGIN, GetMinScreenLocation().y, playerImage[playerAnim], TRUE);
 
 	DrawFormatString(0, 0, 0x000000, "hp :%f", hp);
 	DrawFormatString(0, 15, 0x000000, "attackCoolTime :%f", attackCoolTime);
@@ -119,6 +139,7 @@ void Player::Draw() const
 	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
 	DrawFormatString(0, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponFramCount[stockCount]);
 	DrawFormatString(0, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
+	DrawFormatString(0, 90, 0x000000, "playerAnim :%d", playerAnim);
 	if (weaponType == Weapon::Empty)
 	{
 		DrawFormatString(0, 45, 0x000000, "WeaponType:None");

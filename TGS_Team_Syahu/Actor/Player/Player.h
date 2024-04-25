@@ -4,6 +4,7 @@
 #include"Weapon/Steal.h"
 #include"Weapon/LargeSword.h"
 
+#define PLAYER_IMAGE_ALIGN_THE_ORIGIN	17.f			//画像の原点調整用
 #define PLAYER_MOVE_SPEED				3.f				//移動移動
 #define PLAYER_MAX_MOVE_SPEED			9.f				//最高速度
 #define PLAYER_DAMAGE_INTERVAL			FPS * 1.0		//プレイヤーが再度ダメージを受けるまでの時間
@@ -37,6 +38,9 @@ private:
 
 	int damageFramCount;					//ダメージを受けた時のフレームカウント
 	int weaponFramCount[PLAYER_MAX_STOCK];	//武器のフレームカウント
+	int playerAnimFramCount;				//プレイヤーのアニメーションフレームカウント
+	int playerAnim;							//プレイヤーのアニメーション番号
+	int playerImage[50] = {};				//プレイヤー画像
 
 	float attackCoolTime;					//攻撃のクールタイム
 	float stealCoolTime;					//奪うのクールタイム
