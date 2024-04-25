@@ -8,7 +8,7 @@ Player::Player()
 	location.x = 300.f;
 	location.y = GROUND_LINE;
 	area.width = 56.f;
-	area.height = 96.f;
+	area.height = 84.f;
 	direction.x = 1.f;
 	direction.y = 0.f;
 	damage = 10.f;
@@ -32,11 +32,16 @@ Player::Player()
 	damageFramCount = 0;
 	playerAnimFramCount = 0;
 	playerAnim = 0;
-	int playerImageOld[72];
+	int playerImageOld[72];		
 	LoadDivGraph("Resource/Images/Player/AnimationSheet_Character_resize.png", 72, 8, 9, 96, 96, playerImageOld);
 	for (int i = 0; i < 72; i++)
 	{
-		if ((i >= 2 && i <= 7) || (i >= 10 && i <= 15) || (i >= 20 && i <= 23) || (i >= 38 && i <= 39) || (i >= 52 && i <= 55))
+		//画像がない部分は読みこまない
+		if ((i >= 2 && i <= 7) ||
+			(i >= 10 && i <= 15) ||
+			(i >= 20 && i <= 23) ||
+			(i >= 38 && i <= 39) ||
+			(i >= 52 && i <= 55))
 		{
 			continue;
 		}
@@ -109,6 +114,8 @@ void Player::Update()
 
 	StockSelect();
 
+	Animation();
+
 	normalWeapon->Update(this);
 	
 	for (int i = 0; i < STEAL_VALUE; i++)
@@ -131,7 +138,6 @@ void Player::Draw() const
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
 		isHit ? 0xff0000 : 0xffff00, FALSE
 	);
-	DrawGraphF(GetMinScreenLocation().x - PLAYER_IMAGE_ALIGN_THE_ORIGIN, GetMinScreenLocation().y, playerImage[playerAnim], TRUE);
 
 	DrawFormatString(0, 0, 0x000000, "hp :%f", hp);
 	DrawFormatString(0, 15, 0x000000, "attackCoolTime :%f", attackCoolTime);
@@ -161,6 +167,16 @@ void Player::Draw() const
 	}
 
 #endif // DEBUG
+
+	imageInversionFlg ?
+		DrawRotaGraphF
+		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+			1, 0, playerImage[playerAnim], TRUE, TRUE) :
+		DrawRotaGraphF
+		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+			1, 0, playerImage[playerAnim], TRUE);
 
 	normalWeapon->Draw();
 
@@ -218,6 +234,9 @@ void Player::Movement()
 	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) &&
 		!isKnockBack && !isAttack)
 	{
+		isMove = true;
+		direction.x = 1.f;
+		imageInversionFlg = false;
 		//最高速度は超えない
 		if (move.x < PLAYER_MAX_MOVE_SPEED)
 		{
@@ -229,8 +248,6 @@ void Player::Movement()
 			{
 				move.x += PLAYER_MOVE_SPEED;
 			}
-
-			direction.x = 1.f;
 		}
 		else
 		{
@@ -238,9 +255,13 @@ void Player::Movement()
 		}
 	}
 	//左へ移動
-	else if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) &&
+	else
+	if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) &&
 		!isKnockBack && !isAttack)
 	{
+		isMove = true;
+		direction.x = -1.f;
+		imageInversionFlg = true;
 		//最高速度は超えない
 		if (move.x > -PLAYER_MAX_MOVE_SPEED)
 		{
@@ -252,8 +273,6 @@ void Player::Movement()
 			{
 				move.x += -PLAYER_MOVE_SPEED;
 			}
-
-			direction.x = -1.f;
 		}
 		else
 		{
@@ -263,7 +282,11 @@ void Player::Movement()
 	//停止
 	else
 	{
-		if (!isKnockBack)move.x = 0.f;
+		if (!isKnockBack)
+		{
+			move.x = 0.f;
+			isMove = false;
+		}
 	}
 
 	//ジャンプ
@@ -419,6 +442,53 @@ void Player::StockSelect()
 		{
 			stockCount = 0;
 		}
+	}
+}
+
+void Player::Animation()
+{
+	playerAnimFramCount++;
+
+	//待機
+	if (!isMove && !isAir && !isKnockBack)
+	{
+		if (playerAnim >= 4)
+		{
+			playerAnim = 0;
+		}
+		
+		if (playerAnimFramCount % 16 == 0)
+		{
+			playerAnim++;
+			if (playerAnim >= 4)
+			{
+				playerAnim = 0;
+			}
+		}
+	}
+
+	//移動
+	if (isMove && !isAir && !isKnockBack)
+	{
+		if (playerAnim <= 8 || playerAnim >= 17)
+		{
+			playerAnim = 9;
+		}
+
+		if (playerAnimFramCount % 8 == 0)
+		{
+			playerAnim++;
+			if (playerAnim >= 12)
+			{
+				playerAnim = 9;
+			}
+		}
+	}
+
+	//ジャンプ
+	if (isAir && !isKnockBack)
+	{
+
 	}
 }
 

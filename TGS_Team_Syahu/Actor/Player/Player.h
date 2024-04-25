@@ -4,7 +4,8 @@
 #include"Weapon/Steal.h"
 #include"Weapon/LargeSword.h"
 
-#define PLAYER_IMAGE_ALIGN_THE_ORIGIN	17.f			//画像の原点調整用
+#define PLAYER_IMAGE_ALIGN_THE_ORIGIN_X	31.f			//画像の原点調整用x
+#define PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y	48.f			//画像の原点調整用y
 #define PLAYER_MOVE_SPEED				3.f				//移動移動
 #define PLAYER_MAX_MOVE_SPEED			9.f				//最高速度
 #define PLAYER_DAMAGE_INTERVAL			FPS * 1.0		//プレイヤーが再度ダメージを受けるまでの時間
@@ -86,6 +87,10 @@ private:
 	//ストックの選択
 	void StockSelect();
 
+	//アニメーション
+	void Animation();
+
+private:
 	//武器の重さを取得
 	float GetWeaponWeight(const Weapon type);
 

@@ -16,6 +16,7 @@ CharaBase::CharaBase()
 	damage = 10.f;
 
 	isAir = false;
+	isMove = false;
 	isHit = false;
 	isShow = false;
 	isAttack = false;

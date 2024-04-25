@@ -28,10 +28,12 @@ protected:
 	float damage;				//ダメージ
 
 	bool isAir;					//空中？
+	bool isMove;				//移動している？
 	bool isHit;					//当たっている？
 	bool isShow;				//表示する？
 	bool isAttack;				//攻撃中？
 	bool isKnockBack;			//ノックバックする？
+	bool imageInversionFlg;		//画像反転フラグ
 
 public:
 	//コンストラクタ
