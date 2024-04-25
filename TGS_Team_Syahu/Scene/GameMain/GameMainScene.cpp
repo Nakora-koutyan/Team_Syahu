@@ -113,5 +113,37 @@ void GameMainScene::HitCheck()
 			player->GetLargeSword()->Hit(enemy, player);
 			enemy->SetIsKnockBack(true);
 		}
+
+	}
+
+	// ブロックとプレイヤーが当たったら
+	if (stageblock->CollisionCheck(player))
+	{
+		Vector2D PLoc = player->GetLocation();
+		Vector2D BLoc = stageblock->GetLocation();
+		Vector2D Move = player->GetMove();
+		if (PLoc.y > BLoc.y) {
+			PLoc.y = BLoc.y;
+			Move.y = 0.f;
+			player->SetLocation(PLoc);
+			player->SetMove(Move);
+			
+			/*isAir = false;
+			direction = { direction.x,0.f };*/
+		} else {
+			Vector2D move = player->GetMove();
+			move.x = move.x * -1;
+			move.y = 0;
+			player->SetMove(move);
+		}
+	}
+
+	// ブロックと敵が当たったら
+	if (stageblock->CollisionCheck(enemy))
+	{
+		Vector2D move = enemy->GetMove();
+		move.x = move.x * -1;
+		move.y = move.y * -1;
+		enemy->SetMove(move);
 	}
 }
