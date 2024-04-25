@@ -3,7 +3,7 @@
 
 #define WALK_SPEED 1.f			//徘徊時のスピード
 #define CHASE_SPEED 2.f		//追跡時のスピード
-#define ATTACK_SPEED 8.f		//攻撃時のスピード
+#define ATTACK_SPEED 10.f		//攻撃時のスピード
 
 #define DIRECTION_LEFT 0		//左向き
 #define DIRECTION_RIGHT 1		//右向き
@@ -14,6 +14,9 @@ class NormalEnemy :public EnemyBase
 {
 private:
 	int enemyColor;
+	int colorRed;
+	int colorGreen;
+	int colorBlue;
 
 	int usualColor;	//通常色(確認用)
 	int damageColor;	//ダメージを受けた時の色(確認用)
@@ -27,7 +30,6 @@ private:
 
 	Vector2D attackRange[2];
 	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
-
 
 	int markStatus;		//符号の状態遷移
 	int findMark;		//プレイヤーを発見した際に出現する画像

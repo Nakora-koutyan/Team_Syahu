@@ -4,7 +4,8 @@
 
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyColor(0),damageColor(0),attackColor(0),usualColor(0),
-attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),isChase(false),markStatus(NULL)
+attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),isChase(false),markStatus(NULL),
+colorRed(0),colorGreen(0),colorBlue(0)
 {
 }
 
@@ -24,8 +25,12 @@ void NormalEnemy::Initialize()
 	//攻撃をするときの色
 	attackColor = GetColor(0, 0, 255);
 
+	colorRed = 255;
+	colorGreen = 255;
+	colorBlue = 255;
+
 	//体の色の情報を受け取る変数
-	enemyColor = usualColor;
+	enemyColor = GetColor(colorRed,colorGreen,colorBlue);
 	
 	//サイズ{ x , y }
 	area = { 90.f,90.f };
@@ -115,19 +120,13 @@ void NormalEnemy::Draw() const
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
-		isHit ? 0xff0000 : isAttack ? attackColor : usualColor, TRUE, 1.0f
+		GetColor(colorRed,colorGreen,colorBlue), TRUE, 1.0f
 	);
-	/*DrawFormatStringF(50.f, 80.f, GetColor(255, 0, 255), "%f GetMinLocation().x", GetMinLocation().x);
-	DrawFormatStringF(50.f, 180.f, GetColor(255, 0, 255), "%s isChase", isChase ? "true" : "false");
-	DrawFormatStringF(50.f, 100.f, GetColor(255, 0, 255), "%d AttackCoolTime", statusChangeTime);
-	DrawFormatStringF(50.f, 120.f, GetColor(255, 0, 255), "%d attackTime", attackWaitingTime);
-	DrawFormatStringF(50.f, 140.f, GetColor(255, 0, 255), "%s noMove", noMove ? "true" : "false");
-	DrawFormatStringF(50.f, 160.f, GetColor(255, 0, 255), "%s isAttack", isAttack ? "true" : "false");
-	DrawFormatStringF(50.f, 180.f, GetColor(255, 0, 255), "%s isChase", isChase ? "true" : "false");
-	DrawFormatStringF(50.f, 200.f, GetColor(255, 0, 255), "%s isPatrol", isPatrol ? "true" : "false");
-	DrawFormatStringF(50.f, 220.f, GetColor(255, 0, 255), "%f patrolCounter", patrolCounter);
-	DrawFormatStringF(50.f, 240.f, GetColor(255, 0, 255), "%d enemyStatus", enemyStatus);*/
-	
+
+	DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
+	DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
+	DrawFormatStringF(50.f, 160.f, 0x0000ff, "colorBlue %d", colorBlue);
+
 	if (markStatus != NULL)
 	{
 		//プレイヤーを発見した場合、状態に応じて符号を表示する
@@ -194,6 +193,13 @@ void NormalEnemy::EnemyPatrol(Player* player)
 		//攻撃準備の状態にする
 		enemyStatus = EnemyStatus::AttackStandBy;
 	}
+
+	//エネミーの色変更
+	if (colorBlue < 255 && colorGreen < 255)
+	{
+		colorBlue += 15;
+		colorGreen += 15;
+	}
 }
 
 void NormalEnemy:: AttackStandBy(Player* player)
@@ -207,7 +213,6 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	{
 		direction = DIRECTION_RIGHT;
 	}
-
 	//攻撃準備処理
 	if (attackWaitingTime >= 0)
 	{
@@ -231,6 +236,14 @@ void NormalEnemy:: AttackStandBy(Player* player)
 		//パトロール状態にする
 		enemyStatus = EnemyStatus::Patrol;
 	}
+
+	//エネミーの色変更
+	if (colorBlue > 0 && colorGreen > 0)
+	{
+		colorBlue -= 4.25;
+		colorGreen -= 4.25;
+	}
+	
 }
 
 void NormalEnemy::AttackStart(Player* player)
