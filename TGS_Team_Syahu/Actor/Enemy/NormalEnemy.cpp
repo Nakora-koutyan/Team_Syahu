@@ -22,7 +22,7 @@ void NormalEnemy::Initialize()
 		enemyImage[enemyNumber] = NULL;
 	}
 	//エネミー画像の格納
-	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 1, 6, 120, 130, enemyImage);
+	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 6, 1, 120, 130, enemyImage);
 
 	//仮の色付け
 	//通常のカラー
@@ -40,7 +40,7 @@ void NormalEnemy::Initialize()
 	enemyColor = GetColor(colorRed,colorGreen,colorBlue);
 	
 	//サイズ{ x , y }
-	area = { 90.f,90.f };
+	area = { 80.f,90.f };
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
@@ -94,6 +94,7 @@ void NormalEnemy::Update(Player* player)
 		//パトロール処理
 	case EnemyStatus::Patrol:
 		EnemyPatrol(player);
+		enemyNumber = 0;
 		markStatus = NULL;
 		break;
 
@@ -127,11 +128,11 @@ void NormalEnemy::Draw() const
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
-		GetColor(colorRed,colorGreen,colorBlue), TRUE, 1.0f
+		GetColor(colorRed,colorGreen,colorBlue), FALSE, 1.0f
 	);
 	DrawGraphF
 	(
-		screenLocation.x, screenLocation.y,
+		screenLocation.x - 15.f, screenLocation.y-20.f,
 		enemyImage[enemyNumber], TRUE
 	);
 
