@@ -16,12 +16,14 @@ StageBlock::~StageBlock() {
 };
 
 void StageBlock::Update() {
+	//カメラに応じて座標を変化
 	screenLocation = Camera::ConvertScreenPosition(location);
 
+	
 };
 
 void StageBlock::Draw()const {
-
+	//ブロックの描画
 	DrawBoxAA
 	(
 		screenLocation.x, screenLocation.y,
