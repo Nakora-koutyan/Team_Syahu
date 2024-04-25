@@ -13,12 +13,15 @@ class Player;
 class NormalEnemy :public EnemyBase
 {
 private:
+	int enemyImage[6];	//敵画像
+	int enemyNumber;
+
 	int enemyColor;
 	int colorRed;
 	int colorGreen;
 	int colorBlue;
 
-	int usualColor;	//通常色(確認用)
+	int usualColor;		//通常色(確認用)
 	int damageColor;	//ダメージを受けた時の色(確認用)
 	int attackColor;	//攻撃時の色(確認用)
 

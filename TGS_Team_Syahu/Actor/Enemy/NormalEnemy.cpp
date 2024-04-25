@@ -5,7 +5,7 @@
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyColor(0),damageColor(0),attackColor(0),usualColor(0),
 attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),isChase(false),markStatus(NULL),
-colorRed(0),colorGreen(0),colorBlue(0)
+colorRed(0),colorGreen(0),colorBlue(0),enemyImage{NULL},enemyNumber(0)
 {
 }
 
@@ -17,6 +17,13 @@ NormalEnemy::~NormalEnemy()
 //初期化処理
 void NormalEnemy::Initialize()
 {
+	for (enemyNumber = 0; enemyNumber < 6; enemyNumber++)
+	{
+		enemyImage[enemyNumber] = NULL;
+	}
+	//エネミー画像の格納
+	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 1, 6, 120, 130, enemyImage);
+
 	//仮の色付け
 	//通常のカラー
 	usualColor = GetColor(0, 255, 0);
@@ -122,10 +129,16 @@ void NormalEnemy::Draw() const
 		screenLocation.x + area.width, screenLocation.y + area.height,
 		GetColor(colorRed,colorGreen,colorBlue), TRUE, 1.0f
 	);
+	DrawGraphF
+	(
+		screenLocation.x, screenLocation.y,
+		enemyImage[enemyNumber], TRUE
+	);
 
 	DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
 	DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
 	DrawFormatStringF(50.f, 160.f, 0x0000ff, "colorBlue %d", colorBlue);
+	DrawFormatStringF(50.f, 180.f, 0xffff00, "enemyImage %d", enemyNumber);
 
 	if (markStatus != NULL)
 	{
