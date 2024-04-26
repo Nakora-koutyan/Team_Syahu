@@ -14,7 +14,10 @@ class NormalEnemy :public EnemyBase
 {
 private:
 	int enemyImage[6];	//敵画像
-	int enemyNumber;
+	int enemyNumber;	//画像番号
+	int animInterval;	//画像のインターバル
+	bool animCountDown;	//画像インターバルのカウントダウン
+	bool animTurnFlg;	//アニメーションを左右反転する？(yes：true,no：false)
 
 	int enemyColor;
 	int colorRed;
@@ -52,6 +55,9 @@ public:
 	void Draw()const;
 
 private:
+
+	//エネミーのアニメーション制御関数
+	void EnemyAnimation() override;
 
 	//パトロール関数
 	void EnemyPatrol(Player* player) override;

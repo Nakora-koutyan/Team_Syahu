@@ -5,7 +5,7 @@
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyColor(0),damageColor(0),attackColor(0),usualColor(0),
 attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),isChase(false),markStatus(NULL),
-colorRed(0),colorGreen(0),colorBlue(0),enemyImage{NULL},enemyNumber(0)
+colorRed(0),colorGreen(0),colorBlue(0),enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
 {
 }
 
@@ -73,6 +73,7 @@ void NormalEnemy::Initialize()
 	statusChangeTime = MAX_COOL_TIME;
 
 	enemyStatus = Patrol;
+	enemyNumber = 0;
 }
 
 //描画以外の内容を更新
@@ -94,7 +95,6 @@ void NormalEnemy::Update(Player* player)
 		//パトロール処理
 	case EnemyStatus::Patrol:
 		EnemyPatrol(player);
-		enemyNumber = 0;
 		markStatus = NULL;
 		break;
 
@@ -117,6 +117,9 @@ void NormalEnemy::Update(Player* player)
 		break;
 	}
 
+	//エネミーアニメーション
+	EnemyAnimation();
+
 	location.x += move.x;
 }
 
@@ -130,16 +133,17 @@ void NormalEnemy::Draw() const
 		screenLocation.x + area.width, screenLocation.y + area.height,
 		GetColor(colorRed,colorGreen,colorBlue), FALSE, 1.0f
 	);
-	DrawGraphF
-	(
-		screenLocation.x - 15.f, screenLocation.y-20.f,
-		enemyImage[enemyNumber], TRUE
-	);
+	animTurnFlg ?
+		DrawRotaGraphF(screenLocation.x + 45.f, screenLocation.y + 45.f, 1, 0,
+			enemyImage[enemyNumber], TRUE, TRUE) :
+		DrawRotaGraphF(screenLocation.x + 45.f, screenLocation.y + 45.f, 1, 0,
+			enemyImage[enemyNumber], TRUE, FALSE);
 
 	DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
 	DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
 	DrawFormatStringF(50.f, 160.f, 0x0000ff, "colorBlue %d", colorBlue);
 	DrawFormatStringF(50.f, 180.f, 0xffff00, "enemyImage %d", enemyNumber);
+	DrawFormatStringF(50.f, 200.f, 0xff00ff, "animInterval %d", animInterval);
 
 	if (markStatus != NULL)
 	{
@@ -187,6 +191,7 @@ void NormalEnemy::EnemyPatrol(Player* player)
 		if (patrolCounter <= -150.f)
 		{
 			direction = DIRECTION_RIGHT;
+			animTurnFlg = true;
 		}
 	}
 	//右向きの場合
@@ -198,6 +203,7 @@ void NormalEnemy::EnemyPatrol(Player* player)
 		if (patrolCounter >= 150.f)
 		{
 			direction = DIRECTION_LEFT;
+			animTurnFlg = false;
 		}
 	}
 
@@ -280,11 +286,13 @@ void NormalEnemy::AttackStart(Player* player)
 		//左向きに攻撃を行う
 		if (direction == DIRECTION_LEFT)
 		{
+			animTurnFlg = false;
 			move.x = -(WALK_SPEED * ATTACK_SPEED);
 		}
 		//右向きに攻撃を行う
 		if (direction == DIRECTION_RIGHT)
 		{
+			animTurnFlg = true;
 			move.x = (WALK_SPEED * ATTACK_SPEED);
 		}
 	}
@@ -327,5 +335,100 @@ void NormalEnemy::ClashToPlayer(Player* player)
 	if (CollisionCheck(player) == true)
 	{
 
+	}
+}
+
+//アニメーション制御関数
+void NormalEnemy::EnemyAnimation()
+{
+	animInterval++;
+	//パトロール状態の場合
+	if (enemyStatus == EnemyStatus::Patrol)
+	{
+		//敵画像の番号が2以上でカウントダウンがfalseの場合
+		if (enemyNumber >= 2 && animCountDown == false)
+		{
+			//カウントダウンに切り替える
+			animCountDown = true;
+		}
+		//16フレームごとにアニメーションを切り替える
+		if (animInterval % 16 == 0)
+		{
+			//画像番号を減少する
+			if (animCountDown == true)
+			{
+				enemyNumber--;
+			}
+			//画像番号を増加する
+			if (animCountDown == false)
+			{
+				enemyNumber++;
+			}
+		}
+		//エネミーの画像番号が０以下になった場合
+		if (enemyNumber <= 0 && animCountDown == true)
+		{
+			//カウントダウンをfalseに切り替える
+			animCountDown = false;
+		}
+	}
+
+	//攻撃準備状態の場合
+	if (enemyStatus == EnemyStatus::AttackStandBy)
+	{
+		enemyNumber = 2;
+		animCountDown = false;
+	}
+
+	//攻撃中の場合
+	if (enemyStatus == EnemyStatus::AttackStart)
+	{
+		//画像の番号が３以下の場合
+		if (enemyNumber <= 3)
+		{
+			enemyNumber = 3;
+		}
+		//画像番号が5以上でカウントダウンが解除されている場合
+		if (enemyNumber >= 5 && animCountDown == false)
+		{
+			//カウントダウン状態に切り替える
+			animCountDown = true;
+		}
+		//16フレーム毎に画像を切り替える
+		if (animInterval % 8 == 0)
+		{
+			//画像番号を減少する
+			if (animCountDown == true)
+			{
+				enemyNumber--;
+			}
+			//画像番号を増加する
+			if (animCountDown == false)
+			{
+				enemyNumber++;
+			}
+		}
+		//エネミーの画像番号が４以下になった場合
+		if (enemyNumber <= 4 && animCountDown == true)
+		{
+			//カウントダウンをfalseに切り替える
+			animCountDown = false;
+		}
+	}
+
+	//攻撃終了状態の場合
+	if (enemyStatus == EnemyStatus::AttackEnd)
+	{
+		//8フレーム毎に切り替える
+		if (animInterval % 8 == 0)
+		{
+			//画像番号を減少させる
+			enemyNumber--;
+		}
+		//エネミーの画像番号が０以下になった場合
+		if (enemyNumber <= 0)
+		{
+			enemyNumber = 0;
+		}
 	}
 }
