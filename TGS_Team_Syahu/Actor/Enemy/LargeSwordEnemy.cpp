@@ -132,12 +132,12 @@ void LargeSwordEnemy::Update(Player* player)
 void LargeSwordEnemy::Draw() const
 {
 	//エネミー表示
-	DrawBoxAA
+	/*DrawBoxAA
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
 		GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
-	);
+	);*/
 	animTurnFlg ?
 		DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
 			enemyImage[enemyNumber], TRUE, TRUE) :
