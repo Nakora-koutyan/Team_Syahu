@@ -145,8 +145,8 @@ void GameMainScene::HitCheck()
 		Vector2D pLoc = player->GetLocation();
 		Vector2D bLoc = stageblock->GetLocation();
 		Vector2D move = player->GetMove();
-		if (pLoc.y >= bLoc.y) {
-			pLoc.y = bLoc.y - (move.y + 1.f);
+		if ((pLoc.y + 90) <= bLoc.y) {
+			pLoc.y = bLoc.y - 84;
 			move.y = 0.f;
 			player->SetLocation(pLoc);
 			player->SetMove(move);
@@ -154,11 +154,15 @@ void GameMainScene::HitCheck()
 			/*isAir = false;
 			direction = { direction.x,0.f };*/
 		} else {
-			pLoc.x -= move.x;
-			pLoc.y -= move.y;
-			player->SetLocation(pLoc);
+			if (pLoc.x >= (bLoc.x + 50)) {
+				pLoc.x = bLoc.x + 100;
+				pLoc.y = pLoc.y;
+				player->SetLocation(pLoc);
+			} else {
+				pLoc.x = bLoc.x - 56.f;
+				player->SetLocation(pLoc);
+			}
 			move.x = 0;
-			move.y = 0;
 			player->SetMove(move);
 		}
 	}

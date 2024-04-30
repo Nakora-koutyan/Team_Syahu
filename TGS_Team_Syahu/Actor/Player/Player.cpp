@@ -167,7 +167,6 @@ void Player::Draw() const
 	}
 
 #endif // DEBUG
-
 	imageInversionFlg ?
 		DrawRotaGraphF
 		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
