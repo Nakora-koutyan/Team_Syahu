@@ -19,21 +19,6 @@ private:
 	bool animCountDown;	//画像インターバルのカウントダウン
 	bool animTurnFlg;	//アニメーションを左右反転する？(yes：true,no：false)
 
-	int colorRed;
-	int colorGreen;
-	int colorBlue;
-
-	int hp;				//自身のHP
-
-	int direction;		//進行方向
-
-	Vector2D attackRange[2];
-	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
-
-	int markStatus;		//符号の状態遷移
-	int findMark;		//プレイヤーを発見した際に出現する画像
-	int angryMark;		//プレイヤーに攻撃する際の画像
-
 public:
 	//コンストラクタ
 	NormalEnemy();
@@ -55,11 +40,11 @@ private:
 	//パトロール関数
 	void EnemyPatrol(Player* player) override;
 
-	//攻撃範囲
-	void AttackCenser() override;
+	//徘徊状態から警戒状態に入る範囲
+	void AttackRange()override;
 
-	//プレイヤーを発見するためのセンサー
-	void AttackRange() override;
+	//攻撃を行う範囲
+	void AttackCenser() override;
 
 	//追跡を行うか？
 	void AttackStandBy(Player* player) override;

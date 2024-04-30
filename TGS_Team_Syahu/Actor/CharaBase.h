@@ -98,5 +98,5 @@ protected:
 
 	//ノックバック処理
 	void KnockBack(const double time);
-	
+
 };
