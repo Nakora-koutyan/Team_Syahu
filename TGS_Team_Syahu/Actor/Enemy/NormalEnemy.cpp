@@ -33,7 +33,7 @@ void NormalEnemy::Initialize()
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
-	weaponType = Weapon::Empty;	//突進(武器無し)
+	weaponType = Weapon::LargeSword;	//突進(武器無し)
 
 	//攻撃状態に入る範囲
 	attackRange[0] = { GetCenterLocation() };
@@ -117,23 +117,23 @@ void NormalEnemy::Update(Player* player)
 void NormalEnemy::Draw() const
 {
 	//エネミー表示
-	DrawBoxAA
-	(
-		screenLocation.x, screenLocation.y,
-		screenLocation.x + area.width, screenLocation.y + area.height,
-		GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
-	);
+	//DrawBoxAA
+	//(
+	//	screenLocation.x, screenLocation.y,
+	//	screenLocation.x + area.width, screenLocation.y + area.height,
+	//	GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
+	//);
 	animTurnFlg ?
 		DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
 			enemyImage[enemyNumber], TRUE, TRUE) :
 		DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y + 45.f, 1, 0,
 			enemyImage[enemyNumber], TRUE, FALSE);
 
-	DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
-	DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
-	DrawFormatStringF(50.f, 160.f, 0x0000ff, "colorBlue %d", colorBlue);
-	DrawFormatStringF(50.f, 180.f, 0xffff00, "enemyImage %d", enemyNumber);
-	DrawFormatStringF(50.f, 200.f, 0xff00ff, "animInterval %d", animInterval);
+	//DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
+	//DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
+	//DrawFormatStringF(50.f, 160.f, 0x0000ff, "colorBlue %d", colorBlue);
+	//DrawFormatStringF(50.f, 180.f, 0xffff00, "enemyImage %d", enemyNumber);
+	//DrawFormatStringF(50.f, 200.f, 0xff00ff, "animInterval %d", animInterval);
 
 	if (markStatus != NULL)
 	{
