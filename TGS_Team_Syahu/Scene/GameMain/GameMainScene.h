@@ -4,6 +4,7 @@
 #include"../../Actor/Camera/Camera.h"
 #include"../../Actor/Enemy/NormalEnemy.h"
 #include"../../Map/StageBlock.h"
+#include"../../UI/UI.h"
 
 #define LINE_NUM 12                     //ラインの数
 
@@ -14,6 +15,7 @@ private:
     Camera* camera;                     //カメラのオブジェクト
     NormalEnemy* enemy;                 //雑魚敵のオブジェクト
     StageBlock* stageblock;
+    UI* ui;                             //UIのオブジェクト
 
     int kari;                           //かり
 

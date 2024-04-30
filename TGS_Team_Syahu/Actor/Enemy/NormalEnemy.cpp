@@ -2,10 +2,10 @@
 #include "../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 
+#define MAX_WAITING_TIME 60
+
 //コンストラクタ
-NormalEnemy::NormalEnemy():enemyColor(0),damageColor(0),attackColor(0),usualColor(0),
-attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),isChase(false),markStatus(NULL),
-colorRed(0),colorGreen(0),colorBlue(0),enemyImage{NULL},enemyNumber(0)
+NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
 {
 }
 
@@ -24,29 +24,18 @@ void NormalEnemy::Initialize()
 	//エネミー画像の格納
 	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 6, 1, 120, 130, enemyImage);
 
-	//仮の色付け
-	//通常のカラー
-	usualColor = GetColor(0, 255, 0);
-	//ダメージを受けた時の色
-	damageColor = GetColor(255, 0, 0);
-	//攻撃をするときの色
-	attackColor = GetColor(0, 0, 255);
-
 	colorRed = 255;
 	colorGreen = 255;
 	colorBlue = 255;
 
-	//体の色の情報を受け取る変数
-	enemyColor = GetColor(colorRed,colorGreen,colorBlue);
-	
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
-	weaponType = Weapon::LargeSword;	//かり
+	weaponType = Weapon::LargeSword;	//突進(武器無し)
 
-	//攻撃範囲
+	//攻撃状態に入る範囲
 	attackRange[0] = { GetCenterLocation() };
 	attackRange[1] = { GetCenterLocation() };
 
@@ -54,7 +43,7 @@ void NormalEnemy::Initialize()
 	attackCenser[0] = { GetCenterLocation() };
 	attackCenser[1] = { GetCenterLocation() };
 
-	//プレイヤーを見つけた際の座標
+	//プレイヤーを見つけた際のマーク
 	findMark = LoadGraph("Resource/Images/Exclamation.png");
 	angryMark = LoadGraph("Resource/images/Angry.png");
 
@@ -73,6 +62,7 @@ void NormalEnemy::Initialize()
 	statusChangeTime = MAX_COOL_TIME;
 
 	enemyStatus = Patrol;
+	enemyNumber = 0;
 }
 
 //描画以外の内容を更新
@@ -83,18 +73,18 @@ void NormalEnemy::Update(Player* player)
 	DamageInterval(int(FPS * 0.5));
 	KnockBack(FPS * 0.5);
 
-	//エネミーの攻撃範囲
-	AttackCenser();
-	//プレイヤーを検知するセンサー
+	//徘徊状態から警戒状態に入る範囲
 	AttackRange();
 
+	//エネミーの攻撃範囲
+	AttackCenser();
+	
 	//状態遷移
 	switch (enemyStatus)
 	{
 		//パトロール処理
 	case EnemyStatus::Patrol:
 		EnemyPatrol(player);
-		enemyNumber = 0;
 		markStatus = NULL;
 		break;
 
@@ -117,6 +107,9 @@ void NormalEnemy::Update(Player* player)
 		break;
 	}
 
+	//エネミーアニメーション
+	EnemyAnimation();
+
 	location.x += move.x;
 }
 
@@ -124,54 +117,55 @@ void NormalEnemy::Update(Player* player)
 void NormalEnemy::Draw() const
 {
 	//エネミー表示
-	DrawBoxAA
-	(
-		screenLocation.x, screenLocation.y,
-		screenLocation.x + area.width, screenLocation.y + area.height,
-		GetColor(colorRed,colorGreen,colorBlue), FALSE, 1.0f
-	);
-	DrawGraphF
-	(
-		screenLocation.x - 15.f, screenLocation.y-20.f,
-		enemyImage[enemyNumber], TRUE
-	);
+	//DrawBoxAA
+	//(
+	//	screenLocation.x, screenLocation.y,
+	//	screenLocation.x + area.width, screenLocation.y + area.height,
+	//	GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
+	//);
+	animTurnFlg ?
+		DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
+			enemyImage[enemyNumber], TRUE, TRUE) :
+		DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y + 45.f, 1, 0,
+			enemyImage[enemyNumber], TRUE, FALSE);
 
-	DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
-	DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
-	DrawFormatStringF(50.f, 160.f, 0x0000ff, "colorBlue %d", colorBlue);
-	DrawFormatStringF(50.f, 180.f, 0xffff00, "enemyImage %d", enemyNumber);
+	//DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
+	//DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
+	//DrawFormatStringF(50.f, 160.f, 0x0000ff, "colorBlue %d", colorBlue);
+	//DrawFormatStringF(50.f, 180.f, 0xffff00, "enemyImage %d", enemyNumber);
+	//DrawFormatStringF(50.f, 200.f, 0xff00ff, "animInterval %d", animInterval);
 
 	if (markStatus != NULL)
 	{
 		//プレイヤーを発見した場合、状態に応じて符号を表示する
 		if (direction == DIRECTION_LEFT)
 		{
-			DrawGraphF(screenLocation.x + 75, screenLocation.y - 30, markStatus, TRUE);
+			DrawGraphF(screenLocation.x + 35, screenLocation.y - 20, markStatus, TRUE);
 		}
 		if (direction == DIRECTION_RIGHT)
 		{
-			DrawGraphF(screenLocation.x - 25, screenLocation.y - 30, markStatus, TRUE);
+			DrawGraphF(screenLocation.x, screenLocation.y - 20, markStatus, TRUE);
 		}
 	}
 }
 
-//攻撃範囲
-void NormalEnemy::AttackCenser()
+//攻撃に入る範囲
+void NormalEnemy::AttackRange()
 {
-	attackRange[0].x = GetMinLocation().x - 400.f;
+	attackRange[0].x = GetMinLocation().x - 410.f;
 	attackRange[0].y = GetCenterLocation().y;
 
-	attackRange[1].x = GetMaxLocation().x + 400.f;
+	attackRange[1].x = GetMaxLocation().x + 410.f;
 	attackRange[1].y = GetCenterLocation().y;
 }
 
-//追跡に入る範囲
-void NormalEnemy::AttackRange()
+//徘徊状態から警戒状態に入る範囲
+void NormalEnemy::AttackCenser()
 {
-	attackCenser[0].x = GetMinLocation().x - 350.f;
+	attackCenser[0].x = GetMinLocation().x - 430.f;
 	attackCenser[0].y = GetCenterLocation().y;
 
-	attackCenser[1].x = GetMaxLocation().x + 350.f;
+	attackCenser[1].x = GetMaxLocation().x + 430.f;
 	attackCenser[1].y = GetCenterLocation().y;
 }
 
@@ -187,6 +181,7 @@ void NormalEnemy::EnemyPatrol(Player* player)
 		if (patrolCounter <= -150.f)
 		{
 			direction = DIRECTION_RIGHT;
+			animTurnFlg = true;
 		}
 	}
 	//右向きの場合
@@ -198,11 +193,12 @@ void NormalEnemy::EnemyPatrol(Player* player)
 		if (patrolCounter >= 150.f)
 		{
 			direction = DIRECTION_LEFT;
+			animTurnFlg = false;
 		}
 	}
 
-	if (attackCenser[0].x < player->GetMaxLocation().x &&
-		attackCenser[1].x > player->GetMinLocation().x )
+	if (attackRange[0].x < player->GetMinLocation().x &&
+		attackRange[1].x > player->GetMaxLocation().x )
 	{
 		//攻撃準備の状態にする
 		enemyStatus = EnemyStatus::AttackStandBy;
@@ -222,11 +218,14 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	if (location.x >= player->GetCenterLocation().x)
 	{
 		direction = DIRECTION_LEFT;
+		animTurnFlg = false;
 	}
 	else if (location.x <= player->GetCenterLocation().x)
 	{
 		direction = DIRECTION_RIGHT;
+		animTurnFlg = true;
 	}
+
 	//攻撃準備処理
 	if (attackWaitingTime >= 0)
 	{
@@ -244,8 +243,8 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	}
 
 	//攻撃範囲からプレイヤーが離れた場合
-	if (attackCenser[0].x > player->GetMaxLocation().x &&
-		attackCenser[1].x < player->GetMinLocation().x)
+	if (attackCenser[0].x > player->GetMinLocation().x &&
+		attackCenser[1].x < player->GetMaxLocation().x)
 	{
 		//パトロール状態にする
 		enemyStatus = EnemyStatus::Patrol;
@@ -254,17 +253,16 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	//エネミーの色変更
 	if (colorBlue > 0 && colorGreen > 0)
 	{
-		colorBlue -= 4.25;
-		colorGreen -= 4.25;
+		colorBlue -= 4;
+		colorGreen -= 4;
 	}
-	
 }
 
 void NormalEnemy::AttackStart(Player* player)
 {
 	//プレイヤーがこの範囲内にいるなら攻撃を続行する
-	if (attackRange[0].x <= player->GetCenterLocation().x && 
-		attackRange[1].x >= player->GetCenterLocation().x)
+	if (attackCenser[0].x < player->GetCenterLocation().x &&
+		attackCenser[1].x > player->GetCenterLocation().x)
 	{
 		//攻撃を続行
 		isAttack = true;
@@ -280,11 +278,13 @@ void NormalEnemy::AttackStart(Player* player)
 		//左向きに攻撃を行う
 		if (direction == DIRECTION_LEFT)
 		{
+			animTurnFlg = false;
 			move.x = -(WALK_SPEED * ATTACK_SPEED);
 		}
 		//右向きに攻撃を行う
 		if (direction == DIRECTION_RIGHT)
 		{
+			animTurnFlg = true;
 			move.x = (WALK_SPEED * ATTACK_SPEED);
 		}
 	}
@@ -327,5 +327,100 @@ void NormalEnemy::ClashToPlayer(Player* player)
 	if (CollisionCheck(player) == true)
 	{
 
+	}
+}
+
+//アニメーション制御関数
+void NormalEnemy::EnemyAnimation()
+{
+	animInterval++;
+	//パトロール状態の場合
+	if (enemyStatus == EnemyStatus::Patrol)
+	{
+		//敵画像の番号が2以上でカウントダウンがfalseの場合
+		if (enemyNumber >= 2 && animCountDown == false)
+		{
+			//カウントダウンに切り替える
+			animCountDown = true;
+		}
+		//16フレームごとにアニメーションを切り替える
+		if (animInterval % 16 == 0)
+		{
+			//画像番号を減少する
+			if (animCountDown == true)
+			{
+				enemyNumber--;
+			}
+			//画像番号を増加する
+			if (animCountDown == false)
+			{
+				enemyNumber++;
+			}
+		}
+		//エネミーの画像番号が０以下になった場合
+		if (enemyNumber <= 0 && animCountDown == true)
+		{
+			//カウントダウンをfalseに切り替える
+			animCountDown = false;
+		}
+	}
+
+	//攻撃準備状態の場合
+	if (enemyStatus == EnemyStatus::AttackStandBy)
+	{
+		enemyNumber = 2;
+		animCountDown = false;
+	}
+
+	//攻撃中の場合
+	if (enemyStatus == EnemyStatus::AttackStart)
+	{
+		//画像の番号が３以下の場合
+		if (enemyNumber <= 3)
+		{
+			enemyNumber = 3;
+		}
+		//画像番号が5以上でカウントダウンが解除されている場合
+		if (enemyNumber >= 5 && animCountDown == false)
+		{
+			//カウントダウン状態に切り替える
+			animCountDown = true;
+		}
+		//16フレーム毎に画像を切り替える
+		if (animInterval % 8 == 0)
+		{
+			//画像番号を減少する
+			if (animCountDown == true)
+			{
+				enemyNumber--;
+			}
+			//画像番号を増加する
+			if (animCountDown == false)
+			{
+				enemyNumber++;
+			}
+		}
+		//エネミーの画像番号が４以下になった場合
+		if (enemyNumber <= 4 && animCountDown == true)
+		{
+			//カウントダウンをfalseに切り替える
+			animCountDown = false;
+		}
+	}
+
+	//攻撃終了状態の場合
+	if (enemyStatus == EnemyStatus::AttackEnd)
+	{
+		//8フレーム毎に切り替える
+		if (animInterval % 8 == 0)
+		{
+			//画像番号を減少させる
+			enemyNumber--;
+		}
+		//エネミーの画像番号が０以下になった場合
+		if (enemyNumber <= 0)
+		{
+			enemyNumber = 0;
+		}
 	}
 }

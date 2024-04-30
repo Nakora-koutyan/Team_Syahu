@@ -11,16 +11,19 @@ CharaBase::CharaBase()
 
 	framCount = 0;
 	knockBackCount = 0;
+	alphaBlend = 255;
 
 	hp = 100.f;
 	damage = 10.f;
 
 	isAir = false;
+	isJump = false;
 	isMove = false;
 	isHit = false;
 	isShow = false;
 	isAttack = false;
 	isKnockBack = false;
+	imageInversionFlg = false;
 }
 
 CharaBase::~CharaBase()

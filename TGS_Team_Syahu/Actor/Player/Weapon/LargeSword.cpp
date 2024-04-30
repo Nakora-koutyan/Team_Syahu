@@ -53,6 +53,7 @@ void LargeSword::Update(Player* player)
 		angle = 0.f;
 		isShow = false;
 		player->SetIsAttack(false);
+		player->SetActionCount(0);
 	}
 
 	location.y = player->GetCenterLocation().y;
@@ -101,9 +102,6 @@ void LargeSword::Hit(CharaBase* enemy, Player* player)
 		{
 			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + LARGESWORD_DAMAGE));
 			enemy->SetIsHit(true);
-			player->SetIsAttack(false);
-
-			framCount = 0;
 		}
 	}
 }

@@ -28,6 +28,9 @@ protected:
 	float damage;				//ダメージ
 
 	bool isAir;					//空中？
+	bool isJump;				//ジャンプしている？
+	int alphaBlend;				//画像の透明値
+
 	bool isMove;				//移動している？
 	bool isHit;					//当たっている？
 	bool isShow;				//表示する？
@@ -97,5 +100,5 @@ protected:
 
 	//ノックバック処理
 	void KnockBack(const double time);
-	
+
 };

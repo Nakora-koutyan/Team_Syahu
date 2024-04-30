@@ -2,7 +2,7 @@
 #include"EnemyBase.h"
 
 #define WALK_SPEED 1.f			//徘徊時のスピード
-#define CHASE_SPEED 2.f		//追跡時のスピード
+#define CHASE_SPEED 2.f			//追跡時のスピード
 #define ATTACK_SPEED 10.f		//攻撃時のスピード
 
 #define DIRECTION_LEFT 0		//左向き
@@ -14,29 +14,10 @@ class NormalEnemy :public EnemyBase
 {
 private:
 	int enemyImage[6];	//敵画像
-	int enemyNumber;
-
-	int enemyColor;
-	int colorRed;
-	int colorGreen;
-	int colorBlue;
-
-	int usualColor;		//通常色(確認用)
-	int damageColor;	//ダメージを受けた時の色(確認用)
-	int attackColor;	//攻撃時の色(確認用)
-
-	int hp;				//自身のHP
-
-	int direction;		//進行方向
-
-	bool isChase;		//追跡
-
-	Vector2D attackRange[2];
-	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
-
-	int markStatus;		//符号の状態遷移
-	int findMark;		//プレイヤーを発見した際に出現する画像
-	int angryMark;		//プレイヤーに攻撃する際の画像
+	int enemyNumber;	//画像番号
+	int animInterval;	//画像のインターバル
+	bool animCountDown;	//画像インターバルのカウントダウン
+	bool animTurnFlg;	//アニメーションを左右反転する？(yes：true,no：false)
 
 public:
 	//コンストラクタ
@@ -53,14 +34,17 @@ public:
 
 private:
 
+	//エネミーのアニメーション制御関数
+	void EnemyAnimation() override;
+
 	//パトロール関数
 	void EnemyPatrol(Player* player) override;
 
-	//攻撃範囲
-	void AttackCenser() override;
+	//徘徊状態から警戒状態に入る範囲
+	void AttackRange()override;
 
-	//プレイヤーを発見するためのセンサー
-	void AttackRange() override;
+	//攻撃を行う範囲
+	void AttackCenser() override;
 
 	//追跡を行うか？
 	void AttackStandBy(Player* player) override;
