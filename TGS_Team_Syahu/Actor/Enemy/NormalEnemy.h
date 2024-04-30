@@ -19,20 +19,13 @@ private:
 	bool animCountDown;	//画像インターバルのカウントダウン
 	bool animTurnFlg;	//アニメーションを左右反転する？(yes：true,no：false)
 
-	int enemyColor;
 	int colorRed;
 	int colorGreen;
 	int colorBlue;
 
-	int usualColor;		//通常色(確認用)
-	int damageColor;	//ダメージを受けた時の色(確認用)
-	int attackColor;	//攻撃時の色(確認用)
-
 	int hp;				//自身のHP
 
 	int direction;		//進行方向
-
-	bool isChase;		//追跡
 
 	Vector2D attackRange[2];
 	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
