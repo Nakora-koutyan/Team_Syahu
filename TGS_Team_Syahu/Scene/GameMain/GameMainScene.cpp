@@ -151,7 +151,7 @@ void GameMainScene::HitCheck()
 		Vector2D pLoc = player->GetLocation();
 		Vector2D bLoc = stageblock->GetLocation();
 		Vector2D move = player->GetMove();
-		if ((pLoc.y + 90) <= bLoc.y) {
+		if ((pLoc.y + 64) <= bLoc.y) {
 			pLoc.y = bLoc.y - 84;
 			move.y = 0.f;
 			player->SetLocation(pLoc);
