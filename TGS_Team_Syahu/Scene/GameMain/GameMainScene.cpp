@@ -8,6 +8,7 @@ GameMainScene::GameMainScene()
 	enemy = new NormalEnemy();
 	enemy->Initialize();
 	stageblock = new StageBlock();
+	ui = new UI();
 
 	kari = LoadGraph("Resource/Images/kari.png");
 
@@ -20,6 +21,7 @@ GameMainScene::~GameMainScene()
 	delete camera;
 	delete enemy;
 	delete stageblock;
+	delete ui;
 }
 
 SceneBase* GameMainScene::Update()
@@ -46,6 +48,8 @@ SceneBase* GameMainScene::Update()
 
 	stageblock->Update();
 
+	ui->Update(player);
+
 	return this;
 }
 
@@ -61,6 +65,8 @@ void GameMainScene::Draw() const
 		GetCamera()->ConvertScreenPosition(pos2).x, GetCamera()->ConvertScreenPosition(pos2).y,
 		0xffffff
 	);
+
+	ui->Draw();
 
 	camera->Draw();
 
