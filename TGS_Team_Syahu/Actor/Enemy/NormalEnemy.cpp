@@ -121,7 +121,7 @@ void NormalEnemy::Draw() const
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
-		GetColor(colorRed,colorGreen,colorBlue), FALSE, 1.0f
+		GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
 	);
 	animTurnFlg ?
 		DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
@@ -140,11 +140,11 @@ void NormalEnemy::Draw() const
 		//プレイヤーを発見した場合、状態に応じて符号を表示する
 		if (direction == DIRECTION_LEFT)
 		{
-			DrawGraphF(screenLocation.x + 75, screenLocation.y - 30, markStatus, TRUE);
+			DrawGraphF(screenLocation.x + 35, screenLocation.y - 20, markStatus, TRUE);
 		}
 		if (direction == DIRECTION_RIGHT)
 		{
-			DrawGraphF(screenLocation.x - 25, screenLocation.y - 30, markStatus, TRUE);
+			DrawGraphF(screenLocation.x, screenLocation.y - 20, markStatus, TRUE);
 		}
 	}
 }
@@ -152,10 +152,10 @@ void NormalEnemy::Draw() const
 //攻撃に入る範囲
 void NormalEnemy::AttackRange()
 {
-	attackRange[0].x = GetMinLocation().x - 420.f;
+	attackRange[0].x = GetMinLocation().x - 410.f;
 	attackRange[0].y = GetCenterLocation().y;
 
-	attackRange[1].x = GetMaxLocation().x + 420.f;
+	attackRange[1].x = GetMaxLocation().x + 410.f;
 	attackRange[1].y = GetCenterLocation().y;
 }
 
@@ -197,8 +197,8 @@ void NormalEnemy::EnemyPatrol(Player* player)
 		}
 	}
 
-	if (attackRange[0].x < player->GetMaxLocation().x && 
-		attackRange[1].x > player->GetMinLocation().x )
+	if (attackRange[0].x < player->GetMinLocation().x &&
+		attackRange[1].x > player->GetMaxLocation().x )
 	{
 		//攻撃準備の状態にする
 		enemyStatus = EnemyStatus::AttackStandBy;
@@ -243,8 +243,8 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	}
 
 	//攻撃範囲からプレイヤーが離れた場合
-	if (attackCenser[0].x > player->GetMaxLocation().x &&
-		attackCenser[1].x < player->GetMinLocation().x)
+	if (attackCenser[0].x > player->GetMinLocation().x &&
+		attackCenser[1].x < player->GetMaxLocation().x)
 	{
 		//パトロール状態にする
 		enemyStatus = EnemyStatus::Patrol;

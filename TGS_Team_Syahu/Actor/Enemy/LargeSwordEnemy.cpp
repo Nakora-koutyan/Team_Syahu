@@ -3,6 +3,7 @@
 #include "../Player/Player.h"
 
 #define MAX_WAITING_TIME 90
+#define WALK_SPEED 2.f			//徘徊時のスピード
 
 //コンストラクタ
 LargeSwordEnemy::LargeSwordEnemy():enemyImage(),enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
@@ -176,10 +177,10 @@ void LargeSwordEnemy::AttackRange()
 //プレイヤーに攻撃を仕掛ける範囲
 void LargeSwordEnemy::AttackCenser()
 {
-	attackCenser[0].x = GetMinLocation().x - 200.f;
+	attackCenser[0].x = GetMinLocation().x - 270.f;
 	attackCenser[0].y = GetCenterLocation().y;
 
-	attackCenser[1].x = GetMaxLocation().x + 200.f;
+	attackCenser[1].x = GetMaxLocation().x + 270.f;
 	attackCenser[1].y = GetCenterLocation().y;
 }
 
@@ -191,7 +192,7 @@ void LargeSwordEnemy::EnemyPatrol(Player* player)
 	{
 		move.x = -WALK_SPEED;
 		patrolCounter -= WALK_SPEED;
-		//左に50進んだら向きを右にする
+		//左に200進んだら向きを右にする
 		if (patrolCounter <= -200.f)
 		{
 			direction = DIRECTION_RIGHT;
@@ -203,7 +204,7 @@ void LargeSwordEnemy::EnemyPatrol(Player* player)
 	{
 		move.x = WALK_SPEED;
 		patrolCounter += WALK_SPEED;
-		//右に50進んだら向きを左にする
+		//右に200進んだら向きを左にする
 		if (patrolCounter >= 15.f)
 		{
 			direction = DIRECTION_LEFT;
@@ -211,6 +212,7 @@ void LargeSwordEnemy::EnemyPatrol(Player* player)
 		}
 	}
 
+	//エネミーの状態遷移の処理
 	if (attackCenser[0].x < player->GetMaxLocation().x &&
 		attackCenser[1].x > player->GetMinLocation().x)
 	{
