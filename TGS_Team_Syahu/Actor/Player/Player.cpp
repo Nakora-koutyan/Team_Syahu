@@ -25,8 +25,8 @@ Player::Player()
 	}
 	largeSword = new LargeSword();
 
-	guardCount = 0;
 	stockCount = 0;
+	actionCount = 0;
 
 	framCount = 0;
 	damageFramCount = 0;
@@ -54,6 +54,7 @@ Player::Player()
 	stealCoolTime = 0.f;
 
 	isEquipment = false;
+	landingAnimFlg = false;
 }
 
 Player::~Player()
@@ -94,6 +95,10 @@ void Player::Update()
 
 	if (isEquipment && stock[stockCount] != Weapon::Empty)
 	{
+		if (actionCount == 4)
+		{
+			actionCount = 0;
+		}
 		weaponFramCount[stockCount]--;
 		if (weaponFramCount[stockCount] < 0)
 		{
@@ -145,7 +150,7 @@ void Player::Draw() const
 	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
 	DrawFormatString(0, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponFramCount[stockCount]);
 	DrawFormatString(0, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
-	DrawFormatString(0, 90, 0x000000, "playerAnim :%d", playerAnim);
+	DrawFormatString(0, 90, 0x000000, "attackCount :%d", actionCount);
 	if (weaponType == Weapon::Empty)
 	{
 		DrawFormatString(0, 45, 0x000000, "WeaponType:None");
@@ -224,7 +229,22 @@ void Player::Landing(const float height)
 		location.y = height - area.height;
 		move.y = 0.f;
 		isAir = false;
+		//空中の画像かつ動いていないなら
+		if (playerAnim == 27 && !isMove)
+		{
+			landingAnimFlg = true;
+		}
 		direction = { direction.x,0.f };
+	}
+	else
+	{
+		isAir = true;
+	}
+
+	//移動しているなら
+	if (isMove)
+	{
+		landingAnimFlg = false;
 	}
 }
 
@@ -296,6 +316,7 @@ void Player::Movement()
 	{
 		move.y = -JUMP_POWER;
 		isAir = true;
+		isJump = true;
 		direction.y = -1.f;
 	}
 
@@ -339,11 +360,13 @@ void Player::Attack()
 {
 	//投げるまたは武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
-		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack)
+		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack && actionCount == 0)
 	{
 		//武器を持っているないなら投げる
 		if (stock[stockCount] != Weapon::Empty && !isEquipment)
 		{		
+			isAttack = true;
+			actionCount = 3;
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
 			normalWeapon->Attack(this, GetWeaponWeight(stock[stockCount]), GetWeaponDamage(stock[stockCount]));
 			stock[stockCount] = Weapon::Empty;
@@ -353,6 +376,7 @@ void Player::Attack()
 		//武器攻撃
 		if (weaponType != Weapon::Empty)
 		{
+			actionCount = 2;
 			if (stock[stockCount] == Weapon::LargeSword)
 			{
 				isAttack = true;
@@ -365,21 +389,20 @@ void Player::Attack()
 	if (attackCoolTime > 0)attackCoolTime--;
 
 	//装備
-	if (!isKnockBack &&
+	if (!isKnockBack && stock[stockCount] != Weapon::Empty && weaponType == Weapon::Empty && actionCount == 0 &&
 		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
 	{
-		if (stock[stockCount] != Weapon::Empty)
-		{
 			weaponType = stock[stockCount];
 			isEquipment = true;
-		}
+			actionCount = 4;
 	}
 
 	//奪う
 	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)) &&
-		stealCoolTime <= 0.f && !isKnockBack)
+		stealCoolTime <= 0.f && !isKnockBack && actionCount == 0)
 	{
 		isAttack = true;
+		actionCount = 1;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;
 		//真ん中
 		steal[0]->Attack(this, STEAL_DISTANCE - 20.f, 100.f, 100.f, 30.f);
@@ -450,7 +473,7 @@ void Player::Animation()
 	playerAnimFramCount++;
 
 	//待機
-	if (!isMove && !isAir && !isKnockBack)
+	if (!isMove && !isAir && !isKnockBack && !landingAnimFlg && !isAttack)
 	{
 		if (playerAnim >= 4)
 		{
@@ -470,25 +493,94 @@ void Player::Animation()
 	//移動
 	if (isMove && !isAir && !isKnockBack)
 	{
-		if (playerAnim <= 8 || playerAnim >= 17)
+		if (playerAnim <= 7 || playerAnim >= 16)
 		{
-			playerAnim = 9;
+			playerAnim = 8;
 		}
 
 		if (playerAnimFramCount % 8 == 0)
 		{
 			playerAnim++;
-			if (playerAnim >= 12)
+			if (playerAnim >= 16)
 			{
-				playerAnim = 9;
+				playerAnim = 8;
 			}
 		}
 	}
 
-	//ジャンプ
-	if (isAir && !isKnockBack)
+	//空中
+	if (isAir && !isKnockBack && !isAttack)
 	{
+		if (playerAnim <= 21 || playerAnim >= 30)
+		{
+			if (isJump)
+			{
+				playerAnim = 22;
+				isJump = false;
+			}
+			else
+			{
+				playerAnim = 26;
+			}
+		}
 
+		if (playerAnimFramCount % 8 == 0)
+		{
+			if (playerAnim < 27)
+			{
+				playerAnim++;
+			}
+		}
+	}
+	//着地
+	if (landingAnimFlg && !isAir)
+	{
+		if (playerAnimFramCount % 8 == 0)
+		{
+			if (playerAnim < 30)
+			{
+				playerAnim++;
+			}
+		}
+		//着地のアニメーションが終わったら
+		if (playerAnim >= 30)
+		{
+			landingAnimFlg = false;
+		}
+	}
+
+	//攻撃
+	if (isAttack && !isKnockBack)
+	{
+		if (playerAnim <= 41)
+		{
+			playerAnim = 44;
+			//奪う、ダガーは振っている画像から
+			if (actionCount == 1 || stock[stockCount] == Weapon::Dagger)
+			{
+				playerAnim = 46;
+			}
+			//投げるは振り始めの画像から
+			if (actionCount == 3)
+			{
+				playerAnim = 45;
+			}
+		}
+
+
+		if (playerAnimFramCount % 5 == 0)
+		{
+			if (playerAnim < 49)
+			{
+				playerAnim++;
+			}
+		}
+	}
+
+	//ノックバック
+	if (isKnockBack)
+	{
+		playerAnim = 3;
 	}
 }
 

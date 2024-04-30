@@ -37,6 +37,7 @@ void Steal::Update(Player* player)
 		direction = 0;
 		isShow = false;
 		player->SetIsAttack(false);
+		player->SetActionCount(0);
 	}
 
 	screenLocation = Camera::ConvertScreenPosition(location);
@@ -98,9 +99,6 @@ void Steal::Hit(CharaBase* enemy, Player* player)
 				//敵は無能力になる
 				//enemy->SetWeaponType(Weapon::Empty);
 			}
-
-			framCount = 0;
-			direction = 0;
 		}
 	}
 }

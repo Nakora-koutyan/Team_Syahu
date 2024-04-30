@@ -2,7 +2,7 @@
 #include "../../../Collision/Line/LineCollision.h"
 #include"../../CharaBase.h"
 
-#define STEAL_ATTACK_TIME	FPS * 0.1		//奪う攻撃の時間
+#define STEAL_ATTACK_TIME	FPS * 0.3		//奪う攻撃の時間
 
 class Player;
 

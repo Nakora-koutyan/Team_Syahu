@@ -16,11 +16,13 @@ CharaBase::CharaBase()
 	damage = 10.f;
 
 	isAir = false;
+	isJump = false;
 	isMove = false;
 	isHit = false;
 	isShow = false;
 	isAttack = false;
 	isKnockBack = false;
+	imageInversionFlg = false;
 }
 
 CharaBase::~CharaBase()

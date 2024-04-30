@@ -28,6 +28,7 @@ protected:
 	float damage;				//ダメージ
 
 	bool isAir;					//空中？
+	bool isJump;				//ジャンプしている？
 	bool isMove;				//移動している？
 	bool isHit;					//当たっている？
 	bool isShow;				//表示する？

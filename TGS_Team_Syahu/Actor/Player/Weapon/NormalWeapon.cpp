@@ -52,6 +52,7 @@ void NormalWeapon::Update(Player* player)
 		weaponWeight = 0.f;
 		isShow = false;
 		player->SetIsAttack(false);
+		player->SetActionCount(0);
 	}
 
 	location.x += move.x;

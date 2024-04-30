@@ -34,8 +34,8 @@ private:
 	Steal* steal[STEAL_VALUE];				//奪う
 	LargeSword* largeSword;					//大剣
 
-	short guardCount;						//ガードのカウント	0:していない 1:していた
 	short stockCount;						//現在のストックの番号
+	short actionCount;						//行動のカウント 0:なし 1:奪う 2:武器 3:投げる 4:装備
 
 	int damageFramCount;					//ダメージを受けた時のフレームカウント
 	int weaponFramCount[PLAYER_MAX_STOCK];	//武器のフレームカウント
@@ -47,6 +47,7 @@ private:
 	float stealCoolTime;					//奪うのクールタイム
 
 	bool isEquipment;						//装備中？
+	bool landingAnimFlg;					//着地アニメーションフラグ
 
 public:
 	//コンストラクタ
@@ -76,6 +77,13 @@ public:
 
 	//大剣を取得
 	LargeSword* GetLargeSword()const { return largeSword; }
+
+public:
+	//行動カウントを取得
+	short GetActionCount()const { return actionCount; }
+
+	//行動カウントを設定
+	void SetActionCount(const short cnt) { actionCount = cnt; }
 
 private:
 	//移動
