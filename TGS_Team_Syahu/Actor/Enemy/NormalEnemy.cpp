@@ -3,8 +3,7 @@
 #include "../Player/Player.h"
 
 //コンストラクタ
-NormalEnemy::NormalEnemy():enemyColor(0),damageColor(0),attackColor(0),usualColor(0),
-attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),isChase(false),markStatus(NULL),
+NormalEnemy::NormalEnemy():attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),markStatus(NULL),
 colorRed(0),colorGreen(0),colorBlue(0),enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
 {
 }
@@ -24,21 +23,10 @@ void NormalEnemy::Initialize()
 	//エネミー画像の格納
 	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 6, 1, 120, 130, enemyImage);
 
-	//仮の色付け
-	//通常のカラー
-	usualColor = GetColor(0, 255, 0);
-	//ダメージを受けた時の色
-	damageColor = GetColor(255, 0, 0);
-	//攻撃をするときの色
-	attackColor = GetColor(0, 0, 255);
-
 	colorRed = 255;
 	colorGreen = 255;
 	colorBlue = 255;
 
-	//体の色の情報を受け取る変数
-	enemyColor = GetColor(colorRed,colorGreen,colorBlue);
-	
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
 	//表示座標{ x , y }
@@ -228,10 +216,12 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	if (location.x >= player->GetCenterLocation().x)
 	{
 		direction = DIRECTION_LEFT;
+		animTurnFlg = false;
 	}
 	else if (location.x <= player->GetCenterLocation().x)
 	{
 		direction = DIRECTION_RIGHT;
+		animTurnFlg = true;
 	}
 	//攻撃準備処理
 	if (attackWaitingTime >= 0)
@@ -260,8 +250,8 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	//エネミーの色変更
 	if (colorBlue > 0 && colorGreen > 0)
 	{
-		colorBlue -= 4.25;
-		colorGreen -= 4.25;
+		colorBlue -= 4;
+		colorGreen -= 4;
 	}
 	
 }
