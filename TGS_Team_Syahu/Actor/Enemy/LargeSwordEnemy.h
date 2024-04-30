@@ -1,7 +1,7 @@
 #pragma once
 #include "EnemyBase.h"
-class DaggerEnemy :public EnemyBase
+class LargeSwordEnemy :public EnemyBase
 {
-	
+
 };
 

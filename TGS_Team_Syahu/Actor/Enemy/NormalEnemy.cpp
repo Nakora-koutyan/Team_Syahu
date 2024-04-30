@@ -2,6 +2,8 @@
 #include "../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 
+#define MAX_WAITING_TIME 60
+
 //コンストラクタ
 NormalEnemy::NormalEnemy():attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),markStatus(NULL),
 colorRed(0),colorGreen(0),colorBlue(0),enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
@@ -122,9 +124,9 @@ void NormalEnemy::Draw() const
 		GetColor(colorRed,colorGreen,colorBlue), FALSE, 1.0f
 	);
 	animTurnFlg ?
-		DrawRotaGraphF(screenLocation.x + 45.f, screenLocation.y + 45.f, 1, 0,
+		DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
 			enemyImage[enemyNumber], TRUE, TRUE) :
-		DrawRotaGraphF(screenLocation.x + 45.f, screenLocation.y + 45.f, 1, 0,
+		DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y + 45.f, 1, 0,
 			enemyImage[enemyNumber], TRUE, FALSE);
 
 	DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
