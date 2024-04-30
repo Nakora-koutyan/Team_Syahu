@@ -2,9 +2,10 @@
 #include "../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 
+#define MAX_WAITING_TIME 60
+
 //コンストラクタ
-NormalEnemy::NormalEnemy():attackRange{},attackCenser{},hp(100),findMark(NULL),angryMark(NULL),direction(0),markStatus(NULL),
-colorRed(0),colorGreen(0),colorBlue(0),enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
+NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
 {
 }
 
@@ -32,9 +33,9 @@ void NormalEnemy::Initialize()
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
-	weaponType = Weapon::LargeSword;	//かり
+	weaponType = Weapon::Empty;	//突進(武器無し)
 
-	//攻撃範囲
+	//攻撃状態に入る範囲
 	attackRange[0] = { GetCenterLocation() };
 	attackRange[1] = { GetCenterLocation() };
 
@@ -42,7 +43,7 @@ void NormalEnemy::Initialize()
 	attackCenser[0] = { GetCenterLocation() };
 	attackCenser[1] = { GetCenterLocation() };
 
-	//プレイヤーを見つけた際の座標
+	//プレイヤーを見つけた際のマーク
 	findMark = LoadGraph("Resource/Images/Exclamation.png");
 	angryMark = LoadGraph("Resource/images/Angry.png");
 
@@ -72,11 +73,12 @@ void NormalEnemy::Update(Player* player)
 	DamageInterval(int(FPS * 0.5));
 	KnockBack(FPS * 0.5);
 
-	//エネミーの攻撃範囲
-	AttackCenser();
-	//プレイヤーを検知するセンサー
+	//徘徊状態から警戒状態に入る範囲
 	AttackRange();
 
+	//エネミーの攻撃範囲
+	AttackCenser();
+	
 	//状態遷移
 	switch (enemyStatus)
 	{
@@ -119,12 +121,12 @@ void NormalEnemy::Draw() const
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
-		GetColor(colorRed,colorGreen,colorBlue), FALSE, 1.0f
+		GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
 	);
 	animTurnFlg ?
-		DrawRotaGraphF(screenLocation.x + 45.f, screenLocation.y + 45.f, 1, 0,
+		DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
 			enemyImage[enemyNumber], TRUE, TRUE) :
-		DrawRotaGraphF(screenLocation.x + 45.f, screenLocation.y + 45.f, 1, 0,
+		DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y + 45.f, 1, 0,
 			enemyImage[enemyNumber], TRUE, FALSE);
 
 	DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
@@ -138,32 +140,32 @@ void NormalEnemy::Draw() const
 		//プレイヤーを発見した場合、状態に応じて符号を表示する
 		if (direction == DIRECTION_LEFT)
 		{
-			DrawGraphF(screenLocation.x + 75, screenLocation.y - 30, markStatus, TRUE);
+			DrawGraphF(screenLocation.x + 35, screenLocation.y - 20, markStatus, TRUE);
 		}
 		if (direction == DIRECTION_RIGHT)
 		{
-			DrawGraphF(screenLocation.x - 25, screenLocation.y - 30, markStatus, TRUE);
+			DrawGraphF(screenLocation.x, screenLocation.y - 20, markStatus, TRUE);
 		}
 	}
 }
 
-//攻撃範囲
-void NormalEnemy::AttackCenser()
+//攻撃に入る範囲
+void NormalEnemy::AttackRange()
 {
-	attackRange[0].x = GetMinLocation().x - 400.f;
+	attackRange[0].x = GetMinLocation().x - 410.f;
 	attackRange[0].y = GetCenterLocation().y;
 
-	attackRange[1].x = GetMaxLocation().x + 400.f;
+	attackRange[1].x = GetMaxLocation().x + 410.f;
 	attackRange[1].y = GetCenterLocation().y;
 }
 
-//追跡に入る範囲
-void NormalEnemy::AttackRange()
+//徘徊状態から警戒状態に入る範囲
+void NormalEnemy::AttackCenser()
 {
-	attackCenser[0].x = GetMinLocation().x - 350.f;
+	attackCenser[0].x = GetMinLocation().x - 430.f;
 	attackCenser[0].y = GetCenterLocation().y;
 
-	attackCenser[1].x = GetMaxLocation().x + 350.f;
+	attackCenser[1].x = GetMaxLocation().x + 430.f;
 	attackCenser[1].y = GetCenterLocation().y;
 }
 
@@ -195,8 +197,8 @@ void NormalEnemy::EnemyPatrol(Player* player)
 		}
 	}
 
-	if (attackCenser[0].x < player->GetMaxLocation().x &&
-		attackCenser[1].x > player->GetMinLocation().x )
+	if (attackRange[0].x < player->GetMinLocation().x &&
+		attackRange[1].x > player->GetMaxLocation().x )
 	{
 		//攻撃準備の状態にする
 		enemyStatus = EnemyStatus::AttackStandBy;
@@ -223,6 +225,7 @@ void NormalEnemy:: AttackStandBy(Player* player)
 		direction = DIRECTION_RIGHT;
 		animTurnFlg = true;
 	}
+
 	//攻撃準備処理
 	if (attackWaitingTime >= 0)
 	{
@@ -240,8 +243,8 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	}
 
 	//攻撃範囲からプレイヤーが離れた場合
-	if (attackCenser[0].x > player->GetMaxLocation().x &&
-		attackCenser[1].x < player->GetMinLocation().x)
+	if (attackCenser[0].x > player->GetMinLocation().x &&
+		attackCenser[1].x < player->GetMaxLocation().x)
 	{
 		//パトロール状態にする
 		enemyStatus = EnemyStatus::Patrol;
@@ -253,14 +256,13 @@ void NormalEnemy:: AttackStandBy(Player* player)
 		colorBlue -= 4;
 		colorGreen -= 4;
 	}
-	
 }
 
 void NormalEnemy::AttackStart(Player* player)
 {
 	//プレイヤーがこの範囲内にいるなら攻撃を続行する
-	if (attackRange[0].x <= player->GetCenterLocation().x && 
-		attackRange[1].x >= player->GetCenterLocation().x)
+	if (attackCenser[0].x < player->GetCenterLocation().x &&
+		attackCenser[1].x > player->GetCenterLocation().x)
 	{
 		//攻撃を続行
 		isAttack = true;
