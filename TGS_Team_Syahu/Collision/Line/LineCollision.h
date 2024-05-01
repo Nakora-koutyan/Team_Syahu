@@ -20,6 +20,12 @@ public:
 	//方向ベクトルを設定
 	void SetDirectionVector(const Vector2D move) { directionVector = move; }
 
+	//方向ベクトルxを設定
+	void SetDirectionVectorX(const float x) { directionVector.x = x; }
+
+	//方向ベクトルyを設定
+	void SetDirectionVectorY(const float y) { directionVector.y = y; }
+
 	//線分の終点を取得
 	Vector2D GetLineEnd()const { return { location.x + directionVector.x,location.y + directionVector.y }; }
 

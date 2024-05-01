@@ -20,10 +20,7 @@ Player::Player()
 		weaponFramCount[i] = PLAYER_WEAPON_TIME;
 	}
 	normalWeapon = new NormalWeapon();
-	for (int i = 0; i < STEAL_VALUE; i++)
-	{
-		steal[i] = new Steal();
-	}
+	steal = new Steal();
 	largeSword = new LargeSword();
 	dagger = new Dagger();
 
@@ -62,10 +59,7 @@ Player::Player()
 Player::~Player()
 {
 	delete normalWeapon;
-	for (int i = 0; i < STEAL_VALUE; i++)
-	{
-		delete steal[i];
-	}
+	delete steal;
 	delete largeSword;
 	delete dagger;
 }
@@ -126,10 +120,7 @@ void Player::Update()
 
 	normalWeapon->Update(this);
 	
-	for (int i = 0; i < STEAL_VALUE; i++)
-	{
-		steal[i]->Update(this);
-	}
+	steal->Update(this);
 
 	largeSword->Update(this);
 
@@ -201,10 +192,7 @@ void Player::Draw() const
 
 	normalWeapon->Draw();
 
-	for (int i = 0; i < STEAL_VALUE; i++)
-	{
-		steal[i]->Draw();
-	}
+	steal->Draw();
 
 	largeSword->Draw();
 
@@ -438,37 +426,20 @@ void Player::Attack()
 		isAttack = true;
 		actionCount = 1;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;
-		//真ん中
-		steal[0]->Attack(this, STEAL_DISTANCE - 20.f, 100.f, 100.f, 30.f);
-		//上
-		steal[1]->Attack(this, STEAL_DISTANCE - 10.f, 60.f, 60.f, 0.f);
-		//下
-		steal[2]->Attack(this, STEAL_DISTANCE + 10.f, 70.f, 70.f, 30.f);
+		steal->Attack(this);
 	}
 
-	//一回だけ
-	bool once = false;
-
-	for (int i = 0; i < STEAL_VALUE; i++)
+	if(steal->GetKeepType()!=Weapon::Empty)
 	{
-		//鉤爪のいずれかが能力を奪えている
-		if (steal[i]->GetKeepType() != Weapon::Empty)
+		for (int j = 0; j < PLAYER_MAX_STOCK; j++)
 		{
-			//1度武器をストックしたら他の爪に武器があってもストックしない
-			if (!once)
+			//ストックに空きがある
+			if (stock[j] == Weapon::Empty)
 			{
-				for (int j = 0; j < PLAYER_MAX_STOCK; j++)
-				{
-					//ストックに空きがある
-					if (stock[j] == Weapon::Empty)
-					{
-						stock[j] = steal[i]->GetKeepType();
-						once = true;
-						break;
-					}
-				}
+				stock[j] = steal->GetKeepType();
+				steal->SetKeepType(Weapon::Empty);
+				break;
 			}
-			steal[i]->SetKeepType(Weapon::Empty);
 		}
 	}
 

@@ -28,7 +28,7 @@ class Player :public CharaBase
 private:
 	Weapon stock[PLAYER_MAX_STOCK];			//ストック
 	NormalWeapon* normalWeapon;				//投げる
-	Steal* steal[STEAL_VALUE];				//奪う
+	Steal* steal;							//奪う
 	LargeSword* largeSword;					//大剣
 	Dagger* dagger;							//短剣
 
@@ -74,7 +74,7 @@ public:
 	NormalWeapon* GetNormalWeapon()const { return normalWeapon; }
 
 	//奪うを取得
-	Steal* GetSteal(const int element)const { return steal[element]; }
+	Steal* GetSteal()const { return steal; }
 
 	//大剣を取得
 	LargeSword* GetLargeSword()const { return largeSword; }

@@ -108,13 +108,12 @@ void GameMainScene::HitCheck()
 		}
 
 		//雑魚敵と奪うが当たったら
-		for (int i = 0; i < STEAL_VALUE; i++)
+		if (player->GetSteal()->CollisionCheck(enemy) ||
+			player->GetSteal()->GetSideClaw(0).CollisionCheck(enemy) ||
+			player->GetSteal()->GetSideClaw(1).CollisionCheck(enemy))
 		{
-			if (player->GetSteal(i)->CollisionCheck(enemy))
-			{
-				player->GetSteal(i)->Hit(enemy, player);
-				enemy->SetIsKnockBack(true);
-			}
+			player->GetSteal()->Hit(enemy, player);
+			enemy->SetIsKnockBack(true);
 		}
 
 		//雑魚敵と大剣が当たったら
@@ -134,20 +133,37 @@ void GameMainScene::HitCheck()
 		// ブロックと敵が当たったら
 		if (stageblock->CollisionCheck(enemy))
 		{
-			Vector2D eLoc = enemy->GetLocation();
-			Vector2D bLoc = stageblock->GetLocation();
+			// 座標、移動量取得
+			Vector2D EnemyLoc = enemy->GetLocation();
+			Vector2D BlockLoc = stageblock->GetLocation();
 			Vector2D move = enemy->GetMove();
-			if (eLoc.y >= bLoc.y) {
-
-				/*isAir = false;
-				direction = { direction.x,0.f };*/
+			// 上から
+			if ((EnemyLoc.y + 64) <= BlockLoc.y && enemy->GetDirection().y >= 0.f) {
+				EnemyLoc.y = BlockLoc.y - 84;
+				enemy->SetLocation(EnemyLoc);
+				move.y = 0;
+				enemy->SetMove(move);
+			}
+			// 下から
+			else if (EnemyLoc.y >= (BlockLoc.y + 90) && enemy->GetDirection().y <= 0.f) {
+				EnemyLoc.y = BlockLoc.y + 100;
+				enemy->SetLocation(EnemyLoc);
+				move.y = 0;
+				enemy->SetMove(move);
 			}
 			else {
-				eLoc.x -= move.x;
-				eLoc.y -= move.y;
-				enemy->SetLocation(eLoc);
+				// 右から
+				if (EnemyLoc.x >= (BlockLoc.x + 50)) {
+					EnemyLoc.x = BlockLoc.x + 100;
+					EnemyLoc.y = EnemyLoc.y;
+					enemy->SetLocation(EnemyLoc);
+				}
+				// 左から
+				else {
+					EnemyLoc.x = BlockLoc.x - 56.f;
+					enemy->SetLocation(EnemyLoc);
+				}
 				move.x = 0;
-				move.y = 0;
 				enemy->SetMove(move);
 			}
 		}
@@ -183,43 +199,6 @@ void GameMainScene::HitCheck()
 			}
 			move.x = 0;
 			player->SetMove(move);
-		}
-	}
-	// ブロックと敵が当たったら
-	if (stageblock->CollisionCheck(enemy))
-	{
-		// 座標、移動量取得
-		Vector2D EnemyLoc = enemy->GetLocation();
-		Vector2D BlockLoc = stageblock->GetLocation();
-		Vector2D move = enemy->GetMove();
-		// 上から
-		if ((EnemyLoc.y + 64) <= BlockLoc.y && enemy->GetDirection().y >= 0.f) {
-			EnemyLoc.y = BlockLoc.y - 84;
-			enemy->SetLocation(EnemyLoc);
-			move.y = 0;
-			enemy->SetMove(move);
-		}
-		// 下から
-		else if (EnemyLoc.y >= (BlockLoc.y + 90) && enemy->GetDirection().y <= 0.f) {
-			EnemyLoc.y = BlockLoc.y + 100;
-			enemy->SetLocation(EnemyLoc);
-			move.y = 0;
-			enemy->SetMove(move);
-		}
-		else {
-			// 右から
-			if (EnemyLoc.x >= (BlockLoc.x + 50)) {
-				EnemyLoc.x = BlockLoc.x + 100;
-				EnemyLoc.y = EnemyLoc.y;
-				enemy->SetLocation(EnemyLoc);
-			}
-			// 左から
-			else {
-				EnemyLoc.x = BlockLoc.x - 56.f;
-				enemy->SetLocation(EnemyLoc);
-			}
-			move.x = 0;
-			enemy->SetMove(move);
 		}
 	}
 }

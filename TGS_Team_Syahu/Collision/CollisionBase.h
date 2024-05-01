@@ -42,6 +42,12 @@ public:
 	//ワールド座標の設定
 	void SetLocation(const Vector2D location) { this->location = location; }
 
+	//ワールド座標xの設定
+	void SetLocationX(const float x) { this->location.x = x; }
+
+	//ワールド座標yの設定
+	void SetLocationY(const float y) { this->location.y = y; }
+
 	//スクリーン座標の取得
 	Vector2D GetScreenLocation()const { return screenLocation; }
 
