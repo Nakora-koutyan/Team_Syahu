@@ -2,7 +2,7 @@
 #include "../CharaBase.h"
 #include "../Player/Player.h"
 
-#define MAX_COOL_TIME 30
+#define MAX_COOL_TIME 50
 
 enum EnemyStatus
 {

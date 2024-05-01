@@ -155,28 +155,71 @@ void GameMainScene::HitCheck()
 	// ブロックとプレイヤーが当たったら
 	if (stageblock->CollisionCheck(player))
 	{
-		Vector2D pLoc = player->GetLocation();
-		Vector2D bLoc = stageblock->GetLocation();
+		// 座標、移動量取得
+		Vector2D PlayerLoc = player->GetLocation();
+		Vector2D BlockLoc = stageblock->GetLocation();
 		Vector2D move = player->GetMove();
-		if ((pLoc.y + 64) <= bLoc.y && player->GetDirection().y == 1.f) {
-			pLoc.y = bLoc.y - 84;
-			move.y = 0.f;
-			player->SetLocation(pLoc);
+		// 上から
+		if ((PlayerLoc.y + 64) <= BlockLoc.y && player->GetDirection().y >= 0.f) {
+			player->Landing(BlockLoc.y);
+		}
+		// 下から
+		else if (PlayerLoc.y >= (BlockLoc.y + 90) && player->GetDirection().y <= 0.f) {
+			PlayerLoc.y = BlockLoc.y + 100;
+			player->SetLocation(PlayerLoc);
+			move.y = 0;
 			player->SetMove(move);
-			
-			/*isAir = false;
-			direction = { direction.x,0.f };*/
-		} else {
-			if (pLoc.x >= (bLoc.x + 50)) {
-				pLoc.x = bLoc.x + 100;
-				pLoc.y = pLoc.y;
-				player->SetLocation(pLoc);
-			} else {
-				pLoc.x = bLoc.x - 56.f;
-				player->SetLocation(pLoc);
+		}
+		else {
+			// 右から
+			if (PlayerLoc.x >= (BlockLoc.x + 50)) {
+				PlayerLoc.x = BlockLoc.x + 100;
+				player->SetLocation(PlayerLoc);
+			}
+			// 左から
+			else {
+				PlayerLoc.x = BlockLoc.x - 56.f;
+				player->SetLocation(PlayerLoc);
 			}
 			move.x = 0;
 			player->SetMove(move);
+		}
+	}
+	// ブロックと敵が当たったら
+	if (stageblock->CollisionCheck(enemy))
+	{
+		// 座標、移動量取得
+		Vector2D EnemyLoc = enemy->GetLocation();
+		Vector2D BlockLoc = stageblock->GetLocation();
+		Vector2D move = enemy->GetMove();
+		// 上から
+		if ((EnemyLoc.y + 64) <= BlockLoc.y && enemy->GetDirection().y >= 0.f) {
+			EnemyLoc.y = BlockLoc.y - 84;
+			enemy->SetLocation(EnemyLoc);
+			move.y = 0;
+			enemy->SetMove(move);
+		}
+		// 下から
+		else if (EnemyLoc.y >= (BlockLoc.y + 90) && enemy->GetDirection().y <= 0.f) {
+			EnemyLoc.y = BlockLoc.y + 100;
+			enemy->SetLocation(EnemyLoc);
+			move.y = 0;
+			enemy->SetMove(move);
+		}
+		else {
+			// 右から
+			if (EnemyLoc.x >= (BlockLoc.x + 50)) {
+				EnemyLoc.x = BlockLoc.x + 100;
+				EnemyLoc.y = EnemyLoc.y;
+				enemy->SetLocation(EnemyLoc);
+			}
+			// 左から
+			else {
+				EnemyLoc.x = BlockLoc.x - 56.f;
+				enemy->SetLocation(EnemyLoc);
+			}
+			move.x = 0;
+			enemy->SetMove(move);
 		}
 	}
 }

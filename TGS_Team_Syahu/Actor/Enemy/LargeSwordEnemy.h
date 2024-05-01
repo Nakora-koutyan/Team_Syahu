@@ -10,6 +10,9 @@ private:
 	bool animCountDown;		//画像インターバルのカウントダウン
 	bool animTurnFlg;		//アニメーションを左右反転する？(yes：true,no：false)
 
+	float distance;			//プレイヤーとエネミーとの距離
+	int restTime;			//回転時の休憩
+
 public:
 	//コンストラクタ
 	LargeSwordEnemy();
@@ -37,12 +40,16 @@ protected:
 	//攻撃に入る範囲
 	void AttackCenser() override;
 
-	//追跡を行うか？
+	//プレイヤーに急接近する
+	void SuddenApproachToPlayer(Player* player);
+
+	//攻撃準備に入るか？
 	void AttackStandBy(Player* player) override;
 
 	//攻撃を行うか？
 	void AttackStart(Player* player) override;
 
+	//攻撃の終了
 	void AttackEnd() override;
 
 	void ClashToPlayer(Player* player)override;
