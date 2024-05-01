@@ -39,6 +39,7 @@
     <ClCompile Include="Collision\Sphere\SphereCollision.cpp" />
     <ClCompile Include="Actor\Player\Weapon\Steal.cpp" />
     <ClCompile Include="Actor\Player\Weapon\LargeSword.cpp" />
+    <ClCompile Include="UI\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Camera\Camera.h" />
@@ -61,6 +62,7 @@
     <ClInclude Include="Collision\Sphere\SphereCollision.h" />
     <ClInclude Include="Actor\Player\Weapon\Steal.h" />
     <ClInclude Include="Actor\Player\Weapon\LargeSword.h" />
+    <ClInclude Include="UI\UI.h" />
     <ClInclude Include="Utility\Area.h" />
     <ClInclude Include="Utility\common.h" />
     <ClInclude Include="Utility\Vector2D.h" />

@@ -1,7 +1,7 @@
 #include"Player.h"
 #include"../Camera/Camera.h"
 
-#define DEBUG
+//#define DEBUG
 
 Player::Player()
 {
@@ -11,6 +11,7 @@ Player::Player()
 	area.height = 84.f;
 	direction.x = 1.f;
 	direction.y = 0.f;
+	hp = PLAYER_MAX_HP;
 	damage = 10.f;
 
 	for (int i = 0; i < PLAYER_MAX_STOCK; i++)
@@ -29,7 +30,6 @@ Player::Player()
 	actionCount = 0;
 
 	framCount = 0;
-	damageFramCount = 0;
 	playerAnimFramCount = 0;
 	playerAnim = 0;
 	int playerImageOld[72];		
@@ -55,6 +55,7 @@ Player::Player()
 
 	isEquipment = false;
 	landingAnimFlg = false;
+	blinkingFlg = false;
 }
 
 Player::~Player()
@@ -150,7 +151,8 @@ void Player::Draw() const
 	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
 	DrawFormatString(0, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponFramCount[stockCount]);
 	DrawFormatString(0, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
-	DrawFormatString(0, 90, 0x000000, "attackCount :%d", actionCount);
+	DrawFormatString(0, 90, 0x000000, "animCount :%d", playerAnim);
+	DrawFormatString(0, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
 	if (weaponType == Weapon::Empty)
 	{
 		DrawFormatString(0, 45, 0x000000, "WeaponType:None");
@@ -173,15 +175,25 @@ void Player::Draw() const
 
 #endif // DEBUG
 
-	imageInversionFlg ?
+	//画像反転フラグ
+	if (imageInversionFlg)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
 		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
 			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
-			1, 0, playerImage[playerAnim], TRUE, TRUE) :
+			1, 0, playerImage[playerAnim], TRUE, TRUE);		
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+	else
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
 		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X,
 			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
 			1, 0, playerImage[playerAnim], TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 
 	normalWeapon->Draw();
 
@@ -199,12 +211,9 @@ void Player::Hit(CharaBase* chara)
 	//すでに当たってないなら
 	if (!isHit)
 	{
-		//ダメージ用のカウントを計測する
-		damageFramCount++;
-
 		isHit = true;
 
-		hp -= chara->GetDamage();
+		if (hp > 0)hp -= chara->GetDamage();
 		isKnockBack = true;
 
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
@@ -215,9 +224,6 @@ void Player::Hit(CharaBase* chara)
 		{
 			move.x = PLAYER_KNOCKBACK;
 		}
-
-		//0にする
-		damageFramCount = 0;
 	}
 }
 
@@ -230,13 +236,14 @@ void Player::Landing(const float height)
 		move.y = 0.f;
 		isAir = false;
 		//空中の画像かつ動いていないなら
-		if (playerAnim == 27 && !isMove)
+		if (playerAnim == 27 && !isMove && !isHit)
 		{
 			landingAnimFlg = true;
 		}
 		direction = { direction.x,0.f };
 	}
-	else
+
+	if (direction.y != 0.f)
 	{
 		isAir = true;
 	}
@@ -358,6 +365,11 @@ void Player::Movement()
 
 void Player::Attack()
 {
+	if (!isAttack)
+	{
+		actionCount = 0;
+	}
+
 	//投げるまたは武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
 		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack && actionCount == 0)
@@ -480,7 +492,7 @@ void Player::Animation()
 			playerAnim = 0;
 		}
 		
-		if (playerAnimFramCount % 16 == 0)
+		if (playerAnimFramCount % 14 == 0)
 		{
 			playerAnim++;
 			if (playerAnim >= 4)
@@ -511,7 +523,8 @@ void Player::Animation()
 	//空中
 	if (isAir && !isKnockBack && !isAttack)
 	{
-		if (playerAnim <= 21 || playerAnim >= 30)
+		landingAnimFlg = false;
+		if (playerAnim <= 21 || playerAnim >= 27)
 		{
 			if (isJump)
 			{
@@ -520,7 +533,7 @@ void Player::Animation()
 			}
 			else
 			{
-				playerAnim = 26;
+				playerAnim = 27;
 			}
 		}
 
@@ -582,6 +595,28 @@ void Player::Animation()
 	{
 		playerAnim = 3;
 	}
+
+	//点滅
+	if (isHit)
+	{
+		//攻撃を受けたら着地アニメーションはしない
+		landingAnimFlg = false;
+		if (playerAnimFramCount % 8 == 0)
+		{
+
+			blinkingFlg = !blinkingFlg;
+			blinkingFlg ? alphaBlend = 124 : alphaBlend = 255;
+		}
+	}
+	else
+	{
+		alphaBlend = 255;
+	}
+
+	//if (playerAnimFramCount >= FPS)
+	//{
+	//	playerAnimFramCount = 0;
+	//}
 }
 
 float Player::GetWeaponWeight(const Weapon type)

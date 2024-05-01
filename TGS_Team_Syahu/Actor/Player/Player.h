@@ -8,6 +8,7 @@
 #define PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y	48.f			//画像の原点調整用y
 #define PLAYER_MOVE_SPEED				3.f				//移動移動
 #define PLAYER_MAX_MOVE_SPEED			9.f				//最高速度
+#define PLAYER_MAX_HP					100.f			//最大HP
 #define PLAYER_DAMAGE_INTERVAL			FPS * 1.0		//プレイヤーが再度ダメージを受けるまでの時間
 #define PLAYER_NORMALWEAPON_COOLTIME	FPS * 1.f		//投げるのクールタイム
 #define PLAYER_STEAL_COOLTIME			FPS * 1.2f		//奪うのクールタイム
@@ -37,7 +38,6 @@ private:
 	short stockCount;						//現在のストックの番号
 	short actionCount;						//行動のカウント 0:なし 1:奪う 2:武器 3:投げる 4:装備
 
-	int damageFramCount;					//ダメージを受けた時のフレームカウント
 	int weaponFramCount[PLAYER_MAX_STOCK];	//武器のフレームカウント
 	int playerAnimFramCount;				//プレイヤーのアニメーションフレームカウント
 	int playerAnim;							//プレイヤーのアニメーション番号
@@ -48,6 +48,7 @@ private:
 
 	bool isEquipment;						//装備中？
 	bool landingAnimFlg;					//着地アニメーションフラグ
+	bool blinkingFlg;						//点滅フラグ
 
 public:
 	//コンストラクタ
@@ -69,6 +70,9 @@ public:
 	void Landing(const float height);
 
 public:
+	//ストックを取得
+	Weapon GetStock(const int element)const { return stock[element]; }
+
 	//投げるを取得
 	NormalWeapon* GetNormalWeapon()const { return normalWeapon; }
 
@@ -79,11 +83,17 @@ public:
 	LargeSword* GetLargeSword()const { return largeSword; }
 
 public:
+	//ストックの番号を取得
+	short GetStockCount()const { return stockCount; }
+
 	//行動カウントを取得
 	short GetActionCount()const { return actionCount; }
 
 	//行動カウントを設定
 	void SetActionCount(const short cnt) { actionCount = cnt; }
+
+	//装備中かどうか取得
+	bool GetIsEquipment()const { return isEquipment; }
 
 private:
 	//移動

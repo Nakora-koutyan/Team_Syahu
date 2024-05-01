@@ -11,6 +11,7 @@ CharaBase::CharaBase()
 
 	framCount = 0;
 	knockBackCount = 0;
+	alphaBlend = 255;
 
 	hp = 100.f;
 	damage = 10.f;

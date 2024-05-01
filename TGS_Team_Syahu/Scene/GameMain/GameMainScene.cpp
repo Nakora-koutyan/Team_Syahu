@@ -8,6 +8,7 @@ GameMainScene::GameMainScene()
 	enemy = new NormalEnemy();
 	enemy->Initialize();
 	stageblock = new StageBlock();
+	ui = new UI();
 
 	kari = LoadGraph("Resource/Images/kari.png");
 
@@ -20,6 +21,7 @@ GameMainScene::~GameMainScene()
 	delete camera;
 	delete enemy;
 	delete stageblock;
+	delete ui;
 }
 
 SceneBase* GameMainScene::Update()
@@ -46,6 +48,8 @@ SceneBase* GameMainScene::Update()
 
 	stageblock->Update();
 
+	ui->Update(player);
+
 	return this;
 }
 
@@ -61,6 +65,8 @@ void GameMainScene::Draw() const
 		GetCamera()->ConvertScreenPosition(pos2).x, GetCamera()->ConvertScreenPosition(pos2).y,
 		0xffffff
 	);
+
+	ui->Draw();
 
 	camera->Draw();
 
@@ -145,8 +151,8 @@ void GameMainScene::HitCheck()
 		Vector2D playerLoc = player->GetLocation();
 		Vector2D blockLoc = stageblock->GetLocation();
 		Vector2D move = player->GetMove();
-		if (playerLoc.y >= blockLoc.y) {
-			playerLoc.y = blockLoc.y - (move.y + 1.f);
+		if ((pLoc.y + 64) <= bLoc.y && player->GetDirection().y == 1.f) {
+			pLoc.y = bLoc.y - 84;
 			move.y = 0.f;
 			player->SetLocation(playerLoc);
 			player->SetMove(move);
@@ -154,11 +160,15 @@ void GameMainScene::HitCheck()
 			/*isAir = false;
 			direction = { direction.x,0.f };*/
 		} else {
-			playerLoc.x -= move.x;
-			playerLoc.y -= move.y;
-			player->SetLocation(playerLoc);
+			if (pLoc.x >= (bLoc.x + 50)) {
+				pLoc.x = bLoc.x + 100;
+				pLoc.y = pLoc.y;
+				player->SetLocation(pLoc);
+			} else {
+				pLoc.x = bLoc.x - 56.f;
+				player->SetLocation(pLoc);
+			}
 			move.x = 0;
-			move.y = 0;
 			player->SetMove(move);
 		}
 	}
