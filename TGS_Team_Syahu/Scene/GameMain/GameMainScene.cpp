@@ -148,13 +148,13 @@ void GameMainScene::HitCheck()
 	// ブロックとプレイヤーが当たったら
 	if (stageblock->CollisionCheck(player))
 	{
-		Vector2D playerLoc = player->GetLocation();
-		Vector2D blockLoc = stageblock->GetLocation();
+		Vector2D pLoc = player->GetLocation();
+		Vector2D bLoc = stageblock->GetLocation();
 		Vector2D move = player->GetMove();
 		if ((pLoc.y + 64) <= bLoc.y && player->GetDirection().y == 1.f) {
 			pLoc.y = bLoc.y - 84;
 			move.y = 0.f;
-			player->SetLocation(playerLoc);
+			player->SetLocation(pLoc);
 			player->SetMove(move);
 			
 			/*isAir = false;
