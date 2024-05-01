@@ -3,6 +3,8 @@
 #include"../../CharaBase.h"
 
 #define STEAL_ATTACK_TIME	FPS * 0.3		//奪う攻撃の時間
+#define STEAL_VALUE			3				//奪うの数
+#define STEAL_DISTANCE		25.f			//プレイヤーから奪うを出す距離
 
 class Player;
 

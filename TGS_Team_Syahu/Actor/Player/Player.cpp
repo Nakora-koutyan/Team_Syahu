@@ -1,7 +1,7 @@
 #include"Player.h"
 #include"../Camera/Camera.h"
 
-//#define DEBUG
+#define DEBUG
 
 Player::Player()
 {
@@ -25,6 +25,7 @@ Player::Player()
 		steal[i] = new Steal();
 	}
 	largeSword = new LargeSword();
+	dagger = new Dagger();
 
 	stockCount = 0;
 	actionCount = 0;
@@ -66,6 +67,7 @@ Player::~Player()
 		delete steal[i];
 	}
 	delete largeSword;
+	delete dagger;
 }
 
 void Player::Update()
@@ -130,6 +132,8 @@ void Player::Update()
 	}
 
 	largeSword->Update(this);
+
+	dagger->Update(this);
 
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
@@ -204,6 +208,8 @@ void Player::Draw() const
 
 	largeSword->Draw();
 
+	dagger->Draw();
+
 }
 
 void Player::Hit(CharaBase* chara)
@@ -269,7 +275,7 @@ void Player::Movement()
 		{
 			if (isAir)
 			{
-				move.x += 0.5f;
+				move.x += 0.2f;
 			}
 			else
 			{
@@ -294,7 +300,7 @@ void Player::Movement()
 		{
 			if (isAir)
 			{
-				move.x += -0.5f;
+				move.x += -0.2f;
 			}
 			else
 			{
@@ -309,7 +315,18 @@ void Player::Movement()
 	//停止
 	else
 	{
-		if (!isKnockBack)
+		if (isAir && isAttack)
+		{
+			if (direction.x < 0)
+			{
+				move.x += 0.05f;
+			}
+			else
+			{
+				move.x += -0.05f;
+			}
+		}
+		else if (!isKnockBack)
 		{
 			move.x = 0.f;
 			isMove = false;
@@ -389,11 +406,16 @@ void Player::Attack()
 		if (weaponType != Weapon::Empty)
 		{
 			actionCount = 2;
+			isAttack = true;
 			if (stock[stockCount] == Weapon::LargeSword)
 			{
-				isAttack = true;
 				attackCoolTime = PLAYER_LARGESWORD_COOLTIME;
 				largeSword->Attack(this);
+			}
+			else if (stock[stockCount] == Weapon::Dagger)
+			{
+				attackCoolTime = PLAYER_DAGGER_COOLTIME;
+				dagger->Attack(this);
 			}
 		}
 	}
@@ -562,11 +584,14 @@ void Player::Animation()
 		}
 	}
 
+	bool once = false;
+
 	//攻撃
 	if (isAttack && !isKnockBack)
 	{
 		if (playerAnim <= 41)
 		{
+			once = true;
 			playerAnim = 44;
 			//奪う、ダガーは振っている画像から
 			if (actionCount == 1 || stock[stockCount] == Weapon::Dagger)
@@ -581,11 +606,16 @@ void Player::Animation()
 		}
 
 
-		if (playerAnimFramCount % 5 == 0)
+		if (playerAnimFramCount % 5 == 0 && !once)
 		{
 			if (playerAnim < 49)
 			{
 				playerAnim++;
+			}
+			else
+			{
+				//攻撃アニメーションが終わったらisAttackをfalseにする
+				isAttack = false;
 			}
 		}
 	}

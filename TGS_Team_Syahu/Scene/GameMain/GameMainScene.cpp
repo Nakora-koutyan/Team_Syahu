@@ -124,6 +124,13 @@ void GameMainScene::HitCheck()
 			enemy->SetIsKnockBack(true);
 		}
 
+		//雑魚敵と短剣が当たったら
+		if (player->GetDagger()->CollisionCheck(enemy))
+		{
+			player->GetDagger()->Hit(enemy, player);
+			enemy->SetIsKnockBack(true);
+		}
+
 		// ブロックと敵が当たったら
 		if (stageblock->CollisionCheck(enemy))
 		{

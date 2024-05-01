@@ -3,6 +3,7 @@
 #include"Weapon/NormalWeapon.h"
 #include"Weapon/Steal.h"
 #include"Weapon/LargeSword.h"
+#include"Weapon/Dagger.h"
 
 #define PLAYER_IMAGE_ALIGN_THE_ORIGIN_X	31.f			//画像の原点調整用x
 #define PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y	48.f			//画像の原点調整用y
@@ -13,17 +14,12 @@
 #define PLAYER_NORMALWEAPON_COOLTIME	FPS * 1.f		//投げるのクールタイム
 #define PLAYER_STEAL_COOLTIME			FPS * 1.2f		//奪うのクールタイム
 #define PLAYER_LARGESWORD_COOLTIME		FPS * 1.7f		//大剣のクールタイム
+#define PLAYER_DAGGER_COOLTIME			FPS * 0.5f		//短剣のクールタイム
 #define PLAYER_KNOCKBACK				5.f				//ノックバックの移動距離/f
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
 #define PLAYER_WEAPON_TIME				FPS * 30		//武器の使用時間
 #define PLAYER_MAX_STOCK				5				//最大ストック数
-#define STEAL_VALUE						3				//奪うの数
-#define STEAL_DISTANCE					25.f			//プレイヤーから奪うを出す距離
-#define LARGESWORD_DISTANCE				20				//プレイヤーから大剣を離す距離
-#define LARGESWORD_WEIGHT				0.75f			//大剣の重さ
-#define LARGESWORD_DAMAGE				5.f				//大剣のダメージ
-#define DAGGER_WEIGHT					0.05f			//ダガーの重さ
-#define DAGGER_DAMAGE					1.5f			//ダガーのダメージ
+#define WEAPON_DISTANCE					20				//プレイヤーから武器を離す距離
 #define RAPIER_WEIGHT					0.35f			//レイピアの重さ
 #define RAPIER_DAMAGE					3.f				//レイピアのダメージ
 
@@ -34,6 +30,7 @@ private:
 	NormalWeapon* normalWeapon;				//投げる
 	Steal* steal[STEAL_VALUE];				//奪う
 	LargeSword* largeSword;					//大剣
+	Dagger* dagger;							//短剣
 
 	short stockCount;						//現在のストックの番号
 	short actionCount;						//行動のカウント 0:なし 1:奪う 2:武器 3:投げる 4:装備
@@ -81,6 +78,9 @@ public:
 
 	//大剣を取得
 	LargeSword* GetLargeSword()const { return largeSword; }
+
+	//短剣を取得
+	Dagger* GetDagger()const { return dagger; }
 
 public:
 	//ストックの番号を取得
