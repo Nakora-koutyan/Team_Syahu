@@ -27,7 +27,7 @@ public:
 	~LargeSword();
 
 	//更新
-	void Update(Player* player);
+	void Update(CharaBase* chara);
 
 	//描画
 	void Draw()const;

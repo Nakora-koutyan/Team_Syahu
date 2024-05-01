@@ -21,7 +21,7 @@ LargeSword::~LargeSword()
 
 }
 
-void LargeSword::Update(Player* player)
+void LargeSword::Update(CharaBase* chara)
 {
 	if (isShow)
 	{
@@ -32,31 +32,30 @@ void LargeSword::Update(Player* player)
 		//右に出す
 		if (direction > 0)
 		{
-			location.x = player->GetMaxLocation().x + LARGESWORD_DISTANCE;
+			location.x = chara->GetMaxLocation().x + LARGESWORD_DISTANCE;
 		}
 		//左に出す
 		else
 		{
-			location.x = player->GetMinLocation().x - LARGESWORD_DISTANCE;
+			location.x = chara->GetMinLocation().x - LARGESWORD_DISTANCE;
 		}
 	}
 	else
 	{
-		location = player->GetCenterLocation();
+		location = chara->GetCenterLocation();
 	}
 
 	//攻撃時間を超えたら
-	if (framCount > LARGESWORD_ATTACK_TIME || player->GetIsKnockBack())
+	if (framCount > LARGESWORD_ATTACK_TIME || chara->GetIsKnockBack())
 	{
 		framCount = 0;
 		direction = 0;
 		angle = 0.f;
 		isShow = false;
-		player->SetIsAttack(false);
-		player->SetActionCount(0);
+		chara->SetIsAttack(false);
 	}
 
-	location.y = player->GetCenterLocation().y;
+	location.y = chara->GetCenterLocation().y;
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 

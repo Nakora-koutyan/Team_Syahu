@@ -242,7 +242,8 @@ void Player::Landing(const float height)
 		}
 		direction = { direction.x,0.f };
 	}
-	else
+
+	if (direction.y != 0.f)
 	{
 		isAir = true;
 	}
@@ -364,6 +365,11 @@ void Player::Movement()
 
 void Player::Attack()
 {
+	if (!isAttack)
+	{
+		actionCount = 0;
+	}
+
 	//投げるまたは武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
 		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack && actionCount == 0)
