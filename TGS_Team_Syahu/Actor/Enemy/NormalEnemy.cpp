@@ -2,7 +2,7 @@
 #include "../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 
-#define MAX_WAITING_TIME 60
+#define MAX_WAITING_TIME 120
 
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
@@ -175,8 +175,8 @@ void NormalEnemy::EnemyPatrol(Player* player)
 	//左向きの場合
 	if (direction == DIRECTION_LEFT)
 	{
-		move.x = -WALK_SPEED;
-		patrolCounter -= WALK_SPEED;
+		move.x = -NORMAL_WALK_SPEED;
+		patrolCounter -= NORMAL_WALK_SPEED;
 		//左に50進んだら向きを右にする
 		if (patrolCounter <= -150.f)
 		{
@@ -187,8 +187,8 @@ void NormalEnemy::EnemyPatrol(Player* player)
 	//右向きの場合
 	if (direction == DIRECTION_RIGHT)
 	{
-		move.x = WALK_SPEED;
-		patrolCounter += WALK_SPEED;
+		move.x = NORMAL_WALK_SPEED;
+		patrolCounter += NORMAL_WALK_SPEED;
 		//右に50進んだら向きを左にする
 		if (patrolCounter >= 150.f)
 		{
@@ -243,8 +243,8 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	}
 
 	//攻撃範囲からプレイヤーが離れた場合
-	if (attackCenser[0].x > player->GetMinLocation().x &&
-		attackCenser[1].x < player->GetMaxLocation().x)
+	if (direction == DIRECTION_LEFT && attackCenser[0].x > player->GetMinLocation().x ||
+		direction == DIRECTION_RIGHT && attackCenser[1].x < player->GetMaxLocation().x)
 	{
 		//パトロール状態にする
 		enemyStatus = EnemyStatus::Patrol;
@@ -261,8 +261,10 @@ void NormalEnemy:: AttackStandBy(Player* player)
 void NormalEnemy::AttackStart(Player* player)
 {
 	//プレイヤーがこの範囲内にいるなら攻撃を続行する
-	if (attackCenser[0].x < player->GetCenterLocation().x &&
-		attackCenser[1].x > player->GetCenterLocation().x)
+	if ((direction == DIRECTION_LEFT && attackCenser[0].x < player->GetCenterLocation().x 
+		&& GetMaxLocation().x + 200 > player->GetCenterLocation().x)||
+		(direction == DIRECTION_RIGHT && attackCenser[1].x > player->GetCenterLocation().x)
+		&& GetMinLocation().x - 200 < player->GetCenterLocation().x)
 	{
 		//攻撃を続行
 		isAttack = true;
@@ -279,13 +281,13 @@ void NormalEnemy::AttackStart(Player* player)
 		if (direction == DIRECTION_LEFT)
 		{
 			animTurnFlg = false;
-			move.x = -(WALK_SPEED * ATTACK_SPEED);
+			move.x = -(NORMAL_WALK_SPEED * ATTACK_SPEED);
 		}
 		//右向きに攻撃を行う
 		if (direction == DIRECTION_RIGHT)
 		{
 			animTurnFlg = true;
-			move.x = (WALK_SPEED * ATTACK_SPEED);
+			move.x = (NORMAL_WALK_SPEED * ATTACK_SPEED);
 		}
 	}
 	//プレイヤーと接触した場合
@@ -318,7 +320,6 @@ void NormalEnemy::AttackEnd()
 	{
 		enemyStatus = EnemyStatus::Patrol;
 		statusChangeTime = MAX_COOL_TIME;
-
 	}
 }
 

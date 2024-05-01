@@ -3,10 +3,12 @@
 #include "../Player/Player.h"
 
 #define MAX_WAITING_TIME 90
-#define WALK_SPEED 2.f			//徘徊時のスピード
+#define LARGE_WALK_SPEED 3.f			//徘徊時のスピード
+#define MAX_REST_TIME 30				//休息時間
 
 //コンストラクタ
-LargeSwordEnemy::LargeSwordEnemy():enemyImage(),enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
+LargeSwordEnemy::LargeSwordEnemy():enemyImage(),enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false),
+distance(0),restTime(0)
 {
 }
 
@@ -25,10 +27,10 @@ void LargeSwordEnemy::Initialize()
 	for (int i = 0; i < 115; i++)
 	{
 		//画像が存在しない部分を読み込まない
-		if ((9 < i && i < 24) ||
-			(29 < 1 && i < 47) ||
-			(58 < i && i < 70) ||
-			74 < i || i < 93)
+		if ((8 < i && i < 23) ||
+			(28 < 1 && i < 46) ||
+			(57 < i && i < 69) ||
+			73 < i || i < 92)
 		{
 			//スキップ
 			continue;
@@ -62,7 +64,6 @@ void LargeSwordEnemy::Initialize()
 	findMark = LoadGraph("Resource/Images/Exclamation.png");
 	angryMark = LoadGraph("Resource/images/Angry.png");
 
-
 	//体の向き
 	direction = DIRECTION_LEFT;
 
@@ -81,6 +82,8 @@ void LargeSwordEnemy::Initialize()
 	enemyStatus = Patrol;
 	//画像番号
 	enemyNumber = 0;
+	//休息時間の設定
+	restTime = MAX_REST_TIME;
 }
 
 //描画以外の更新
@@ -190,25 +193,27 @@ void LargeSwordEnemy::EnemyPatrol(Player* player)
 	//左向きの場合
 	if (direction == DIRECTION_LEFT)
 	{
-		move.x = -WALK_SPEED;
-		patrolCounter -= WALK_SPEED;
+		move.x = -LARGE_WALK_SPEED;
+		patrolCounter -= LARGE_WALK_SPEED;
 		//左に200進んだら向きを右にする
 		if (patrolCounter <= -200.f)
 		{
 			direction = DIRECTION_RIGHT;
 			animTurnFlg = true;
+			restTime = MAX_REST_TIME;
 		}
 	}
 	//右向きの場合
 	if (direction == DIRECTION_RIGHT)
 	{
-		move.x = WALK_SPEED;
-		patrolCounter += WALK_SPEED;
+		move.x = LARGE_WALK_SPEED;
+		patrolCounter += LARGE_WALK_SPEED;
 		//右に200進んだら向きを左にする
-		if (patrolCounter >= 15.f)
+		if (patrolCounter >= 200.f)
 		{
 			direction = DIRECTION_LEFT;
 			animTurnFlg = false;
+			restTime = MAX_REST_TIME;
 		}
 	}
 
@@ -228,14 +233,84 @@ void LargeSwordEnemy::EnemyPatrol(Player* player)
 	}
 }
 
+//プレイヤーへの接近処理
+void LargeSwordEnemy::SuddenApproachToPlayer(Player* player)
+{
+	//restTimeを減算する
+	if (restTime >= 0)
+	{
+		restTime--;
+	}
+	//restTimeが０になった場合
+	if (restTime <= 0)
+	{
+		//プレイヤーと自身の距離を計算
+		distance = abs(player->GetCenterLocation().x - GetCenterLocation().x);
+		//距離が50以下の場合
+		if (distance >= 50)
+		{
+			//8の速度で接近する
+			move.x = 8.f;
+		}
+
+		//攻撃準備処理
+		if (distance <= 50 && attackWaitingTime >= 0)
+		{
+			//移動を０にする
+			move.x = 0.f;
+			//攻撃時間を減算していく
+			attackWaitingTime--;
+		}
+	}
+}
+
 //攻撃の準備時間
 void LargeSwordEnemy::AttackStandBy(Player* player)
 {
+	//プレイヤーと自身の位置をみて方向を転換する
+	if (location.x <= player->GetCenterLocation().x)
+	{
+		//左方向
+		direction = DIRECTION_LEFT;
+	}
+	else if (location.x >= player->GetCenterLocation().x)
+	{
+		//右方向
+		direction = DIRECTION_RIGHT;
+	}
+
+	//プレイヤーへの接近処理
+	SuddenApproachToPlayer(player);
+
+	//攻撃待ち時間が０になった場合
+	if (attackWaitingTime <= 0)
+	{
+		//エネミーの状態を「攻撃開始」に遷移する
+		enemyStatus = EnemyStatus::AttackStart;
+		//攻撃待機時間をリセットする
+		attackWaitingTime = MAX_WAITING_TIME;
+	}
+
+	//攻撃範囲からプレイヤーが離れた場合
+	if (direction == DIRECTION_LEFT && attackCenser[0].x > player->GetMinLocation().x ||
+		direction == DIRECTION_RIGHT && attackCenser[1].x < player->GetMaxLocation().x)
+	{
+		//パトロール状態にする
+		enemyStatus = EnemyStatus::Patrol;
+	}
+
+	//エネミーの色変更
+	if (colorBlue > 0 && colorGreen > 0)
+	{
+		colorBlue -= 4;
+		colorGreen -= 4;
+	}
 }
 
 //攻撃開始
 void LargeSwordEnemy::AttackStart(Player* player)
 {
+
 }
 
 //攻撃終了
