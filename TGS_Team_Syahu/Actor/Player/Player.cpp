@@ -25,7 +25,7 @@ Player::Player()
 	dagger = new Dagger();
 
 	stockCount = 0;
-	actionCount = 0;
+	actionState = Action::None;
 
 	framCount = 0;
 	playerAnimFramCount = 0;
@@ -92,9 +92,9 @@ void Player::Update()
 
 	if (isEquipment && stock[stockCount] != Weapon::Empty)
 	{
-		if (actionCount == 4)
+		if (actionState == Action::Equipment)
 		{
-			actionCount = 0;
+			actionState = Action::None;
 		}
 		weaponFramCount[stockCount]--;
 		if (weaponFramCount[stockCount] < 0)
@@ -263,7 +263,7 @@ void Player::Movement()
 		{
 			if (isAir)
 			{
-				move.x += 0.2f;
+				move.x += PLAYER_AIR_MOVE_SPEED;
 			}
 			else
 			{
@@ -288,7 +288,7 @@ void Player::Movement()
 		{
 			if (isAir)
 			{
-				move.x += -0.2f;
+				move.x += -PLAYER_AIR_MOVE_SPEED;
 			}
 			else
 			{
@@ -303,7 +303,7 @@ void Player::Movement()
 	//停止
 	else
 	{
-		if (isAir && isAttack)
+		if (isAir && isAttack && move.x != 0)
 		{
 			if (direction.x < 0)
 			{
@@ -372,18 +372,18 @@ void Player::Attack()
 {
 	if (!isAttack)
 	{
-		actionCount = 0;
+		actionState = Action::None;
 	}
 
 	//投げるまたは武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
-		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack && actionCount == 0)
+		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None)
 	{
 		//武器を持っているないなら投げる
 		if (stock[stockCount] != Weapon::Empty && !isEquipment)
 		{		
 			isAttack = true;
-			actionCount = 3;
+			actionState = Action::Throw;
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
 			normalWeapon->Attack(this, GetWeaponWeight(stock[stockCount]), GetWeaponDamage(stock[stockCount]));
 			stock[stockCount] = Weapon::Empty;
@@ -393,7 +393,7 @@ void Player::Attack()
 		//武器攻撃
 		if (weaponType != Weapon::Empty)
 		{
-			actionCount = 2;
+			actionState = Action::WeaponAttack;
 			isAttack = true;
 			if (stock[stockCount] == Weapon::LargeSword)
 			{
@@ -411,20 +411,20 @@ void Player::Attack()
 	if (attackCoolTime > 0)attackCoolTime--;
 
 	//装備
-	if (!isKnockBack && stock[stockCount] != Weapon::Empty && weaponType == Weapon::Empty && actionCount == 0 &&
+	if (!isKnockBack && stock[stockCount] != Weapon::Empty && weaponType == Weapon::Empty && actionState == Action::None &&
 		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
 	{
 			weaponType = stock[stockCount];
 			isEquipment = true;
-			actionCount = 4;
+			actionState = Action::Equipment;
 	}
 
 	//奪う
 	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)) &&
-		stealCoolTime <= 0.f && !isKnockBack && actionCount == 0)
+		stealCoolTime <= 0.f && !isKnockBack && actionState == Action::None)
 	{
 		isAttack = true;
-		actionCount = 1;
+		actionState = Action::Steal;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;
 		steal->Attack(this);
 	}
@@ -521,7 +521,7 @@ void Player::Animation()
 		{
 			if (isJump)
 			{
-				playerAnim = 22;
+				playerAnim = 23;
 				isJump = false;
 			}
 			else
@@ -563,14 +563,13 @@ void Player::Animation()
 		if (playerAnim <= 41)
 		{
 			once = true;
-			playerAnim = 44;
 			//奪う、ダガーは振っている画像から
-			if (actionCount == 1 || stock[stockCount] == Weapon::Dagger)
+			if (actionState == Action::Steal || (actionState == Action::WeaponAttack && stock[stockCount] == Weapon::Dagger))
 			{
 				playerAnim = 46;
 			}
-			//投げるは振り始めの画像から
-			if (actionCount == 3)
+			//投げる、大剣は振り始めの画像から
+			if (actionState == Action::Throw || (actionState == Action::WeaponAttack && stock[stockCount] == Weapon::LargeSword))
 			{
 				playerAnim = 45;
 			}
@@ -613,11 +612,6 @@ void Player::Animation()
 	{
 		alphaBlend = 255;
 	}
-
-	//if (playerAnimFramCount >= FPS)
-	//{
-	//	playerAnimFramCount = 0;
-	//}
 }
 
 float Player::GetWeaponWeight(const Weapon type)

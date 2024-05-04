@@ -5,7 +5,7 @@
 Dagger::Dagger()
 {
 	directionVector.x = DAGGER_LENGTH;
-	directionVector.y = -100.f;
+	directionVector.y = 0.f;
 
 	direction = 0;
 
@@ -90,10 +90,10 @@ void Dagger::Attack(const Player* player)
 		angle = -DAGGER_ANGLE;
 	}
 
-	directionVector.y = -50.f;
+	directionVector.y = -10.f;
 }
 
-void Dagger::Hit(CharaBase* enemy, Player* player)
+void Dagger::Hit(CharaBase* enemy, const Player* player)
 {
 	if (isShow)
 	{

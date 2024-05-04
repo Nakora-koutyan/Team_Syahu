@@ -50,9 +50,9 @@ void NormalWeapon::Update(Player* player)
 		move.y = 0.f;
 		gravityVelocity = 0.f;
 		weaponWeight = 0.f;
+		weaponDamage = 0.f;
 		isShow = false;
 		player->SetIsAttack(false);
-		player->SetActionCount(0);
 	}
 
 	location.x += move.x;
@@ -94,7 +94,7 @@ void NormalWeapon::Attack(const Player* player, const float weight, const float 
 	weaponDamage = damage;
 }
 
-void NormalWeapon::Hit(CharaBase* enemy, Player* player)
+void NormalWeapon::Hit(CharaBase* enemy, const Player* player)
 {
 	if (isShow)
 	{

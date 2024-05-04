@@ -41,7 +41,7 @@ public:
 	void Attack(const Player* player, const float weight, const float damage);
 
 	//当たった時の処理
-	void Hit(CharaBase* enemy, Player* player);
+	void Hit(CharaBase* enemy, const Player* player);
 
 	//表示フラグを取得
 	bool GetIsShow()const { return isShow; }

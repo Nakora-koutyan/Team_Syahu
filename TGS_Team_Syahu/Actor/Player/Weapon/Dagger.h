@@ -38,7 +38,7 @@ public:
 	void Attack(const Player* player);
 
 	//当たった時の処理
-	void Hit(CharaBase* enemy, Player* player);
+	void Hit(CharaBase* enemy, const Player* player);
 
 };
 

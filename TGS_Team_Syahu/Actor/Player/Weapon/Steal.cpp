@@ -40,7 +40,6 @@ void Steal::Update(Player* player)
 		direction = 0;
 		isShow = false;
 		player->SetIsAttack(false);
-		player->SetActionCount(0);
 	}
 
 	screenLocation = Camera::ConvertScreenPosition(location);

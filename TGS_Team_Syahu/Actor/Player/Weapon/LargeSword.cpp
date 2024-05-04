@@ -5,7 +5,7 @@
 LargeSword::LargeSword()
 {
 	directionVector.x = LARGRSWORD_LENGTH;
-	directionVector.y = -100.f;
+	directionVector.y = 0.f;
 
 	direction = 0;
 
@@ -93,7 +93,7 @@ void LargeSword::Attack(const Player* player)
 	directionVector.y = -100.f;
 }
 
-void LargeSword::Hit(CharaBase* enemy, Player* player)
+void LargeSword::Hit(CharaBase* enemy, const Player* player)
 {
 	if (isShow)
 	{

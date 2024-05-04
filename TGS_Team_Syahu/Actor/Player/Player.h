@@ -7,7 +7,8 @@
 
 #define PLAYER_IMAGE_ALIGN_THE_ORIGIN_X	31.f			//画像の原点調整用x
 #define PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y	48.f			//画像の原点調整用y
-#define PLAYER_MOVE_SPEED				3.f				//移動移動
+#define PLAYER_MOVE_SPEED				1.0f			//移動移動
+#define PLAYER_AIR_MOVE_SPEED			0.1f			//空中移動移動
 #define PLAYER_MAX_MOVE_SPEED			9.f				//最高速度
 #define PLAYER_MAX_HP					100.f			//最大HP
 #define PLAYER_DAMAGE_INTERVAL			FPS * 1.0		//プレイヤーが再度ダメージを受けるまでの時間
@@ -23,17 +24,27 @@
 #define RAPIER_WEIGHT					0.35f			//レイピアの重さ
 #define RAPIER_DAMAGE					3.f				//レイピアのダメージ
 
+enum class Action
+{
+	None = 0,		//なし
+	Steal,			//奪う
+	WeaponAttack,	//武器攻撃
+	Throw,			//投げる
+	Equipment		//装備
+};
+
 class Player :public CharaBase
 {
 private:
 	Weapon stock[PLAYER_MAX_STOCK];			//ストック
+	Action actionState;						//行動状態
+
 	NormalWeapon* normalWeapon;				//投げる
 	Steal* steal;							//奪う
 	LargeSword* largeSword;					//大剣
 	Dagger* dagger;							//短剣
 
 	short stockCount;						//現在のストックの番号
-	short actionCount;						//行動のカウント 0:なし 1:奪う 2:武器 3:投げる 4:装備
 
 	int weaponFramCount[PLAYER_MAX_STOCK];	//武器のフレームカウント
 	int playerAnimFramCount;				//プレイヤーのアニメーションフレームカウント
@@ -85,12 +96,6 @@ public:
 public:
 	//ストックの番号を取得
 	short GetStockCount()const { return stockCount; }
-
-	//行動カウントを取得
-	short GetActionCount()const { return actionCount; }
-
-	//行動カウントを設定
-	void SetActionCount(const short cnt) { actionCount = cnt; }
 
 	//装備中かどうか取得
 	bool GetIsEquipment()const { return isEquipment; }
