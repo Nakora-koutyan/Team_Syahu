@@ -2,20 +2,23 @@
 #include "../../../Collision/Line/LineCollision.h"
 #include"../../CharaBase.h"
 
-#define STEAL_ATTACK_TIME	FPS * 0.3		//奪う攻撃の時間
+#define STEAL_ATTACK_TIME	FPS * 0.2		//奪う攻撃の時間
+#define STEAL_VALUE			3				//奪うの数
+#define STEAL_DISTANCE		25.f			//プレイヤーから奪うを出す距離
 
 class Player;
 
 class Steal :public LineCollision
 {
 private:
-	Weapon keepType;		//能力の保存用
+	LineCollision sideClaw[2] = {};		//鉤爪の横2つの判定用 0:上 1:下
+	Weapon keepType;					//能力の保存用
 
-	short direction;		//方向
+	short direction;					//方向
 
-	int framCount;			//フレームカウント
+	int framCount;						//フレームカウント
 
-	bool isShow;			//表示させる？
+	bool isShow;						//表示させる？
 
 public:
 	//コンストラクタ
@@ -31,11 +34,14 @@ public:
 	void Draw()const;
 
 	//攻撃
-	void Attack
-	(const Player* player, const float distance, const float direX, const float direY, const float locY);
+	void Attack(const Player* player);
 
 	//当たった時の処理
 	void Hit(CharaBase* enemy, Player* player);
+
+public:
+	//鉤爪の判定を取得
+	LineCollision GetSideClaw(const int element) { return sideClaw[element]; }
 
 	//表示フラグを取得
 	bool GetIsShow()const { return isShow; }

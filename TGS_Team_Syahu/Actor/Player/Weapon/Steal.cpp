@@ -28,6 +28,9 @@ void Steal::Update(Player* player)
 	else
 	{
 		location = player->GetCenterLocation();
+		sideClaw[0].SetLocation(player->GetCenterLocation());
+		sideClaw[1].SetLocation(player->GetCenterLocation());
+
 	}
 
 	//攻撃時間を超えたら
@@ -37,21 +40,32 @@ void Steal::Update(Player* player)
 		direction = 0;
 		isShow = false;
 		player->SetIsAttack(false);
-		player->SetActionCount(0);
 	}
 
 	screenLocation = Camera::ConvertScreenPosition(location);
+	sideClaw[0].SetScreenLocation(Camera::ConvertScreenPosition(sideClaw[0].GetLocation()));
+	sideClaw[1].SetScreenLocation(Camera::ConvertScreenPosition(sideClaw[1].GetLocation()));
 }
 
 void Steal::Draw() const
 {
-	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
-		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
-		0x00ff00, 1);
-
+	if (isShow)
+	{
+		DrawLineAA(screenLocation.x, screenLocation.y,
+			screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
+			0x00ff00, 1);
+		DrawLineAA(sideClaw[0].GetScreenLocation().x, sideClaw[0].GetScreenLocation().y,
+			sideClaw[0].GetScreenLocation().x + sideClaw[0].GetDirectionVector().x,
+			sideClaw[0].GetScreenLocation().y + sideClaw[0].GetDirectionVector().y,
+			0x00ff00, 1);
+		DrawLineAA(sideClaw[1].GetScreenLocation().x, sideClaw[1].GetScreenLocation().y,
+			sideClaw[1].GetScreenLocation().x + sideClaw[1].GetDirectionVector().x,
+			sideClaw[1].GetScreenLocation().y + sideClaw[1].GetDirectionVector().y,
+			0x00ff00, 1);
+	}
 }
 
-void Steal::Attack(const Player* player, const float distance, const float direX, const float direY, const float locY)
+void Steal::Attack(const Player* player)
 {
 	//出現させる
 	isShow = true;
@@ -59,20 +73,33 @@ void Steal::Attack(const Player* player, const float distance, const float direX
 	//右に出す
 	if (player->GetDirection().x > 0)
 	{
-		location.x = player->GetMaxLocation().x + distance;
+		location.x = player->GetMaxLocation().x + (STEAL_DISTANCE - 20.f);
+		sideClaw[0].SetLocationX(player->GetMaxLocation().x + (STEAL_DISTANCE - 10.f));
+		sideClaw[1].SetLocationX(player->GetMaxLocation().x + (STEAL_DISTANCE + 10.f));
 
-		directionVector.x = direX;
+		directionVector.x = 100.f;
+		sideClaw[0].SetDirectionVectorX(60.f);
+		sideClaw[1].SetDirectionVectorX(70.f);
 	}
 	//左に出す
 	else
 	{
-		location.x = player->GetMinLocation().x - distance;
+		location.x = player->GetMinLocation().x - (STEAL_DISTANCE - 20.f);
+		sideClaw[0].SetLocationX(player->GetMinLocation().x - (STEAL_DISTANCE - 10.f));
+		sideClaw[1].SetLocationX(player->GetMinLocation().x - (STEAL_DISTANCE + 10.f));
 	
-		directionVector.x = -direX;
+		directionVector.x = -100.f;
+		sideClaw[0].SetDirectionVectorX(-60.f);
+		sideClaw[1].SetDirectionVectorX(-70.f);
 	}		
 
-	location.y = player->GetCenterLocation().y + locY;
-	directionVector.y = -direY;
+	location.y = player->GetCenterLocation().y + 30.f;
+	sideClaw[0].SetLocationY(player->GetCenterLocation().y);
+	sideClaw[1].SetLocationY(player->GetCenterLocation().y + 30.f);
+
+	directionVector.y = -100.f;
+	sideClaw[0].SetDirectionVectorY(-60.f);
+	sideClaw[1].SetDirectionVectorY(-70.f);
 
 	//まだ方向が決まってないなら
 	if (direction == 0)

@@ -6,7 +6,7 @@ NormalWeapon::NormalWeapon()
 {
 	location.x = 300.f;
 	location.y = GROUND_LINE + radius;
-	radius = 30.f;
+	radius = 25.f;
 
 	move.x = 0.f;
 	move.y = 0.f;
@@ -29,10 +29,10 @@ NormalWeapon::~NormalWeapon()
 }
 
 void NormalWeapon::Update(Player* player)
-{
+{framCount++;
 	if (isShow)
 	{
-		framCount++;
+		
 
 		gravityVelocity += NORMAL_WEAPON_GRAVITY + weaponWeight;
 	}
@@ -50,9 +50,9 @@ void NormalWeapon::Update(Player* player)
 		move.y = 0.f;
 		gravityVelocity = 0.f;
 		weaponWeight = 0.f;
+		weaponDamage = 0.f;
 		isShow = false;
 		player->SetIsAttack(false);
-		player->SetActionCount(0);
 	}
 
 	location.x += move.x;
@@ -94,7 +94,7 @@ void NormalWeapon::Attack(const Player* player, const float weight, const float 
 	weaponDamage = damage;
 }
 
-void NormalWeapon::Hit(CharaBase* enemy, Player* player)
+void NormalWeapon::Hit(CharaBase* enemy, const Player* player)
 {
 	if (isShow)
 	{
@@ -103,13 +103,6 @@ void NormalWeapon::Hit(CharaBase* enemy, Player* player)
 			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + weaponDamage));
 			enemy->SetIsHit(true);
 
-			framCount = 0;
-			direction = 0;
-			move.x = 0.f;
-			move.y = 0.f;
-			gravityVelocity = 0.f;
-			weaponWeight = 0.f;
-			weaponDamage = 0.f;
 			isShow = false;
 		}
 	}
