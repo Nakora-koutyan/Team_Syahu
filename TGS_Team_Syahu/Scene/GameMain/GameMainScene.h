@@ -3,6 +3,7 @@
 #include"../../Actor/Player/Player.h"
 #include"../../Actor/Camera/Camera.h"
 #include"../../Actor/Enemy/NormalEnemy.h"
+#include"../../Actor/Enemy/LargeSwordEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../../UI/UI.h"
 
@@ -14,6 +15,7 @@ private:
     Player* player;                     //プレイヤーのオブジェクト
     Camera* camera;                     //カメラのオブジェクト
     NormalEnemy* enemy;                 //雑魚敵のオブジェクト
+    LargeSwordEnemy* enemy1;            //敵(大剣)のオブジェクト
     StageBlock* stageblock;
     UI* ui;                             //UIのオブジェクト
 

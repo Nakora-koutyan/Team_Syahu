@@ -13,6 +13,9 @@ private:
 	float distance;			//プレイヤーとエネミーとの距離
 	int restTime;			//回転時の休憩
 
+	int attackCountDown;	//攻撃までのカウントダウン
+	bool didAttack;			//攻撃をした？
+
 public:
 	//コンストラクタ
 	LargeSwordEnemy();

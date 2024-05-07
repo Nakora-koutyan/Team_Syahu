@@ -4,11 +4,12 @@
 
 #define MAX_WAITING_TIME 90
 #define LARGE_WALK_SPEED 3.f			//徘徊時のスピード
-#define MAX_REST_TIME 30				//休息時間
+#define MAX_REST_TIME 60				//休息時間
+#define ATTACK_COUNT_DOWN 31
 
 //コンストラクタ
-LargeSwordEnemy::LargeSwordEnemy():enemyImage(),enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false),
-distance(0),restTime(0)
+LargeSwordEnemy::LargeSwordEnemy():enemyImage(),enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
+distance(0),restTime(0),attackCountDown(0),didAttack(false)
 {
 }
 
@@ -23,14 +24,14 @@ void LargeSwordEnemy::Initialize()
 	//アニメーション画像に関する初期化
 	enemyNumber = 0;
 	int enemyImageOld[115];
-	LoadDivGraph("Resource/Images/Enemy/NightBorne.png", 72, 8, 9, 96, 96, enemyImageOld);
+	LoadDivGraph("Resource/Images/Enemy/NightBorne3.png", 115, 23, 5, 240, 240, enemyImageOld);
 	for (int i = 0; i < 115; i++)
 	{
 		//画像が存在しない部分を読み込まない
 		if ((8 < i && i < 23) ||
-			(28 < 1 && i < 46) ||
+			(28 < i && i < 46) ||
 			(57 < i && i < 69) ||
-			73 < i || i < 92)
+			73 < i && i < 92)
 		{
 			//スキップ
 			continue;
@@ -45,9 +46,9 @@ void LargeSwordEnemy::Initialize()
 	colorBlue = 255;
 
 	//サイズ{ x , y }
-	area = { 120.f,120.f };
+	area = { 120.f,85.f };
 	//表示座標{ x , y }
-	location = { 1500,GROUND_LINE - area.height };
+	location = { 1100,GROUND_LINE - area.height };
 	
 	//自身の持つ武器
 	weaponType = Weapon::LargeSword;	//大剣
@@ -84,6 +85,8 @@ void LargeSwordEnemy::Initialize()
 	enemyNumber = 0;
 	//休息時間の設定
 	restTime = MAX_REST_TIME;
+
+	attackCountDown = ATTACK_COUNT_DOWN;
 }
 
 //描画以外の更新
@@ -135,23 +138,24 @@ void LargeSwordEnemy::Update(Player* player)
 void LargeSwordEnemy::Draw() const
 {
 	//エネミー表示
-	/*DrawBoxAA
+	DrawBoxAA
 	(
 		screenLocation.x, screenLocation.y,
 		screenLocation.x + area.width, screenLocation.y + area.height,
 		GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
-	);*/
+	);
 	animTurnFlg ?
-		DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
+		DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y + 15.f, 1, 0,
 			enemyImage[enemyNumber], TRUE, TRUE) :
-		DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y + 45.f, 1, 0,
+		DrawRotaGraphF(screenLocation.x + 65.f, screenLocation.y + 15.f, 1, 0,
 			enemyImage[enemyNumber], TRUE, FALSE);
 
-	DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
-	DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
-	DrawFormatStringF(50.f, 160.f, 0x0000ff, "colorBlue %d", colorBlue);
-	DrawFormatStringF(50.f, 180.f, 0xffff00, "enemyImage %d", enemyNumber);
-	DrawFormatStringF(50.f, 200.f, 0xff00ff, "animInterval %d", animInterval);
+	DrawFormatStringF(50.f, 300.f, 0xff0000, "colorRed %d", colorRed);
+	DrawFormatStringF(50.f, 320.f, 0x00ff00, "colorGreen %d", colorGreen);
+	DrawFormatStringF(50.f, 340.f, 0x0000ff, "colorBlue %d", colorBlue);
+	DrawFormatStringF(50.f, 360.f, 0xffff00, "enemyImage %d", enemyNumber);
+	DrawFormatStringF(50.f, 380.f, 0xff00ff, "animInterval %d", animInterval);
+	DrawFormatStringF(50.f, 400.f, 0xff00ff, "enemystate %d", enemyStatus);
 
 	if (markStatus != NULL)
 	{
@@ -190,31 +194,37 @@ void LargeSwordEnemy::AttackCenser()
 //エネミーの徘徊処理
 void LargeSwordEnemy::EnemyPatrol(Player* player)
 {
+	
 	//左向きの場合
-	if (direction == DIRECTION_LEFT)
+	if (direction == DIRECTION_LEFT && restTime <= 0)
 	{
 		move.x = -LARGE_WALK_SPEED;
 		patrolCounter -= LARGE_WALK_SPEED;
-		//左に200進んだら向きを右にする
-		if (patrolCounter <= -200.f)
+		//左に45進んだら向きを右にする
+		if (patrolCounter <= -45.f)
 		{
 			direction = DIRECTION_RIGHT;
-			animTurnFlg = true;
+			animTurnFlg = false;
 			restTime = MAX_REST_TIME;
 		}
 	}
 	//右向きの場合
-	if (direction == DIRECTION_RIGHT)
+	if (direction == DIRECTION_RIGHT && restTime <= 0)
 	{
 		move.x = LARGE_WALK_SPEED;
 		patrolCounter += LARGE_WALK_SPEED;
-		//右に200進んだら向きを左にする
-		if (patrolCounter >= 200.f)
+		//右に45進んだら向きを左にする
+		if (patrolCounter >= 45.f)
 		{
 			direction = DIRECTION_LEFT;
-			animTurnFlg = false;
+			animTurnFlg = true;
 			restTime = MAX_REST_TIME;
 		}
+	}
+	if (restTime >= 0)
+	{
+		restTime--;
+		move.x = 0.f;
 	}
 
 	//エネミーの状態遷移の処理
@@ -223,6 +233,7 @@ void LargeSwordEnemy::EnemyPatrol(Player* player)
 	{
 		//攻撃準備の状態にする
 		enemyStatus = EnemyStatus::AttackStandBy;
+		restTime = MAX_REST_TIME;
 	}
 
 	//エネミーの色変更
@@ -246,20 +257,37 @@ void LargeSwordEnemy::SuddenApproachToPlayer(Player* player)
 	{
 		//プレイヤーと自身の距離を計算
 		distance = abs(player->GetCenterLocation().x - GetCenterLocation().x);
-		//距離が50以下の場合
-		if (distance >= 50)
+		//距離が100以上の場合
+		if (distance > 100)
 		{
-			//8の速度で接近する
-			move.x = 8.f;
+			//左向きの場合
+			if (direction == DIRECTION_LEFT)
+			{
+				//画像：左向き
+				animTurnFlg = true;
+				//速度：８で移動
+				move.x = -8.f;
+			}
+			if (direction == DIRECTION_RIGHT)
+			{
+				//画像：右向き
+				animTurnFlg = false;
+				//速度：８で移動
+				move.x = 8.f;
+			}
 		}
 
 		//攻撃準備処理
-		if (distance <= 50 && attackWaitingTime >= 0)
+		if (distance <= 100)
 		{
 			//移動を０にする
 			move.x = 0.f;
-			//攻撃時間を減算していく
-			attackWaitingTime--;
+
+			//待機時間のリセット
+			restTime = MAX_REST_TIME;
+
+			//エネミーの状態を「攻撃開始」に遷移する
+			enemyStatus = EnemyStatus::AttackStart;
 		}
 	}
 }
@@ -270,26 +298,17 @@ void LargeSwordEnemy::AttackStandBy(Player* player)
 	//プレイヤーと自身の位置をみて方向を転換する
 	if (location.x <= player->GetCenterLocation().x)
 	{
-		//左方向
-		direction = DIRECTION_LEFT;
+		//右方向
+		direction = DIRECTION_RIGHT;
 	}
 	else if (location.x >= player->GetCenterLocation().x)
 	{
-		//右方向
-		direction = DIRECTION_RIGHT;
+		//左方向
+		direction = DIRECTION_LEFT;
 	}
 
 	//プレイヤーへの接近処理
 	SuddenApproachToPlayer(player);
-
-	//攻撃待ち時間が０になった場合
-	if (attackWaitingTime <= 0)
-	{
-		//エネミーの状態を「攻撃開始」に遷移する
-		enemyStatus = EnemyStatus::AttackStart;
-		//攻撃待機時間をリセットする
-		attackWaitingTime = MAX_WAITING_TIME;
-	}
 
 	//攻撃範囲からプレイヤーが離れた場合
 	if (direction == DIRECTION_LEFT && attackCenser[0].x > player->GetMinLocation().x ||
@@ -310,12 +329,61 @@ void LargeSwordEnemy::AttackStandBy(Player* player)
 //攻撃開始
 void LargeSwordEnemy::AttackStart(Player* player)
 {
+	if ((direction == DIRECTION_LEFT && GetMinLocation().x - 150 < player->GetCenterLocation().x
+		&& GetMaxLocation().x + 100 > player->GetCenterLocation().x) ||
+		(direction == DIRECTION_RIGHT && GetMinLocation().x - 100 > player->GetCenterLocation().x)
+		&& GetMinLocation().x + 150 < player->GetCenterLocation().x)
+	{
+		//攻撃を続行
+		isAttack = true;
+	}
+	else
+	{
+		//攻撃を中止
+		isAttack = false;
+	}
 
+	//攻撃ができるなら
+	if (isAttack == true && attackWaitingTime <= 0)
+	{
+		//攻撃までのカウントダウンを行う
+		attackCountDown--;
+		
+		if (attackCountDown >= 0)
+		{
+			//カウントダウンが行われている間は動けない
+			move.x = 0;
+		}
+		else if (attackCountDown <= 0)
+		{
+			//カウントダウンが０になったらリセット
+			attackCountDown = ATTACK_COUNT_DOWN;
+		}
+	}
+
+	if (didAttack == true)
+	{
+		//攻撃をしていれば状態を「攻撃終了」に遷移する
+		enemyStatus = EnemyStatus::AttackEnd;
+	}
+
+	//攻撃の待ち時間の制御
+	if (attackWaitingTime >= 0)
+	{
+		//攻撃時間を減算していく
+		attackWaitingTime--;
+	}
 }
 
 //攻撃終了
 void LargeSwordEnemy::AttackEnd()
 {
+	enemyStatus = EnemyStatus::Patrol;
+	restTime = 0;
+	enemyNumber = 0;
+
+	//攻撃待機時間をリセットする
+	attackWaitingTime = MAX_WAITING_TIME;
 }
 
 //プレイヤーと衝突した場合
@@ -326,5 +394,75 @@ void LargeSwordEnemy::ClashToPlayer(Player* player)
 //アニメーション制御関数
 void LargeSwordEnemy::EnemyAnimation()
 {
+	animInterval++;
+	//パトロール時のアニメーション
+	if (enemyStatus == EnemyStatus::Patrol)
+	{
+		//待機時間が０より大きい場合：待機アニメーション
+		if (restTime >= 0)
+		{
+			//画像番号が８より大きい場合:0にする
+			if (enemyNumber > 8)
+			{
+				enemyNumber = 0;
+			}
 
+			//5フレームに1回
+			if (animInterval % 5 == 0)
+			{
+				//アニメーションを更新
+				enemyNumber++;
+			}
+		}
+		else if (restTime <= 0)
+		{
+			if (enemyNumber > 14)
+			{
+				enemyNumber = 9;
+			}
+			if (animInterval % 3 == 0)
+			{
+				enemyNumber++;
+			}
+		}
+	}
+	//攻撃準備中のアニメーション
+	if (enemyStatus == EnemyStatus::AttackStandBy)
+	{
+		if (enemyNumber > 14)
+		{
+			enemyNumber = 9;
+		}
+		if (animInterval % 3 == 0)
+		{
+			enemyNumber++;
+		}
+	}
+	//攻撃開始時のアニメーション
+	if (enemyStatus == EnemyStatus::AttackStart)
+	{
+		if (attackWaitingTime >= 0)
+		{
+			if (enemyNumber >= 20)
+			{
+				enemyNumber = 18;
+			}
+			if (animInterval % 6 == 0)
+			{
+				enemyNumber++;
+			}
+		}
+		else if (attackWaitingTime <= 0)
+		{
+			if (enemyNumber >= 26)
+			{
+				enemyNumber = 15;
+				didAttack = true;
+			}
+			if (animInterval % 5 == 0)
+			{
+				enemyNumber++;
+			}
+		}
+	}
 }

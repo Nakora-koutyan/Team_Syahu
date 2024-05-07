@@ -7,6 +7,8 @@ GameMainScene::GameMainScene()
 	camera = new Camera();
 	enemy = new NormalEnemy();
 	enemy->Initialize();
+	enemy1 = new LargeSwordEnemy();
+	enemy1->Initialize();
 	stageblock = new StageBlock();
 	ui = new UI();
 
@@ -22,6 +24,7 @@ GameMainScene::~GameMainScene()
 	delete enemy;
 	delete stageblock;
 	delete ui;
+	delete enemy1;
 }
 
 SceneBase* GameMainScene::Update()
@@ -45,6 +48,7 @@ SceneBase* GameMainScene::Update()
 			enemy = nullptr;
 		}
 	}
+	enemy1->Update(player);
 
 	stageblock->Update();
 
@@ -76,6 +80,8 @@ void GameMainScene::Draw() const
 	{
 		enemy->Draw();
 	}
+
+	enemy1->Draw();
 
 	stageblock->Draw();
 }
