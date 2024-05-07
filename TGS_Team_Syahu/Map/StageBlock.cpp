@@ -35,8 +35,8 @@ void StageBlock::Draw()const {
 	);
 
 	//タイプ表示(仮)
-	DrawFormatString(screenLocation.x + 5, screenLocation.y + 5, 0x660066, "%d", DrawType);
+	DrawFormatStringF(screenLocation.x + 5, screenLocation.y + 5, 0x660066, "%d", DrawType);
 
 	//画面描画(仮)
-	DrawFormatString(screenLocation.x + 15, screenLocation.y + 5, 0x660066, "%d", IsDraw);
+	DrawFormatStringF(screenLocation.x + 15, screenLocation.y + 5, 0x660066, "%d", IsDraw);
 };

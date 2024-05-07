@@ -13,7 +13,7 @@ private:
 	std::map<std::string, int> bgm;							//BGM
 	std::map<std::string, int> se;							//SE
 	std::map<std::string, int> image;						//画像
-	std::map<std::string, int[]> divImage;					//分割読み込み用の画像
+	std::map<std::string, int[100]> divImage;				//分割読み込み用の画像
 
 public:
 	//コンストラクタ
