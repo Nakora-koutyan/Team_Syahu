@@ -111,18 +111,15 @@ void Player::Update()
 
 	Animation();
 
-	if (isAttack)
-	{
-		normalWeapon->Update(this);
-	
-		steal->Update(this);
+	normalWeapon->Update(this);
 
-		largeSword->Update(this);
+	steal->Update(this);
 
-		dagger->Update(this);
+	largeSword->Update(this);
 
-		rapier->Update(this);
-	}
+	dagger->Update(this);
+
+	rapier->Update(this);
 
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
@@ -188,18 +185,15 @@ void Player::Draw() const
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
-	if (isAttack)
-	{
-		normalWeapon->Draw();
+	normalWeapon->Draw();
 
-		steal->Draw();
+	steal->Draw();
 
-		largeSword->Draw();
+	largeSword->Draw();
 
-		dagger->Draw();
+	dagger->Draw();
 
-		rapier->Draw();
-	}
+	rapier->Draw();
 }
 
 void Player::Hit(CharaBase* chara)
