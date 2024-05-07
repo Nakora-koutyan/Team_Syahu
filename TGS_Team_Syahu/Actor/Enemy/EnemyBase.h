@@ -37,6 +37,11 @@ protected:
 	int findMark;		//プレイヤーを発見した際に出現する画像
 	int angryMark;		//プレイヤーに攻撃する際の画像
 
+	bool isBlink;
+
+	int blinkCounter;
+
+	int enemyAlpha;
 
 	int colorRed;
 	int colorGreen;
@@ -83,6 +88,9 @@ protected:
 	virtual void AttackEnd() = 0;
 
 	//プレイヤーとの当たり判定
-	virtual void ClashToPlayer(Player* player) = 0;
+	virtual void ReceiveDamage(Player* player) = 0;
+
+	//ヒット処理
+	virtual void Hit(Player* player) = 0;
 };
 

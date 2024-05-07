@@ -119,7 +119,7 @@ void GameMainScene::HitCheck()
 			player->GetSteal()->GetSideClaw(1).CollisionCheck(enemy))
 		{
 			player->GetSteal()->Hit(enemy, player);
-			enemy->SetIsKnockBack(true);
+			enemy->Hit(player);
 		}
 
 		//雑魚敵と大剣が当たったら

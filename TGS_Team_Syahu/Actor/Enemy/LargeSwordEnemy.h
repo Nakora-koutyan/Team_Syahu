@@ -55,6 +55,8 @@ protected:
 	//攻撃の終了
 	void AttackEnd() override;
 
-	void ClashToPlayer(Player* player)override;
+	void ReceiveDamage(Player* player)override;
+
+	void Hit(Player* chara)override;
 };
 

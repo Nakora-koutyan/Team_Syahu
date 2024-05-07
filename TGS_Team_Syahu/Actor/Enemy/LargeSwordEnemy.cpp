@@ -6,6 +6,7 @@
 #define LARGE_WALK_SPEED 3.f			//徘徊時のスピード
 #define MAX_REST_TIME 60				//休息時間
 #define ATTACK_COUNT_DOWN 31
+#define LARGE_SWORD_KNOCKBACK 5		//ノックバック時間
 
 //コンストラクタ
 LargeSwordEnemy::LargeSwordEnemy():enemyImage(),enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
@@ -301,7 +302,7 @@ void LargeSwordEnemy::AttackStandBy(Player* player)
 		//右方向
 		direction = DIRECTION_RIGHT;
 	}
-	else if (location.x >= player->GetCenterLocation().x)
+	else if (location.x > player->GetCenterLocation().x)
 	{
 		//左方向
 		direction = DIRECTION_LEFT;
@@ -329,10 +330,8 @@ void LargeSwordEnemy::AttackStandBy(Player* player)
 //攻撃開始
 void LargeSwordEnemy::AttackStart(Player* player)
 {
-	if ((direction == DIRECTION_LEFT && GetMinLocation().x - 150 < player->GetCenterLocation().x
-		&& GetMaxLocation().x + 100 > player->GetCenterLocation().x) ||
-		(direction == DIRECTION_RIGHT && GetMinLocation().x - 100 > player->GetCenterLocation().x)
-		&& GetMinLocation().x + 150 < player->GetCenterLocation().x)
+	if (GetMinLocation().x - 150 < player->GetCenterLocation().x
+		&& GetMaxLocation().x + 100 > player->GetCenterLocation().x)
 	{
 		//攻撃を続行
 		isAttack = true;
@@ -381,14 +380,41 @@ void LargeSwordEnemy::AttackEnd()
 	enemyStatus = EnemyStatus::Patrol;
 	restTime = 0;
 	enemyNumber = 0;
+	didAttack = false;
 
 	//攻撃待機時間をリセットする
 	attackWaitingTime = MAX_WAITING_TIME;
 }
 
 //プレイヤーと衝突した場合
-void LargeSwordEnemy::ClashToPlayer(Player* player)
+void LargeSwordEnemy::ReceiveDamage(Player* player)
 {
+}
+
+void LargeSwordEnemy::Hit(Player* chara)
+{
+	//自身のHPの減少
+	if (hp > 0)hp -= chara->GetDamage();
+	//ノックバックを有効にする
+	isKnockBack = true;
+
+	//ノックバック処理
+	move.x = LARGE_SWORD_KNOCKBACK;
+
+	//ダメージを与えたキャラの位置によってノックバックする方向を決める
+	if (GetCenterLocation().x < chara->GetCenterLocation().x)
+	{
+		//左にノックバック
+		move.x = -LARGE_SWORD_KNOCKBACK;
+	}
+	else
+	{
+		//右にノックバック
+		move.x = LARGE_SWORD_KNOCKBACK;
+	}
+
+	//ダメージを受けたことで攻撃状態を解除
+	enemyStatus = EnemyStatus::Patrol;
 }
 
 //アニメーション制御関数
