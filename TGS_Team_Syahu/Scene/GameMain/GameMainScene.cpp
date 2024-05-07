@@ -182,7 +182,8 @@ void GameMainScene::HitCheck()
 		Vector2D BlockLoc = stageblock->GetLocation();
 		Vector2D move = player->GetMove();
 		// 上から
-		if ((PlayerLoc.y + 64) <= BlockLoc.y && player->GetDirection().y >= 0.f) {
+		if ((PlayerLoc.y + 64) <= BlockLoc.y && ((PlayerLoc.x + 56 - 23) <= (BlockLoc.x + 100) &&
+			(PlayerLoc.x + 23) >= BlockLoc.x) && player->GetDirection().y >= 0.f) {
 			player->Landing(BlockLoc.y);
 		}
 		// 下から
