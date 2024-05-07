@@ -3,6 +3,7 @@
 #include "../Player/Player.h"
 
 #define MAX_WAITING_TIME 120
+#define NORMAL_ENEMY_KNOCKBACK 5.f
 
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(false)
@@ -71,7 +72,7 @@ void NormalEnemy::Update(Player* player)
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(int(FPS * 0.5));
-	KnockBack(FPS * 0.5);
+	KnockBack(FPS * 1.5f);
 
 	//徘徊状態から警戒状態に入る範囲
 	AttackRange();
@@ -106,7 +107,7 @@ void NormalEnemy::Update(Player* player)
 		markStatus = NULL;
 		break;
 	}
-
+	
 	//エネミーアニメーション
 	EnemyAnimation();
 
@@ -123,11 +124,14 @@ void NormalEnemy::Draw() const
 	//	screenLocation.x + area.width, screenLocation.y + area.height,
 	//	GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
 	//);
-	animTurnFlg ?
-		DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
-			enemyImage[enemyNumber], TRUE, TRUE) :
-		DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y + 45.f, 1, 0,
-			enemyImage[enemyNumber], TRUE, FALSE);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, enemyAlpha);
+		animTurnFlg ?
+			DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
+				enemyImage[enemyNumber], TRUE, TRUE) :
+			DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y + 45.f, 1, 0,
+				enemyImage[enemyNumber], TRUE, FALSE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
 
 	//DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
 	//DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
@@ -323,11 +327,56 @@ void NormalEnemy::AttackEnd()
 	}
 }
 
-void NormalEnemy::ClashToPlayer(Player* player)
+void NormalEnemy::ReceiveDamage(Player* player)
 {
-	if (CollisionCheck(player) == true)
-	{
+	
+}
 
+void NormalEnemy::Hit(Player* chara)
+{
+	if (isHit == true)
+	{
+		//自身のHPの減少
+		if (hp > 0)hp -= chara->GetDamage();
+		//ノックバックを有効にする
+		isKnockBack = true;
+
+		//ノックバック処理
+		move.x = NORMAL_ENEMY_KNOCKBACK;
+
+		//ダメージを与えたキャラの位置によってノックバックする方向を決める
+		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		{
+			//左にノックバック
+			move.x = -NORMAL_ENEMY_KNOCKBACK;
+		}
+		else
+		{
+			//右にノックバック
+			move.x = NORMAL_ENEMY_KNOCKBACK;
+		}
+
+		//ダメージを受けたことで攻撃状態を解除
+		enemyStatus = EnemyStatus::Patrol;
+	}
+	//ノックバックが発生した場合
+	if (isHit = true)
+	{
+		//点滅処理用カウンター
+		blinkCounter++;
+
+		//9フレーム毎に行う処理
+		if (blinkCounter % 4 == 0)
+		{
+			//現在のtrue,falseを入れ替える
+			isBlink = !isBlink;
+
+			isBlink ? enemyAlpha = 124 : enemyAlpha = 255;
+		}
+	}
+	else
+	{
+		enemyAlpha = 255;
 	}
 }
 

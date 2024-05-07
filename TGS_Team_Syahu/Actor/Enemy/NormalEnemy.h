@@ -32,6 +32,8 @@ public:
 	//描画更新処理
 	void Draw()const;
 
+	void Hit(Player* chara)override;
+
 private:
 
 	//エネミーのアニメーション制御関数
@@ -54,5 +56,5 @@ private:
 
 	void AttackEnd() override;
 
-	void ClashToPlayer(Player* player)override;
+	void ReceiveDamage(Player* player)override;
 };
