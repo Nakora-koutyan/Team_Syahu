@@ -107,6 +107,11 @@ void NormalEnemy::Update(Player* player)
 		markStatus = NULL;
 		break;
 	}
+
+	if (isHit)
+	{
+		enemyStatus = EnemyStatus::AttackEnd;
+	}
 	
 	//エネミーアニメーション
 	EnemyAnimation();
@@ -334,15 +339,15 @@ void NormalEnemy::ReceiveDamage(Player* player)
 
 void NormalEnemy::Hit(Player* chara)
 {
-	if (isHit == true)
+	if (isHit)
 	{
 		//自身のHPの減少
 		if (hp > 0)hp -= chara->GetDamage();
-		//ノックバックを有効にする
-		isKnockBack = true;
 
 		//ノックバック処理
 		move.x = NORMAL_ENEMY_KNOCKBACK;
+
+		isKnockBack = true;
 
 		//ダメージを与えたキャラの位置によってノックバックする方向を決める
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
@@ -358,25 +363,6 @@ void NormalEnemy::Hit(Player* chara)
 
 		//ダメージを受けたことで攻撃状態を解除
 		enemyStatus = EnemyStatus::Patrol;
-	}
-	//ノックバックが発生した場合
-	if (isHit = true)
-	{
-		//点滅処理用カウンター
-		blinkCounter++;
-
-		//9フレーム毎に行う処理
-		if (blinkCounter % 4 == 0)
-		{
-			//現在のtrue,falseを入れ替える
-			isBlink = !isBlink;
-
-			isBlink ? enemyAlpha = 124 : enemyAlpha = 255;
-		}
-	}
-	else
-	{
-		enemyAlpha = 255;
 	}
 }
 
@@ -472,5 +458,25 @@ void NormalEnemy::EnemyAnimation()
 		{
 			enemyNumber = 0;
 		}
+	}
+
+	//ノックバックが発生した場合
+	if (isHit)
+	{
+		//点滅処理用カウンター
+		blinkCounter++;
+
+		//4フレーム毎に行う処理
+		if (blinkCounter % 8 == 0)
+		{
+			//現在のtrue,falseを入れ替える
+			isBlink = !isBlink;
+
+			isBlink ? enemyAlpha = 124 : enemyAlpha = 255;
+		}
+	}
+	else
+	{
+		enemyAlpha = 255;
 	}
 }
