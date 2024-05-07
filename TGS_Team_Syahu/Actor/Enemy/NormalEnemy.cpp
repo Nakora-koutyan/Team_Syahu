@@ -33,7 +33,7 @@ void NormalEnemy::Initialize()
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
-	weaponType = Weapon::LargeSword;	//突進(武器無し)
+	weaponType = Weapon::Rapier;	//突進(武器無し)
 
 	//攻撃状態に入る範囲
 	attackRange[0] = { GetCenterLocation() };

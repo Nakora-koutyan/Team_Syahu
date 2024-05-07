@@ -136,6 +136,13 @@ void GameMainScene::HitCheck()
 			enemy->SetIsKnockBack(true);
 		}
 
+		//雑魚敵とレイピアが当たったら
+		if (player->GetRapier()->CollisionCheck(enemy))
+		{
+			player->GetRapier()->Hit(enemy, player);
+			enemy->SetIsKnockBack(true);
+		}
+
 		// ブロックと敵が当たったら
 		if (stageblock->CollisionCheck(enemy))
 		{

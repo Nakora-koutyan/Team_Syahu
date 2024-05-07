@@ -1,10 +1,10 @@
-#include "Dagger.h"
+#include "Rapier.h"
 #include"../../Player/Player.h"
 #include"../../Camera/Camera.h"
 
-Dagger::Dagger()
+Rapier::Rapier()
 {
-	directionVector.x = DAGGER_LENGTH;
+	directionVector.x = RAPIER_LENGTH;
 	directionVector.y = 0.f;
 
 	direction = 0;
@@ -16,28 +16,28 @@ Dagger::Dagger()
 	isShow = false;
 }
 
-Dagger::~Dagger()
+Rapier::~Rapier()
 {
 
 }
 
-void Dagger::Update(CharaBase* chara)
+void Rapier::Update(CharaBase* chara)
 {
 	if (isShow)
 	{
 		framCount++;
-		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
-		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
-
 		//右に出す
 		if (direction > 0)
 		{
 			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+			directionVector.x = RAPIER_LENGTH;
+			chara->SetLocationX(chara->GetLocation().x + RAPIER_MOVE);
 		}
-		//左に出す
 		else
 		{
 			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+			directionVector.x = -RAPIER_LENGTH;
+			chara->SetLocationX(chara->GetLocation().x - RAPIER_MOVE);
 		}
 	}
 	else
@@ -46,27 +46,28 @@ void Dagger::Update(CharaBase* chara)
 	}
 
 	//攻撃時間を超えたら
-	if (framCount > DAGGER_ATTACK_TIME || chara->GetIsKnockBack())
+	if (framCount > RAPIER_ATTACK_TIME || chara->GetIsKnockBack())
 	{
 		framCount = 0;
 		direction = 0;
 		angle = 0.f;
 		isShow = false;
 		chara->SetIsAttack(false);
+		chara->SetMove({ 0,0 });
 	}
 
 	location.y = chara->GetCenterLocation().y;
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
-void Dagger::Draw() const
+void Rapier::Draw() const
 {
 	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
 		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
 		0x000000, 1);
 }
 
-void Dagger::Attack(const Player* player)
+void Rapier::Attack(const Player* player)
 {
 	isShow = true;
 
@@ -76,30 +77,15 @@ void Dagger::Attack(const Player* player)
 		//プレイヤーの方向情報を保持する
 		direction = (short)player->GetDirection().x;
 	}
-
-	//右に出す
-	if (direction > 0)
-	{
-		directionVector.x = DAGGER_LENGTH;
-		angle = DAGGER_ANGLE;
-	}
-	//左に出す
-	else
-	{
-		directionVector.x = -DAGGER_LENGTH;
-		angle = -DAGGER_ANGLE;
-	}
-
-	directionVector.y = -40.f;
 }
 
-void Dagger::Hit(CharaBase* enemy, const Player* player)
+void Rapier::Hit(CharaBase* enemy, const Player* player)
 {
 	if (isShow)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + DAGGER_DAMAGE));
+			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + RAPIER_DAMAGE));
 			enemy->SetIsHit(true);
 		}
 	}
