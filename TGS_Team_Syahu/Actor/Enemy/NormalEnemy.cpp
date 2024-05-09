@@ -122,27 +122,10 @@ void NormalEnemy::Update(Player* player)
 //描画に関する更新
 void NormalEnemy::Draw() const
 {
-	//エネミー表示
-	//DrawBoxAA
-	//(
-	//	screenLocation.x, screenLocation.y,
-	//	screenLocation.x + area.width, screenLocation.y + area.height,
-	//	GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
-	//);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, enemyAlpha);
-		animTurnFlg ?
-			DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
-				enemyImage[enemyNumber], TRUE, TRUE) :
-			DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y + 45.f, 1, 0,
-				enemyImage[enemyNumber], TRUE, FALSE);
+	DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
+		enemyImage[enemyNumber], TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-
-	//DrawFormatStringF(50.f, 120.f, 0xff0000, "colorRed %d", colorRed);
-	//DrawFormatStringF(50.f, 140.f, 0x00ff00, "colorGreen %d", colorGreen);
-	//DrawFormatStringF(50.f, 160.f, 0x0000ff, "colorBlue %d", colorBlue);
-	//DrawFormatStringF(50.f, 180.f, 0xffff00, "enemyImage %d", enemyNumber);
-	//DrawFormatStringF(50.f, 200.f, 0xff00ff, "animInterval %d", animInterval);
 
 	if (markStatus != NULL)
 	{
