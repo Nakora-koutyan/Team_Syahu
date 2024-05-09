@@ -1,7 +1,7 @@
 #include "Steal.h"
-#include"../../../Scene/GameMain/GameMainScene.h"
-#include"../../../Actor/Player/Player.h"
-#include"../../../Utility/common.h"
+#include"../../../../Scene/GameMain/GameMainScene.h"
+#include"../../../../Actor/Character/Player/Player.h"
+#include"../../../../Utility/common.h"
 
 Steal::Steal()
 {	
