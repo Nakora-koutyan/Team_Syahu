@@ -17,12 +17,14 @@ LineCollision::~LineCollision()
 
 }
 
-bool LineCollision::HitLine(const LineCollision* collision) const
+bool LineCollision::HitLine(const ObjectBase* object) const
 {
+	const LineCollision* line = static_cast<const LineCollision*>(object);
+
 	bool ret = true;		//返り値
 
-	Vector2D argLoc = collision->GetLocation();
-	Vector2D argVec = collision->GetDirectionVector();
+	Vector2D argLoc = line->GetLocation();
+	Vector2D argVec = line->GetDirectionVector();
 
 	//ベクトルを求める
 	Vector2D v = Vec2DSub(argLoc, this->location);
@@ -53,13 +55,15 @@ bool LineCollision::HitLine(const LineCollision* collision) const
 	return ret;
 }
 
-bool LineCollision::HitBox(const BoxCollision* collision) const
+bool LineCollision::HitBox(const ObjectBase* object) const
 {
+	const BoxCollision* box = static_cast<const BoxCollision*>(object);
+
 	bool ret = false;		//返り値
 
-	Vector2D min = collision->GetMinLocation();
-	Vector2D max = collision->GetMaxLocation();
-	Area area = collision->GetArea();
+	Vector2D min = box->GetMinLocation();
+	Vector2D max = box->GetMaxLocation();
+	Area area = box->GetArea();
 
 	LineCollision segment[4] = {};
 
@@ -92,12 +96,14 @@ bool LineCollision::HitBox(const BoxCollision* collision) const
 	return ret;
 }
 
-bool LineCollision::HitSphere(const SphereCollision* collision) const
+bool LineCollision::HitSphere(const ObjectBase* object) const
 {
+	const SphereCollision* sphere = static_cast<const SphereCollision*>(object);
+
 	bool ret = false;		//返り値
 
-	Vector2D sphereLoc = collision->GetLocation();
-	float sphereR = collision->GetRadius();
+	Vector2D sphereLoc = sphere->GetLocation();
+	float sphereR = sphere->GetRadius();
 
 	//始点から中心点へのベクトル
 	Vector2D vec1 = Vec2DSub(sphereLoc, location);

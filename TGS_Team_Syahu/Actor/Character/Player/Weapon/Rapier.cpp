@@ -1,6 +1,6 @@
 #include "Rapier.h"
 #include"../../Player/Player.h"
-#include"../../Camera/Camera.h"
+#include"../../../Camera/Camera.h"
 
 Rapier::Rapier()
 {
@@ -31,13 +31,13 @@ void Rapier::Update(CharaBase* chara)
 		{
 			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
 			directionVector.x = RAPIER_LENGTH;
-			chara->SetLocationX(chara->GetLocation().x + RAPIER_MOVE);
+			chara->SetMove({ RAPIER_MOVE ,chara->GetMove().y });
 		}
 		else
 		{
 			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
 			directionVector.x = -RAPIER_LENGTH;
-			chara->SetLocationX(chara->GetLocation().x - RAPIER_MOVE);
+			chara->SetMove({ -RAPIER_MOVE ,chara->GetMove().y });
 		}
 	}
 	else
@@ -53,7 +53,6 @@ void Rapier::Update(CharaBase* chara)
 		angle = 0.f;
 		isShow = false;
 		chara->SetIsAttack(false);
-		chara->SetMove({ 0,0 });
 	}
 
 	location.y = chara->GetCenterLocation().y;
