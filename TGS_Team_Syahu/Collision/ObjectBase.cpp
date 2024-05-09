@@ -1,9 +1,9 @@
-#include"CollisionBase.h"
+#include"ObjectBase.h"
 #include"Box/BoxCollision.h"
 #include"Sphere/SphereCollision.h"
 #include"Line/LineCollision.h"
 
-CollisionBase::CollisionBase()
+ObjectBase::ObjectBase()
 {
 	location.x = 0.f;
 	location.y = 0.f;
@@ -13,17 +13,17 @@ CollisionBase::CollisionBase()
 	collisionType = CollisionType::Empty;
 }
 
-CollisionBase::~CollisionBase()
+ObjectBase::~ObjectBase()
 {
 
 }
 
-bool CollisionBase::CollisionCheck(const CollisionBase* collision) const
+bool ObjectBase::CollisionCheck(const ObjectBase* object) const
 {
 	bool ret = false;
 
 	//コリジョンの種類の取得
-	CollisionType type = collision->GetType();
+	CollisionType type = object->GetType();
 
 	switch (type)
 	{
@@ -34,17 +34,17 @@ bool CollisionBase::CollisionCheck(const CollisionBase* collision) const
 
 	//四角
 	case CollisionType::Box:
-		ret = HitBox(static_cast<const BoxCollision*>(collision));
+		ret = HitBox(static_cast<const BoxCollision*>(object));
 		break;
 
 	//円
 	case CollisionType::Sphere:
-		ret = HitSphere(static_cast<const SphereCollision*>(collision));
+		ret = HitSphere(static_cast<const SphereCollision*>(object));
 		break;
 
 	//線
 	case CollisionType::Line:
-		ret = HitLine(static_cast<const LineCollision*>(collision));
+		ret = HitLine(static_cast<const LineCollision*>(object));
 		break;
 
 	//デフォルト
@@ -56,7 +56,7 @@ bool CollisionBase::CollisionCheck(const CollisionBase* collision) const
 	return ret;
 }
 
-float CollisionBase::MakeHypotenuse(const float x1, const float y1, const float x2, const float y2) const
+float ObjectBase::MakeHypotenuse(const float x1, const float y1, const float x2, const float y2) const
 {
 	float dX = x2 - x1;
 	float dY = y2 - y1;

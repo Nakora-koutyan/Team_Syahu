@@ -2,6 +2,18 @@
 #include "GameMainScene.h"
 
 GameMainScene::GameMainScene()
+	:player(nullptr),camera(nullptr),enemy(nullptr),stageblock(nullptr),ui(nullptr),enemy1(nullptr)
+	,debugModeFlg(false)
+{
+	kari = LoadGraph("Resource/Images/kari.png");
+}
+
+GameMainScene::~GameMainScene()
+{
+
+}
+
+void GameMainScene::Initialize()
 {
 	player = new Player();
 	camera = new Camera();
@@ -11,13 +23,9 @@ GameMainScene::GameMainScene()
 	enemy1->Initialize();
 	stageblock = new StageBlock();
 	ui = new UI();
-
-	kari = LoadGraph("Resource/Images/kari.png");
-
-	debugModeFlg = false;
 }
 
-GameMainScene::~GameMainScene()
+void GameMainScene::Finalize()
 {
 	delete player;
 	delete camera;

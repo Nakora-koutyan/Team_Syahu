@@ -1,4 +1,6 @@
 #pragma once
+#define _USE_MATH_DEFINES
+#include<math.h>
 
 typedef struct _Vector2D
 {
@@ -41,12 +43,19 @@ inline Vector2D Vec2DMult(const Vector2D& vec1, const Vector2D& vec2)
 }
 
 //2Dベクトルの徐算
-inline Vector2D Vec2DDiv(const Vector2D& vec1, const Vector2D& vec2)
+inline Vector2D Vec2DDiv(const Vector2D& vec1, int scalar)
 {
 	Vector2D ret = {};
 
-	ret.x = vec1.x / vec2.x;
-	ret.y = vec1.y / vec2.y;
+	ret.x = vec1.x / scalar;
+	ret.y = vec1.y / scalar;
+
+	if (abs(scalar) < 1e-6f)
+	{
+		ret.x = 0.f;
+		ret.y = 0.f;
+		return ret;
+	}
 
 	return ret;
 }

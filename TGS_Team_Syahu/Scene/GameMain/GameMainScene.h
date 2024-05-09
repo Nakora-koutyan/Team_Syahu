@@ -30,6 +30,12 @@ public:
     //デストラクタ
     ~GameMainScene();
 
+    //初期化処理
+    void Initialize()override;
+
+    //終了処理
+    void Finalize()override;
+
     //更新
     SceneBase* Update()override;
 

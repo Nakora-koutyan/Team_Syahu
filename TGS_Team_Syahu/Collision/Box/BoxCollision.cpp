@@ -15,8 +15,10 @@ BoxCollision::~BoxCollision()
 
 }
 
-bool BoxCollision::HitBox(const BoxCollision* collision) const
+bool BoxCollision::HitBox(const ObjectBase* object) const
 {
+	const BoxCollision* box = static_cast<const BoxCollision*>(object);
+
 	bool ret = false;		//返り値
 
 	float myX[2] = {};
@@ -30,10 +32,10 @@ bool BoxCollision::HitBox(const BoxCollision* collision) const
 	myX[1] = myX[0] + area.width;
 	myY[1] = myY[0] + area.height;
 
-	subX[0] = collision->GetLocation().x;
-	subY[0] = collision->GetLocation().y;
-	subX[1] = subX[0] + collision->GetArea().width;
-	subY[1] = subY[0] + collision->GetArea().height;
+	subX[0] = box->GetLocation().x;
+	subY[0] = box->GetLocation().y;
+	subX[1] = subX[0] + box->GetArea().width;
+	subY[1] = subY[0] + box->GetArea().height;
 
 	//四辺に重なっていたら
 	if ((myX[0] < subX[1]) &&
@@ -46,8 +48,10 @@ bool BoxCollision::HitBox(const BoxCollision* collision) const
 	return ret;
 }
 
-bool BoxCollision::HitSphere(const SphereCollision* collision) const
+bool BoxCollision::HitSphere(const ObjectBase* object) const
 {
+	const SphereCollision* sphere = static_cast<const SphereCollision*>(object);
+
 	bool ret = false;		//返り値
 
 	Vector2D min = location;
@@ -55,9 +59,9 @@ bool BoxCollision::HitSphere(const SphereCollision* collision) const
 	max.x = location.x + area.width;
 	max.y = location.y + area.height;
 
-	float sphereX = collision->GetLocation().x;
-	float sphereY = collision->GetLocation().y;
-	float sphereR = collision->GetRadius();
+	float sphereX = sphere->GetLocation().x;
+	float sphereY = sphere->GetLocation().y;
+	float sphereR = sphere->GetRadius();
 
 	//円の座標が四辺の座標に半径を足した数より大きいまたは小さいなら
 	if ((sphereX > min.x - sphereR) &&
@@ -122,8 +126,10 @@ bool BoxCollision::HitSphere(const SphereCollision* collision) const
 	return ret;
 }
 
-bool BoxCollision::HitLine(const LineCollision* collision) const
+bool BoxCollision::HitLine(const ObjectBase* object) const
 {
+	const LineCollision* line = static_cast<const LineCollision*>(object);
+
 	bool ret = false;		//返り値
 
 	LineCollision segment[4] = {};
@@ -155,7 +161,7 @@ bool BoxCollision::HitLine(const LineCollision* collision) const
 	for (int i = 0; i < 3; i++)
 	{
 		//四辺のいずれかと交差していたら
-		if (collision->HitLine(&segment[i]))
+		if (line->HitLine(&segment[i]))
 		{
 			ret = true;
 			break;

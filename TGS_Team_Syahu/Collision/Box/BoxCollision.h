@@ -1,8 +1,8 @@
 #pragma once
-#include"../CollisionBase.h"
+#include"../ObjectBase.h"
 #include"../../Utility/common.h"
 
-class BoxCollision :public CollisionBase
+class BoxCollision :public ObjectBase
 {
 protected:
     Area area;          //領域
@@ -41,11 +41,11 @@ public:
 
 public:
     //四角の当たり判定
-    bool HitBox(const BoxCollision* collision)const override;
+    bool HitBox(const ObjectBase* object)const override;
 
     //円の当たり判定
-    bool HitSphere(const SphereCollision* collision)const override;
+    bool HitSphere(const ObjectBase* object)const override;
 
     //線の当たり判定
-    bool HitLine(const LineCollision* collision)const override;
+    bool HitLine(const ObjectBase* object)const override;
 };

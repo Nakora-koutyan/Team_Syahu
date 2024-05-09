@@ -60,7 +60,7 @@
     <ClCompile Include="Collision\Box\BoxCollision.cpp">
       <Filter>ソース ファイル\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Collision\CollisionBase.cpp">
+    <ClCompile Include="Collision\ObjectBase.cpp">
       <Filter>ソース ファイル\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Actor\CharaBase.cpp">
@@ -120,10 +120,10 @@
     <ClCompile Include="Actor\Player\Weapon\Dagger.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
+    <ClCompile Include="Actor\Player\Weapon\Rapier.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Player\Weapon\Rapier.cpp">
+    <ClCompile Include="ResourceManager\ResourceManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,7 +131,7 @@
     <ClInclude Include="Collision\Box\BoxCollision.h">
       <Filter>ヘッダー ファイル\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Collision\CollisionBase.h">
+    <ClInclude Include="Collision\ObjectBase.h">
       <Filter>ヘッダー ファイル\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Camera\Camera.h">
@@ -203,10 +203,10 @@
     <ClInclude Include="Actor\Player\Weapon\Dagger.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
+    <ClInclude Include="Actor\Player\Weapon\Rapier.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Player\Weapon\Rapier.h">
+    <ClInclude Include="ResourceManager\ResourceManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

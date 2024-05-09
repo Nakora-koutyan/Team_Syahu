@@ -310,7 +310,7 @@ void Player::Movement()
 				move.x += -0.05f;
 			}
 		}
-		else if (!isKnockBack)
+		else if (!isKnockBack && !isAttack)
 		{
 			move.x = 0.f;
 			isMove = false;
