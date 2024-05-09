@@ -5,7 +5,7 @@
 
 StageBlock::StageBlock() {
 	location.x = 1000.f;
-	location.y = 1240.f;
+	location.y = 1140.f;
 
 	area.width = 100.f;
 	area.height = 100.f;
