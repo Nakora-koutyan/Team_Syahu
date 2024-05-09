@@ -29,10 +29,10 @@ NormalWeapon::~NormalWeapon()
 }
 
 void NormalWeapon::Update(Player* player)
-{framCount++;
+{
 	if (isShow)
 	{
-		
+		framCount++;
 
 		gravityVelocity += NORMAL_WEAPON_GRAVITY + weaponWeight;
 	}

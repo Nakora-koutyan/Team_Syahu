@@ -35,6 +35,8 @@
     <ClCompile Include="Actor\Enemy\NormalEnemy.cpp" />
     <ClCompile Include="Actor\Player\Weapon\NormalWeapon.cpp" />
     <ClCompile Include="Map\StageBlock.cpp" />
+    <ClCompile Include="Actor\Player\Weapon\Rapier.cpp" />
+    <ClCompile Include="ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="SceneManager\SceneManager.cpp" />
     <ClCompile Include="Scene\GameMain\GameMainScene.cpp" />
     <ClCompile Include="Collision\Sphere\SphereCollision.cpp" />
@@ -58,6 +60,8 @@
     <ClInclude Include="Collision\Line\LineCollision.h" />
     <ClInclude Include="Actor\Enemy\LargeSwordEnemy.h" />
     <ClInclude Include="Map\StageBlock.h" />
+    <ClInclude Include="Actor\Player\Weapon\Rapier.h" />
+    <ClInclude Include="ResourceManager\ResourceManager.h" />
     <ClInclude Include="SceneManager\SceneManager.h" />
     <ClInclude Include="Scene\GameMain\GameMainScene.h" />
     <ClInclude Include="Scene\SceneBase.h" />

@@ -136,6 +136,13 @@ void GameMainScene::HitCheck()
 			enemy->SetIsKnockBack(true);
 		}
 
+		//雑魚敵とレイピアが当たったら
+		if (player->GetRapier()->CollisionCheck(enemy))
+		{
+			player->GetRapier()->Hit(enemy, player);
+			enemy->SetIsKnockBack(true);
+		}
+
 		// ブロックと敵が当たったら
 		if (stageblock->CollisionCheck(enemy))
 		{
@@ -143,30 +150,32 @@ void GameMainScene::HitCheck()
 			Vector2D EnemyLoc = enemy->GetLocation();
 			Vector2D BlockLoc = stageblock->GetLocation();
 			Vector2D move = enemy->GetMove();
+			Area EnemySize = enemy->GetArea();
+			Area BlockSize = stageblock->GetArea();
 			// 上から
-			if ((EnemyLoc.y + 64) <= BlockLoc.y && enemy->GetDirection().y >= 0.f) {
-				EnemyLoc.y = BlockLoc.y - 84;
+			if ((EnemyLoc.y + EnemySize.height - 20) <= BlockLoc.y && enemy->GetDirection().y >= 0.f) {
+				EnemyLoc.y = BlockLoc.y - EnemySize.height;
 				enemy->SetLocation(EnemyLoc);
 				move.y = 0;
 				enemy->SetMove(move);
 			}
 			// 下から
-			else if (EnemyLoc.y >= (BlockLoc.y + 90) && enemy->GetDirection().y <= 0.f) {
-				EnemyLoc.y = BlockLoc.y + 100;
+			else if (EnemyLoc.y >= BlockLoc.y + BlockSize.height - 10 && enemy->GetDirection().y <= 0.f) {
+				EnemyLoc.y = BlockLoc.y + BlockSize.height;
 				enemy->SetLocation(EnemyLoc);
 				move.y = 0;
 				enemy->SetMove(move);
 			}
 			else {
 				// 右から
-				if (EnemyLoc.x >= (BlockLoc.x + 50)) {
-					EnemyLoc.x = BlockLoc.x + 100;
+				if (EnemyLoc.x >= (BlockLoc.x + BlockSize.width / 2)) {
+					EnemyLoc.x = BlockLoc.x + BlockSize.width;
 					EnemyLoc.y = EnemyLoc.y;
 					enemy->SetLocation(EnemyLoc);
 				}
 				// 左から
 				else {
-					EnemyLoc.x = BlockLoc.x - 56.f;
+					EnemyLoc.x = BlockLoc.x - EnemySize.width;
 					enemy->SetLocation(EnemyLoc);
 				}
 				move.x = 0;
@@ -181,26 +190,31 @@ void GameMainScene::HitCheck()
 		Vector2D PlayerLoc = player->GetLocation();
 		Vector2D BlockLoc = stageblock->GetLocation();
 		Vector2D move = player->GetMove();
+		Area PlayerSize = player->GetArea();
+		Area BlockSize = stageblock->GetArea();
 		// 上から
-		if ((PlayerLoc.y + 64) <= BlockLoc.y && player->GetDirection().y >= 0.f) {
-			player->Landing(BlockLoc.y);
+		if ((PlayerLoc.y + PlayerSize.height - 20) <= BlockLoc.y && player->GetDirection().y >= 0.f) {
+			int Dropwidth = 21;
+			if (move.x != 0 || (PlayerLoc.x + PlayerSize.width - Dropwidth <= BlockLoc.x + BlockSize.width && PlayerLoc.x + Dropwidth >= BlockLoc.x)) {
+				player->Landing(BlockLoc.y);
+			}
 		}
 		// 下から
-		else if (PlayerLoc.y >= (BlockLoc.y + 90) && player->GetDirection().y <= 0.f) {
-			PlayerLoc.y = BlockLoc.y + 100;
+		else if (PlayerLoc.y >= (BlockLoc.y + BlockSize.height - 10) && player->GetDirection().y <= 0.f) {
+			PlayerLoc.y = BlockLoc.y + BlockSize.height;
 			player->SetLocation(PlayerLoc);
 			move.y = 0;
 			player->SetMove(move);
 		}
 		else {
 			// 右から
-			if (PlayerLoc.x >= (BlockLoc.x + 50)) {
-				PlayerLoc.x = BlockLoc.x + 100;
+			if (PlayerLoc.x >= BlockLoc.x + BlockSize.width / 2) {
+				PlayerLoc.x = BlockLoc.x + BlockSize.width;
 				player->SetLocation(PlayerLoc);
 			}
 			// 左から
 			else {
-				PlayerLoc.x = BlockLoc.x - 56.f;
+				PlayerLoc.x = BlockLoc.x - PlayerSize.width;
 				player->SetLocation(PlayerLoc);
 			}
 			move.x = 0;

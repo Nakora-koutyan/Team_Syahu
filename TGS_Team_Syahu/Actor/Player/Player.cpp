@@ -23,6 +23,7 @@ Player::Player()
 	steal = new Steal();
 	largeSword = new LargeSword();
 	dagger = new Dagger();
+	rapier = new Rapier();
 
 	stockCount = 0;
 	actionState = Action::None;
@@ -62,6 +63,7 @@ Player::~Player()
 	delete steal;
 	delete largeSword;
 	delete dagger;
+	delete rapier;
 }
 
 void Player::Update()
@@ -78,15 +80,6 @@ void Player::Update()
 	if (KeyInput::GetKey(KEY_INPUT_3)) 
 	{ 
 		stock[stockCount] = Weapon::Rapier;
-	}
-	if (KeyInput::GetKey(KEY_INPUT_4))
-	{
-		stock[stockCount] = Weapon::LargeSword;
-	}
-	if (KeyInput::GetKey(KEY_INPUT_P))
-	{
-		playerAnim++;
-		if (playerAnim > 49)playerAnim = 0;
 	}
 #endif // DEBUG
 
@@ -119,12 +112,14 @@ void Player::Update()
 	Animation();
 
 	normalWeapon->Update(this);
-	
+
 	steal->Update(this);
 
 	largeSword->Update(this);
 
 	dagger->Update(this);
+
+	rapier->Update(this);
 
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
@@ -198,6 +193,7 @@ void Player::Draw() const
 
 	dagger->Draw();
 
+	rapier->Draw();
 }
 
 void Player::Hit(CharaBase* chara)
@@ -405,6 +401,11 @@ void Player::Attack()
 				attackCoolTime = PLAYER_DAGGER_COOLTIME;
 				dagger->Attack(this);
 			}
+			else if (stock[stockCount] == Weapon::Rapier)
+			{
+				attackCoolTime = PLAYER_RAPIER_COOLTIME;
+				rapier->Attack(this);
+			}
 		}
 	}
 
@@ -573,6 +574,10 @@ void Player::Animation()
 			{
 				playerAnim = 45;
 			}
+			if (actionState == Action::WeaponAttack && stock[stockCount] == Weapon::Rapier)
+			{
+				playerAnim = 44;
+			}
 		}
 
 
@@ -587,6 +592,12 @@ void Player::Animation()
 				//攻撃アニメーションが終わったらisAttackをfalseにする
 				isAttack = false;
 			}
+		}
+
+		//かり
+		if (actionState == Action::WeaponAttack && stock[stockCount] == Weapon::Rapier)
+		{
+			playerAnim = 44;
 		}
 	}
 
