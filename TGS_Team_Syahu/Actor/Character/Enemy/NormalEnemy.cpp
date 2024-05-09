@@ -1,5 +1,5 @@
 #include "NormalEnemy.h"
-#include "../../Scene/GameMain/GameMainScene.h"
+#include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 
 #define MAX_WAITING_TIME 120

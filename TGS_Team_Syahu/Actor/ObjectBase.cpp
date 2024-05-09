@@ -1,7 +1,7 @@
 #include"ObjectBase.h"
-#include"Box/BoxCollision.h"
-#include"Sphere/SphereCollision.h"
-#include"Line/LineCollision.h"
+#include"../Collision/Box/BoxCollision.h"
+#include"../Collision/Sphere/SphereCollision.h"
+#include"../Collision/Line/LineCollision.h"
 
 ObjectBase::ObjectBase()
 {

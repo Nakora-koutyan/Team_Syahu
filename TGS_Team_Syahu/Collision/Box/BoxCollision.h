@@ -1,5 +1,5 @@
 #pragma once
-#include"../ObjectBase.h"
+#include"../../Actor/ObjectBase.h"
 #include"../../Utility/common.h"
 
 class BoxCollision :public ObjectBase

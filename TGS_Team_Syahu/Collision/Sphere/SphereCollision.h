@@ -1,5 +1,5 @@
 #pragma once
-#include "../ObjectBase.h"
+#include"../../Actor/ObjectBase.h"
 
 class SphereCollision :public ObjectBase
 {

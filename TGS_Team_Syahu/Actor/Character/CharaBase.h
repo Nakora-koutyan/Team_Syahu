@@ -1,5 +1,5 @@
 #pragma once
-#include"../Collision/Box/BoxCollision.h"
+#include"../../Collision/Box/BoxCollision.h"
 
 #define NEED_STICK_RATIO	0.2f		//スティックの傾き割合
 #define GRAVITY				0.8f		//重力

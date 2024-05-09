@@ -1,6 +1,6 @@
 #include"UI.h"
 #include"DxLib.h"
-#include"../Actor/Player/Player.h"
+#include"../Actor/Character/Player/Player.h"
 
 UI::UI()
 {

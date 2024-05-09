@@ -1,5 +1,5 @@
 #include"Player.h"
-#include"../Camera/Camera.h"
+#include"../../Camera/Camera.h"
 
 #define DEBUG
 
@@ -299,6 +299,7 @@ void Player::Movement()
 	//停止
 	else
 	{
+		//空中で動きながら攻撃しているなら移動量を少しずつ減らす
 		if (isAir && isAttack && move.x != 0)
 		{
 			if (direction.x < 0)
@@ -310,7 +311,13 @@ void Player::Movement()
 				move.x += -0.05f;
 			}
 		}
-		else if (!isKnockBack && !isAttack)
+		//レイピアの攻撃は例外で動けるようにするためにこの条件式を設ける
+		else if ((stock[stockCount] == Weapon::Rapier && isEquipment && isAttack))
+		{
+			//アイドル状態にしないための条件式なので何も書かなくても問題ない
+		}
+		//ノックバックしていないならアイドル状態
+		else if (!isKnockBack)
 		{
 			move.x = 0.f;
 			isMove = false;

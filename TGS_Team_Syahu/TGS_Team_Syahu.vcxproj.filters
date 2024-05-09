@@ -60,13 +60,13 @@
     <ClCompile Include="Collision\Box\BoxCollision.cpp">
       <Filter>ソース ファイル\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Collision\ObjectBase.cpp">
+    <ClCompile Include="Actor\ObjectBase.cpp">
       <Filter>ソース ファイル\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\CharaBase.cpp">
+    <ClCompile Include="Actor\Character\CharaBase.cpp">
       <Filter>ソース ファイル\Actor\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Player\Player.cpp">
+    <ClCompile Include="Actor\Character\Player\Player.cpp">
       <Filter>ソース ファイル\Actor\Character</Filter>
     </ClCompile>
     <ClCompile Include="Actor\Camera\Camera.cpp">
@@ -84,43 +84,43 @@
     <ClCompile Include="SceneManager\SceneManager.cpp">
       <Filter>ソース ファイル\SceneManager</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Enemy\NormalEnemy.cpp">
+    <ClCompile Include="Actor\Character\Enemy\NormalEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Player\Weapon\NormalWeapon.cpp">
+    <ClCompile Include="Actor\Character\Player\Weapon\NormalWeapon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Collision\Sphere\SphereCollision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Player\Weapon\Steal.cpp">
+    <ClCompile Include="Actor\Character\Player\Weapon\Steal.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Collision\Line\LineCollision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Player\Weapon\LargeSword.cpp">
+    <ClCompile Include="Actor\Character\Player\Weapon\LargeSword.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Enemy\EnemyBase.cpp">
+    <ClCompile Include="Actor\Character\Enemy\EnemyBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Map\StageBlock.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Enemy\DaggerEnemy.cpp">
+    <ClCompile Include="Actor\Character\Enemy\DaggerEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Enemy\LargeSwordEnemy.cpp">
+    <ClCompile Include="Actor\Character\Enemy\LargeSwordEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="UI\UI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Player\Weapon\Dagger.cpp">
+    <ClCompile Include="Actor\Character\Player\Weapon\Dagger.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Player\Weapon\Rapier.cpp">
+    <ClCompile Include="Actor\Character\Player\Weapon\Rapier.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager\ResourceManager.cpp">
@@ -131,16 +131,16 @@
     <ClInclude Include="Collision\Box\BoxCollision.h">
       <Filter>ヘッダー ファイル\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Collision\ObjectBase.h">
+    <ClInclude Include="Actor\ObjectBase.h">
       <Filter>ヘッダー ファイル\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Camera\Camera.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\CharaBase.h">
+    <ClInclude Include="Actor\Character\CharaBase.h">
       <Filter>ヘッダー ファイル\Actor\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Player\Player.h">
+    <ClInclude Include="Actor\Character\Player\Player.h">
       <Filter>ヘッダー ファイル\Actor\Character</Filter>
     </ClInclude>
     <ClInclude Include="InputControl\Key\KeyInput.h">
@@ -167,43 +167,43 @@
     <ClInclude Include="Utility\Area.h">
       <Filter>ヘッダー ファイル\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Enemy\NormalEnemy.h">
+    <ClInclude Include="Actor\Character\Enemy\NormalEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Player\Weapon\NormalWeapon.h">
+    <ClInclude Include="Actor\Character\Player\Weapon\NormalWeapon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Collision\Sphere\SphereCollision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Player\Weapon\Steal.h">
+    <ClInclude Include="Actor\Character\Player\Weapon\Steal.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Collision\Line\LineCollision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Enemy\EnemyBase.h">
+    <ClInclude Include="Actor\Character\Enemy\EnemyBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Player\Weapon\LargeSword.h">
+    <ClInclude Include="Actor\Character\Player\Weapon\LargeSword.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Map\StageBlock.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Enemy\DaggerEnemy.h">
+    <ClInclude Include="Actor\Character\Enemy\DaggerEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Enemy\LargeSwordEnemy.h">
+    <ClInclude Include="Actor\Character\Enemy\LargeSwordEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="UI\UI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Player\Weapon\Dagger.h">
+    <ClInclude Include="Actor\Character\Player\Weapon\Dagger.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Player\Weapon\Rapier.h">
+    <ClInclude Include="Actor\Character\Player\Weapon\Rapier.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager\ResourceManager.h">

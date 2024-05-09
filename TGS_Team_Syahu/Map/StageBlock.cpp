@@ -1,6 +1,6 @@
 #include "StageBlock.h"
 #include "../Scene/GameMain/GameMainScene.h"
-#include "../Actor/Player/Player.h"
+#include "../Actor/Character/Player/Player.h"
 #include "../Actor/Camera/Camera.h"
 
 StageBlock::StageBlock() {

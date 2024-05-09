@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../Collision/Line/LineCollision.h"
+#include "../../../../Collision/Line/LineCollision.h"
 
 #define RAPIER_ATTACK_TIME				FPS * 0.3		//レイピア攻撃の時間
 #define RAPIER_MOVE						10.5f			//レイピアの移動量/f

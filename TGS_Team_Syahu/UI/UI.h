@@ -2,7 +2,7 @@
 #include<map>
 #include<string>
 #include"../Utility/Vector2D.h"
-#include"../Actor/CharaBase.h"	
+#include"../Actor/Character/CharaBase.h"	
 
 class Player;
 
