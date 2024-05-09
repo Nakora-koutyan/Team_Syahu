@@ -1,5 +1,5 @@
 #pragma once
-#include"../../../Collision/Line/LineCollision.h"
+#include"../../../../Collision/Line/LineCollision.h"
 
 #define LARGESWORD_ATTACK_TIME	FPS * 0.3		//大剣攻撃の時間
 #define LARGESWORD_ANGLE		5.5f			//大剣の振る角度/f

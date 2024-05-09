@@ -1,6 +1,6 @@
 #include"LargeSword.h"
 #include"../../Player/Player.h"
-#include"../../Camera/Camera.h"
+#include"../../../Camera/Camera.h"
 
 LargeSword::LargeSword()
 {

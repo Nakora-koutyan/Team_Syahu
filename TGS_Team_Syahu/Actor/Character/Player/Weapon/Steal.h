@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../Collision/Line/LineCollision.h"
+#include"../../../../Collision/Line/LineCollision.h"
 #include"../../CharaBase.h"
 
 #define STEAL_ATTACK_TIME	FPS * 0.2		//奪う攻撃の時間
