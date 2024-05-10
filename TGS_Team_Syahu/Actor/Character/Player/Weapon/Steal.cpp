@@ -112,23 +112,29 @@ void Steal::Attack(const Player* player)
 	}
 }
 
-void Steal::Hit(CharaBase* enemy, Player* player)
+void Steal::Hit(ObjectBase* object, const float damage)
 {
+	CharaBase* enemy = static_cast<CharaBase*>(object);
+
 	if (isShow)
 	{
-		if (enemy->GetIsShow() && !enemy->GetIsHit())
+		if (isShow)
 		{
-			enemy->SetHp(enemy->GetHp() - player->GetDamage());
-			enemy->SetIsHit(true);
-
-			//能力の種類が空ではないなら
-			if (enemy->GetWeaponType() != Weapon::Empty)
+			if (enemy->GetIsShow() && !enemy->GetIsHit())
 			{
-				//敵の能力を奪う
-				keepType = enemy->GetWeaponType();
-				//敵は無能力になる
-				//enemy->SetWeaponType(Weapon::Empty);
+				enemy->SetHp(enemy->GetHp() - damage);
+				enemy->SetIsHit(true);
+
+				//能力の種類が空ではないなら
+				if (enemy->GetWeaponType() != Weapon::Empty)
+				{
+					//敵の能力を奪う
+					keepType = enemy->GetWeaponType();
+					//敵は無能力になる
+					//enemy->SetWeaponType(Weapon::Empty);
+				}
 			}
 		}
 	}
+
 }

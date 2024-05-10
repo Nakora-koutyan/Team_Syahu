@@ -108,7 +108,7 @@ void GameMainScene::HitCheck()
 		//雑魚敵と投げるが当たったら
 		if (player->GetNormalWeapon()->CollisionCheck(enemy))
 		{
-			player->GetNormalWeapon()->Hit(enemy, player);
+			player->GetNormalWeapon()->Hit(enemy, player->GetDamage());
 			enemy->SetIsKnockBack(true);
 		}
 
@@ -124,21 +124,21 @@ void GameMainScene::HitCheck()
 		//雑魚敵と大剣が当たったら
 		if (player->GetLargeSword()->CollisionCheck(enemy))
 		{
-			player->GetLargeSword()->Hit(enemy, player);
+			player->GetLargeSword()->Hit(enemy, player->GetDamage());
 			enemy->SetIsKnockBack(true);
 		}
 
 		//雑魚敵と短剣が当たったら
 		if (player->GetDagger()->CollisionCheck(enemy))
 		{
-			player->GetDagger()->Hit(enemy, player);
+			player->GetDagger()->Hit(enemy, player->GetDamage());
 			enemy->SetIsKnockBack(true);
 		}
 
 		//雑魚敵とレイピアが当たったら
 		if (player->GetRapier()->CollisionCheck(enemy))
 		{
-			player->GetRapier()->Hit(enemy, player);
+			player->GetRapier()->Hit(enemy, player->GetDamage());
 			enemy->SetIsKnockBack(true);
 		}
 

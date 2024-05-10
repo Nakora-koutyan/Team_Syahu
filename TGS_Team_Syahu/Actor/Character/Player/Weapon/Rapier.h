@@ -40,8 +40,8 @@ public:
 	//攻撃
 	void Attack(const Player* player);
 
-	//当たった時の処理
-	void Hit(CharaBase* enemy, const Player* player);
+	//ヒット処理
+	void Hit(ObjectBase* object, const float damage)override;
 
 };
 

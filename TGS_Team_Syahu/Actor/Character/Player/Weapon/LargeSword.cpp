@@ -97,13 +97,15 @@ void LargeSword::Attack(const Player* player)
 	directionVector.y = -100.f;
 }
 
-void LargeSword::Hit(CharaBase* enemy, const Player* player)
+void LargeSword::Hit(ObjectBase* object, const float damage)
 {
+	CharaBase* enemy = static_cast<CharaBase*>(object);
+
 	if (isShow)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + LARGESWORD_DAMAGE));
+			enemy->SetHp(enemy->GetHp() - (damage + LARGESWORD_DAMAGE));
 			enemy->SetIsHit(true);
 		}
 	}

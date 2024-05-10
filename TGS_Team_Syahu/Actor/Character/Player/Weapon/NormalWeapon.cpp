@@ -97,13 +97,15 @@ void NormalWeapon::Attack(const Player* player, const float weight, const float 
 	weaponDamage = damage;
 }
 
-void NormalWeapon::Hit(CharaBase* enemy, const Player* player)
+void NormalWeapon::Hit(ObjectBase* object, const float damage)
 {
+	CharaBase* enemy = static_cast<CharaBase*>(object);
+
 	if (isShow)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + weaponDamage));
+			enemy->SetHp(enemy->GetHp() - (damage + weaponDamage));
 			enemy->SetIsHit(true);
 
 			isShow = false;

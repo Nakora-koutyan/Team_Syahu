@@ -97,13 +97,15 @@ void Dagger::Attack(const Player* player)
 	directionVector.y = -40.f;
 }
 
-void Dagger::Hit(CharaBase* enemy, const Player* player)
+void Dagger::Hit(ObjectBase* object, const float damage)
 {
+	CharaBase* enemy = static_cast<CharaBase*>(object);
+
 	if (isShow)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + DAGGER_DAMAGE));
+			enemy->SetHp(enemy->GetHp() - (damage + DAGGER_DAMAGE));
 			enemy->SetIsHit(true);
 		}
 	}
