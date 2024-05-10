@@ -54,14 +54,6 @@ void LargeSwordEnemy::Initialize()
 	//自身の持つ武器
 	weaponType = Weapon::LargeSword;	//大剣
 
-	//攻撃状態に入る範囲
-	attackRange[0] = { GetCenterLocation() };
-	attackRange[1] = { GetCenterLocation() };
-
-	//プレイヤーに攻撃を仕掛ける範囲
-	attackCenser[0] = { GetCenterLocation() };
-	attackCenser[1] = { GetCenterLocation() };
-
 	//プレイヤーを見つけた際のマーク
 	findMark = LoadGraph("Resource/Images/Exclamation.png");
 	angryMark = LoadGraph("Resource/images/Angry.png");
@@ -71,6 +63,18 @@ void LargeSwordEnemy::Initialize()
 
 	//体力
 	hp = 100;
+
+	//攻撃状態に入る範囲
+	attackRange[0].x = GetMinLocation().x - 250.f;
+	attackRange[0].y = GetCenterLocation().y;
+	attackRange[1].x = GetMaxLocation().x + 250.f;
+	attackRange[1].y = GetCenterLocation().y;
+
+	//プレイヤーに攻撃を仕掛ける範囲
+	attackCenser[0].x = GetMinLocation().x - 270.f;
+	attackCenser[0].y = GetCenterLocation().y;
+	attackCenser[1].x = GetMaxLocation().x + 270.f;
+	attackCenser[1].y = GetCenterLocation().y;
 
 	/*　状態　*/
 	//表示するか?
@@ -98,9 +102,6 @@ void LargeSwordEnemy::Update(Player* player)
 	DamageInterval(int(FPS * 0.5));
 	KnockBack(FPS * 0.5);
 
-	//エネミーの攻撃範囲
-	AttackCenser();
-	
 	//状態遷移
 	switch (enemyStatus)
 	{
@@ -170,26 +171,6 @@ void LargeSwordEnemy::Draw() const
 			DrawGraphF(screenLocation.x - 25, screenLocation.y - 30, markStatus, TRUE);
 		}
 	}
-}
-
-//徘徊状態から警戒状態に入る範囲
-void LargeSwordEnemy::AttackRange()
-{
-	attackRange[0].x = GetMinLocation().x - 250.f;
-	attackRange[0].y = GetCenterLocation().y;
-
-	attackRange[1].x = GetMaxLocation().x + 250.f;
-	attackRange[1].y = GetCenterLocation().y;
-}
-
-//プレイヤーに攻撃を仕掛ける範囲
-void LargeSwordEnemy::AttackCenser()
-{
-	attackCenser[0].x = GetMinLocation().x - 270.f;
-	attackCenser[0].y = GetCenterLocation().y;
-
-	attackCenser[1].x = GetMaxLocation().x + 270.f;
-	attackCenser[1].y = GetCenterLocation().y;
 }
 
 //エネミーの徘徊処理
