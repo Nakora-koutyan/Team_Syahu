@@ -11,11 +11,7 @@ enum class CollisionType
 	Line			//線
 };
 
-class BoxCollision;
-class SphereCollision;
-class LineCollision;
-
-class CollisionBase
+class ObjectBase
 {
 protected:
 	Vector2D location;					//ワールド座標
@@ -24,13 +20,13 @@ protected:
 	CollisionType collisionType;		//コリジョンの種類
 public:
 	//コンストラクタ
-	CollisionBase();
+	ObjectBase();
 
 	//デストラクタ
-	~CollisionBase();
+	~ObjectBase();
 
 	//当たり判定
-	bool CollisionCheck(const CollisionBase* collision)const;
+	bool CollisionCheck(const ObjectBase* collision)const;
 
 	//四角と円の当たり判定に必要な斜辺の作成
 	float MakeHypotenuse(const float x1, const float y1, const float x2, const float y2)const;
@@ -59,13 +55,13 @@ public:
 	
 protected:
 	//四角の当たり判定
-	virtual bool HitBox(const BoxCollision* collision)const = 0;
+	virtual bool HitBox(const ObjectBase* object)const = 0;
 
 	//円の当たり判定
-	virtual bool HitSphere(const SphereCollision* collision)const = 0;
+	virtual bool HitSphere(const ObjectBase* object)const = 0;
 
 	//線の当たり判定
-	virtual bool HitLine(const LineCollision* collision)const = 0;
+	virtual bool HitLine(const ObjectBase* object)const = 0;
 
 };
 

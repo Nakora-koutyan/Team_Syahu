@@ -1,9 +1,9 @@
 #pragma once
 #include "../SceneBase.h"
-#include"../../Actor/Player/Player.h"
+#include"../../Actor/Character/Player/Player.h"
 #include"../../Actor/Camera/Camera.h"
-#include"../../Actor/Enemy/NormalEnemy.h"
-#include"../../Actor/Enemy/LargeSwordEnemy.h"
+#include"../../Actor/Character/Enemy/NormalEnemy.h"
+#include"../../Actor/Character//Enemy/LargeSwordEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../../UI/UI.h"
 
@@ -29,6 +29,12 @@ public:
 
     //デストラクタ
     ~GameMainScene();
+
+    //初期化処理
+    void Initialize()override;
+
+    //終了処理
+    void Finalize()override;
 
     //更新
     SceneBase* Update()override;

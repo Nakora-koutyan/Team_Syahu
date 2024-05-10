@@ -1,10 +1,10 @@
-#include "Dagger.h"
+#include"LargeSword.h"
 #include"../../Player/Player.h"
-#include"../../Camera/Camera.h"
+#include"../../../Camera/Camera.h"
 
-Dagger::Dagger()
+LargeSword::LargeSword()
 {
-	directionVector.x = DAGGER_LENGTH;
+	directionVector.x = LARGRSWORD_LENGTH;
 	directionVector.y = 0.f;
 
 	direction = 0;
@@ -16,37 +16,37 @@ Dagger::Dagger()
 	isShow = false;
 }
 
-Dagger::~Dagger()
+LargeSword::~LargeSword()
 {
 
 }
 
-void Dagger::Update(CharaBase* chara)
+void LargeSword::Update(CharaBase* chara)
 {
 	if (isShow)
 	{
 		framCount++;
 		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
 		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
-
-		//右に出す
-		if (direction > 0)
-		{
-			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
 		}
-		//左に出す
-		else
-		{
-			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
-		}
-	}
 	else
 	{
 		location = chara->GetCenterLocation();
 	}
 
+	//右に出す
+	if (direction > 0)
+	{
+		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+	}
+	//左に出す
+	else
+	{
+		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+	}
+
 	//攻撃時間を超えたら
-	if (framCount > DAGGER_ATTACK_TIME || chara->GetIsKnockBack())
+	if (framCount > LARGESWORD_ATTACK_TIME || chara->GetIsKnockBack())
 	{
 		framCount = 0;
 		direction = 0;
@@ -59,14 +59,14 @@ void Dagger::Update(CharaBase* chara)
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
-void Dagger::Draw() const
+void LargeSword::Draw() const
 {
 	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
 		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
 		0x000000, 1);
 }
 
-void Dagger::Attack(const Player* player)
+void LargeSword::Attack(const Player* player)
 {
 	isShow = true;
 
@@ -80,26 +80,26 @@ void Dagger::Attack(const Player* player)
 	//右に出す
 	if (direction > 0)
 	{
-		directionVector.x = DAGGER_LENGTH;
-		angle = DAGGER_ANGLE;
+		directionVector.x = LARGRSWORD_LENGTH;
+		angle = LARGESWORD_ANGLE;
 	}
 	//左に出す
 	else
 	{
-		directionVector.x = -DAGGER_LENGTH;
-		angle = -DAGGER_ANGLE;
+		directionVector.x = -LARGRSWORD_LENGTH;
+		angle = -LARGESWORD_ANGLE;
 	}
 
-	directionVector.y = -40.f;
+	directionVector.y = -100.f;
 }
 
-void Dagger::Hit(CharaBase* enemy, const Player* player)
+void LargeSword::Hit(CharaBase* enemy, const Player* player)
 {
 	if (isShow)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + DAGGER_DAMAGE));
+			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + LARGESWORD_DAMAGE));
 			enemy->SetIsHit(true);
 		}
 	}

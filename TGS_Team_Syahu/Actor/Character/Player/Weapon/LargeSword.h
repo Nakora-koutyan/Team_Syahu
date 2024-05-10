@@ -1,16 +1,16 @@
 #pragma once
-#include"../../../Collision/Line/LineCollision.h"
+#include"../../../../Collision/Line/LineCollision.h"
 
-#define DAGGER_ATTACK_TIME	FPS * 0.2		//短剣攻撃の時間
-#define DAGGER_ANGLE		5.5f			//短剣の振る角度/f
-#define DAGGER_LENGTH		75.f			//短剣の長さ
-#define DAGGER_WEIGHT		0.05f			//ダガーの重さ
-#define DAGGER_DAMAGE		1.5f			//ダガーのダメージ
+#define LARGESWORD_ATTACK_TIME	FPS * 0.3		//大剣攻撃の時間
+#define LARGESWORD_ANGLE		5.5f			//大剣の振る角度/f
+#define LARGRSWORD_LENGTH		100.f			//大剣の長さ
+#define LARGESWORD_WEIGHT		0.75f			//大剣の重さ
+#define LARGESWORD_DAMAGE		5.f				//大剣のダメージ
 
 class CharaBase;
 class Player;
 
-class Dagger :public LineCollision
+class LargeSword :public LineCollision
 {
 private:
 	short direction;		//方向
@@ -23,10 +23,10 @@ private:
 
 public:
 	//コンストラクタ
-	Dagger();
+	LargeSword();
 
 	//デストラクタ
-	~Dagger();
+	~LargeSword();
 
 	//更新
 	void Update(CharaBase* chara);

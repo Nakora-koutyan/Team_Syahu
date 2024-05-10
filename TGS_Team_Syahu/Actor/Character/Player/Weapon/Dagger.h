@@ -1,16 +1,16 @@
 #pragma once
-#include "../../../Collision/Line/LineCollision.h"
+#include"../../../../Collision/Line/LineCollision.h"
 
-#define RAPIER_ATTACK_TIME				FPS * 0.3		//レイピア攻撃の時間
-#define RAPIER_MOVE						10.5f			//レイピアの移動量/f
-#define RAPIER_LENGTH					90.f			//レイピアの長さ
-#define RAPIER_WEIGHT					0.35f			//レイピアの重さ
-#define RAPIER_DAMAGE					3.f				//レイピアのダメージ
+#define DAGGER_ATTACK_TIME	FPS * 0.2		//短剣攻撃の時間
+#define DAGGER_ANGLE		5.5f			//短剣の振る角度/f
+#define DAGGER_LENGTH		75.f			//短剣の長さ
+#define DAGGER_WEIGHT		0.05f			//ダガーの重さ
+#define DAGGER_DAMAGE		1.5f			//ダガーのダメージ
 
 class CharaBase;
 class Player;
 
-class Rapier :public LineCollision
+class Dagger :public LineCollision
 {
 private:
 	short direction;		//方向
@@ -23,10 +23,10 @@ private:
 
 public:
 	//コンストラクタ
-	Rapier();
+	Dagger();
 
 	//デストラクタ
-	~Rapier();
+	~Dagger();
 
 	//更新
 	void Update(CharaBase* chara);

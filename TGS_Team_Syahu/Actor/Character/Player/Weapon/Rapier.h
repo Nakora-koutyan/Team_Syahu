@@ -1,16 +1,16 @@
 #pragma once
-#include"../../../Collision/Line/LineCollision.h"
+#include "../../../../Collision/Line/LineCollision.h"
 
-#define LARGESWORD_ATTACK_TIME	FPS * 0.3		//大剣攻撃の時間
-#define LARGESWORD_ANGLE		5.5f			//大剣の振る角度/f
-#define LARGRSWORD_LENGTH		100.f			//大剣の長さ
-#define LARGESWORD_WEIGHT		0.75f			//大剣の重さ
-#define LARGESWORD_DAMAGE		5.f				//大剣のダメージ
+#define RAPIER_ATTACK_TIME				FPS * 0.3		//レイピア攻撃の時間
+#define RAPIER_MOVE						10.5f			//レイピアの移動量/f
+#define RAPIER_LENGTH					90.f			//レイピアの長さ
+#define RAPIER_WEIGHT					0.35f			//レイピアの重さ
+#define RAPIER_DAMAGE					3.f				//レイピアのダメージ
 
 class CharaBase;
 class Player;
 
-class LargeSword :public LineCollision
+class Rapier :public LineCollision
 {
 private:
 	short direction;		//方向
@@ -23,10 +23,10 @@ private:
 
 public:
 	//コンストラクタ
-	LargeSword();
+	Rapier();
 
 	//デストラクタ
-	~LargeSword();
+	~Rapier();
 
 	//更新
 	void Update(CharaBase* chara);

@@ -1,21 +1,31 @@
 #pragma once
 #include "../Scene/SceneBase.h"
+#include"../Utility/common.h"
 
-class SceenManager :public SceneBase
+class SceneManager
 {
 private:
-    //現在のシーン
-    SceneBase* now_sceen;
+    SceneBase* now_sceen;       //現在のシーン
+
+    bool initFlg;               //初期化した？
+
 public:
     //コンストラクタ
-    SceenManager(SceneBase* scene) :now_sceen(scene) {};
+    SceneManager() :now_sceen(nullptr), initFlg(false) {};
 
     //デストラクタ
-    ~SceenManager() { delete now_sceen; }
+    ~SceneManager() { delete now_sceen; }
 
     //更新
-    SceneBase* Update()override;
+    void Update();
 
     //描画
-    void Draw()const override;
+    void Draw()const;
+
+    //初期化処理
+    void Initialize();
+
+    //終了処理
+    void Finalize();
+
 };

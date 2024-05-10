@@ -1,7 +1,7 @@
 #pragma once
-#include "../CollisionBase.h"
+#include"../../Actor/ObjectBase.h"
 
-class SphereCollision :public CollisionBase
+class SphereCollision :public ObjectBase
 {
 protected:
     float radius;           //半径
@@ -22,13 +22,13 @@ public:
 
 public:
     //円の当たり判定
-    bool HitSphere(const SphereCollision* collision)const override;
+    bool HitSphere(const ObjectBase* object)const override;
 
     //四角の当たり判定
-    bool HitBox(const BoxCollision* collision)const override;
+    bool HitBox(const ObjectBase* object)const override;
 
     //線の当たり判定
-    bool HitLine(const LineCollision* collision)const override;
+    bool HitLine(const ObjectBase* object)const override;
 
 };
 
