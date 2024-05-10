@@ -124,6 +124,7 @@ void Steal::Hit(ObjectBase* object, const float damage)
 			{
 				enemy->SetHp(enemy->GetHp() - damage);
 				enemy->SetIsHit(true);
+				enemy->SetIsKnockBack(true);
 
 				//能力の種類が空ではないなら
 				if (enemy->GetWeaponType() != Weapon::Empty)

@@ -107,6 +107,7 @@ void LargeSword::Hit(ObjectBase* object, const float damage)
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + LARGESWORD_DAMAGE));
 			enemy->SetIsHit(true);
+			enemy->SetIsKnockBack(true);
 		}
 	}
 }

@@ -92,6 +92,7 @@ void Rapier::Hit(ObjectBase* object, const float damage)
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + RAPIER_DAMAGE));
 			enemy->SetIsHit(true);
+			enemy->SetIsKnockBack(true);
 		}
 	}
 }
