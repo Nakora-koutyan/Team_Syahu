@@ -73,9 +73,6 @@
     <ClInclude Include="Utility\common.h" />
     <ClInclude Include="Utility\Vector2D.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

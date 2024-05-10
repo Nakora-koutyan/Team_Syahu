@@ -37,12 +37,6 @@ protected:
 	//パトロール関数
 	void EnemyPatrol(Player* player) override;
 
-	//徘徊状態から警戒状態に入る範囲
-	void AttackRange()override;
-
-	//攻撃に入る範囲
-	void AttackCenser() override;
-
 	//プレイヤーに急接近する
 	void SuddenApproachToPlayer(Player* player);
 

@@ -73,11 +73,6 @@ protected:
 	//パトロール関数
 	virtual void EnemyPatrol(Player* player) = 0;
 
-	//攻撃準備範囲
-	virtual void AttackCenser() = 0;
-
-	virtual void AttackRange() = 0;
-
 	//攻撃準備
 	virtual void AttackStandBy(Player* player) = 0;
 

@@ -19,6 +19,10 @@ private:
 	bool animCountDown;	//画像インターバルのカウントダウン
 	bool animTurnFlg;	//アニメーションを左右反転する？(yes：true,no：false)
 
+	int attackTime;		//攻撃時間
+
+	bool once;
+
 public:
 	//コンストラクタ
 	NormalEnemy();
@@ -41,12 +45,6 @@ private:
 
 	//パトロール関数
 	void EnemyPatrol(Player* player) override;
-
-	//徘徊状態から警戒状態に入る範囲
-	void AttackRange()override;
-
-	//攻撃を行う範囲
-	void AttackCenser() override;
 
 	//追跡を行うか？
 	void AttackStandBy(Player* player) override;

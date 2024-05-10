@@ -103,15 +103,6 @@ void GameMainScene::HitCheck()
 		if (player->CollisionCheck(enemy))
 		{
 			player->Hit(enemy, enemy->GetDamage());
-			enemy->SetIsKnockBack(true);
-			if (enemy->GetCenterLocation().x < player->GetCenterLocation().x)
-			{
-				enemy->SetMove({ -2.f,0.f });
-			}
-			else
-			{
-				enemy->SetMove({ 2.f,0.f });
-			}
 		}
 
 		//雑魚敵と投げるが当たったら
