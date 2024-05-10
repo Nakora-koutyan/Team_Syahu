@@ -71,8 +71,8 @@ void NormalEnemy::Update(Player* player)
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
-	DamageInterval(int(FPS * 0.5));
-	KnockBack(FPS * 1.5f);
+	DamageInterval(FPS * 0.5);
+	KnockBack(this, FPS * 1.5f, NORMAL_ENEMY_KNOCKBACK);
 
 	//徘徊状態から警戒状態に入る範囲
 	AttackRange();

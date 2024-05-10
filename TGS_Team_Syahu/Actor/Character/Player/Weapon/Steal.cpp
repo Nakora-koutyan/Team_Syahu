@@ -19,29 +19,8 @@ Steal::~Steal()
 
 }
 
-void Steal::Update(Player* player)
+void Steal::Update()
 {
-	if (isShow)
-	{
-		framCount++;
-	}
-	else
-	{
-		location = player->GetCenterLocation();
-		sideClaw[0].SetLocation(player->GetCenterLocation());
-		sideClaw[1].SetLocation(player->GetCenterLocation());
-
-	}
-
-	//攻撃時間を超えたら
-	if (framCount > STEAL_ATTACK_TIME || player->GetIsKnockBack())
-	{
-		framCount = 0;
-		direction = 0;
-		isShow = false;
-		player->SetIsAttack(false);
-	}
-
 	screenLocation = Camera::ConvertScreenPosition(location);
 	sideClaw[0].SetScreenLocation(Camera::ConvertScreenPosition(sideClaw[0].GetLocation()));
 	sideClaw[1].SetScreenLocation(Camera::ConvertScreenPosition(sideClaw[1].GetLocation()));
@@ -62,6 +41,30 @@ void Steal::Draw() const
 			sideClaw[1].GetScreenLocation().x + sideClaw[1].GetDirectionVector().x,
 			sideClaw[1].GetScreenLocation().y + sideClaw[1].GetDirectionVector().y,
 			0x00ff00, 1);
+	}
+}
+
+void Steal::Appearance(Player* player)
+{
+	if (isShow)
+	{
+		framCount++;
+	}
+	else
+	{
+		location = player->GetCenterLocation();
+		sideClaw[0].SetLocation(player->GetCenterLocation());
+		sideClaw[1].SetLocation(player->GetCenterLocation());
+
+	}
+
+	//攻撃時間を超えたら
+	if (framCount > STEAL_ATTACK_TIME || player->GetIsKnockBack())
+	{
+		framCount = 0;
+		direction = 0;
+		isShow = false;
+		player->SetIsAttack(false);
 	}
 }
 

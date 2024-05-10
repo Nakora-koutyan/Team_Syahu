@@ -21,7 +21,19 @@ Dagger::~Dagger()
 
 }
 
-void Dagger::Update(CharaBase* chara)
+void Dagger::Update()
+{
+	screenLocation = Camera::ConvertScreenPosition(location);
+}
+
+void Dagger::Draw() const
+{
+	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
+		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
+		0x000000, 1);
+}
+
+void Dagger::Appearance(CharaBase* chara)
 {
 	if (isShow)
 	{
@@ -56,14 +68,6 @@ void Dagger::Update(CharaBase* chara)
 	}
 
 	location.y = chara->GetCenterLocation().y;
-	screenLocation = Camera::ConvertScreenPosition(location);
-}
-
-void Dagger::Draw() const
-{
-	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
-		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
-		0x000000, 1);
 }
 
 void Dagger::Attack(const Player* player)

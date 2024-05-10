@@ -32,10 +32,13 @@ public:
 	~NormalWeapon();
 
 	//更新
-	void Update(Player* player);
+	void Update()override;
 
 	//描画
-	void Draw()const;
+	void Draw()const override;
+
+	//出現
+	void Appearance(Player* player);
 
 	//攻撃
 	void Attack(const Player* player, const float weight, const float damage);

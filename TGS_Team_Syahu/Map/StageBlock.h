@@ -13,10 +13,10 @@ public:
 	~StageBlock();
 
 	//更新
-	void Update();
+	void Update()override;
 
 	//描画
-	void Draw()const;
+	void Draw()const override;
 
 	//画像タイプ取得
 	int GetDrawType()

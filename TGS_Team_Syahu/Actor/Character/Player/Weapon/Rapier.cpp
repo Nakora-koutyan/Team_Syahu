@@ -21,7 +21,19 @@ Rapier::~Rapier()
 
 }
 
-void Rapier::Update(CharaBase* chara)
+void Rapier::Update()
+{
+	screenLocation = Camera::ConvertScreenPosition(location);
+}
+
+void Rapier::Draw() const
+{
+	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
+		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
+		0x000000, 1);
+}
+
+void Rapier::Appearance(CharaBase* chara)
 {
 	if (isShow)
 	{
@@ -56,14 +68,6 @@ void Rapier::Update(CharaBase* chara)
 	}
 
 	location.y = chara->GetCenterLocation().y;
-	screenLocation = Camera::ConvertScreenPosition(location);
-}
-
-void Rapier::Draw() const
-{
-	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
-		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
-		0x000000, 1);
 }
 
 void Rapier::Attack(const Player* player)

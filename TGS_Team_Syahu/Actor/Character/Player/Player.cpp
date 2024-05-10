@@ -3,7 +3,7 @@
 
 #define DEBUG
 
-Player::Player()
+Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger(nullptr),rapier(nullptr)
 {
 	location.x = 300.f;
 	location.y = GROUND_LINE;
@@ -19,11 +19,6 @@ Player::Player()
 		stock[i] = Weapon::Empty;
 		weaponFramCount[i] = PLAYER_WEAPON_TIME;
 	}
-	normalWeapon = new NormalWeapon();
-	steal = new Steal();
-	largeSword = new LargeSword();
-	dagger = new Dagger();
-	rapier = new Rapier();
 
 	stockCount = 0;
 	actionState = Action::None;
@@ -58,6 +53,20 @@ Player::Player()
 }
 
 Player::~Player()
+{
+
+}
+
+void Player::Initialize()
+{
+	normalWeapon = new NormalWeapon();
+	steal = new Steal();
+	largeSword = new LargeSword();
+	dagger = new Dagger();
+	rapier = new Rapier();
+}
+
+void Player::Finalize()
 {
 	delete normalWeapon;
 	delete steal;
@@ -101,7 +110,7 @@ void Player::Update()
 
 	DamageInterval(int(PLAYER_DAMAGE_INTERVAL));
 
-	KnockBack(PLAYER_KNOCKBACK_TIME);
+	KnockBack(this, PLAYER_KNOCKBACK_TIME, PLAYER_KNOCKBACK);
 
 	Movement();
 
@@ -111,15 +120,16 @@ void Player::Update()
 
 	Animation();
 
-	normalWeapon->Update(this);
-
-	steal->Update(this);
-
-	largeSword->Update(this);
-
-	dagger->Update(this);
-
-	rapier->Update(this);
+	normalWeapon->Update();
+	normalWeapon->Appearance(this);
+	steal->Update();
+	steal->Appearance(this);
+	largeSword->Update();
+	largeSword->Appearance(this);
+	dagger->Update();
+	dagger->Appearance(this);
+	rapier->Update();
+	rapier->Appearance(this);
 
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
@@ -194,27 +204,6 @@ void Player::Draw() const
 	dagger->Draw();
 
 	rapier->Draw();
-}
-
-void Player::Hit(CharaBase* chara)
-{
-	//すでに当たってないなら
-	if (!isHit)
-	{
-		isHit = true;
-
-		if (hp > 0)hp -= chara->GetDamage();
-		isKnockBack = true;
-
-		if (GetCenterLocation().x < chara->GetCenterLocation().x)
-		{
-			move.x = -PLAYER_KNOCKBACK;
-		}
-		else
-		{
-			move.x = PLAYER_KNOCKBACK;
-		}
-	}
 }
 
 void Player::Landing(const float height)
