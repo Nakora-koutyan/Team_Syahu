@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="EnemyBase" Collapsed="true">
+    <Position X="15" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAUAAEQgAYyIABAoAAMEBACAAEGIIBABAQECAkAA=</HashCode>
+      <FileName>Actor\Enemy\EnemyBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DaggerEnemy" Collapsed="true">
+    <Position X="15" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Actor\Enemy\DaggerEnemy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dagger" Collapsed="true">
+    <Position X="6" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAIIgAAAAIAAAAAIIAAAAAAAAAAAABQAAA=</HashCode>
+      <FileName>Actor\Player\Weapon\Dagger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormalEnemy" Collapsed="true">
+    <Position X="17.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAgAQyAAAAoAAAAAAEgAAAIoBAIAVEAAEAA=</HashCode>
+      <FileName>Actor\Enemy\NormalEnemy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormalWeapon" Collapsed="true">
+    <Position X="21.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAAAIIgCAAAICAAAAAIAAgAAAAAAAAABQABQ=</HashCode>
+      <FileName>Actor\Player\Weapon\NormalWeapon.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LineCollision" Collapsed="true">
+    <Position X="4.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAIAAAAAAAAAAABIAJgAAAAAAAgACAgCAAAAAAAAA=</HashCode>
+      <FileName>Collision\Line\LineCollision.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LargeSwordEnemy" Collapsed="true">
+    <Position X="12.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAgIQyABAAoAAAAAAEAACAIoBAIAUAgAEAA=</HashCode>
+      <FileName>Actor\Enemy\LargeSwordEnemy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StageBlock" Collapsed="true">
+    <Position X="10.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAQAAIoAAAAAAAAAAAgAAAAAQAAAAIAAAAAA=</HashCode>
+      <FileName>Map\StageBlock.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rapier" Collapsed="true">
+    <Position X="8.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAiAIIgAAAAIAAAAAAIAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Actor\Player\Weapon\Rapier.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceManager" Collapsed="true">
+    <Position X="24.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAjAAAAQIAAAQCEAEUEIAMAAAAAAAACAAIACA=</HashCode>
+      <FileName>ResourceManager\ResourceManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SphereCollision" Collapsed="true">
+    <Position X="21.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAACAAAAAEIBAAAAAAAAAAAAACAAAAAAAiAAAA=</HashCode>
+      <FileName>Collision\Sphere\SphereCollision.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Steal" Collapsed="true">
+    <Position X="1.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAIIgAACAIKAAAAAIBAAAAAAIFAgAAAAAA=</HashCode>
+      <FileName>Actor\Player\Weapon\Steal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LargeSword" Collapsed="true">
+    <Position X="3.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAIIgAAAAIAAgAAAIAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Actor\Player\Weapon\LargeSword.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UI" Collapsed="true">
+    <Position X="26" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAQAAAAAgABEghAAAAIAAACAAEAACAAABAAEAg=</HashCode>
+      <FileName>UI\UI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BoxCollision" Collapsed="true">
+    <Position X="15" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAgIIAAAAAAAAEABAIAAAEAAAAAAAKACAAAEAAAAQE=</HashCode>
+      <FileName>Collision\Box\BoxCollision.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CollisionBase" Collapsed="true">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIICACCIgAACAABAAAAAACAAAAAAGgAAAAAABAAAA=</HashCode>
+      <FileName>Collision\CollisionBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Camera" Collapsed="true">
+    <Position X="24.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQCAAAACAAAAgAAQAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Actor\Camera\Camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharaBase" Collapsed="true">
+    <Position X="16" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAiABIRgIogCkAHACIAIAAIDAAQIIAQBADgYAAAA=</HashCode>
+      <FileName>Actor\CharaBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player" Collapsed="true">
+    <Position X="19.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQBKEAAAAEAAgICzgIgAAQICIQABYAYCCAgAQAhcBA=</HashCode>
+      <FileName>Actor\Player\Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KeyInput" Collapsed="true">
+    <Position X="26" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQAAAAEAAgAAAAEAAAIAAQAIAQEAAgAAAAEAAAAQIg=</HashCode>
+      <FileName>InputControl\Key\KeyInput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PadInput" Collapsed="true">
+    <Position X="27.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gASgAAAEAAAAAAAMAAADAABAAEAAABAIAAAEAAACAIA=</HashCode>
+      <FileName>InputControl\Pad\PadInput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameMainScene" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQAAAAAAggAEgAAAAEAIABAAAEAAAABAAAAAQAAACY=</HashCode>
+      <FileName>Scene\GameMain\GameMainScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneBase" Collapsed="true">
+    <Position X="1.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scene\SceneBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceenManager" Collapsed="true">
+    <Position X="2.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAACA=</HashCode>
+      <FileName>SceneManager\SceneManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="MOUSE_INPUT" Collapsed="true">
+    <Position X="24.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>InputControl\Key\KeyInput.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Stick" Collapsed="true">
+    <Position X="26" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>InputControl\Pad\PadInput.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_Area" Collapsed="true">
+    <Position X="1.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\Area.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_Vector2D" Collapsed="true">
+    <Position X="6.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>Utility\Vector2D.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="Area" Collapsed="true">
+    <Position X="1.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\Area.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Vector2D" Collapsed="true">
+    <Position X="6.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\Vector2D.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="EnemyStatus" Collapsed="true">
+    <Position X="27.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAQAAAEAA=</HashCode>
+      <FileName>Actor\Enemy\EnemyBase.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CollisionType" Collapsed="true">
+    <Position X="26" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAYAAAAAAAIAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Collision\CollisionBase.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Weapon" Collapsed="true">
+    <Position X="24.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAIAAAAAAIAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Actor\CharaBase.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Action" Collapsed="true">
+    <Position X="24.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAQAAAAAAAAAAQEAAAEAAAA=</HashCode>
+      <FileName>Actor\Player\Player.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Yu Gothic UI" Size="9" />
+</ClassDiagram>

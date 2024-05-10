@@ -120,10 +120,10 @@
     <ClCompile Include="Actor\Player\Weapon\Dagger.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
+    <ClCompile Include="Actor\Player\Weapon\Rapier.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Player\Weapon\Rapier.cpp">
+    <ClCompile Include="ResourceManager\ResourceManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,14 +203,15 @@
     <ClInclude Include="Actor\Player\Weapon\Dagger.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
+    <ClInclude Include="Actor\Player\Weapon\Rapier.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Player\Weapon\Rapier.h">
+    <ClInclude Include="ResourceManager\ResourceManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

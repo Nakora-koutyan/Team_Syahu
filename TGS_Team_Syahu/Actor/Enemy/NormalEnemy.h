@@ -19,6 +19,10 @@ private:
 	bool animCountDown;	//画像インターバルのカウントダウン
 	bool animTurnFlg;	//アニメーションを左右反転する？(yes：true,no：false)
 
+	int attackTime;		//攻撃時間
+
+	bool once;
+
 public:
 	//コンストラクタ
 	NormalEnemy();
