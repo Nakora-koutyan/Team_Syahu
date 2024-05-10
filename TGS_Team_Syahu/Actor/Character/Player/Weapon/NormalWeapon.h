@@ -43,8 +43,8 @@ public:
 	//攻撃
 	void Attack(const Player* player, const float weight, const float damage);
 
-	//当たった時の処理
-	void Hit(CharaBase* enemy, const Player* player);
+	//ヒット処理
+	void Hit(ObjectBase* object, const float damage)override;
 
 	//表示フラグを取得
 	bool GetIsShow()const { return isShow; }

@@ -9,6 +9,8 @@ CharaBase::CharaBase()
 
 	weaponType = Weapon::Empty;
 
+	knockBackDirection = 0;
+
 	framCount = 0;
 	knockBackCount = 0;
 	alphaBlend = 255;
@@ -43,7 +45,19 @@ void CharaBase::Finalize()
 
 void CharaBase::Hit(ObjectBase* object, const float damage)
 {
-	const CharaBase* chara = dynamic_cast<const CharaBase*>(object);
+	const CharaBase* chara = static_cast<const CharaBase*>(object);
+
+	if (isHit)
+	{
+		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		{
+			knockBackDirection = -1;
+		}
+		else
+		{
+			knockBackDirection = 1;
+		}
+	}
 
 	//すでに当たってないなら
 	if (!isHit)
@@ -73,9 +87,11 @@ void CharaBase::DamageInterval(const double interval)
 
 void CharaBase::KnockBack(const CharaBase* chara, const double time, const float x)
 {
-	if (isHit)
+	if (isKnockBack)
 	{
-		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		knockBackCount++;
+
+		if (knockBackDirection < 0)
 		{
 			move.x = -x;
 		}
@@ -83,16 +99,13 @@ void CharaBase::KnockBack(const CharaBase* chara, const double time, const float
 		{
 			move.x = x;
 		}
-	}
 
-	if (isKnockBack)
-	{
-		knockBackCount++;
 		location.x += move.x;
 		if (knockBackCount > time)
 		{
 			isKnockBack = false;
 			knockBackCount = 0;
+			knockBackDirection = 0;
 			move.x = 0.f;
 			move.y = 0.f;
 		}

@@ -21,16 +21,17 @@ protected:
 
 	Weapon weaponType;			//武器の種類
 
+	short knockBackDirection;	//ノックバックの方向
+
 	int framCount;				//フレーム計測用
 	int knockBackCount;			//ノックバック用のカウント
+	int alphaBlend;				//画像の透明値
 
 	float hp;					//HP
 	float damage;				//ダメージ
 
 	bool isAir;					//空中？
 	bool isJump;				//ジャンプしている？
-	int alphaBlend;				//画像の透明値
-
 	bool isMove;				//移動している？
 	bool isHit;					//当たっている？
 	bool isShow;				//表示する？

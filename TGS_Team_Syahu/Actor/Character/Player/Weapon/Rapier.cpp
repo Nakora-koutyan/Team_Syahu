@@ -82,13 +82,15 @@ void Rapier::Attack(const Player* player)
 	}
 }
 
-void Rapier::Hit(CharaBase* enemy, const Player* player)
+void Rapier::Hit(ObjectBase* object, const float damage)
 {
+	CharaBase* enemy = static_cast<CharaBase*>(object);
+
 	if (isShow)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
-			enemy->SetHp(enemy->GetHp() - (player->GetDamage() + RAPIER_DAMAGE));
+			enemy->SetHp(enemy->GetHp() - (damage + RAPIER_DAMAGE));
 			enemy->SetIsHit(true);
 		}
 	}
