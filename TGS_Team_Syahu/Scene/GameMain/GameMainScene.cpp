@@ -117,7 +117,7 @@ void GameMainScene::HitCheck()
 			player->GetSteal()->GetSideClaw(0).CollisionCheck(enemy) ||
 			player->GetSteal()->GetSideClaw(1).CollisionCheck(enemy))
 		{
-			player->GetSteal()->Hit(enemy, player);
+			player->GetSteal()->Hit(enemy, player->GetDamage());
 			enemy->Hit(player,player->GetDamage());
 		}
 
