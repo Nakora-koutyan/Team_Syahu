@@ -36,28 +36,28 @@ enum class Action
 class Player :public CharaBase
 {
 private:
-	Weapon stock[PLAYER_MAX_STOCK];			//ストック
-	Action actionState;						//行動状態
+	Weapon stock[PLAYER_MAX_STOCK];				//ストック
+	Action actionState;							//行動状態
 
-	NormalWeapon* normalWeapon;				//投げる
-	Steal* steal;							//奪う
-	LargeSword* largeSword;					//大剣
-	Dagger* dagger;							//短剣
-	Rapier* rapier;							//レイピア
+	NormalWeapon* normalWeapon;					//投げる
+	Steal* steal;								//奪う
+	LargeSword* largeSword;						//大剣
+	Dagger* dagger;								//短剣
+	Rapier* rapier;								//レイピア
 
-	short stockCount;						//現在のストックの番号
+	short stockCount;							//現在のストックの番号
 
-	int weaponFramCount[PLAYER_MAX_STOCK];	//武器のフレームカウント
-	int playerAnimFramCount;				//プレイヤーのアニメーションフレームカウント
-	int playerAnim;							//プレイヤーのアニメーション番号
-	int playerImage[50] = {};				//プレイヤー画像
+	int weaponFramCount[PLAYER_MAX_STOCK] = {};	//武器のフレームカウント
+	int playerAnimFramCount;					//プレイヤーのアニメーションフレームカウント
+	int playerAnim;								//プレイヤーのアニメーション番号
+	int playerImage[50] = {};					//プレイヤー画像
 
-	float attackCoolTime;					//攻撃のクールタイム
-	float stealCoolTime;					//奪うのクールタイム
+	float attackCoolTime;						//攻撃のクールタイム
+	float stealCoolTime;						//奪うのクールタイム
 
-	bool isEquipment;						//装備中？
-	bool landingAnimFlg;					//着地アニメーションフラグ
-	bool blinkingFlg;						//点滅フラグ
+	bool isEquipment;							//装備中？
+	bool landingAnimFlg;						//着地アニメーションフラグ
+	bool blinkingFlg;							//点滅フラグ
 
 public:
 	//コンストラクタ
@@ -66,14 +66,17 @@ public:
 	//デストラクタ
 	~Player();
 
+	//初期化処理
+	void Initialize()override;
+
+	//終了処理
+	void Finalize()override;
+
 	//更新
 	void Update();
 
 	//描画
 	void Draw()const;
-
-	//ヒット処理
-	void Hit(CharaBase* chara);
 
 	//着地
 	void Landing(const float height);

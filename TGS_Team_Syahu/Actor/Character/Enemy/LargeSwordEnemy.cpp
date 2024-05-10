@@ -99,8 +99,8 @@ void LargeSwordEnemy::Update(Player* player)
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
-	DamageInterval(int(FPS * 0.5));
-	KnockBack(FPS * 0.5);
+	DamageInterval(FPS * 0.5);
+	KnockBack(this,FPS * 0.5, LARGE_SWORD_KNOCKBACK);
 
 	//状態遷移
 	switch (enemyStatus)

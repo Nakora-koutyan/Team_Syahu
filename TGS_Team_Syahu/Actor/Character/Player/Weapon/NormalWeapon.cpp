@@ -28,7 +28,19 @@ NormalWeapon::~NormalWeapon()
 
 }
 
-void NormalWeapon::Update(Player* player)
+void NormalWeapon::Update()
+{
+	location.x += move.x;
+	location.y += gravityVelocity;
+	screenLocation = Camera::ConvertScreenPosition(location);
+}
+
+void NormalWeapon::Draw() const
+{
+	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0xff0000, TRUE);
+}
+
+void NormalWeapon::Appearance(Player* player)
 {
 	if (isShow)
 	{
@@ -54,15 +66,6 @@ void NormalWeapon::Update(Player* player)
 		isShow = false;
 		player->SetIsAttack(false);
 	}
-
-	location.x += move.x;
-	location.y += gravityVelocity;
-	screenLocation = Camera::ConvertScreenPosition(location);
-}
-
-void NormalWeapon::Draw() const
-{
-	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0xff0000, TRUE);
 }
 
 void NormalWeapon::Attack(const Player* player, const float weight, const float damage)

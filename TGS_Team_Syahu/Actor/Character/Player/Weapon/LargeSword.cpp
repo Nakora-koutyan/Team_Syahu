@@ -21,14 +21,26 @@ LargeSword::~LargeSword()
 
 }
 
-void LargeSword::Update(CharaBase* chara)
+void LargeSword::Update()
+{
+	screenLocation = Camera::ConvertScreenPosition(location);
+}
+
+void LargeSword::Draw() const
+{
+	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
+		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
+		0x000000, 1);
+}
+
+void LargeSword::Appearance(CharaBase* chara)
 {
 	if (isShow)
 	{
 		framCount++;
 		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
 		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
-		}
+	}
 	else
 	{
 		location = chara->GetCenterLocation();
@@ -56,14 +68,6 @@ void LargeSword::Update(CharaBase* chara)
 	}
 
 	location.y = chara->GetCenterLocation().y;
-	screenLocation = Camera::ConvertScreenPosition(location);
-}
-
-void LargeSword::Draw() const
-{
-	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
-		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
-		0x000000, 1);
 }
 
 void LargeSword::Attack(const Player* player)

@@ -31,7 +31,31 @@ CharaBase::~CharaBase()
 
 }
 
-void CharaBase::DamageInterval(const int interval)
+void CharaBase::Initialize()
+{
+
+}
+
+void CharaBase::Finalize()
+{
+
+}
+
+void CharaBase::Hit(ObjectBase* object, const float damage)
+{
+	const CharaBase* chara = dynamic_cast<const CharaBase*>(object);
+
+	//すでに当たってないなら
+	if (!isHit)
+	{
+		isHit = true;
+
+		if (hp > 0)hp -= damage;
+		isKnockBack = true;
+	}
+}
+
+void CharaBase::DamageInterval(const double interval)
 {
 	//当たっているなら
 	if (isHit)
@@ -39,7 +63,7 @@ void CharaBase::DamageInterval(const int interval)
 		framCount++;
 
 		//intervalの時間無敵
-		if (framCount % interval == 0)
+		if (framCount % int(interval) == 0)
 		{
 			//無敵解除
 			isHit = false;
@@ -47,8 +71,20 @@ void CharaBase::DamageInterval(const int interval)
 	}
 }
 
-void CharaBase::KnockBack(const double time)
+void CharaBase::KnockBack(const CharaBase* chara, const double time, const float x)
 {
+	if (isHit)
+	{
+		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		{
+			move.x = -x;
+		}
+		else
+		{
+			move.x = x;
+		}
+	}
+
 	if (isKnockBack)
 	{
 		knockBackCount++;

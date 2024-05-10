@@ -16,6 +16,7 @@ GameMainScene::~GameMainScene()
 void GameMainScene::Initialize()
 {
 	player = new Player();
+	player->Initialize();
 	camera = new Camera();
 	enemy = new NormalEnemy();
 	enemy->Initialize();
@@ -102,7 +103,7 @@ void GameMainScene::HitCheck()
 		//雑魚敵とプレイヤーが当たったら
 		if (player->CollisionCheck(enemy))
 		{
-			player->Hit(enemy);
+			player->Hit(enemy, enemy->GetDamage());
 		}
 
 		//雑魚敵と投げるが当たったら
