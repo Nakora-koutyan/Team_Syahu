@@ -74,7 +74,7 @@ void NormalEnemy::Initialize()
 }
 
 //描画以外の内容を更新
-void NormalEnemy::Update(Player* player)
+void NormalEnemy::Update()
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
@@ -87,19 +87,19 @@ void NormalEnemy::Update(Player* player)
 	{
 		//パトロール処理
 	case EnemyStatus::Patrol:
-		EnemyPatrol(player);
+		EnemyPatrol();
 		markStatus = NULL;
 		break;
 
 		//攻撃の予備動作
 	case EnemyStatus::AttackStandBy:
-		AttackStandBy(player);
+		AttackStandBy();
 		markStatus = findMark;
 		break;
 
 		//攻撃開始
 	case EnemyStatus::AttackStart:
-		AttackStart(player);
+		AttackStart();
 		markStatus = angryMark;
 		break;
 
@@ -138,8 +138,34 @@ void NormalEnemy::Draw() const
 	}
 }
 
+void NormalEnemy::FindPlayer(Player* player)
+{
+	if ((attackRange[0].x < player->GetMinLocation().x &&
+		attackRange[1].x > player->GetCenterLocation().x)
+		&& attackRange[0].y <= player->GetMinLocation().y &&
+		attackRange[1].y >= player->GetCenterLocation().y)
+	{
+		//方向変化処理
+		if (location.x >= player->GetCenterLocation().x)
+		{
+			direction = DIRECTION_LEFT;
+			animTurnFlg = false;
+		}
+		else
+		{
+			direction = DIRECTION_RIGHT;
+			animTurnFlg = true;
+		}
+		isFind = true;
+	}
+	else
+	{
+		isFind = false;
+	}
+}
+
 //プレイヤーのいる方向に向かう
-void NormalEnemy::EnemyPatrol(Player* player)
+void NormalEnemy::EnemyPatrol()
 {
 	//左向きの場合
 	if (direction == DIRECTION_LEFT)
@@ -167,22 +193,8 @@ void NormalEnemy::EnemyPatrol(Player* player)
 	}
 
 	//攻撃準備に入る処理
-	if (!isKnockBack &&(attackRange[0].x < player->GetMinLocation().x &&
-		attackRange[1].x > player->GetCenterLocation().x ) 
-		 && attackRange[0].y <= player->GetMinLocation().y &&
-		attackRange[1].y >= player->GetCenterLocation().y)
+	if (isFind)
 	{
-		//方向変化処理
-		if (location.x >= player->GetCenterLocation().x)
-		{
-			direction = DIRECTION_LEFT;
-			animTurnFlg = false;
-		}
-		else
-		{
-			direction = DIRECTION_RIGHT;
-			animTurnFlg = true;
-		}
 		//攻撃準備の状態にする
 		enemyStatus = EnemyStatus::AttackStandBy;
 	}
@@ -195,7 +207,7 @@ void NormalEnemy::EnemyPatrol(Player* player)
 	}
 }
 
-void NormalEnemy:: AttackStandBy(Player* player)
+void NormalEnemy:: AttackStandBy()
 {
 	//攻撃準備処理
 	if (attackWaitingTime >= 0)
@@ -215,10 +227,7 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	}
 
 	//攻撃範囲からプレイヤーが離れた場合
-	if (((direction == DIRECTION_LEFT && attackCenser[0].x > player->GetMinLocation().x ||
-		direction == DIRECTION_RIGHT && attackCenser[1].x < player->GetMaxLocation().x)) ||
-		attackCenser[0].y > player->GetCenterLocation().y || 
-		attackCenser[1].y < player->GetCenterLocation().y)
+	if (isFind = false)
 	{
 		//パトロール状態にする
 		enemyStatus = EnemyStatus::Patrol;
@@ -234,7 +243,7 @@ void NormalEnemy:: AttackStandBy(Player* player)
 	}
 }
 
-void NormalEnemy::AttackStart(Player* player)
+void NormalEnemy::AttackStart()
 {
 	//攻撃時間が０秒以上であれば
 	if (attackTime >= 0)
@@ -282,36 +291,6 @@ void NormalEnemy::AttackEnd()
 		enemyStatus = EnemyStatus::Patrol;
 		statusChangeTime = MAX_COOL_TIME;
 		attackTime = MAX_ATTACK_TIME;
-	}
-}
-
-void NormalEnemy::ReceiveDamage(Player* player)
-{
-	
-}
-
-void NormalEnemy::Hit(Player* chara)
-{
-	if (!isHit)
-	{
-		isHit = true;
-
-		//自身のHPの減少
-		if (hp > 0)hp -= chara->GetDamage();
-
-		isKnockBack = true;
-
-		//ダメージを与えたキャラの位置によってノックバックする方向を決める
-		if (GetCenterLocation().x < chara->GetCenterLocation().x)
-		{
-			//左にノックバック
-			move.x = -NORMAL_ENEMY_KNOCKBACK;
-		}
-		else
-		{
-			//右にノックバック
-			move.x = NORMAL_ENEMY_KNOCKBACK;
-		}
 	}
 }
 

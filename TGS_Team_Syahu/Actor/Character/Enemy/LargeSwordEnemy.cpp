@@ -95,7 +95,7 @@ void LargeSwordEnemy::Initialize()
 }
 
 //描画以外の更新
-void LargeSwordEnemy::Update(Player* player)
+void LargeSwordEnemy::Update()
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
@@ -107,19 +107,19 @@ void LargeSwordEnemy::Update(Player* player)
 	{
 		//パトロール処理
 	case EnemyStatus::Patrol:
-		EnemyPatrol(player);
+		EnemyPatrol();
 		markStatus = NULL;
 		break;
 
 		//攻撃の予備動作
 	case EnemyStatus::AttackStandBy:
-		AttackStandBy(player);
+		AttackStandBy();
 		markStatus = findMark;
 		break;
 
 		//攻撃開始
 	case EnemyStatus::AttackStart:
-		AttackStart(player);
+		AttackStart();
 		markStatus = angryMark;
 		break;
 
@@ -173,8 +173,36 @@ void LargeSwordEnemy::Draw() const
 	}
 }
 
+void LargeSwordEnemy::FindPlayer(Player* player)
+{
+	if (attackCenser[0].x < player->GetMaxLocation().x &&
+		attackCenser[1].x > player->GetMinLocation().x)
+	{
+		//方向変化処理
+		if (location.x >= player->GetCenterLocation().x)
+		{
+			direction = DIRECTION_LEFT;
+			animTurnFlg = false;
+		}
+		else
+		{
+			direction = DIRECTION_RIGHT;
+			animTurnFlg = true;
+		}
+
+		isFind = true;
+	}
+	else
+	{
+		isFind = false;
+	}
+
+	//プレイヤーへの接近処理
+	SuddenApproachToPlayer(player);
+}
+
 //エネミーの徘徊処理
-void LargeSwordEnemy::EnemyPatrol(Player* player)
+void LargeSwordEnemy::EnemyPatrol()
 {
 	
 	//左向きの場合
@@ -210,8 +238,7 @@ void LargeSwordEnemy::EnemyPatrol(Player* player)
 	}
 
 	//エネミーの状態遷移の処理
-	if (attackCenser[0].x < player->GetMaxLocation().x &&
-		attackCenser[1].x > player->GetMinLocation().x)
+	if (isFind)
 	{
 		//攻撃準備の状態にする
 		enemyStatus = EnemyStatus::AttackStandBy;
@@ -275,26 +302,10 @@ void LargeSwordEnemy::SuddenApproachToPlayer(Player* player)
 }
 
 //攻撃の準備時間
-void LargeSwordEnemy::AttackStandBy(Player* player)
+void LargeSwordEnemy::AttackStandBy()
 {
-	//プレイヤーと自身の位置をみて方向を転換する
-	if (location.x <= player->GetCenterLocation().x)
-	{
-		//右方向
-		direction = DIRECTION_RIGHT;
-	}
-	else if (location.x > player->GetCenterLocation().x)
-	{
-		//左方向
-		direction = DIRECTION_LEFT;
-	}
-
-	//プレイヤーへの接近処理
-	SuddenApproachToPlayer(player);
-
 	//攻撃範囲からプレイヤーが離れた場合
-	if (direction == DIRECTION_LEFT && attackCenser[0].x > player->GetMinLocation().x ||
-		direction == DIRECTION_RIGHT && attackCenser[1].x < player->GetMaxLocation().x)
+	if (!isFind)
 	{
 		//パトロール状態にする
 		enemyStatus = EnemyStatus::Patrol;
@@ -309,20 +320,8 @@ void LargeSwordEnemy::AttackStandBy(Player* player)
 }
 
 //攻撃開始
-void LargeSwordEnemy::AttackStart(Player* player)
+void LargeSwordEnemy::AttackStart()
 {
-	if (GetMinLocation().x - 150 < player->GetCenterLocation().x
-		&& GetMaxLocation().x + 100 > player->GetCenterLocation().x)
-	{
-		//攻撃を続行
-		isAttack = true;
-	}
-	else
-	{
-		//攻撃を中止
-		isAttack = false;
-	}
-
 	//攻撃ができるなら
 	if (isAttack == true && attackWaitingTime <= 0)
 	{
@@ -365,37 +364,6 @@ void LargeSwordEnemy::AttackEnd()
 
 	//攻撃待機時間をリセットする
 	attackWaitingTime = MAX_WAITING_TIME;
-}
-
-//プレイヤーと衝突した場合
-void LargeSwordEnemy::ReceiveDamage(Player* player)
-{
-}
-
-void LargeSwordEnemy::Hit(Player* chara)
-{
-	//自身のHPの減少
-	if (hp > 0)hp -= chara->GetDamage();
-	//ノックバックを有効にする
-	isKnockBack = true;
-
-	//ノックバック処理
-	move.x = LARGE_SWORD_KNOCKBACK;
-
-	//ダメージを与えたキャラの位置によってノックバックする方向を決める
-	if (GetCenterLocation().x < chara->GetCenterLocation().x)
-	{
-		//左にノックバック
-		move.x = -LARGE_SWORD_KNOCKBACK;
-	}
-	else
-	{
-		//右にノックバック
-		move.x = LARGE_SWORD_KNOCKBACK;
-	}
-
-	//ダメージを受けたことで攻撃状態を解除
-	enemyStatus = EnemyStatus::Patrol;
 }
 
 //アニメーション制御関数

@@ -51,6 +51,8 @@ protected:
 
 	int direction;		//進行方向
 
+	bool isFind;		//見つけた？
+
 	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
 	Vector2D attackRange[2];		//0:左センサー	1:右センサー
 
@@ -61,31 +63,28 @@ public:
 	~EnemyBase();
 
 	//更新処理
-	void Update(Player* player);
+	void Update();
 
 	//描画処理
 	void Draw(Player* player);
+
+	//プレイヤーを見つけた？
+	virtual void FindPlayer(Player* player) = 0;
 
 protected:
 
 	virtual void EnemyAnimation() = 0;
 
 	//パトロール関数
-	virtual void EnemyPatrol(Player* player) = 0;
+	virtual void EnemyPatrol() = 0;
 
 	//攻撃準備
-	virtual void AttackStandBy(Player* player) = 0;
+	virtual void AttackStandBy() = 0;
 
 	//攻撃開始
-	virtual void AttackStart(Player* player) = 0;
+	virtual void AttackStart() = 0;
 
 	//攻撃終了
 	virtual void AttackEnd() = 0;
-
-	//プレイヤーとの当たり判定
-	virtual void ReceiveDamage(Player* player) = 0;
-
-	//ヒット処理
-	virtual void Hit(Player* player) = 0;
 };
 

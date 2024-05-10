@@ -26,31 +26,30 @@ public:
 	void Initialize();
 
 	//描画以外の更新
-	void Update(Player* player);
+	void Update();
 	//描画に関する更新
 	void Draw()const;
+
+	//プレイヤーを見つけた？
+	void FindPlayer(Player* player)override;
 
 protected:
 	//エネミーのアニメーション制御関数
 	void EnemyAnimation() override;
 
 	//パトロール関数
-	void EnemyPatrol(Player* player) override;
+	void EnemyPatrol() override;
 
 	//プレイヤーに急接近する
 	void SuddenApproachToPlayer(Player* player);
 
 	//攻撃準備に入るか？
-	void AttackStandBy(Player* player) override;
+	void AttackStandBy() override;
 
 	//攻撃を行うか？
-	void AttackStart(Player* player) override;
+	void AttackStart() override;
 
 	//攻撃の終了
 	void AttackEnd() override;
-
-	void ReceiveDamage(Player* player)override;
-
-	void Hit(Player* chara)override;
 };
 

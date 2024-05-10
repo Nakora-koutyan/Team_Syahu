@@ -48,7 +48,8 @@ SceneBase* GameMainScene::Update()
 		
 	if (enemy != nullptr)
 	{
-		enemy->Update(player);
+		enemy->Update();
+		enemy->FindPlayer(player);
 
 		//deleteしなくてもいい
 		if (enemy->GetHp() <= 0.f)
@@ -57,7 +58,7 @@ SceneBase* GameMainScene::Update()
 			enemy = nullptr;
 		}
 	}
-	enemy1->Update(player);
+	enemy1->Update();
 
 	stageblock->Update();
 
@@ -80,8 +81,6 @@ void GameMainScene::Draw() const
 	);
 
 	ui->Draw();
-
-	camera->Draw();
 
 	player->Draw();
 
@@ -119,7 +118,7 @@ void GameMainScene::HitCheck()
 			player->GetSteal()->GetSideClaw(1).CollisionCheck(enemy))
 		{
 			player->GetSteal()->Hit(enemy, player);
-			enemy->Hit(player);
+			enemy->Hit(player,player->GetDamage());
 		}
 
 		//雑魚敵と大剣が当たったら

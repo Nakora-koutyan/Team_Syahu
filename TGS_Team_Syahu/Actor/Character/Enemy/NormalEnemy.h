@@ -32,11 +32,12 @@ public:
 	//初期化処理
 	void Initialize();
 	//更新処理
-	void Update(Player* player);
+	void Update();
 	//描画更新処理
 	void Draw()const;
 
-	void Hit(Player* chara)override;
+	//プレイヤーを見つけた？
+	void FindPlayer(Player* player);
 
 private:
 
@@ -44,15 +45,13 @@ private:
 	void EnemyAnimation() override;
 
 	//パトロール関数
-	void EnemyPatrol(Player* player) override;
+	void EnemyPatrol() override;
 
 	//追跡を行うか？
-	void AttackStandBy(Player* player) override;
+	void AttackStandBy() override;
 
 	//攻撃を行うか？
-	void AttackStart(Player* player) override;
+	void AttackStart() override;
 
 	void AttackEnd() override;
-
-	void ReceiveDamage(Player* player)override;
 };
