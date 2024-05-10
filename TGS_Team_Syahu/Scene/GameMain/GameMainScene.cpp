@@ -16,6 +16,7 @@ GameMainScene::~GameMainScene()
 void GameMainScene::Initialize()
 {
 	player = new Player();
+	player->Initialize();
 	camera = new Camera();
 	enemy = new NormalEnemy();
 	enemy->Initialize();
