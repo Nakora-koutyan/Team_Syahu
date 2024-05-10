@@ -150,32 +150,47 @@ void GameMainScene::HitCheck()
 			Vector2D move = enemy->GetMove();
 			Area EnemySize = enemy->GetArea();
 			Area BlockSize = stageblock->GetArea();
+			int Dropwidth = 21;
 			// 上から
-			if ((EnemyLoc.y + EnemySize.height - 20) <= BlockLoc.y && enemy->GetDirection().y >= 0.f) {
+			if ((EnemyLoc.y + EnemySize.height - 20) <= BlockLoc.y && enemy->GetDirection().y >= 0.f &&
+				(move.x != 0 || (EnemyLoc.x + EnemySize.width - Dropwidth <= BlockLoc.x + BlockSize.width && EnemyLoc.x + Dropwidth >= BlockLoc.x))) {
 				EnemyLoc.y = BlockLoc.y - EnemySize.height;
 				enemy->SetLocation(EnemyLoc);
 				move.y = 0;
 				enemy->SetMove(move);
 			}
 			// 下から
-			else if (EnemyLoc.y >= BlockLoc.y + BlockSize.height - 10 && enemy->GetDirection().y <= 0.f) {
-				EnemyLoc.y = BlockLoc.y + BlockSize.height;
-				enemy->SetLocation(EnemyLoc);
-				move.y = 0;
-				enemy->SetMove(move);
+			else if (EnemyLoc.y >= (BlockLoc.y + BlockSize.height - 20) && enemy->GetDirection().y <= 0.f) {
+				// Dropwidth以上ブロックからはみ出してないか
+				if (EnemyLoc.x + EnemySize.width - Dropwidth <= BlockLoc.x + BlockSize.width && EnemyLoc.x + Dropwidth >= BlockLoc.x) {
+					EnemyLoc.y = BlockLoc.y + BlockSize.height;
+					enemy->SetLocation(EnemyLoc);
+					move.y = 0;
+					enemy->SetMove(move);
+				}
+				else
+				{
+					// 右から
+					if (EnemyLoc.x + EnemySize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
+						EnemyLoc.x = BlockLoc.x + BlockSize.width;
+					}
+					// 左から
+					else {
+						EnemyLoc.x = BlockLoc.x - EnemySize.width;
+					}
+					enemy->SetLocation(EnemyLoc);
+				}
 			}
 			else {
 				// 右から
-				if (EnemyLoc.x >= (BlockLoc.x + BlockSize.width / 2)) {
+				if (EnemyLoc.x + EnemySize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
 					EnemyLoc.x = BlockLoc.x + BlockSize.width;
-					EnemyLoc.y = EnemyLoc.y;
-					enemy->SetLocation(EnemyLoc);
 				}
 				// 左から
 				else {
 					EnemyLoc.x = BlockLoc.x - EnemySize.width;
-					enemy->SetLocation(EnemyLoc);
 				}
+				enemy->SetLocation(EnemyLoc);
 				move.x = 0;
 				enemy->SetMove(move);
 			}
@@ -190,31 +205,44 @@ void GameMainScene::HitCheck()
 		Vector2D move = player->GetMove();
 		Area PlayerSize = player->GetArea();
 		Area BlockSize = stageblock->GetArea();
+		int Dropwidth = 21;
 		// 上から
-		if ((PlayerLoc.y + PlayerSize.height - 20) <= BlockLoc.y && player->GetDirection().y >= 0.f) {
-			int Dropwidth = 21;
-			if (move.x != 0 || (PlayerLoc.x + PlayerSize.width - Dropwidth <= BlockLoc.x + BlockSize.width && PlayerLoc.x + Dropwidth >= BlockLoc.x)) {
-				player->Landing(BlockLoc.y);
-			}
+		if ((PlayerLoc.y + PlayerSize.height - 20) <= BlockLoc.y && player->GetDirection().y >= 0.f &&
+			(move.x != 0 || (PlayerLoc.x + PlayerSize.width - Dropwidth <= BlockLoc.x + BlockSize.width && PlayerLoc.x + Dropwidth >= BlockLoc.x))) {
+			player->Landing(BlockLoc.y);
 		}
 		// 下から
-		else if (PlayerLoc.y >= (BlockLoc.y + BlockSize.height - 10) && player->GetDirection().y <= 0.f) {
-			PlayerLoc.y = BlockLoc.y + BlockSize.height;
-			player->SetLocation(PlayerLoc);
-			move.y = 0;
-			player->SetMove(move);
+		else if (PlayerLoc.y >= (BlockLoc.y + BlockSize.height - 20) && player->GetDirection().y <= 0.f) {
+			// Dropwidth以上ブロックからはみ出してないか
+			if (PlayerLoc.x + PlayerSize.width - Dropwidth <= BlockLoc.x + BlockSize.width && PlayerLoc.x + Dropwidth >= BlockLoc.x) {
+				PlayerLoc.y = BlockLoc.y + BlockSize.height;
+				player->SetLocation(PlayerLoc);
+				move.y = 0;
+				player->SetMove(move); 
+			}
+			else 
+			{
+				// 右から
+				if (PlayerLoc.x + PlayerSize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
+					PlayerLoc.x = BlockLoc.x + BlockSize.width;
+				}
+				// 左から
+				else {
+					PlayerLoc.x = BlockLoc.x - PlayerSize.width;
+				}
+				player->SetLocation(PlayerLoc);
+			}
 		}
 		else {
 			// 右から
-			if (PlayerLoc.x >= BlockLoc.x + BlockSize.width / 2) {
+			if (PlayerLoc.x + PlayerSize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
 				PlayerLoc.x = BlockLoc.x + BlockSize.width;
-				player->SetLocation(PlayerLoc);
 			}
 			// 左から
 			else {
 				PlayerLoc.x = BlockLoc.x - PlayerSize.width;
-				player->SetLocation(PlayerLoc);
 			}
+			player->SetLocation(PlayerLoc);
 			move.x = 0;
 			player->SetMove(move);
 		}
