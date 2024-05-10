@@ -81,35 +81,33 @@ void NormalEnemy::Update(Player* player)
 	DamageInterval(int(FPS * 0.5));
 	KnockBack(FPS * 0.5f);
 
-	if (!isKnockBack)
+	
+	//状態遷移
+	switch (enemyStatus)
 	{
-		//状態遷移
-		switch (enemyStatus)
-		{
-			//パトロール処理
-		case EnemyStatus::Patrol:
-			EnemyPatrol(player);
-			markStatus = NULL;
-			break;
+		//パトロール処理
+	case EnemyStatus::Patrol:
+		EnemyPatrol(player);
+		markStatus = NULL;
+		break;
 
-			//攻撃の予備動作
-		case EnemyStatus::AttackStandBy:
-			AttackStandBy(player);
-			markStatus = findMark;
-			break;
+		//攻撃の予備動作
+	case EnemyStatus::AttackStandBy:
+		AttackStandBy(player);
+		markStatus = findMark;
+		break;
 
-			//攻撃開始
-		case EnemyStatus::AttackStart:
-			AttackStart(player);
-			markStatus = angryMark;
-			break;
+		//攻撃開始
+	case EnemyStatus::AttackStart:
+		AttackStart(player);
+		markStatus = angryMark;
+		break;
 
-			//攻撃終了
-		case EnemyStatus::AttackEnd:
-			AttackEnd();
-			markStatus = NULL;
-			break;
-		}
+		//攻撃終了
+	case EnemyStatus::AttackEnd:
+		AttackEnd();
+		markStatus = NULL;
+		break;
 	}
 	
 	//エネミーアニメーション
