@@ -32,12 +32,12 @@ public:
 	//初期化処理
 	void Initialize();
 	//更新処理
-	void Update();
+	void Update()override;
 	//描画更新処理
-	void Draw()const;
+	void Draw()const override;
 
 	//プレイヤーを見つけた？
-	void FindPlayer(Player* player);
+	void FindPlayer(Player* player)override;
 
 private:
 

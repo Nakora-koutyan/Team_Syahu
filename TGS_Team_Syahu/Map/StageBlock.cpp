@@ -3,7 +3,8 @@
 #include "../Actor/Character/Player/Player.h"
 #include "../Actor/Camera/Camera.h"
 
-StageBlock::StageBlock() {
+StageBlock::StageBlock() 
+{
 	location.x = 1000.f;
 	location.y = 1140.f;
 
@@ -14,18 +15,21 @@ StageBlock::StageBlock() {
 	IsDraw = TRUE;
 };
 
-StageBlock::~StageBlock() {
+StageBlock::~StageBlock() 
+{
 
 };
 
-void StageBlock::Update() {
+void StageBlock::Update() 
+{
 	//カメラに応じて座標を変化
 	screenLocation = Camera::ConvertScreenPosition(location);
 
 	
 };
 
-void StageBlock::Draw()const {
+void StageBlock::Draw()const 
+{
 	//ブロックの描画
 	DrawBoxAA
 	(
@@ -39,4 +43,10 @@ void StageBlock::Draw()const {
 
 	//画面描画(仮)
 	DrawFormatStringF(screenLocation.x + 15, screenLocation.y + 5, 0x660066, "%d", IsDraw);
-};
+}
+
+void StageBlock::Hit(ObjectBase* object, const float damage)
+{
+
+}
+;

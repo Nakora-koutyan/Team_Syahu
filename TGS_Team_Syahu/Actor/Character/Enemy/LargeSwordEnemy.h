@@ -26,9 +26,9 @@ public:
 	void Initialize();
 
 	//描画以外の更新
-	void Update();
+	void Update()override;
 	//描画に関する更新
-	void Draw()const;
+	void Draw()const override;
 
 	//プレイヤーを見つけた？
 	void FindPlayer(Player* player)override;
