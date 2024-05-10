@@ -107,6 +107,7 @@ void NormalWeapon::Hit(ObjectBase* object, const float damage)
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + weaponDamage));
 			enemy->SetIsHit(true);
+			enemy->SetIsKnockBack(true);
 
 			isShow = false;
 		}
