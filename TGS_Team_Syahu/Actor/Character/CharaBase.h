@@ -13,13 +13,6 @@ enum class Weapon
 	Rapier				//レイピア
 };
 
-enum class CharacterType
-{
-	None = 0,
-	Player,
-	Enemy
-};
-
 class CharaBase :public BoxCollision
 {
 protected:
@@ -27,7 +20,6 @@ protected:
 	Vector2D direction;			//方向
 
 	Weapon weaponType;			//武器の種類
-	CharacterType charaType;	//キャラクターの種類
 
 	short knockBackDirection;	//ノックバックの方向
 
@@ -116,9 +108,6 @@ public:
 
 	//武器の種類を設定
 	void SetWeaponType(const Weapon ability) { weaponType = ability; }
-
-	//キャラクターの種類を取得
-	CharacterType GetCharacterType()const { return charaType; }
 
 protected:
 	//ダメージのインターバル処理
