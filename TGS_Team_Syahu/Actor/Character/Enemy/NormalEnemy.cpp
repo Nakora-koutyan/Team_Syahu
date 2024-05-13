@@ -123,6 +123,9 @@ void NormalEnemy::Draw() const
 	DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
 		enemyImage[enemyNumber], TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DrawBoxAA(GetMinScreenLocation().x - (410.f/2.f),GetMinScreenLocation().y - (75.f/2.f),
+			GetMaxScreenLocation().x + (410.f/2.f),GetMaxScreenLocation().y + (75.f/2.f),
+			0x00ffff, FALSE, 1.f);
 
 	if (markStatus != NULL)
 	{
@@ -140,27 +143,32 @@ void NormalEnemy::Draw() const
 
 void NormalEnemy::FindPlayer(Player* player)
 {
-	if ((attackRange[0].x < player->GetMinLocation().x &&
-		attackRange[1].x > player->GetCenterLocation().x)
-		&& attackRange[0].y <= player->GetMinLocation().y &&
-		attackRange[1].y >= player->GetCenterLocation().y)
+	if ((enemyStatus == EnemyStatus::AttackStandBy || 
+		enemyStatus == EnemyStatus::Patrol )&&
+		player->GetIsHit() == false)
 	{
-		//方向変化処理
-		if (location.x >= player->GetCenterLocation().x)
+		if ((attackRange[0].x < player->GetCenterLocation().x &&
+			attackRange[1].x > player->GetCenterLocation().x)
+			&& attackRange[0].y <= player->GetCenterLocation().y &&
+			attackRange[1].y >= player->GetCenterLocation().y)
 		{
-			direction = DIRECTION_LEFT;
-			animTurnFlg = false;
+			//方向変化処理
+			if (location.x >= player->GetCenterLocation().x)
+			{
+				direction = DIRECTION_LEFT;
+				animTurnFlg = false;
+			}
+			else
+			{
+				direction = DIRECTION_RIGHT;
+				animTurnFlg = true;
+			}
+			isFind = true;
 		}
 		else
 		{
-			direction = DIRECTION_RIGHT;
-			animTurnFlg = true;
+			isFind = false;
 		}
-		isFind = true;
-	}
-	else
-	{
-		isFind = false;
 	}
 }
 
