@@ -23,18 +23,7 @@ LargeSword::~LargeSword()
 
 }
 
-void LargeSword::Update()
-{
-}
-
-void LargeSword::Draw() const
-{
-	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
-		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
-		0x000000, 1);
-}
-
-void LargeSword::Appearance(CharaBase* chara)
+void LargeSword::Update(CharaBase* chara)
 {
 	if (isShow)
 	{
@@ -70,9 +59,17 @@ void LargeSword::Appearance(CharaBase* chara)
 	damage = chara->GetDamage() + LARGESWORD_DAMAGE;
 	location.y = chara->GetCenterLocation().y;
 	screenLocation = Camera::ConvertScreenPosition(location);
+
 }
 
-void LargeSword::Attack(const Player* player)
+void LargeSword::Draw() const
+{
+	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
+		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
+		0x000000, 1);
+}
+
+void LargeSword::Attack(const CharaBase* chara)
 {
 	isShow = true;
 
@@ -80,7 +77,7 @@ void LargeSword::Attack(const Player* player)
 	if (direction == 0)
 	{
 		//プレイヤーの方向情報を保持する
-		direction = (short)player->GetDirection().x;
+		direction = (short)chara->GetDirection().x;
 	}
 
 	//右に出す
@@ -108,8 +105,6 @@ void LargeSword::Hit(ObjectBase* object, const float damage)
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + LARGESWORD_DAMAGE));
-			enemy->SetIsHit(true);
-			enemy->SetIsKnockBack(true);
 		}
 	}
 }

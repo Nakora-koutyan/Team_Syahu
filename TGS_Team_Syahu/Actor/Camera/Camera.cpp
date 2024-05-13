@@ -6,6 +6,8 @@ Vector2D Camera::screenPosition;
 
 Camera::Camera()
 {	
+	objectType = ObjectType::Camera;
+
 	cameraPosition.x = WORLD_WIDTH / 2.f;
 	cameraPosition.y = WORLD_HEIGHT / 2.f;
 	screenPosition.x = SCREEN_WIDTH / 2.f;

@@ -15,6 +15,7 @@ CharaBase::CharaBase()
 	framCount = 0;
 	knockBackCount = 0;
 	alphaBlend = 255;
+	imageInversionFlg = FALSE;
 
 	hp = 100.f;
 	damage = 10.f;
@@ -26,7 +27,6 @@ CharaBase::CharaBase()
 	isShow = false;
 	isAttack = false;
 	isKnockBack = false;
-	imageInversionFlg = false;
 }
 
 CharaBase::~CharaBase()
@@ -48,8 +48,9 @@ void CharaBase::Hit(ObjectBase* object, const float damage)
 {
 	const CharaBase* chara = static_cast<const CharaBase*>(object);
 
-	if (!isKnockBack)
+	if (!isKnockBack && !isHit)
 	{
+		isKnockBack = true;
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
 		{
 			knockBackDirection = -1;
@@ -66,7 +67,6 @@ void CharaBase::Hit(ObjectBase* object, const float damage)
 		isHit = true;
 
 		if (hp > 0)hp -= damage;
-		isKnockBack = true;
 	}
 }
 
