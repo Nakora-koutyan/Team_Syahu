@@ -29,16 +29,13 @@ public:
 	~Dagger();
 
 	//更新
-	void Update()override;
+	void Update(CharaBase* chara);
 
 	//描画
 	void Draw()const override;
 
-	//出現
-	void Appearance(CharaBase* chara);
-
 	//攻撃
-	void Attack(const Player* player);
+	void Attack(const CharaBase* chara);
 
 	//ヒット処理
 	void Hit(ObjectBase* object, const float damage)override;

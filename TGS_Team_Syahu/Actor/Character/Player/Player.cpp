@@ -1,7 +1,7 @@
 #include"Player.h"
 #include"../../Camera/Camera.h"
 
-#define DEBUG
+//#define DEBUG
 
 Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger(nullptr),rapier(nullptr)
 {
@@ -66,6 +66,12 @@ void Player::Initialize()
 	largeSword = new LargeSword();
 	dagger = new Dagger();
 	rapier = new Rapier();
+
+	weapon.push_back(normalWeapon);
+	weapon.push_back(steal);
+	weapon.push_back(largeSword);
+	weapon.push_back(dagger);
+	weapon.push_back(rapier);
 }
 
 void Player::Finalize()
@@ -122,16 +128,11 @@ void Player::Update()
 
 	Animation();
 
-	normalWeapon->Update();
-	normalWeapon->Appearance(this);
-	steal->Update();
-	steal->Appearance(this);
-	largeSword->Update();
-	largeSword->Appearance(this);
-	dagger->Update();
-	dagger->Appearance(this);
-	rapier->Update();
-	rapier->Appearance(this);
+	normalWeapon->Update(this);
+	steal->Update(this);
+	largeSword->Update(this);
+	dagger->Update(this);
+	rapier->Update(this);
 
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
@@ -177,25 +178,12 @@ void Player::Draw() const
 
 #endif // DEBUG
 
-	//画像反転フラグ
-	if (imageInversionFlg)
-	{
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
-		DrawRotaGraphF
-		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
-			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
-			1, 0, playerImage[playerAnim], TRUE, TRUE);		
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}
-	else
-	{
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
-		DrawRotaGraphF
-		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X,
-			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
-			1, 0, playerImage[playerAnim], TRUE);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
+	DrawRotaGraphF
+	(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
+		GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+		1, 0, playerImage[playerAnim], TRUE, imageInversionFlg);		
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	normalWeapon->Draw();
 
@@ -244,7 +232,7 @@ void Player::Movement()
 	{
 		isMove = true;
 		direction.x = 1.f;
-		imageInversionFlg = false;
+		imageInversionFlg = FALSE;
 		//最高速度は超えない
 		if (move.x < PLAYER_MAX_MOVE_SPEED)
 		{
@@ -269,7 +257,7 @@ void Player::Movement()
 	{
 		isMove = true;
 		direction.x = -1.f;
-		imageInversionFlg = true;
+		imageInversionFlg = TRUE;
 		//最高速度は超えない
 		if (move.x > -PLAYER_MAX_MOVE_SPEED)
 		{

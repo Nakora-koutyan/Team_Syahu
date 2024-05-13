@@ -28,19 +28,7 @@ NormalWeapon::~NormalWeapon()
 
 }
 
-void NormalWeapon::Update()
-{
-	location.x += move.x;
-	location.y += gravityVelocity;
-	screenLocation = Camera::ConvertScreenPosition(location);
-}
-
-void NormalWeapon::Draw() const
-{
-	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0xff0000, TRUE);
-}
-
-void NormalWeapon::Appearance(Player* player)
+void NormalWeapon::Update(CharaBase* chara)
 {
 	if (isShow)
 	{
@@ -50,7 +38,7 @@ void NormalWeapon::Appearance(Player* player)
 	}
 	else
 	{
-		location = player->GetCenterLocation();
+		location = chara->GetCenterLocation();
 	}
 
 	//攻撃時間を超えたら
@@ -64,12 +52,21 @@ void NormalWeapon::Appearance(Player* player)
 		weaponWeight = 0.f;
 		weaponDamage = 0.f;
 		isShow = false;
-		player->SetIsAttack(false);
+		chara->SetIsAttack(false);
 	}
-	damage = weaponDamage + player->GetDamage();
+
+	damage = weaponDamage + chara->GetDamage();
+	location.x += move.x;
+	location.y += gravityVelocity;
+	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
-void NormalWeapon::Attack(const Player* player, const float weight, const float damage)
+void NormalWeapon::Draw() const
+{
+	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0xff0000, TRUE);
+}
+
+void NormalWeapon::Attack(const CharaBase* chara, const float weight, const float damage)
 {
 	//出現させる
 	isShow = true;
@@ -77,22 +74,22 @@ void NormalWeapon::Attack(const Player* player, const float weight, const float 
 	//まだ方向が決まってないなら
 	if (direction == 0)
 	{
-		direction = (short)player->GetDirection().x;
+		direction = (short)chara->GetDirection().x;
 	}
 
 	if (direction < 0)
 	{
 		move.x = -NORMAL_WEAPON_SPEED * cos(angle);
-		location.x = player->GetMinLocation().x - radius;
+		location.x = chara->GetMinLocation().x - radius;
 	}
 	else
 	{
 		move.x = NORMAL_WEAPON_SPEED * cos(angle);
-		location.x = player->GetMaxLocation().x + radius;
+		location.x = chara->GetMaxLocation().x + radius;
 	}
 
 	move.y = NORMAL_WEAPON_SPEED * sin(angle);
-	location.y = player->GetCenterLocation().y;
+	location.y = chara->GetCenterLocation().y;
 
 	weaponWeight = weight;
 	weaponDamage = damage;
@@ -107,8 +104,6 @@ void NormalWeapon::Hit(ObjectBase* object, const float damage)
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + weaponDamage));
-			enemy->SetIsHit(true);
-			enemy->SetIsKnockBack(true);
 
 			isShow = false;
 		}

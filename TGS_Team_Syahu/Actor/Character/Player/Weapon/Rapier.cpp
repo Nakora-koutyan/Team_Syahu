@@ -23,18 +23,7 @@ Rapier::~Rapier()
 
 }
 
-void Rapier::Update()
-{
-}
-
-void Rapier::Draw() const
-{
-	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
-		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
-		0x000000, 1);
-}
-
-void Rapier::Appearance(CharaBase* chara)
+void Rapier::Update(CharaBase* chara)
 {
 	if (isShow)
 	{
@@ -73,7 +62,14 @@ void Rapier::Appearance(CharaBase* chara)
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
-void Rapier::Attack(const Player* player)
+void Rapier::Draw() const
+{
+	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
+		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
+		0x000000, 1);
+}
+
+void Rapier::Attack(const CharaBase* chara)
 {
 	isShow = true;
 
@@ -81,7 +77,7 @@ void Rapier::Attack(const Player* player)
 	if (direction == 0)
 	{
 		//プレイヤーの方向情報を保持する
-		direction = (short)player->GetDirection().x;
+		direction = (short)chara->GetDirection().x;
 	}
 }
 
@@ -94,8 +90,6 @@ void Rapier::Hit(ObjectBase* object, const float damage)
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + RAPIER_DAMAGE));
-			enemy->SetIsHit(true);
-			enemy->SetIsKnockBack(true);
 		}
 	}
 }

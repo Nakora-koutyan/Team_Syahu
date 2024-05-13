@@ -3,7 +3,7 @@
 
 #define RAPIER_ATTACK_TIME				FPS * 0.3		//レイピア攻撃の時間
 #define RAPIER_MOVE						10.5f			//レイピアの移動量/f
-#define RAPIER_LENGTH					90.f			//レイピアの長さ
+#define RAPIER_LENGTH					100.f			//レイピアの長さ
 #define RAPIER_WEIGHT					0.35f			//レイピアの重さ
 #define RAPIER_DAMAGE					3.f				//レイピアのダメージ
 
@@ -29,16 +29,13 @@ public:
 	~Rapier();
 
 	//更新
-	void Update()override;
+	void Update(CharaBase* chara);
 
 	//描画
 	void Draw()const override;
 
-	//出現
-	void Appearance(CharaBase* chara);
-
 	//攻撃
-	void Attack(const Player* player);
+	void Attack(const CharaBase* chara);
 
 	//ヒット処理
 	void Hit(ObjectBase* object, const float damage)override;

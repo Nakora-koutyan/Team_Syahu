@@ -23,18 +23,7 @@ Dagger::~Dagger()
 
 }
 
-void Dagger::Update()
-{
-}
-
-void Dagger::Draw() const
-{
-	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
-		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
-		0x000000, 1);
-}
-
-void Dagger::Appearance(CharaBase* chara)
+void Dagger::Update(CharaBase* chara)
 {
 	if (isShow)
 	{
@@ -73,7 +62,14 @@ void Dagger::Appearance(CharaBase* chara)
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
-void Dagger::Attack(const Player* player)
+void Dagger::Draw() const
+{
+	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
+		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
+		0x000000, 1);
+}
+
+void Dagger::Attack(const CharaBase* chara)
 {
 	isShow = true;
 
@@ -81,7 +77,7 @@ void Dagger::Attack(const Player* player)
 	if (direction == 0)
 	{
 		//プレイヤーの方向情報を保持する
-		direction = (short)player->GetDirection().x;
+		direction = (short)chara->GetDirection().x;
 	}
 
 	//右に出す
@@ -109,8 +105,6 @@ void Dagger::Hit(ObjectBase* object, const float damage)
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + DAGGER_DAMAGE));
-			enemy->SetIsHit(true);
-			enemy->SetIsKnockBack(true);
 		}
 	}
 }
