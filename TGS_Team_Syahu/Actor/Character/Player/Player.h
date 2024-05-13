@@ -79,7 +79,7 @@ public:
 	void Draw()const override;
 
 	//着地
-	void Landing(const float height);
+	void Landing(const float height)override;
 
 public:
 	//ストックを取得

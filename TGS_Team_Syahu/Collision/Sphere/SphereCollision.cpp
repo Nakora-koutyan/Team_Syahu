@@ -7,6 +7,7 @@ SphereCollision::SphereCollision()
 	radius = 0.f;
 
 	collisionType = CollisionType::Sphere;
+	objectType = ObjectType::Object;
 }
 
 SphereCollision::~SphereCollision()

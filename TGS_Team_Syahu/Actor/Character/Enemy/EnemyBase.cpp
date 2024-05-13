@@ -4,6 +4,7 @@ EnemyBase::EnemyBase() :isClash(false), statusChangeTime(0), attackWaitingTime(0
 findMark(NULL),angryMark(NULL),attackRange{}, attackCenser{0}, colorRed(NULL), colorGreen(NULL), colorBlue(NULL), direction(NULL), hp(0),
 markStatus(NULL),isBlink(false),blinkCounter(0),enemyAlpha(255),isFind(false)
 {
+	charaType = CharacterType::Enemy;
 }
 
 EnemyBase::~EnemyBase()

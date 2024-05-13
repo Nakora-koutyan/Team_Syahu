@@ -6,17 +6,15 @@
 #include"../../Actor/Character//Enemy/LargeSwordEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../../UI/UI.h"
+#include"vector"
 
 #define LINE_NUM 12                     //ラインの数
 
 class GameMainScene :public SceneBase
 {
 private:
-    Player* player;                     //プレイヤーのオブジェクト
-    Camera* camera;                     //カメラのオブジェクト
-    NormalEnemy* enemy;                 //雑魚敵のオブジェクト
-    LargeSwordEnemy* enemy1;            //敵(大剣)のオブジェクト
-    StageBlock* stageblock;
+    std::vector<ObjectBase*>object;     //オブジェクト
+
     UI* ui;                             //UIのオブジェクト
 
     int kari;                           //かり
@@ -41,16 +39,6 @@ public:
 
     //描画
     void Draw()const override;
-
-public:
-    //プレイヤーオブジェクトの取得
-    Player* GetPlayer()const { return player; }
-
-    //カメラオブジェクトの取得
-    Camera* GetCamera()const { return camera; }
-
-    //雑魚敵オブジェクトの取得
-    NormalEnemy* GetNormalEnemy()const { return enemy; }
 
 private:
     //ヒットチェック

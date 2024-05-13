@@ -26,9 +26,6 @@ public:
     //描画
     void Draw()const override {};
 
-    //ヒット処理
-    void Hit(ObjectBase* object, const float damage)override {};
-
 public:
     //領域の取得
     Area GetArea()const { return area; }

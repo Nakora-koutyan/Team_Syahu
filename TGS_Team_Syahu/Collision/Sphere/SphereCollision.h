@@ -25,9 +25,6 @@ public:
     //描画
     void Draw()const override {};
 
-    //ヒット処理
-    void Hit(ObjectBase* object, const float damage)override {};
-
 public:
     //半径を取得
     float GetRadius()const { return radius; }

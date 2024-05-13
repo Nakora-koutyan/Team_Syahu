@@ -5,6 +5,8 @@
 
 Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger(nullptr),rapier(nullptr)
 {
+	charaType = CharacterType::Player;
+
 	location.x = 300.f;
 	location.y = GROUND_LINE;
 	area.width = 56.f;
@@ -16,7 +18,7 @@ Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger
 
 	for (int i = 0; i < PLAYER_MAX_STOCK; i++)
 	{
-		stock[i] = Weapon::Empty;
+		stock[i] = Weapon::None;
 		weaponFramCount[i] = PLAYER_WEAPON_TIME;
 	}
 
@@ -92,7 +94,7 @@ void Player::Update()
 	}
 #endif // DEBUG
 
-	if (isEquipment && stock[stockCount] != Weapon::Empty)
+	if (isEquipment && stock[stockCount] != Weapon::None)
 	{
 		if (actionState == Action::Equipment)
 		{
@@ -101,9 +103,9 @@ void Player::Update()
 		weaponFramCount[stockCount]--;
 		if (weaponFramCount[stockCount] < 0)
 		{
-			weaponType = Weapon::Empty;
+			weaponType = Weapon::None;
 			weaponFramCount[stockCount] = PLAYER_WEAPON_TIME;
-			stock[stockCount] = Weapon::Empty;
+			stock[stockCount] = Weapon::None;
 			isEquipment = false;
 		}
 	}
@@ -153,7 +155,7 @@ void Player::Draw() const
 	DrawFormatString(0, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
 	DrawFormatString(0, 90, 0x000000, "animCount :%d", playerAnim);
 	DrawFormatString(0, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
-	if (weaponType == Weapon::Empty)
+	if (weaponType == Weapon::None)
 	{
 		DrawFormatString(0, 45, 0x000000, "WeaponType:None");
 	}
@@ -372,18 +374,18 @@ void Player::Attack()
 		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None)
 	{
 		//武器を持っているないなら投げる
-		if (stock[stockCount] != Weapon::Empty && !isEquipment)
+		if (stock[stockCount] != Weapon::None && !isEquipment)
 		{		
 			isAttack = true;
 			actionState = Action::Throw;
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
 			normalWeapon->Attack(this, GetWeaponWeight(stock[stockCount]), GetWeaponDamage(stock[stockCount]));
-			stock[stockCount] = Weapon::Empty;
+			stock[stockCount] = Weapon::None;
 			weaponFramCount[stockCount] = PLAYER_WEAPON_TIME;
 		}
 
 		//武器攻撃
-		if (weaponType != Weapon::Empty)
+		if (weaponType != Weapon::None)
 		{
 			actionState = Action::WeaponAttack;
 			isAttack = true;
@@ -408,7 +410,7 @@ void Player::Attack()
 	if (attackCoolTime > 0)attackCoolTime--;
 
 	//装備
-	if (!isKnockBack && stock[stockCount] != Weapon::Empty && weaponType == Weapon::Empty && actionState == Action::None &&
+	if (!isKnockBack && stock[stockCount] != Weapon::None && weaponType == Weapon::None && actionState == Action::None &&
 		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
 	{
 			weaponType = stock[stockCount];
@@ -426,15 +428,15 @@ void Player::Attack()
 		steal->Attack(this);
 	}
 
-	if(steal->GetKeepType()!=Weapon::Empty)
+	if(steal->GetKeepType()!=Weapon::None)
 	{
 		for (int j = 0; j < PLAYER_MAX_STOCK; j++)
 		{
 			//ストックに空きがある
-			if (stock[j] == Weapon::Empty)
+			if (stock[j] == Weapon::None)
 			{
 				stock[j] = steal->GetKeepType();
-				steal->SetKeepType(Weapon::Empty);
+				steal->SetKeepType(Weapon::None);
 				break;
 			}
 		}
@@ -450,7 +452,7 @@ void Player::StockSelect()
 	{
 		isEquipment = false;
 		stockCount--;
-		weaponType = Weapon::Empty;
+		weaponType = Weapon::None;
 		if (stockCount < 0)
 		{
 			stockCount = PLAYER_MAX_STOCK - 1;
@@ -462,7 +464,7 @@ void Player::StockSelect()
 	{
 		isEquipment = false;
 		stockCount++;
-		weaponType = Weapon::Empty;
+		weaponType = Weapon::None;
 		if (stockCount >= PLAYER_MAX_STOCK)
 		{
 			stockCount = 0;
@@ -628,7 +630,7 @@ float Player::GetWeaponWeight(const Weapon type)
 
 	switch (checkType)
 	{
-	case Weapon::Empty:
+	case Weapon::None:
 		weight = 0.f;
 		break;
 
@@ -659,7 +661,7 @@ float Player::GetWeaponDamage(const Weapon type)
 
 	switch (checkType)
 	{
-	case Weapon::Empty:
+	case Weapon::None:
 		damage = 0.f;
 		break;
 

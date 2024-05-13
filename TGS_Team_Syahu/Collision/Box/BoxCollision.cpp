@@ -8,6 +8,7 @@ BoxCollision::BoxCollision()
 	area.height = 0.f;
 
 	collisionType = CollisionType::Box;
+	objectType = ObjectType::Object;
 }
 
 BoxCollision::~BoxCollision()

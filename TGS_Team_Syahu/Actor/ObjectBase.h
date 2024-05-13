@@ -5,10 +5,17 @@
 
 enum class CollisionType
 {
-	Empty = 0,		//空
+	None = 0,		//なし
 	Box,			//四角
 	Sphere,			//円
 	Line			//線
+};
+
+enum class ObjectType
+{
+	None = 0,		//なし
+	Object,			//物体
+	Character		//キャラクター
 };
 
 class ObjectBase
@@ -18,6 +25,10 @@ protected:
 	Vector2D screenLocation;			//スクリーン座標
 
 	CollisionType collisionType;		//コリジョンの種類
+	ObjectType objectType;				//オブジェクトの種類
+
+	float damage;						//ダメージ量
+
 public:
 	//コンストラクタ
 	ObjectBase();
@@ -38,7 +49,7 @@ public:
 	virtual void Draw()const = 0;
 
 	//ヒット処理
-	virtual void Hit(ObjectBase* object, const float damage) = 0;
+	virtual void Hit(ObjectBase* object, const float damage) {};
 
 public:
 	//当たり判定
@@ -67,17 +78,23 @@ public:
 	void SetScreenLocation(const Vector2D location) { this->screenLocation = location; }
 
 	//コリジョンの種類の取得
-	CollisionType GetType()const { return collisionType; }
+	CollisionType GetCollisionType()const { return collisionType; }
+
+	//オブジェクトの種類の取得
+	ObjectType GetObjectType()const { return objectType; }
+
+	//ダメージを取得
+	float GetDamage()const { return damage; }
 	
 protected:
 	//四角の当たり判定
-	virtual bool HitBox(const ObjectBase* object)const = 0;
+	virtual bool HitBox(const ObjectBase* object)const { return false; }
 
 	//円の当たり判定
-	virtual bool HitSphere(const ObjectBase* object)const = 0;
+	virtual bool HitSphere(const ObjectBase* object)const { return false; }
 
 	//線の当たり判定
-	virtual bool HitLine(const ObjectBase* object)const = 0;
+	virtual bool HitLine(const ObjectBase* object)const { return false; }
 
 };
 
