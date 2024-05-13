@@ -47,51 +47,51 @@ void StageBlock::Draw()const
 
 void StageBlock::Hit(ObjectBase* object, const float damage)
 {
-	const CharaBase* chara = static_cast<const CharaBase*>(object);
+	CharaBase* chara = static_cast<CharaBase*>(object);
 	// 座標、移動量取得
-	Vector2D ObjectLoc = object->GetLocation();
-	Vector2D BlockLoc = GetLocation();
+	Vector2D objectLoc = object->GetLocation();
+	Vector2D blockLoc = GetLocation();
 	Vector2D move = chara->GetMove();
-	Area ObjectSize = chara->GetArea();
-	Area BlockSize = GetArea();
-	int Dropwidth = 21;
+	Area objectSize = chara->GetArea();
+	Area blockSize = GetArea();
+	int dropWidth = 21;
 	// 上から
-	if ((ObjectLoc.y + ObjectSize.height - 20) <= BlockLoc.y && chara->GetDirection().y >= 0.f &&
-		(move.x != 0 || (ObjectLoc.x + ObjectSize.width - Dropwidth <= BlockLoc.x + BlockSize.width && ObjectLoc.x + Dropwidth >= BlockLoc.x))) {
-		chara->Landing(BlockLoc.y);
+	if ((objectLoc.y + objectSize.height - 20) <= blockLoc.y && chara->GetDirection().y >= 0.f &&
+		(move.x != 0 || (objectLoc.x + objectSize.width - dropWidth <= blockLoc.x + blockSize.width && objectLoc.x + dropWidth >= blockLoc.x))) {
+		chara->Landing(blockLoc.y);
 	}
 	// 下から
-	else if (ObjectLoc.y >= (BlockLoc.y + BlockSize.height - 20) && chara->GetDirection().y <= 0.f) {
+	else if (objectLoc.y >= (blockLoc.y + blockSize.height - 20) && chara->GetDirection().y <= 0.f) {
 		// Dropwidth以上ブロックからはみ出してないか
-		if (ObjectLoc.x + ObjectSize.width - Dropwidth <= BlockLoc.x + BlockSize.width && ObjectLoc.x + Dropwidth >= BlockLoc.x) {
-			ObjectLoc.y = BlockLoc.y + BlockSize.height;
-			object->SetLocation(ObjectLoc);
+		if (objectLoc.x + objectSize.width - dropWidth <= blockLoc.x + blockSize.width && objectLoc.x + dropWidth >= blockLoc.x) {
+			objectLoc.y = blockLoc.y + blockSize.height;
+			object->SetLocation(objectLoc);
 			move.y = 0;
 			chara->SetMove(move);
 		}
 		else
 		{
 			// 右から
-			if (ObjectLoc.x + ObjectSize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
-				ObjectLoc.x = BlockLoc.x + BlockSize.width;
+			if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
+				objectLoc.x = blockLoc.x + blockSize.width;
 			}
 			// 左から
 			else {
-				ObjectLoc.x = BlockLoc.x - ObjectSize.width;
+				objectLoc.x = blockLoc.x - objectSize.width;
 			}
-			object->SetLocation(ObjectLoc);
+			object->SetLocation(objectLoc);
 		}
 	}
 	else {
 		// 右から
-		if (ObjectLoc.x + ObjectSize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
-			ObjectLoc.x = BlockLoc.x + BlockSize.width;
+		if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
+			objectLoc.x = blockLoc.x + blockSize.width;
 		}
 		// 左から
 		else {
-			ObjectLoc.x = BlockLoc.x - ObjectSize.width;
+			objectLoc.x = blockLoc.x - objectSize.width;
 		}
-		object->SetLocation(ObjectLoc);
+		object->SetLocation(objectLoc);
 		move.x = 0;
 		chara->SetMove(move);
 	}

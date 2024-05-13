@@ -7,7 +7,7 @@
 
 enum class Weapon
 {
-	Empty = 0,			//空
+	None = 0,			//空
 	LargeSword,			//大剣
 	Dagger,				//ダガー
 	Rapier				//レイピア
@@ -60,6 +60,8 @@ public:
 
 	//ヒット処理
 	void Hit(ObjectBase* object, const float damage)override;
+
+	virtual void Landing(const float height);
 
 public:
 	//HPを取得
