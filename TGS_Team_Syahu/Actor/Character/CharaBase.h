@@ -54,7 +54,7 @@ public:
 	//更新
 	void Update()override {};
 
-	//描画
+	//描
 	void Draw()const override {};
 
 	//ヒット処理
