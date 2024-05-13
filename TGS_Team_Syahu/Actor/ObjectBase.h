@@ -15,7 +15,8 @@ enum class ObjectType
 {
 	None = 0,		//なし
 	Object,			//物体
-	Character		//キャラクター
+	Player,			//キャラクター
+	Enemy			//敵
 };
 
 class ObjectBase
@@ -37,16 +38,16 @@ public:
 	~ObjectBase();
 
 	//初期化処理
-	virtual void Initialize() = 0;
+	virtual void Initialize() {};
 
 	//終了処理
-	virtual void Finalize() = 0;
+	virtual void Finalize() {};
 
 	//更新
-	virtual void Update() = 0;
+	virtual void Update() {};
 
 	//描画
-	virtual void Draw()const = 0;
+	virtual void Draw()const {};
 
 	//ヒット処理
 	virtual void Hit(ObjectBase* object, const float damage) {};

@@ -8,8 +8,7 @@ CharaBase::CharaBase()
 	direction.y = 0.f;
 
 	weaponType = Weapon::None;
-	objectType = ObjectType::Character;
-	charaType = CharacterType::None;
+	objectType = ObjectType::Object;
 
 	knockBackDirection = 0;
 

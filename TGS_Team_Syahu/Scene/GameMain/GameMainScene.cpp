@@ -1,7 +1,7 @@
 #include"../../Utility/common.h"
 #include "GameMainScene.h"
 
-GameMainScene::GameMainScene() :debugModeFlg(false)
+GameMainScene::GameMainScene() :ui(nullptr), debugModeFlg(false)
 {
 	kari = LoadGraph("Resource/Images/kari.png");
 }
@@ -43,19 +43,30 @@ SceneBase* GameMainScene::Update()
 
 	for (int i = 0; i < object.size(); i++)
 	{
-		if (i == 1)
-		{
-			Camera* camera = static_cast<Camera*>(object[i]);
-			Player* player = static_cast<Player*>(object[0]);
-			ui->Update(player);
-			camera->SetTarget(player->GetLocation());
-		}
 		if (object[i] !=  nullptr)
 		{
+			if (object[i]->GetObjectType() == ObjectType::None && object[0] != nullptr)
+			{
+				Camera* camera = static_cast<Camera*>(object[i]);
+				Player* player = static_cast<Player*>(object[0]);
+				ui->Update(player);
+				camera->SetTarget(object[0]->GetLocation());
+			}
+
 			object[i]->Update();
+
+			if (object[i]->GetObjectType() == ObjectType::Player || object[i]->GetObjectType() == ObjectType::Enemy)
+			{
+				const CharaBase* chara = static_cast<const CharaBase*>(object[i]);
+				//プレイヤーか敵のHPが0以下なら
+				if (chara->GetHp() <= 0.f)
+				{
+					delete object[i];
+					object[i] = nullptr;
+				}
+			}
 		}
 	}
-
 
 	return this;
 }
@@ -88,17 +99,20 @@ void GameMainScene::HitCheck()
 {
 	for (int i = 0; i < object.size(); i++)
 	{
+		//i番目がnullじゃないかつオブジェクトタイプがあるなら
 		if (object[i] != nullptr && object[i]->GetObjectType() != ObjectType::None)
 		{
 			for (int j = i + 1; j < object.size(); j++)
 			{
+				//j番目がnullじゃないかつオブジェクトタイプがあるなら
 				if (object[j] != nullptr && object[j]->GetObjectType() != ObjectType::None)
 				{
-					const CharaBase* chara = static_cast<const CharaBase*>(object[i]);
-					if (chara->GetCharacterType() == CharacterType::Player)
+					//i番目がプレイヤーなら
+					if (object[i]->GetObjectType() == ObjectType::Player)
 					{
 						const Player* player = static_cast<const Player*>(object[i]);
-						if (object[j]->GetObjectType() == ObjectType::Character && player->GetIsAttack())
+						//武器との当たり判定
+						if (object[j]->GetObjectType() == ObjectType::Enemy && player->GetIsAttack())
 						{
 							CharaBase* enemy = static_cast<CharaBase*>(object[j]);
 
@@ -133,14 +147,16 @@ void GameMainScene::HitCheck()
 					}
 					if (object[i]->CollisionCheck(object[j]))
 					{
-						if (object[j]->GetObjectType() != ObjectType::Character)
+						//ステージの場合
+						if (object[j]->GetObjectType() == ObjectType::Object)
 						{
 							object[j]->Hit(object[i], 0.f);
 						}
-						else if (object[j]->GetObjectType() == ObjectType::Character)
+						else if (object[j]->GetObjectType() == ObjectType::Enemy)
 						{
 							const CharaBase* target = static_cast<const CharaBase*>(object[j]);
-							if ((chara->GetCharacterType() == CharacterType::Player && target->GetCharacterType() == CharacterType::Enemy))
+							//プレイヤーと敵の場合
+							if ((object[i]->GetObjectType() == ObjectType::Player && target->GetObjectType() == ObjectType::Enemy))
 							{
 								object[i]->Hit(object[j], object[j]->GetDamage());
 							}
