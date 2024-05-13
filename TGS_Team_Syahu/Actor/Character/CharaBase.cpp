@@ -7,7 +7,9 @@ CharaBase::CharaBase()
 	direction.x = 0.f;
 	direction.y = 0.f;
 
-	weaponType = Weapon::Empty;
+	weaponType = Weapon::None;
+	objectType = ObjectType::Character;
+	charaType = CharacterType::None;
 
 	knockBackDirection = 0;
 
@@ -47,7 +49,7 @@ void CharaBase::Hit(ObjectBase* object, const float damage)
 {
 	const CharaBase* chara = static_cast<const CharaBase*>(object);
 
-	if (isHit)
+	if (!isKnockBack)
 	{
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
 		{
@@ -67,6 +69,24 @@ void CharaBase::Hit(ObjectBase* object, const float damage)
 		if (hp > 0)hp -= damage;
 		isKnockBack = true;
 	}
+}
+
+void CharaBase::Landing(const float height)
+{
+	//地面を超えない
+	if (GetMaxLocation().y > height)
+	{
+		location.y = height - area.height;
+		move.y = 0.f;
+		isAir = false;
+		direction = { direction.x,0.f };
+	}
+
+	if (direction.y != 0.f)
+	{
+		isAir = true;
+	}
+
 }
 
 void CharaBase::DamageInterval(const double interval)

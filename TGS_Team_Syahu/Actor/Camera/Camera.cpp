@@ -17,20 +17,18 @@ Camera::~Camera()
 
 }
 
-void Camera::Update(Vector2D location, const bool debugFlg)
+void Camera::Initialize()
 {
-	if (!debugFlg)
-	{
-		//対象を追尾
-		cameraPosition = location;
-	}
-	else
-	{
-		//マウスでカメラ移動
-		cameraPosition.x += (float)KeyInput::GetMouseVecX();
-		cameraPosition.y += (float)KeyInput::GetMouseVecY();
-	}
 
+}
+
+void Camera::Finalize()
+{
+
+}
+
+void Camera::Update()
+{
 	//世界の左端を超えない
 	if (cameraPosition.x - SCREEN_WIDTH / 2.f <= 0.f)
 	{
@@ -73,4 +71,19 @@ Vector2D Camera::ConvertScreenPosition(const Vector2D location)
 
 
 	return screenPosition;
+}
+
+void Camera::SetTarget(const Vector2D location, const bool debugFlg)
+{
+	if (!debugFlg)
+	{
+		//対象を追尾
+		cameraPosition = location;
+	}
+	else
+	{
+		//マウスでカメラ移動
+		cameraPosition.x += (float)KeyInput::GetMouseVecX();
+		cameraPosition.y += (float)KeyInput::GetMouseVecY();
+	}
 }

@@ -7,10 +7,17 @@
 
 enum class Weapon
 {
-	Empty = 0,			//空
+	None = 0,			//空
 	LargeSword,			//大剣
 	Dagger,				//ダガー
 	Rapier				//レイピア
+};
+
+enum class CharacterType
+{
+	None = 0,
+	Player,
+	Enemy
 };
 
 class CharaBase :public BoxCollision
@@ -20,6 +27,7 @@ protected:
 	Vector2D direction;			//方向
 
 	Weapon weaponType;			//武器の種類
+	CharacterType charaType;	//キャラクターの種類
 
 	short knockBackDirection;	//ノックバックの方向
 
@@ -28,7 +36,6 @@ protected:
 	int alphaBlend;				//画像の透明値
 
 	float hp;					//HP
-	float damage;				//ダメージ
 
 	bool isAir;					//空中？
 	bool isJump;				//ジャンプしている？
@@ -61,15 +68,15 @@ public:
 	//ヒット処理
 	void Hit(ObjectBase* object, const float damage)override;
 
+	//着地
+	virtual	void Landing(const float height);
+
 public:
 	//HPを取得
 	float GetHp()const { return hp; }
 
 	//HPを設定
 	void SetHp(const float hp) { this->hp = hp; }
-
-	//ダメージを取得
-	float GetDamage()const { return damage; }
 
 	//当たっているかどうかを取得
 	bool GetIsHit()const { return isHit; }
@@ -109,6 +116,9 @@ public:
 
 	//武器の種類を設定
 	void SetWeaponType(const Weapon ability) { weaponType = ability; }
+
+	//キャラクターの種類を取得
+	CharacterType GetCharacterType()const { return charaType; }
 
 protected:
 	//ダメージのインターバル処理

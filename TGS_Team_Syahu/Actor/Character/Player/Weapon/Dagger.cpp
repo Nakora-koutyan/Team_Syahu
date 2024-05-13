@@ -7,6 +7,8 @@ Dagger::Dagger()
 	directionVector.x = DAGGER_LENGTH;
 	directionVector.y = 0.f;
 
+	damage = 0.f;
+
 	direction = 0;
 
 	framCount = 0;
@@ -23,7 +25,6 @@ Dagger::~Dagger()
 
 void Dagger::Update()
 {
-	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void Dagger::Draw() const
@@ -67,7 +68,9 @@ void Dagger::Appearance(CharaBase* chara)
 		chara->SetIsAttack(false);
 	}
 
+	damage = chara->GetDamage() + DAGGER_DAMAGE;
 	location.y = chara->GetCenterLocation().y;
+	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void Dagger::Attack(const Player* player)

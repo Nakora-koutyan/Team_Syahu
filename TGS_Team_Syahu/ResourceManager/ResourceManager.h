@@ -44,9 +44,6 @@ public:
 	//分割読み込みの画像を取得
 	static int GetDivImage(const std::string fileName, const int element) { return manager->divImage[fileName][element]; }
 
-	//分割読み込みの画像ポインタを取得
-	static int* GetDivImagePtr(const std::string fileName) { return manager->divImage[fileName]; }
-
 public:
 	//BGMを設定
 	static void SetBGM(const std::string fileName);

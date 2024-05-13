@@ -7,6 +7,8 @@ Rapier::Rapier()
 	directionVector.x = RAPIER_LENGTH;
 	directionVector.y = 0.f;
 
+	damage = 0.f;
+
 	direction = 0;
 
 	framCount = 0;
@@ -23,7 +25,6 @@ Rapier::~Rapier()
 
 void Rapier::Update()
 {
-	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void Rapier::Draw() const
@@ -67,7 +68,9 @@ void Rapier::Appearance(CharaBase* chara)
 		chara->SetIsAttack(false);
 	}
 
+	damage = chara->GetDamage() + RAPIER_DAMAGE;
 	location.y = chara->GetCenterLocation().y;
+	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void Rapier::Attack(const Player* player)

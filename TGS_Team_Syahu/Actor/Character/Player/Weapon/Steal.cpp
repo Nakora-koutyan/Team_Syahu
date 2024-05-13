@@ -5,7 +5,9 @@
 
 Steal::Steal()
 {	
-	keepType = Weapon::Empty;
+	keepType = Weapon::None;
+
+	damage = 10.f;
 
 	direction = 0;
 
@@ -122,17 +124,13 @@ void Steal::Hit(ObjectBase* object, const float damage)
 		{
 			if (enemy->GetIsShow() && !enemy->GetIsHit())
 			{
-				enemy->SetHp(enemy->GetHp() - damage);
-				enemy->SetIsHit(true);
-				enemy->SetIsKnockBack(true);
-
 				//能力の種類が空ではないなら
-				if (enemy->GetWeaponType() != Weapon::Empty)
+				if (enemy->GetWeaponType() != Weapon::None)
 				{
 					//敵の能力を奪う
 					keepType = enemy->GetWeaponType();
 					//敵は無能力になる
-					//enemy->SetWeaponType(Weapon::Empty);
+					//enemy->SetWeaponType(Weapon::None);
 				}
 			}
 		}

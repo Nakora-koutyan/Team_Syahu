@@ -10,7 +10,10 @@ ObjectBase::ObjectBase()
 	screenLocation.x = 0.f;
 	screenLocation.y = 0.f;
 
-	collisionType = CollisionType::Empty;
+	collisionType = CollisionType::None;
+	objectType = ObjectType::None;
+
+	damage = 0.f;
 }
 
 ObjectBase::~ObjectBase()
@@ -23,12 +26,12 @@ bool ObjectBase::CollisionCheck(const ObjectBase* object) const
 	bool ret = false;
 
 	//コリジョンの種類の取得
-	CollisionType type = object->GetType();
+	CollisionType type = object->GetCollisionType();
 
 	switch (type)
 	{
 	//空
-	case CollisionType::Empty:
+	case CollisionType::None:
 		ret = false;
 		break;
 

@@ -1,9 +1,10 @@
 #pragma once
 #include"../../Utility/Vector2D.h"
+#include"../ObjectBase.h"
 
 class GameMainScene;
 
-class Camera
+class Camera :public ObjectBase
 {
 private:
 	static Vector2D cameraPosition;		//カメラの座標
@@ -16,13 +17,23 @@ public:
 	//デストラクタ
 	~Camera();
 
+	//初期化処理
+	void Initialize()override;
+
+	//終了処理
+	void Finalize()override;
+
 	//更新
-	void Update(Vector2D location, const bool debugFlg = false);
+	void Update()override;
 
 	//描画
-	void Draw()const;
+	void Draw()const override;
 
+public:
 	//スクリーンの座標に変換
 	static Vector2D ConvertScreenPosition(const Vector2D location);
+
+	//対象を設定する
+	static void SetTarget(const Vector2D location, const bool debugFlg = false);
 
 };

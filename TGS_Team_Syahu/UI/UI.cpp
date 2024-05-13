@@ -25,7 +25,7 @@ UI::UI()
 
 	for (int i = 0; i < 5; i++)
 	{
-		stockIcon[i] = Weapon::Empty;
+		stockIcon[i] = Weapon::None;
 	}
 
 	playerHpBarLocation.x = 27.f;
@@ -99,7 +99,7 @@ void UI::PlayerStock() const
 	{
 		DrawGraph(10 + (i * 50), 38, stockImage, TRUE);
 
-		if (stockIcon[i] == Weapon::Empty)
+		if (stockIcon[i] == Weapon::None)
 		{
 
 		}

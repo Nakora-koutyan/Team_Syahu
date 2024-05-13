@@ -1,9 +1,7 @@
 #include"../../Utility/common.h"
 #include "GameMainScene.h"
 
-GameMainScene::GameMainScene()
-	:player(nullptr),camera(nullptr),enemy(nullptr),stageblock(nullptr),ui(nullptr),enemy1(nullptr)
-	,debugModeFlg(false)
+GameMainScene::GameMainScene() :debugModeFlg(false)
 {
 	kari = LoadGraph("Resource/Images/kari.png");
 }
@@ -15,232 +13,141 @@ GameMainScene::~GameMainScene()
 
 void GameMainScene::Initialize()
 {
-	player = new Player();
-	player->Initialize();
-	camera = new Camera();
-	enemy = new NormalEnemy();
-	enemy->Initialize();
-	enemy1 = new LargeSwordEnemy();
-	enemy1->Initialize();
-	stageblock = new StageBlock();
 	ui = new UI();
+
+	object.push_back(new Player);
+	object.push_back(new Camera);
+	object.push_back(new NormalEnemy);
+	object.push_back(new LargeSwordEnemy);
+	object.push_back(new StageBlock);
+
+	for (ObjectBase* ob : object)
+	{
+		ob->Initialize();
+	}
 }
 
 void GameMainScene::Finalize()
 {
-	delete player;
-	delete camera;
-	delete enemy;
-	delete stageblock;
-	delete ui;
-	delete enemy1;
+	for (ObjectBase* ob : object)
+	{
+		delete ob;
+	}
 }
 
 SceneBase* GameMainScene::Update()
 {
 	if (KeyInput::GetKey(KEY_INPUT_G))debugModeFlg = !debugModeFlg;
 
-	camera->Update(player->GetLocation(),debugModeFlg);
-
-	player->Update();
-
 	HitCheck();
-		
-	if (enemy != nullptr)
-	{
-		enemy->Update();
-		enemy->FindPlayer(player);
 
-		//deleteしなくてもいい
-		if (enemy->GetHp() <= 0.f)
+	for (int i = 0; i < object.size(); i++)
+	{
+		if (i == 1)
 		{
-			delete enemy;
-			enemy = nullptr;
+			Camera* camera = static_cast<Camera*>(object[i]);
+			Player* player = static_cast<Player*>(object[0]);
+			ui->Update(player);
+			camera->SetTarget(player->GetLocation());
+		}
+		if (object[i] !=  nullptr)
+		{
+			object[i]->Update();
 		}
 	}
-	enemy1->Update();
 
-	stageblock->Update();
-
-	ui->Update(player);
 
 	return this;
 }
 
 void GameMainScene::Draw() const
 {
-	DrawGraphF(GetCamera()->ConvertScreenPosition({ 0,0 }).x, GetCamera()->ConvertScreenPosition({ 0,0 }).y, kari, TRUE);
+	DrawGraphF(Camera::ConvertScreenPosition({ 0,0 }).x, Camera::ConvertScreenPosition({ 0,0 }).y, kari, TRUE);
 
 	//x軸
 	Vector2D pos1 = { 0.f, GROUND_LINE };
 	Vector2D pos2 = { WORLD_WIDTH, GROUND_LINE };
 	DrawLineAA
-	(GetCamera()->ConvertScreenPosition(pos1).x, GetCamera()->ConvertScreenPosition(pos1).y,
-		GetCamera()->ConvertScreenPosition(pos2).x, GetCamera()->ConvertScreenPosition(pos2).y,
+	(Camera::ConvertScreenPosition(pos1).x, Camera::ConvertScreenPosition(pos1).y,
+		Camera::ConvertScreenPosition(pos2).x, Camera::ConvertScreenPosition(pos2).y,
 		0xffffff
 	);
 
 	ui->Draw();
 
-	player->Draw();
-
-	if (enemy != nullptr)
+	for (ObjectBase* ob : object)
 	{
-		enemy->Draw();
+		if (ob != nullptr)
+		{
+			ob->Draw();
+		}
 	}
-
-	enemy1->Draw();
-
-	stageblock->Draw();
 }
 
 void GameMainScene::HitCheck()
 {
-	//雑魚敵がnullじゃないなら
-	if (enemy != nullptr)
-	{	
-		//雑魚敵とプレイヤーが当たったら
-		if (player->CollisionCheck(enemy))
-		{
-			player->Hit(enemy, enemy->GetDamage());
-		}
-
-		//雑魚敵と投げるが当たったら
-		if (player->GetNormalWeapon()->CollisionCheck(enemy))
-		{
-			player->GetNormalWeapon()->Hit(enemy, player->GetDamage());
-		}
-
-		//雑魚敵と奪うが当たったら
-		if (player->GetSteal()->CollisionCheck(enemy) ||
-			player->GetSteal()->GetSideClaw(0).CollisionCheck(enemy) ||
-			player->GetSteal()->GetSideClaw(1).CollisionCheck(enemy))
-		{
-			player->GetSteal()->Hit(enemy, player->GetDamage());
-		}
-
-		//雑魚敵と大剣が当たったら
-		if (player->GetLargeSword()->CollisionCheck(enemy))
-		{
-			player->GetLargeSword()->Hit(enemy, player->GetDamage());
-		}
-
-		//雑魚敵と短剣が当たったら
-		if (player->GetDagger()->CollisionCheck(enemy))
-		{
-			player->GetDagger()->Hit(enemy, player->GetDamage());
-		}
-
-		//雑魚敵とレイピアが当たったら
-		if (player->GetRapier()->CollisionCheck(enemy))
-		{
-			player->GetRapier()->Hit(enemy, player->GetDamage());
-		}
-
-		// ブロックと敵が当たったら
-		if (stageblock->CollisionCheck(enemy))
-		{
-			// 座標、移動量取得
-			Vector2D EnemyLoc = enemy->GetLocation();
-			Vector2D BlockLoc = stageblock->GetLocation();
-			Vector2D move = enemy->GetMove();
-			Area EnemySize = enemy->GetArea();
-			Area BlockSize = stageblock->GetArea();
-			int Dropwidth = 21;
-			// 上から
-			if ((EnemyLoc.y + EnemySize.height - 20) <= BlockLoc.y && enemy->GetDirection().y >= 0.f &&
-				(move.x != 0 || (EnemyLoc.x + EnemySize.width - Dropwidth <= BlockLoc.x + BlockSize.width && EnemyLoc.x + Dropwidth >= BlockLoc.x))) {
-				EnemyLoc.y = BlockLoc.y - EnemySize.height;
-				enemy->SetLocation(EnemyLoc);
-				move.y = 0;
-				enemy->SetMove(move);
-			}
-			// 下から
-			else if (EnemyLoc.y >= (BlockLoc.y + BlockSize.height - 20) && enemy->GetDirection().y <= 0.f) {
-				// Dropwidth以上ブロックからはみ出してないか
-				if (EnemyLoc.x + EnemySize.width - Dropwidth <= BlockLoc.x + BlockSize.width && EnemyLoc.x + Dropwidth >= BlockLoc.x) {
-					EnemyLoc.y = BlockLoc.y + BlockSize.height;
-					enemy->SetLocation(EnemyLoc);
-					move.y = 0;
-					enemy->SetMove(move);
-				}
-				else
-				{
-					// 右から
-					if (EnemyLoc.x + EnemySize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
-						EnemyLoc.x = BlockLoc.x + BlockSize.width;
-					}
-					// 左から
-					else {
-						EnemyLoc.x = BlockLoc.x - EnemySize.width;
-					}
-					enemy->SetLocation(EnemyLoc);
-				}
-			}
-			else {
-				// 右から
-				if (EnemyLoc.x + EnemySize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
-					EnemyLoc.x = BlockLoc.x + BlockSize.width;
-				}
-				// 左から
-				else {
-					EnemyLoc.x = BlockLoc.x - EnemySize.width;
-				}
-				enemy->SetLocation(EnemyLoc);
-				move.x = 0;
-				enemy->SetMove(move);
-			}
-		}
-	}
-	// ブロックとプレイヤーが当たったら
-	if (stageblock->CollisionCheck(player))
+	for (int i = 0; i < object.size(); i++)
 	{
-		// 座標、移動量取得
-		Vector2D PlayerLoc = player->GetLocation();
-		Vector2D BlockLoc = stageblock->GetLocation();
-		Vector2D move = player->GetMove();
-		Area PlayerSize = player->GetArea();
-		Area BlockSize = stageblock->GetArea();
-		int Dropwidth = 21;
-		// 上から
-		if ((PlayerLoc.y + PlayerSize.height - 20) <= BlockLoc.y && player->GetDirection().y >= 0.f &&
-			(move.x != 0 || (PlayerLoc.x + PlayerSize.width - Dropwidth <= BlockLoc.x + BlockSize.width && PlayerLoc.x + Dropwidth >= BlockLoc.x))) {
-			player->Landing(BlockLoc.y);
-		}
-		// 下から
-		else if (PlayerLoc.y >= (BlockLoc.y + BlockSize.height - 20) && player->GetDirection().y <= 0.f) {
-			// Dropwidth以上ブロックからはみ出してないか
-			if (PlayerLoc.x + PlayerSize.width - Dropwidth <= BlockLoc.x + BlockSize.width && PlayerLoc.x + Dropwidth >= BlockLoc.x) {
-				PlayerLoc.y = BlockLoc.y + BlockSize.height;
-				player->SetLocation(PlayerLoc);
-				move.y = 0;
-				player->SetMove(move); 
-			}
-			else 
+		if (object[i] != nullptr && object[i]->GetObjectType() != ObjectType::None)
+		{
+			for (int j = i + 1; j < object.size(); j++)
 			{
-				// 右から
-				if (PlayerLoc.x + PlayerSize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
-					PlayerLoc.x = BlockLoc.x + BlockSize.width;
+				if (object[j] != nullptr && object[j]->GetObjectType() != ObjectType::None)
+				{
+					const CharaBase* chara = static_cast<const CharaBase*>(object[i]);
+					if (chara->GetCharacterType() == CharacterType::Player)
+					{
+						const Player* player = static_cast<const Player*>(object[i]);
+						if (object[j]->GetObjectType() == ObjectType::Character && player->GetIsAttack())
+						{
+							CharaBase* enemy = static_cast<CharaBase*>(object[j]);
+
+							if (player->GetNormalWeapon()->CollisionCheck(object[j]))
+							{
+								enemy->Hit(object[i], player->GetNormalWeapon()->GetDamage());
+							}
+
+							if (player->GetSteal()->CollisionCheck(object[j]) ||
+								player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
+								player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j]))
+							{
+								player->GetSteal()->Hit(object[j], 0);
+								enemy->Hit(object[i], player->GetSteal()->GetDamage());
+							}
+
+							if (player->GetLargeSword()->CollisionCheck(object[j]))
+							{
+								enemy->Hit(object[i], player->GetLargeSword()->GetDamage());
+							}
+
+							if (player->GetDagger()->CollisionCheck(object[j]))
+							{
+								enemy->Hit(object[i], player->GetDagger()->GetDamage());
+							}
+
+							if (player->GetRapier()->CollisionCheck(object[j]))
+							{
+								enemy->Hit(object[i], player->GetRapier()->GetDamage());
+							}
+						}
+					}
+					if (object[i]->CollisionCheck(object[j]))
+					{
+						if (object[j]->GetObjectType() != ObjectType::Character)
+						{
+							object[j]->Hit(object[i], 0.f);
+						}
+						else if (object[j]->GetObjectType() == ObjectType::Character)
+						{
+							const CharaBase* target = static_cast<const CharaBase*>(object[j]);
+							if ((chara->GetCharacterType() == CharacterType::Player && target->GetCharacterType() == CharacterType::Enemy))
+							{
+								object[i]->Hit(object[j], object[j]->GetDamage());
+							}
+						}
+					}
 				}
-				// 左から
-				else {
-					PlayerLoc.x = BlockLoc.x - PlayerSize.width;
-				}
-				player->SetLocation(PlayerLoc);
 			}
-		}
-		else {
-			// 右から
-			if (PlayerLoc.x + PlayerSize.width / 2 >= BlockLoc.x + BlockSize.width / 2) {
-				PlayerLoc.x = BlockLoc.x + BlockSize.width;
-			}
-			// 左から
-			else {
-				PlayerLoc.x = BlockLoc.x - PlayerSize.width;
-			}
-			player->SetLocation(PlayerLoc);
-			move.x = 0;
-			player->SetMove(move);
 		}
 	}
 }

@@ -66,6 +66,7 @@ void NormalWeapon::Appearance(Player* player)
 		isShow = false;
 		player->SetIsAttack(false);
 	}
+	damage = weaponDamage + player->GetDamage();
 }
 
 void NormalWeapon::Attack(const Player* player, const float weight, const float damage)

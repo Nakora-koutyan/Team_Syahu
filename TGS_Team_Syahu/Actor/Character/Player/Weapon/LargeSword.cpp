@@ -7,6 +7,8 @@ LargeSword::LargeSword()
 	directionVector.x = LARGRSWORD_LENGTH;
 	directionVector.y = 0.f;
 
+	damage = 0.f;
+
 	direction = 0;
 
 	framCount = 0;
@@ -23,7 +25,6 @@ LargeSword::~LargeSword()
 
 void LargeSword::Update()
 {
-	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void LargeSword::Draw() const
@@ -66,8 +67,9 @@ void LargeSword::Appearance(CharaBase* chara)
 		isShow = false;
 		chara->SetIsAttack(false);
 	}
-
+	damage = chara->GetDamage() + LARGESWORD_DAMAGE;
 	location.y = chara->GetCenterLocation().y;
+	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void LargeSword::Attack(const Player* player)

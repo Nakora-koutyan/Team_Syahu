@@ -10,6 +10,7 @@ LineCollision::LineCollision()
 	directionVector.y = 0.f;
 
 	collisionType = CollisionType::Line;
+	objectType = ObjectType::Object;
 }
 
 LineCollision::~LineCollision()
