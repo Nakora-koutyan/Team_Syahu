@@ -19,6 +19,8 @@ private:
 	int stockImage;										//ストックの画像
 	int selectImage[2];									//選択しているアイコンの画像
 	int largeSwordIcon;									//大剣のアイコン
+	int daggerIcon;										//短剣のアイコン
+	int rapierIcon;										//レイピアのアイコン
 
 	float playerHp;										//プレイヤーのHP
 
