@@ -16,6 +16,9 @@ private:
 	int attackCountDown;	//攻撃までのカウントダウン
 	bool didAttack;			//攻撃をした？
 
+	bool canAttack;			//攻撃できる？
+	float correctLocX;		//画像のX座標の修正用変数
+
 public:
 	//コンストラクタ
 	LargeSwordEnemy();
