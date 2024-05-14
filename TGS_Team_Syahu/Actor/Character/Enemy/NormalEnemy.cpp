@@ -64,6 +64,8 @@ void NormalEnemy::Initialize()
 	//表示するか?
 	isShow = true;
 
+	damage = 10.f;
+
 	//攻撃時間
 	attackWaitingTime = MAX_WAITING_TIME;
 	statusChangeTime = MAX_COOL_TIME;

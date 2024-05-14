@@ -15,8 +15,9 @@ enum class ObjectType
 {
 	None = 0,		//なし
 	Object,			//物体
-	Player,			//キャラクター
-	Enemy			//敵
+	Player,			//プレイヤー
+	Enemy,			//敵
+	Camera			//カメラ
 };
 
 class ObjectBase

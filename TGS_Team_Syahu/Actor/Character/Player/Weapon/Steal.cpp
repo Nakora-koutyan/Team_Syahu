@@ -21,8 +21,28 @@ Steal::~Steal()
 
 }
 
-void Steal::Update()
+void Steal::Update(CharaBase* chara)
 {
+	if (isShow)
+	{
+		framCount++;
+	}
+	else
+	{
+		location = chara->GetCenterLocation();
+		sideClaw[0].SetLocation(chara->GetCenterLocation());
+		sideClaw[1].SetLocation(chara->GetCenterLocation());
+
+	}
+
+	//攻撃時間を超えたら
+	if (framCount > STEAL_ATTACK_TIME || chara->GetIsKnockBack())
+	{
+		framCount = 0;
+		direction = 0;
+		isShow = false;
+		chara->SetIsAttack(false);
+	}
 	screenLocation = Camera::ConvertScreenPosition(location);
 	sideClaw[0].SetScreenLocation(Camera::ConvertScreenPosition(sideClaw[0].GetLocation()));
 	sideClaw[1].SetScreenLocation(Camera::ConvertScreenPosition(sideClaw[1].GetLocation()));
@@ -46,41 +66,17 @@ void Steal::Draw() const
 	}
 }
 
-void Steal::Appearance(Player* player)
-{
-	if (isShow)
-	{
-		framCount++;
-	}
-	else
-	{
-		location = player->GetCenterLocation();
-		sideClaw[0].SetLocation(player->GetCenterLocation());
-		sideClaw[1].SetLocation(player->GetCenterLocation());
-
-	}
-
-	//攻撃時間を超えたら
-	if (framCount > STEAL_ATTACK_TIME || player->GetIsKnockBack())
-	{
-		framCount = 0;
-		direction = 0;
-		isShow = false;
-		player->SetIsAttack(false);
-	}
-}
-
-void Steal::Attack(const Player* player)
+void Steal::Attack(const CharaBase* chara)
 {
 	//出現させる
 	isShow = true;
 
 	//右に出す
-	if (player->GetDirection().x > 0)
+	if (chara->GetDirection().x > 0)
 	{
-		location.x = player->GetMaxLocation().x + (STEAL_DISTANCE - 20.f);
-		sideClaw[0].SetLocationX(player->GetMaxLocation().x + (STEAL_DISTANCE - 10.f));
-		sideClaw[1].SetLocationX(player->GetMaxLocation().x + (STEAL_DISTANCE + 10.f));
+		location.x = chara->GetMaxLocation().x + (STEAL_DISTANCE - 20.f);
+		sideClaw[0].SetLocationX(chara->GetMaxLocation().x + (STEAL_DISTANCE - 10.f));
+		sideClaw[1].SetLocationX(chara->GetMaxLocation().x + (STEAL_DISTANCE + 10.f));
 
 		directionVector.x = 100.f;
 		sideClaw[0].SetDirectionVectorX(60.f);
@@ -89,18 +85,18 @@ void Steal::Attack(const Player* player)
 	//左に出す
 	else
 	{
-		location.x = player->GetMinLocation().x - (STEAL_DISTANCE - 20.f);
-		sideClaw[0].SetLocationX(player->GetMinLocation().x - (STEAL_DISTANCE - 10.f));
-		sideClaw[1].SetLocationX(player->GetMinLocation().x - (STEAL_DISTANCE + 10.f));
+		location.x = chara->GetMinLocation().x - (STEAL_DISTANCE - 20.f);
+		sideClaw[0].SetLocationX(chara->GetMinLocation().x - (STEAL_DISTANCE - 10.f));
+		sideClaw[1].SetLocationX(chara->GetMinLocation().x - (STEAL_DISTANCE + 10.f));
 	
 		directionVector.x = -100.f;
 		sideClaw[0].SetDirectionVectorX(-60.f);
 		sideClaw[1].SetDirectionVectorX(-70.f);
 	}		
 
-	location.y = player->GetCenterLocation().y + 30.f;
-	sideClaw[0].SetLocationY(player->GetCenterLocation().y);
-	sideClaw[1].SetLocationY(player->GetCenterLocation().y + 30.f);
+	location.y = chara->GetCenterLocation().y + 30.f;
+	sideClaw[0].SetLocationY(chara->GetCenterLocation().y);
+	sideClaw[1].SetLocationY(chara->GetCenterLocation().y + 30.f);
 
 	directionVector.y = -100.f;
 	sideClaw[0].SetDirectionVectorY(-60.f);
@@ -110,27 +106,30 @@ void Steal::Attack(const Player* player)
 	if (direction == 0)
 	{
 		//プレイヤーの方向情報を保持する
-		direction = (short)player->GetDirection().x;
+		direction = (short)chara->GetDirection().x;
 	}
 }
 
 void Steal::Hit(ObjectBase* object, const float damage)
 {
-	CharaBase* enemy = static_cast<CharaBase*>(object);
+	CharaBase* chara = static_cast<CharaBase*>(object);
 
 	if (isShow)
 	{
 		if (isShow)
 		{
-			if (enemy->GetIsShow() && !enemy->GetIsHit())
+			if (chara->GetIsShow() && !chara->GetIsHit())
 			{
 				//能力の種類が空ではないなら
-				if (enemy->GetWeaponType() != Weapon::None)
+				if (chara->GetWeaponType() != Weapon::None)
 				{
 					//敵の能力を奪う
-					keepType = enemy->GetWeaponType();
+					keepType = chara->GetWeaponType();
+
 					//敵は無能力になる
-					//enemy->SetWeaponType(Weapon::None);
+					//chara->SetWeaponType(Weapon::None);
+
+					chara->SetHp(chara->GetHp() - (damage));
 				}
 			}
 		}

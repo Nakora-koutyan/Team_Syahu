@@ -5,6 +5,7 @@
 #include"Weapon/LargeSword.h"
 #include"Weapon/Dagger.h"
 #include"Weapon/Rapier.h"
+#include<vector>
 
 #define PLAYER_IMAGE_ALIGN_THE_ORIGIN_X	31.f			//画像の原点調整用x
 #define PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y	48.f			//画像の原点調整用y
@@ -36,6 +37,8 @@ enum class Action
 class Player :public CharaBase
 {
 private:
+	std::vector<ObjectBase*>weapon;				//武器
+	
 	Weapon stock[PLAYER_MAX_STOCK];				//ストック
 	Action actionState;							//行動状態
 
@@ -99,6 +102,9 @@ public:
 
 	//レイピアを取得
 	Rapier* GetRapier()const { return rapier; }
+
+	//武器を取得
+	ObjectBase* GetWeapon(const int element)const { return weapon[element]; }
 
 public:
 	//ストックの番号を取得

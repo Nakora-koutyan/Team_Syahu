@@ -45,12 +45,14 @@ SceneBase* GameMainScene::Update()
 	{
 		if (object[i] !=  nullptr)
 		{
-			if (object[i]->GetObjectType() == ObjectType::None && object[0] != nullptr)
+			//カメラなら
+			if (object[i]->GetObjectType() == ObjectType::Camera && object[i - 1] != nullptr)
 			{
 				Camera* camera = static_cast<Camera*>(object[i]);
-				Player* player = static_cast<Player*>(object[0]);
+				//カメラの前にプレイヤーが格納されている
+				Player* player = static_cast<Player*>(object[i - 1]);
 				ui->Update(player);
-				camera->SetTarget(object[0]->GetLocation());
+				camera->SetTarget(object[i - 1]->GetLocation());
 			}
 
 			object[i]->Update();
@@ -58,9 +60,21 @@ SceneBase* GameMainScene::Update()
 			if (object[i]->GetObjectType() == ObjectType::Player || object[i]->GetObjectType() == ObjectType::Enemy)
 			{
 				const CharaBase* chara = static_cast<const CharaBase*>(object[i]);
+				//敵なら
+				if (object[i]->GetObjectType() == ObjectType::Enemy)
+				{
+					EnemyBase* enemy = static_cast<EnemyBase*>(object[i]);
+					Player* player = static_cast<Player*>(object[0]);
+					enemy->FindPlayer(player);
+				}
 				//プレイヤーか敵のHPが0以下なら
 				if (chara->GetHp() <= 0.f)
 				{
+					//プレイヤーならゲームオーバーに遷移（今はゲームメイン）
+					if (chara->GetObjectType() == ObjectType::Player)
+					{
+						return new GameMainScene();
+					}
 					delete object[i];
 					object[i] = nullptr;
 				}
@@ -99,49 +113,45 @@ void GameMainScene::HitCheck()
 {
 	for (int i = 0; i < object.size(); i++)
 	{
-		//i番目がnullじゃないかつオブジェクトタイプがあるなら
-		if (object[i] != nullptr && object[i]->GetObjectType() != ObjectType::None)
+		//i番目がnullじゃないかつコリジョンがあるなら
+		if (object[i] != nullptr && object[i]->GetCollisionType() != CollisionType::None)
 		{
 			for (int j = i + 1; j < object.size(); j++)
 			{
-				//j番目がnullじゃないかつオブジェクトタイプがあるなら
-				if (object[j] != nullptr && object[j]->GetObjectType() != ObjectType::None)
+				//j番目がnullじゃないかつコリジョンがあるなら
+				if (object[j] != nullptr && object[j]->GetCollisionType() != CollisionType::None)
 				{
-					//i番目がプレイヤーなら
+					//i番目がプレイヤーなら武器の当たり判定
 					if (object[i]->GetObjectType() == ObjectType::Player)
 					{
 						const Player* player = static_cast<const Player*>(object[i]);
-						//武器との当たり判定
+						//武器と敵の当たり判定
 						if (object[j]->GetObjectType() == ObjectType::Enemy && player->GetIsAttack())
 						{
 							CharaBase* enemy = static_cast<CharaBase*>(object[j]);
 
-							if (player->GetNormalWeapon()->CollisionCheck(object[j]))
+							for (int k = 0; k < 5; k++)
 							{
-								enemy->Hit(object[i], player->GetNormalWeapon()->GetDamage());
-							}
-
-							if (player->GetSteal()->CollisionCheck(object[j]) ||
-								player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
-								player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j]))
-							{
-								player->GetSteal()->Hit(object[j], 0);
-								enemy->Hit(object[i], player->GetSteal()->GetDamage());
-							}
-
-							if (player->GetLargeSword()->CollisionCheck(object[j]))
-							{
-								enemy->Hit(object[i], player->GetLargeSword()->GetDamage());
-							}
-
-							if (player->GetDagger()->CollisionCheck(object[j]))
-							{
-								enemy->Hit(object[i], player->GetDagger()->GetDamage());
-							}
-
-							if (player->GetRapier()->CollisionCheck(object[j]))
-							{
-								enemy->Hit(object[i], player->GetRapier()->GetDamage());
+								if (k != 1)
+								{
+									//武器のポインタが格納されている配列の要素を呼ぶ
+									if (player->GetWeapon(k)->CollisionCheck(enemy))
+									{
+										player->GetWeapon(k)->Hit(enemy, player->GetDamage());
+										enemy->Hit(object[i], 0);
+									}
+								}
+								//奪うだけ特殊なので直接呼ぶ
+								else
+								{
+									if (player->GetSteal()->CollisionCheck(object[j]) ||
+										player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
+										player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j]))
+									{
+										player->GetSteal()->Hit(object[j], player->GetDamage());
+										enemy->Hit(object[i], 0);
+									}
+								}
 							}
 						}
 					}
@@ -152,14 +162,13 @@ void GameMainScene::HitCheck()
 						{
 							object[j]->Hit(object[i], 0.f);
 						}
-						else if (object[j]->GetObjectType() == ObjectType::Enemy)
+						//objectのi番目がプレイヤー、objectのj番目が敵であることを保障しているなら
+						else if (object[i]->GetObjectType() == ObjectType::Player && object[j]->GetObjectType() == ObjectType::Enemy)
 						{
 							const CharaBase* target = static_cast<const CharaBase*>(object[j]);
-							//プレイヤーと敵の場合
-							if ((object[i]->GetObjectType() == ObjectType::Player && target->GetObjectType() == ObjectType::Enemy))
-							{
-								object[i]->Hit(object[j], object[j]->GetDamage());
-							}
+
+							//プレイヤーと敵の当たり判定
+							object[i]->Hit(object[j], object[j]->GetDamage());
 						}
 					}
 				}
