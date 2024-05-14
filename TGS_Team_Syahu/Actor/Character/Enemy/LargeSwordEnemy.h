@@ -31,7 +31,7 @@ public:
 	void Draw()const override;
 
 	//プレイヤーを見つけた？
-	void FindPlayer(Player* player)override;
+	void FindPlayer(const Player* player)override;
 
 protected:
 	//エネミーのアニメーション制御関数
@@ -41,7 +41,7 @@ protected:
 	void EnemyPatrol() override;
 
 	//プレイヤーに急接近する
-	void SuddenApproachToPlayer(Player* player);
+	void SuddenApproachToPlayer(const Player* player);
 
 	//攻撃準備に入るか？
 	void AttackStandBy() override;

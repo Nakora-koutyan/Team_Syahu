@@ -175,7 +175,7 @@ void LargeSwordEnemy::Draw() const
 	}
 }
 
-void LargeSwordEnemy::FindPlayer(Player* player)
+void LargeSwordEnemy::FindPlayer(const Player* player)
 {
 	if (attackCenser[0].x < player->GetMaxLocation().x &&
 		attackCenser[1].x > player->GetMinLocation().x)
@@ -256,7 +256,7 @@ void LargeSwordEnemy::EnemyPatrol()
 }
 
 //プレイヤーへの接近処理
-void LargeSwordEnemy::SuddenApproachToPlayer(Player* player)
+void LargeSwordEnemy::SuddenApproachToPlayer(const Player* player)
 {
 	//restTimeを減算する
 	if (restTime >= 0)
