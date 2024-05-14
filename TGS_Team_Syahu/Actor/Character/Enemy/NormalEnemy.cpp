@@ -43,7 +43,7 @@ void NormalEnemy::Initialize()
 	angryMark = LoadGraph("Resource/images/Angry.png");
 
 	//体の向き
-	direction = DIRECTION_LEFT;
+	direction.x = DIRECTION_LEFT;
 
 	//攻撃状態に入る範囲
 	attackRange[0].x = GetMinLocation().x - 410.f;
@@ -132,11 +132,11 @@ void NormalEnemy::Draw() const
 	if (markStatus != NULL)
 	{
 		//プレイヤーを発見した場合、状態に応じて符号を表示する
-		if (direction == DIRECTION_LEFT)
+		if (direction.x == DIRECTION_LEFT)
 		{
 			DrawGraphF(screenLocation.x + 35, screenLocation.y - 20, markStatus, TRUE);
 		}
-		if (direction == DIRECTION_RIGHT)
+		if (direction.x == DIRECTION_RIGHT)
 		{
 			DrawGraphF(screenLocation.x, screenLocation.y - 20, markStatus, TRUE);
 		}
@@ -158,12 +158,12 @@ void NormalEnemy::FindPlayer(const Player* player)
 			//方向変化処理
 			if (location.x >= player->GetCenterLocation().x)
 			{
-				direction = DIRECTION_LEFT;
+				direction.x = DIRECTION_LEFT;
 				animTurnFlg = false;
 			}
 			else
 			{
-				direction = DIRECTION_RIGHT;
+				direction.x = DIRECTION_RIGHT;
 				animTurnFlg = true;
 			}
 			isFind = true;
@@ -179,26 +179,26 @@ void NormalEnemy::FindPlayer(const Player* player)
 void NormalEnemy::EnemyPatrol()
 {
 	//左向きの場合
-	if (direction == DIRECTION_LEFT)
+	if (direction.x == DIRECTION_LEFT)
 	{
 		move.x = -NORMAL_WALK_SPEED;
 		patrolCounter -= NORMAL_WALK_SPEED;
 		//左に50進んだら向きを右にする
 		if (patrolCounter <= -150.f)
 		{
-			direction = DIRECTION_RIGHT;
+			direction.x = DIRECTION_RIGHT;
 			animTurnFlg = true;
 		}
 	}
 	//右向きの場合
-	if (direction == DIRECTION_RIGHT)
+	if (direction.x == DIRECTION_RIGHT)
 	{
 		move.x = NORMAL_WALK_SPEED;
 		patrolCounter += NORMAL_WALK_SPEED;
 		//右に50進んだら向きを左にする
 		if (patrolCounter >= 150.f)
 		{
-			direction = DIRECTION_LEFT;
+			direction.x = DIRECTION_LEFT;
 			animTurnFlg = false;
 		}
 	}
@@ -271,13 +271,13 @@ void NormalEnemy::AttackStart()
 	if (isAttack == true)
 	{
 		//左向きに攻撃を行う
-		if (direction == DIRECTION_LEFT)
+		if (direction.x == DIRECTION_LEFT)
 		{
 			animTurnFlg = false;
 			move.x = -(NORMAL_WALK_SPEED * ATTACK_SPEED);
 		}
 		//右向きに攻撃を行う
-		if (direction == DIRECTION_RIGHT)
+		if (direction.x == DIRECTION_RIGHT)
 		{
 			animTurnFlg = true;
 			move.x = (NORMAL_WALK_SPEED * ATTACK_SPEED);

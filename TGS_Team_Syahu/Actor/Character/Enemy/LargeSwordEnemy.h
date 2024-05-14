@@ -1,9 +1,14 @@
 #pragma once
 #include "EnemyBase.h"
 
+class LargeSword;
+
 class LargeSwordEnemy :public EnemyBase
 {
 private:
+
+	LargeSword* largeSword;
+
 	int enemyImage[115];	//敵画像
 	int enemyNumber;		//画像番号
 	int animInterval;		//画像のインターバル
@@ -18,6 +23,8 @@ private:
 
 	bool canAttack;			//攻撃できる？
 	float correctLocX;		//画像のX座標の修正用変数
+
+	bool once;				//LargeSwordのAttack関数を一度の攻撃で一回だけ呼ぶためのフラグ
 
 public:
 	//コンストラクタ

@@ -2,7 +2,7 @@
 #include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 
-#define MAX_WAITING_TIME 90
+#define MAX_WAITING_TIME 87
 #define LARGE_WALK_SPEED 3.f			//徘徊時のスピード
 #define MAX_REST_TIME 60				//休息時間
 #define ATTACK_COUNT_DOWN 31
@@ -10,7 +10,7 @@
 
 //コンストラクタ
 LargeSwordEnemy::LargeSwordEnemy():enemyImage(),enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
-distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0)
+distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0),largeSword(nullptr),once(false)
 {
 }
 
@@ -59,7 +59,7 @@ void LargeSwordEnemy::Initialize()
 	angryMark = LoadGraph("Resource/images/Angry.png");
 
 	//体の向き
-	direction = DIRECTION_LEFT;
+	direction.x = DIRECTION_LEFT;
 
 	//体力
 	hp = 100;
@@ -97,6 +97,8 @@ void LargeSwordEnemy::Initialize()
 
 	attackCountDown = ATTACK_COUNT_DOWN;
 	animTurnFlg = true;
+
+	largeSword = new LargeSword;
 }
 
 //描画以外の更新
@@ -106,6 +108,9 @@ void LargeSwordEnemy::Update()
 	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 0.5);
 	KnockBack(this,FPS * 0.5, LARGE_SWORD_KNOCKBACK);
+
+	//エネミーアニメーション
+	EnemyAnimation();
 
 	//状態遷移
 	switch (enemyStatus)
@@ -135,6 +140,9 @@ void LargeSwordEnemy::Update()
 		break;
 	}
 
+	largeSword->Update(this);
+
+
 	//アニメーションの画像のX座標のずれを修正
 	if (animTurnFlg)
 	{
@@ -146,9 +154,6 @@ void LargeSwordEnemy::Update()
 		//右向き
 		correctLocX = 30.f;
 	}
-
-	//エネミーアニメーション
-	EnemyAnimation();
 
 	location.x += move.x;
 }
@@ -165,7 +170,10 @@ void LargeSwordEnemy::Draw() const
 	);
 	DrawRotaGraphF(screenLocation.x + correctLocX, screenLocation.y + 15.f, 1, 0,
 		enemyImage[enemyNumber], TRUE, animTurnFlg);
+
+	largeSword->Draw();
 		
+	//デバッグ用文字列
 	DrawFormatStringF(50.f, 300.f, 0xff0000, "colorRed %d", colorRed);
 	DrawFormatStringF(50.f, 320.f, 0x00ff00, "colorGreen %d", colorGreen);
 	DrawFormatStringF(50.f, 340.f, 0x0000ff, "colorBlue %d", colorBlue);
@@ -176,11 +184,11 @@ void LargeSwordEnemy::Draw() const
 	if (markStatus != NULL)
 	{
 		//プレイヤーを発見した場合、状態に応じて符号を表示する
-		if (direction == DIRECTION_LEFT)
+		if (direction.x == DIRECTION_LEFT)
 		{
 			DrawGraphF(screenLocation.x + 75, screenLocation.y - 30, markStatus, TRUE);
 		}
-		if (direction == DIRECTION_RIGHT)
+		if (direction.x == DIRECTION_RIGHT)
 		{
 			DrawGraphF(screenLocation.x - 25, screenLocation.y - 30, markStatus, TRUE);
 		}
@@ -195,12 +203,12 @@ void LargeSwordEnemy::FindPlayer(const Player* player)
 		//方向変化処理
 		if (location.x >= player->GetCenterLocation().x)
 		{
-			direction = DIRECTION_LEFT;
+			direction.x = DIRECTION_LEFT;
 			animTurnFlg = true;
 		}
 		else
 		{
-			direction = DIRECTION_RIGHT;
+			direction.x = DIRECTION_RIGHT;
 			animTurnFlg = false;
 		}
 
@@ -223,27 +231,27 @@ void LargeSwordEnemy::EnemyPatrol()
 	if (isFind == false)
 	{
 		//左向きの場合
-		if (direction == DIRECTION_LEFT && restTime <= 0)
+		if (direction.x == DIRECTION_LEFT && restTime <= 0)
 		{
 			move.x = -LARGE_WALK_SPEED;
 			patrolCounter -= LARGE_WALK_SPEED;
 			//左に45進んだら向きを右にする
 			if (patrolCounter <= -45.f)
 			{
-				direction = DIRECTION_RIGHT;
+				direction.x = DIRECTION_RIGHT;
 				animTurnFlg = false;
 				restTime = MAX_REST_TIME;
 			}
 		}
 		//右向きの場合
-		if (direction == DIRECTION_RIGHT && restTime <= 0)
+		if (direction.x == DIRECTION_RIGHT && restTime <= 0)
 		{
 			move.x = LARGE_WALK_SPEED;
 			patrolCounter += LARGE_WALK_SPEED;
 			//右に45進んだら向きを左にする
 			if (patrolCounter >= 45.f)
 			{
-				direction = DIRECTION_LEFT;
+				direction.x = DIRECTION_LEFT;
 				animTurnFlg = true;
 				restTime = MAX_REST_TIME;
 			}
@@ -283,14 +291,14 @@ void LargeSwordEnemy::SuddenApproachToPlayer(const Player* player)
 	if (distance > 100 && canAttack == false)
 	{
 		//左向きの場合
-		if (direction == DIRECTION_LEFT)
+		if (direction.x == DIRECTION_LEFT)
 		{
 			//画像：左向き
 			animTurnFlg = true;
 			//速度：８で移動
 			move.x = -8.f;
 		}
-		if (direction == DIRECTION_RIGHT)
+		if (direction.x == DIRECTION_RIGHT)
 		{
 			//画像：右向き
 			animTurnFlg = false;
@@ -341,7 +349,7 @@ void LargeSwordEnemy::AttackStandBy()
 void LargeSwordEnemy::AttackStart()
 {
 	//攻撃ができるなら
-	if (isAttack == true && attackWaitingTime <= 0)
+	if (attackWaitingTime <= 0)
 	{
 		//攻撃までのカウントダウンを行う
 		attackCountDown--;
@@ -353,9 +361,19 @@ void LargeSwordEnemy::AttackStart()
 		}
 		else if (attackCountDown <= 0)
 		{
+			if (enemyNumber >= 23)
+			{
+				largeSword->Attack(this);
+			}
 			//カウントダウンが０になったらリセット
 			attackCountDown = ATTACK_COUNT_DOWN;
 		}
+	}
+	//攻撃の待ち時間の制御
+	if (attackWaitingTime >= 0)
+	{
+		//攻撃時間を減算していく
+		attackWaitingTime--;
 	}
 
 	if (didAttack == true)
@@ -363,13 +381,8 @@ void LargeSwordEnemy::AttackStart()
 		//攻撃をしていれば状態を「攻撃終了」に遷移する
 		enemyStatus = EnemyStatus::AttackEnd;
 		animInterval = 0;
-	}
-
-	//攻撃の待ち時間の制御
-	if (attackWaitingTime >= 0)
-	{
-		//攻撃時間を減算していく
-		attackWaitingTime--;
+		//攻撃待機時間をリセットする
+		attackWaitingTime = MAX_WAITING_TIME;
 	}
 }
 
@@ -381,9 +394,6 @@ void LargeSwordEnemy::AttackEnd()
 	enemyNumber = 0;
 	didAttack = false;
 	animInterval = 0;
-
-	//攻撃待機時間をリセットする
-	attackWaitingTime = MAX_WAITING_TIME;
 }
 
 //アニメーション制御関数
@@ -443,7 +453,7 @@ void LargeSwordEnemy::EnemyAnimation()
 			{
 				enemyNumber = 18;
 			}
-			if (animInterval % 6 == 0)
+			if (animInterval % 5 == 0)
 			{
 				enemyNumber++;
 			}
@@ -455,7 +465,7 @@ void LargeSwordEnemy::EnemyAnimation()
 				enemyNumber = 15;
 				didAttack = true;
 			}
-			if (animInterval % 5 == 0)
+			if (animInterval % 7 == 0)
 			{
 				enemyNumber++;
 			}

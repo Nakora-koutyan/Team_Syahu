@@ -5,7 +5,7 @@
 #define CHASE_SPEED 2.f					//追跡時のスピード
 #define ATTACK_SPEED 5.f				//攻撃時のスピード
 
-#define DIRECTION_LEFT 0				//左向き
+#define DIRECTION_LEFT -1				//左向き
 #define DIRECTION_RIGHT 1				//右向き
 
 class Player;

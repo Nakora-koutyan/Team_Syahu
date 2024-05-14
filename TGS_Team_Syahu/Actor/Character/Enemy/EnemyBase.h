@@ -49,8 +49,6 @@ protected:
 
 	int hp;				//自身のHP
 
-	int direction;		//進行方向
-
 	bool isFind;		//見つけた？
 
 	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
