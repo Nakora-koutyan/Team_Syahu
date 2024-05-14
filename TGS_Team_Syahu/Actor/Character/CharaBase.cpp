@@ -15,7 +15,6 @@ CharaBase::CharaBase()
 	framCount = 0;
 	knockBackCount = 0;
 	alphaBlend = 255;
-	imageInversionFlg = FALSE;
 
 	hp = 100.f;
 	damage = 10.f;
@@ -27,6 +26,8 @@ CharaBase::CharaBase()
 	isShow = false;
 	isAttack = false;
 	isKnockBack = false;
+	imageInversionFlg = false;
+	isInvincible = false;
 }
 
 CharaBase::~CharaBase()
@@ -48,7 +49,7 @@ void CharaBase::Hit(ObjectBase* object, const float damage)
 {
 	const CharaBase* chara = static_cast<const CharaBase*>(object);
 
-	if (!isKnockBack && !isHit)
+	if (!isKnockBack && !isHit && !isInvincible && !chara->GetIsInvincible())
 	{
 		isKnockBack = true;
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
@@ -61,13 +62,36 @@ void CharaBase::Hit(ObjectBase* object, const float damage)
 		}
 	}
 
-	//すでに当たってないなら
-	if (!isHit)
+	//すでに当たってないならかつ同じオブジェクトじゃないなら
+	if (!isHit && !isInvincible && objectType != chara->GetObjectType())
 	{
 		isHit = true;
 
 		if (hp > 0)hp -= damage;
 	}
+
+	//中心の距離
+	float disX = chara->GetCenterLocation().x - GetCenterLocation().x;
+
+	//2点間の長さ
+	float length = (GetArea().width / 2) + (chara->GetArea().width / 2);
+
+	if (abs(disX) < length && !isInvincible && !chara->GetIsInvincible())
+	{
+		float dif = length - abs(disX);
+
+		//左
+		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		{
+			SetLocationX(location.x - dif);
+		}
+		//右
+		else
+		{
+			SetLocationX(location.x + dif);
+		}
+	}
+
 }
 
 void CharaBase::Landing(const float height)

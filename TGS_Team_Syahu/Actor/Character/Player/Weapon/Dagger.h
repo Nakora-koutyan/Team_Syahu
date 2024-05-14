@@ -20,6 +20,7 @@ private:
 	float angle;			//角度
 
 	bool isShow;			//表示させる？
+	bool isHit;				//当たったか？
 
 public:
 	//コンストラクタ
@@ -39,6 +40,13 @@ public:
 
 	//ヒット処理
 	void Hit(ObjectBase* object, const float damage)override;
+
+public:
+	//当たったかどうか取得
+	bool GetIsHit()const { return isHit; }
+
+	//当たっているかどうかを設定
+	void SetIsHit(const bool flg) { isHit = flg; }
 
 };
 

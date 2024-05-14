@@ -16,6 +16,8 @@ Rapier::Rapier()
 	angle = 0.f;
 
 	isShow = false;
+	isHit = false;
+	isUnable = false;
 }
 
 Rapier::~Rapier()
@@ -54,7 +56,10 @@ void Rapier::Update(CharaBase* chara)
 		direction = 0;
 		angle = 0.f;
 		isShow = false;
+		isHit = false;
+		isUnable = false;
 		chara->SetIsAttack(false);
+		chara->SetIsInvincible(false);
 	}
 
 	damage = chara->GetDamage() + RAPIER_DAMAGE;
@@ -85,11 +90,13 @@ void Rapier::Hit(ObjectBase* object, const float damage)
 {
 	CharaBase* enemy = static_cast<CharaBase*>(object);
 
-	if (isShow)
+	if (isShow && !isUnable)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + RAPIER_DAMAGE));
+			isHit = true;
+			isUnable = true;
 		}
 	}
 }

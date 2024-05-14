@@ -16,6 +16,7 @@ Dagger::Dagger()
 	angle = 0.f;
 
 	isShow = false;
+	isHit = false;
 }
 
 Dagger::~Dagger()
@@ -54,6 +55,7 @@ void Dagger::Update(CharaBase* chara)
 		direction = 0;
 		angle = 0.f;
 		isShow = false;
+		isHit = false;
 		chara->SetIsAttack(false);
 	}
 
@@ -105,6 +107,7 @@ void Dagger::Hit(ObjectBase* object, const float damage)
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + DAGGER_DAMAGE));
+			isHit = true;
 		}
 	}
 }

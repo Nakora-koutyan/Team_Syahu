@@ -155,6 +155,7 @@ void GameMainScene::HitCheck()
 							}
 						}
 					}
+					//ゲームメインにあるオブジェクトの当たり判定
 					if (object[i]->CollisionCheck(object[j]))
 					{
 						//ステージの場合
@@ -162,12 +163,9 @@ void GameMainScene::HitCheck()
 						{
 							object[j]->Hit(object[i], 0.f);
 						}
-						//objectのi番目がプレイヤー、objectのj番目が敵であることを保障しているなら
-						else if (object[i]->GetObjectType() == ObjectType::Player && object[j]->GetObjectType() == ObjectType::Enemy)
+						//ステージじゃないなら
+						else
 						{
-							const CharaBase* target = static_cast<const CharaBase*>(object[j]);
-
-							//プレイヤーと敵の当たり判定
 							object[i]->Hit(object[j], object[j]->GetDamage());
 						}
 					}

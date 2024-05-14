@@ -1,7 +1,7 @@
 #include"Player.h"
 #include"../../Camera/Camera.h"
 
-//#define DEBUG
+#define DEBUG
 
 Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger(nullptr),rapier(nullptr)
 {
@@ -100,20 +100,25 @@ void Player::Update()
 	}
 #endif // DEBUG
 
-	if (isEquipment && stock[stockCount] != Weapon::None)
+	if (isEquipment && isAttack && stock[stockCount] != Weapon::None &&
+		(largeSword->GetIsHit() || dagger->GetIsHit() || rapier->GetIsHit()))
 	{
 		if (actionState == Action::Equipment)
 		{
 			actionState = Action::None;
 		}
-		weaponFramCount[stockCount]--;
-		if (weaponFramCount[stockCount] < 0)
-		{
-			weaponType = Weapon::None;
-			weaponFramCount[stockCount] = PLAYER_WEAPON_TIME;
-			stock[stockCount] = Weapon::None;
-			isEquipment = false;
-		}
+		largeSword->SetIsHit(false);
+		dagger->SetIsHit(false);
+		rapier->SetIsHit(false);
+		weaponFramCount[stockCount] = weaponFramCount[stockCount] - (PLAYER_WEAPON_TIME / 2);
+	}
+
+	if (!isAttack && weaponFramCount[stockCount] <= 0)
+	{
+		weaponType = Weapon::None;
+		weaponFramCount[stockCount] = PLAYER_WEAPON_TIME;
+		stock[stockCount] = Weapon::None;
+		isEquipment = false;
 	}
 
 	DamageInterval(int(PLAYER_DAMAGE_INTERVAL));
@@ -178,13 +183,25 @@ void Player::Draw() const
 
 #endif // DEBUG
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
-	DrawRotaGraphF
-	(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
-		GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
-		1, 0, playerImage[playerAnim], TRUE, imageInversionFlg);		
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
+	//画像反転フラグ
+	if (imageInversionFlg)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
+		DrawRotaGraphF
+		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+			1, 0, playerImage[playerAnim], TRUE, TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+	else
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
+		DrawRotaGraphF
+		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+			1, 0, playerImage[playerAnim], TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 	normalWeapon->Draw();
 
 	steal->Draw();
@@ -232,7 +249,7 @@ void Player::Movement()
 	{
 		isMove = true;
 		direction.x = 1.f;
-		imageInversionFlg = FALSE;
+		imageInversionFlg = false;
 		//最高速度は超えない
 		if (move.x < PLAYER_MAX_MOVE_SPEED)
 		{
@@ -257,7 +274,7 @@ void Player::Movement()
 	{
 		isMove = true;
 		direction.x = -1.f;
-		imageInversionFlg = TRUE;
+		imageInversionFlg = true;
 		//最高速度は超えない
 		if (move.x > -PLAYER_MAX_MOVE_SPEED)
 		{
@@ -389,6 +406,7 @@ void Player::Attack()
 			}
 			else if (stock[stockCount] == Weapon::Rapier)
 			{
+				isInvincible = true;
 				attackCoolTime = PLAYER_RAPIER_COOLTIME;
 				rapier->Attack(this);
 			}
@@ -396,15 +414,6 @@ void Player::Attack()
 	}
 
 	if (attackCoolTime > 0)attackCoolTime--;
-
-	//装備
-	if (!isKnockBack && stock[stockCount] != Weapon::None && weaponType == Weapon::None && actionState == Action::None &&
-		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
-	{
-			weaponType = stock[stockCount];
-			isEquipment = true;
-			actionState = Action::Equipment;
-	}
 
 	//奪う
 	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)) &&
@@ -425,6 +434,9 @@ void Player::Attack()
 			{
 				stock[j] = steal->GetKeepType();
 				steal->SetKeepType(Weapon::None);
+				weaponType = stock[stockCount];
+				isEquipment = true;
+				actionState = Action::Equipment;
 				break;
 			}
 		}

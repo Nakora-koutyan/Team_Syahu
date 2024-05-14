@@ -26,7 +26,6 @@ protected:
 	int framCount;				//フレーム計測用
 	int knockBackCount;			//ノックバック用のカウント
 	int alphaBlend;				//画像の透明値
-	int imageInversionFlg;		//画像反転フラグ
 
 	float hp;					//HP
 
@@ -37,6 +36,8 @@ protected:
 	bool isShow;				//表示する？
 	bool isAttack;				//攻撃中？
 	bool isKnockBack;			//ノックバックする？
+	bool imageInversionFlg;		//画像反転フラグ
+	bool isInvincible;			//無敵フラグ
 
 public:
 	//コンストラクタ
@@ -95,6 +96,12 @@ public:
 
 	//ノックバックフラグを設定
 	void SetIsKnockBack(const bool flg) { isKnockBack = flg; }
+
+	//無敵フラグを取得
+	bool GetIsInvincible()const { return isInvincible; }
+
+	//無敵フラグを設定
+	void SetIsInvincible(const bool flg) { isInvincible = flg; }
 
 	//移動量の取得
 	Vector2D GetMove()const { return move; }
