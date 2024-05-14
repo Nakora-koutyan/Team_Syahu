@@ -113,61 +113,57 @@ void GameMainScene::HitCheck()
 {
 	for (int i = 0; i < object.size(); i++)
 	{
-		//i番目がnullじゃないかつコリジョンがあるなら
-		if (object[i] != nullptr && object[i]->GetCollisionType() != CollisionType::None)
+		for (int j = i + 1; j < object.size(); j++)
 		{
-			for (int j = i + 1; j < object.size(); j++)
+			//i,j番目がnullじゃないかつコリジョンがあるなら
+			if (object[i] && object[j] != nullptr && object[j]->GetCollisionType() != CollisionType::None)
 			{
-				//j番目がnullじゃないかつコリジョンがあるなら
-				if (object[j] != nullptr && object[j]->GetCollisionType() != CollisionType::None)
+				//i番目がプレイヤーなら武器の当たり判定
+				if (object[i]->GetObjectType() == ObjectType::Player)
 				{
-					//i番目がプレイヤーなら武器の当たり判定
-					if (object[i]->GetObjectType() == ObjectType::Player)
+					const Player* player = static_cast<const Player*>(object[i]);
+					//武器と敵の当たり判定
+					if (object[j]->GetObjectType() == ObjectType::Enemy && player->GetIsAttack())
 					{
-						const Player* player = static_cast<const Player*>(object[i]);
-						//武器と敵の当たり判定
-						if (object[j]->GetObjectType() == ObjectType::Enemy && player->GetIsAttack())
-						{
-							CharaBase* enemy = static_cast<CharaBase*>(object[j]);
+						CharaBase* enemy = static_cast<CharaBase*>(object[j]);
 
-							for (int k = 0; k < 5; k++)
+						for (int k = 0; k < 5; k++)
+						{
+							if (k != 1)
 							{
-								if (k != 1)
+								//武器のポインタが格納されている配列の要素を呼ぶ
+								if (player->GetWeapon(k)->CollisionCheck(enemy))
 								{
-									//武器のポインタが格納されている配列の要素を呼ぶ
-									if (player->GetWeapon(k)->CollisionCheck(enemy))
-									{
-										player->GetWeapon(k)->Hit(enemy, player->GetDamage());
-										enemy->Hit(object[i], 0);
-									}
+									player->GetWeapon(k)->Hit(enemy, player->GetDamage());
+									enemy->Hit(object[i], 0);
 								}
-								//奪うだけ特殊なので直接呼ぶ
-								else
+							}
+							//奪うだけ特殊なので直接呼ぶ
+							else
+							{
+								if (player->GetSteal()->CollisionCheck(object[j]) ||
+									player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
+									player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j]))
 								{
-									if (player->GetSteal()->CollisionCheck(object[j]) ||
-										player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
-										player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j]))
-									{
-										player->GetSteal()->Hit(object[j], player->GetDamage());
-										enemy->Hit(object[i], 0);
-									}
+									player->GetSteal()->Hit(object[j], player->GetDamage());
+									enemy->Hit(object[i], 0);
 								}
 							}
 						}
 					}
-					//ゲームメインにあるオブジェクトの当たり判定
-					if (object[i]->CollisionCheck(object[j]))
+				}
+				//ゲームメインにあるオブジェクトの当たり判定
+				if (object[i]->CollisionCheck(object[j]))
+				{
+					//ステージの場合
+					if (object[j]->GetObjectType() == ObjectType::Object)
 					{
-						//ステージの場合
-						if (object[j]->GetObjectType() == ObjectType::Object)
-						{
-							object[j]->Hit(object[i], 0.f);
-						}
-						//ステージじゃないなら
-						else
-						{
-							object[i]->Hit(object[j], object[j]->GetDamage());
-						}
+						object[j]->Hit(object[i], 0.f);
+					}
+					//ステージじゃないなら
+					else
+					{
+						object[i]->Hit(object[j], object[j]->GetDamage());
 					}
 				}
 			}

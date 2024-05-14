@@ -73,12 +73,13 @@ bool BoxCollision::HitSphere(const ObjectBase* object) const
 		ret = true;
 		float length = sphereR * sphereR;
 
-		//右
-		if (sphereR < min.x)
+		//左
+		if (sphereX < min.x)
 		{
-			//右上
+			//左上
 			if (sphereY < min.y)
 			{
+				//斜辺のほうが大きいならfalse
 				if (MakeHypotenuse(min.x, min.y, sphereX, sphereY) >= length)
 				{
 					ret = false;
@@ -89,6 +90,7 @@ bool BoxCollision::HitSphere(const ObjectBase* object) const
 				//左下
 				if (sphereY > max.y)
 				{
+					//斜辺のほうが大きいならfalse
 					if (MakeHypotenuse(min.x, max.y, sphereX, sphereY) >= length)
 					{
 						ret = false;
@@ -101,9 +103,10 @@ bool BoxCollision::HitSphere(const ObjectBase* object) const
 			//左
 			if (sphereX > max.x)
 			{
-				//左上
+				//右上
 				if (sphereY < min.x)
 				{
+					//斜辺のほうが大きいならfalse
 					if (MakeHypotenuse(max.x, min.y, sphereX, sphereY) >= length)
 					{
 						ret = false;
@@ -111,9 +114,10 @@ bool BoxCollision::HitSphere(const ObjectBase* object) const
 				}
 				else
 				{	
-					//左下
+					//右下
 					if (sphereY > max.y)
 					{
+						//斜辺のほうが大きいならfalse
 						if (MakeHypotenuse(max.x, max.y, sphereX, sphereY) >= length)
 						{
 							ret = false;
