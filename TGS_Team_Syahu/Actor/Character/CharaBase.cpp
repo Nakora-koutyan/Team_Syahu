@@ -76,7 +76,7 @@ void CharaBase::Hit(ObjectBase* object, const float damage)
 	//2点間の長さ
 	float length = (GetArea().width / 2) + (chara->GetArea().width / 2);
 
-	if (abs(disX) < length && !isInvincible && !chara->GetIsInvincible())
+	if (abs(disX) < length/* && !isInvincible && !chara->GetIsInvincible()*/)
 	{
 		float dif = length - abs(disX);
 
@@ -91,7 +91,6 @@ void CharaBase::Hit(ObjectBase* object, const float damage)
 			SetLocationX(location.x + dif);
 		}
 	}
-
 }
 
 void CharaBase::Landing(const float height)

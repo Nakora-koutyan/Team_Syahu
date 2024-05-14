@@ -213,6 +213,65 @@ void Player::Draw() const
 	rapier->Draw();
 }
 
+void Player::Hit(ObjectBase* object, const float damage)
+{
+	const CharaBase* chara = static_cast<const CharaBase*>(object);
+
+	if (!isKnockBack && !isHit && !isInvincible && !chara->GetIsInvincible())
+	{
+		isKnockBack = true;
+		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		{
+			knockBackDirection = -1;
+		}
+		else
+		{
+			knockBackDirection = 1;
+		}
+	}
+
+	//すでに当たってないならかつ同じオブジェクトじゃないなら
+	if (!isHit && !isInvincible && objectType != chara->GetObjectType())
+	{
+		isHit = true;
+
+		if (hp > 0)hp -= damage;
+	}
+
+	//中心の距離
+	float disX = chara->GetCenterLocation().x - GetCenterLocation().x;
+
+	//2点間の長さ
+	float length = 0.f;
+
+	//if (isInvincible)
+	//{
+	//	length = ((GetArea().width / 2) + RAPIER_LENGTH) + (chara->GetArea().width / 2);
+	//}
+	//else
+	//{
+	//	//2点間の長さ
+	//	length = (GetArea().width / 2) + (chara->GetArea().width / 2);
+	//}
+
+
+	if (abs(disX) < length && !isInvincible && !chara->GetIsInvincible())
+	{
+		float dif = length - abs(disX);
+
+		//左
+		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		{
+			SetLocationX(location.x - dif);
+		}
+		//右
+		else
+		{
+			SetLocationX(location.x + dif);
+		}
+	}
+}
+
 void Player::Landing(const float height)
 {
 	//地面を超えない
@@ -423,6 +482,15 @@ void Player::Attack()
 		actionState = Action::Steal;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;
 		steal->Attack(this);
+	}
+
+	//装備
+	if (!isKnockBack && stock[stockCount] != Weapon::None && weaponType == Weapon::None && actionState == Action::None &&
+		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
+	{
+		weaponType = stock[stockCount];
+		isEquipment = true;
+		actionState = Action::Equipment;
 	}
 
 	if(steal->GetKeepType()!=Weapon::None)

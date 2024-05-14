@@ -81,6 +81,9 @@ public:
 	//描画
 	void Draw()const override;
 
+	//ヒット処理
+	void Hit(ObjectBase* object, const float damage)override;
+
 	//着地
 	void Landing(const float height)override;
 

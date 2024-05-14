@@ -60,6 +60,7 @@ void Rapier::Update(CharaBase* chara)
 		isUnable = false;
 		chara->SetIsAttack(false);
 		chara->SetIsInvincible(false);
+		chara->SetArea({ 56.f,chara->GetArea().height });
 	}
 
 	damage = chara->GetDamage() + RAPIER_DAMAGE;

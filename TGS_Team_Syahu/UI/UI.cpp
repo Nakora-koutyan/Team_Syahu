@@ -48,6 +48,14 @@ UI::UI()
 	filePath = imageFilePath + "LargeSwordStockImage" + extension;
 	largeSwordIcon = LoadGraph(filePath.c_str());
 	if (largeSwordIcon == -1)throw;	
+
+	filePath = imageFilePath + "DaggerStockImage" + extension;
+	daggerIcon = LoadGraph(filePath.c_str());
+	if (daggerIcon == -1)throw;
+
+	filePath = imageFilePath + "RapierStockImage" + extension;
+	rapierIcon = LoadGraph(filePath.c_str());
+	if (rapierIcon == -1)throw;
 	
 	playerHp = 0.f;
 
@@ -109,11 +117,11 @@ void UI::PlayerStock() const
 		}
 		else if (stockIcon[i] == Weapon::Dagger)
 		{
-
+			DrawGraph(20 + (i * 50), 48, daggerIcon, TRUE);
 		}
 		else if (stockIcon[i] == Weapon::Rapier)
 		{
-
+			DrawGraph(20 + (i * 50), 48, rapierIcon, TRUE);
 		}
 	}
 
