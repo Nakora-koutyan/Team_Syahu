@@ -29,7 +29,6 @@ protected:
 	int imageInversionFlg;		//画像反転フラグ
 
 	float hp;					//HP
-	float damage;				//ダメージ
 
 	bool isAir;					//空中？
 	bool isJump;				//ジャンプしている？

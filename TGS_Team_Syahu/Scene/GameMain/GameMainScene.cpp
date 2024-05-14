@@ -60,6 +60,13 @@ SceneBase* GameMainScene::Update()
 			if (object[i]->GetObjectType() == ObjectType::Player || object[i]->GetObjectType() == ObjectType::Enemy)
 			{
 				const CharaBase* chara = static_cast<const CharaBase*>(object[i]);
+				//敵なら
+				if (object[i]->GetObjectType() == ObjectType::Enemy)
+				{
+					EnemyBase* enemy = static_cast<EnemyBase*>(object[i]);
+					Player* player = static_cast<Player*>(object[0]);
+					enemy->FindPlayer(player);
+				}
 				//プレイヤーか敵のHPが0以下なら
 				if (chara->GetHp() <= 0.f)
 				{
