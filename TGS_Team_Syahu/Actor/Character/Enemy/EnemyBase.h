@@ -69,7 +69,7 @@ public:
 	void Draw(Player* player);
 
 	//プレイヤーを見つけた？
-	virtual void FindPlayer(Player* player) = 0;
+	virtual void FindPlayer(const Player* player) = 0;
 
 protected:
 

@@ -143,10 +143,11 @@ void NormalEnemy::Draw() const
 	}
 }
 
-void NormalEnemy::FindPlayer(Player* player)
+void NormalEnemy::FindPlayer(const Player* player)
 {
-	if ((enemyStatus == EnemyStatus::AttackStandBy || 
-		enemyStatus == EnemyStatus::Patrol )&&
+	//パトロール状態もしくは攻撃準備の状態でPlayerが攻撃を受けていない
+	if ((enemyStatus == EnemyStatus::Patrol ||
+		enemyStatus == EnemyStatus::AttackStandBy)&&
 		player->GetIsHit() == false)
 	{
 		if ((attackRange[0].x < player->GetCenterLocation().x &&

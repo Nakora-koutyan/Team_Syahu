@@ -37,7 +37,7 @@ public:
 	void Draw()const override;
 
 	//プレイヤーを見つけた？
-	void FindPlayer(Player* player)override;
+	void FindPlayer(const Player* player)override;
 
 private:
 
