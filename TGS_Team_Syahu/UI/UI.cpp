@@ -1,27 +1,13 @@
 #include"UI.h"
 #include"DxLib.h"
 #include"../Actor/Character/Player/Player.h"
+#include"ResourceManager.h"
 
 UI::UI()
 {
-	//画像フォルダまでのパス
-	std::string imageFilePath = "Resource/Images/UI/";
-	//画像のファイルパス
-	std::string filePath = "";
-	//拡張子
-	std::string extension = ".png";
-
-	filePath = imageFilePath + "bar" + extension;
-	playerHpBarImage.emplace("bar", LoadGraph(filePath.c_str()));
-	if (playerHpBarImage["bar"] == -1)throw;
-
-	filePath = imageFilePath + "bar_background" + extension;
-	playerHpBarImage.emplace("bar_background", LoadGraph(filePath.c_str()));
-	if (playerHpBarImage["bar_background"] == -1)throw;
-
-	filePath = imageFilePath + "health_bar" + extension;
-	playerHpBarImage.emplace("health_bar", LoadGraph(filePath.c_str()));
-	if (playerHpBarImage["health_bar"] == -1)throw;
+	playerHpBarImage.emplace("bar", ResourceManager::GetImage("UI/bar"));
+	playerHpBarImage.emplace("barBackground", ResourceManager::GetImage("UI/barBackground"));
+	playerHpBarImage.emplace("healthBar", ResourceManager::GetImage("UI/healthBar"));
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -33,29 +19,12 @@ UI::UI()
 
 	selectCount = 0;
 
-	filePath = imageFilePath + "stock" + extension;
-	stockImage = LoadGraph(filePath.c_str());
-	if (stockImage == -1)throw;
-
-	filePath = imageFilePath + "selectStock" + extension;
-	selectImage[0] = LoadGraph(filePath.c_str());
-	if (selectImage[0] == -1)throw;
-
-	filePath = imageFilePath + "kariSelect" + extension;
-	selectImage[1] = LoadGraph(filePath.c_str());
-	if (selectImage[1] == -1)throw;
-
-	filePath = imageFilePath + "LargeSwordStockImage" + extension;
-	largeSwordIcon = LoadGraph(filePath.c_str());
-	if (largeSwordIcon == -1)throw;	
-
-	filePath = imageFilePath + "DaggerStockImage" + extension;
-	daggerIcon = LoadGraph(filePath.c_str());
-	if (daggerIcon == -1)throw;
-
-	filePath = imageFilePath + "RapierStockImage" + extension;
-	rapierIcon = LoadGraph(filePath.c_str());
-	if (rapierIcon == -1)throw;
+	stockImage = ResourceManager::GetImage("UI/stock");
+	selectImage[0] = ResourceManager::GetImage("UI/selectStock");
+	selectImage[1] = ResourceManager::GetImage("UI/kariSelect");
+	largeSwordIcon = ResourceManager::GetImage("UI/LargeSwordStockImage");
+	daggerIcon = ResourceManager::GetImage("UI/DaggerStockImage");
+	rapierIcon = ResourceManager::GetImage("UI/RapierStockImage");
 	
 	playerHp = 0.f;
 
@@ -93,11 +62,11 @@ void UI::PlayerHPBar() const
 	DrawExtendGraphF
 	(playerHpBarLocation.x, playerHpBarLocation.y,
 		playerHpBarLocation.x + 300.f, playerHpBarLocation.y + 21.f,
-		playerHpBarImage.find("bar_background")->second, FALSE);
+		playerHpBarImage.find("barBackground")->second, FALSE);
 	DrawExtendGraphF
 	(playerHpBarLocation.x, playerHpBarLocation.y,
 		playerHpBarLocation.x + playerHp, playerHpBarLocation.y + 21.f,
-		playerHpBarImage.find("health_bar")->second, TRUE);
+		playerHpBarImage.find("healthBar")->second, TRUE);
 	DrawGraphF(0.f, 2.f, playerHpBarImage.find("bar")->second, TRUE);
 }
 

@@ -1,5 +1,6 @@
 #include"Player.h"
 #include"../../Camera/Camera.h"
+#include"ResourceManager.h"
 
 #define DEBUG
 
@@ -28,8 +29,6 @@ Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger
 	framCount = 0;
 	playerAnimFramCount = 0;
 	playerAnim = 0;
-	int playerImageOld[72];		
-	LoadDivGraph("Resource/Images/Player/AnimationSheet_Character_resize.png", 72, 8, 9, 96, 96, playerImageOld);
 	for (int i = 0; i < 72; i++)
 	{
 		//画像がない部分は読みこまない
@@ -41,7 +40,7 @@ Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger
 		{
 			continue;
 		}
-		playerImage[playerAnim] = playerImageOld[i];
+		playerImage[playerAnim] = ResourceManager::GetDivImage("Player/player", i);
 		playerAnim++;
 	}
 	playerAnim = 0;
@@ -153,31 +152,31 @@ void Player::Draw() const
 		isHit ? 0xff0000 : 0xffff00, FALSE
 	);
 
-	DrawFormatString(0, 0, 0x000000, "hp :%f", hp);
-	DrawFormatString(0, 15, 0x000000, "attackCoolTime :%f", attackCoolTime);
-	DrawFormatString(0, 30, 0x000000, "stealCoolTime :%f", stealCoolTime);
-	DrawFormatString(250, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
-	DrawFormatString(0, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponFramCount[stockCount]);
-	DrawFormatString(0, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
-	DrawFormatString(0, 90, 0x000000, "animCount :%d", playerAnim);
-	DrawFormatString(0, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
+	DrawFormatString(600, 0, 0x000000, "hp :%f", hp);
+	DrawFormatString(600, 15, 0x000000, "attackCoolTime :%f", attackCoolTime);
+	DrawFormatString(600, 30, 0x000000, "stealCoolTime :%f", stealCoolTime);
+	DrawFormatString(850, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
+	DrawFormatString(600, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponFramCount[stockCount]);
+	DrawFormatString(600, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
+	DrawFormatString(600, 90, 0x000000, "animCount :%d", playerAnim);
+	DrawFormatString(600, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
 	if (weaponType == Weapon::None)
 	{
-		DrawFormatString(0, 45, 0x000000, "WeaponType:None");
+		DrawFormatString(600, 45, 0x000000, "WeaponType:None");
 	}
 	else
 	{
 		if (weaponType == Weapon::LargeSword)
 		{
-			DrawFormatString(0, 45, 0x000000, "WeaponType:LargeSword");
+			DrawFormatString(600, 45, 0x000000, "WeaponType:LargeSword");
 		}
 		if (weaponType == Weapon::Dagger)
 		{
-			DrawFormatString(0, 45, 0x000000, "WeaponType:Dagger");
+			DrawFormatString(600, 45, 0x000000, "WeaponType:Dagger");
 		}
 		if (weaponType == Weapon::Rapier)
 		{
-			DrawFormatString(0, 45, 0x000000, "WeaponType:Rapier");
+			DrawFormatString(600, 45, 0x000000, "WeaponType:Rapier");
 		}
 	}
 
