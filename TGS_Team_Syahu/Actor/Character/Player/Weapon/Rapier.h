@@ -5,7 +5,8 @@
 #define RAPIER_MOVE						15.5f			//レイピアの移動量/f
 #define RAPIER_LENGTH					100.f			//レイピアの長さ
 #define RAPIER_WEIGHT					0.35f			//レイピアの重さ
-#define RAPIER_DAMAGE					3.f				//レイピアのダメージ
+#define RAPIER_DAMAGE					30.f			//レイピアのダメージ
+#define RAPIER_KNOCKBACK				0.f				//レイピアのノックバックの量
 
 class CharaBase;
 class Player;
@@ -18,6 +19,8 @@ private:
 	int framCount;			//フレームカウント
 
 	float angle;			//角度
+	float dis;				//距離
+	float length;			//長さ
 
 	bool isShow;			//表示させる？
 	bool isHit;				//当たったか？
@@ -40,7 +43,7 @@ public:
 	void Attack(const CharaBase* chara);
 
 	//ヒット処理
-	void Hit(ObjectBase* object, const float damage)override;
+	void Hit(ObjectBase* target, const float damage)override;
 
 public:
 	//当たったかどうか取得

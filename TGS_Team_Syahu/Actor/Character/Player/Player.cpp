@@ -123,7 +123,7 @@ void Player::Update()
 
 	DamageInterval(int(PLAYER_DAMAGE_INTERVAL));
 
-	KnockBack(this, PLAYER_KNOCKBACK_TIME, PLAYER_KNOCKBACK);
+	KnockBack(this, PLAYER_KNOCKBACK_TIME, knockBackMove);
 
 	Movement();
 
@@ -217,7 +217,7 @@ void Player::Hit(ObjectBase* object, const float damage)
 {
 	const CharaBase* chara = static_cast<const CharaBase*>(object);
 
-	if (!isKnockBack && !isHit && !isInvincible && !chara->GetIsInvincible())
+	if (!isKnockBack && !isHit)
 	{
 		isKnockBack = true;
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
@@ -228,10 +228,11 @@ void Player::Hit(ObjectBase* object, const float damage)
 		{
 			knockBackDirection = 1;
 		}
+		knockBackMove = PLAYER_KNOCKBACK;
 	}
 
 	//すでに当たってないならかつ同じオブジェクトじゃないなら
-	if (!isHit && !isInvincible && objectType != chara->GetObjectType())
+	if (!isHit && objectType != chara->GetObjectType())
 	{
 		isHit = true;
 
@@ -242,20 +243,14 @@ void Player::Hit(ObjectBase* object, const float damage)
 	float disX = chara->GetCenterLocation().x - GetCenterLocation().x;
 
 	//2点間の長さ
-	float length = 0.f;
+	float length = (GetArea().width / 2) + (chara->GetArea().width / 2);
 
-	//if (isInvincible)
-	//{
-	//	length = ((GetArea().width / 2) + RAPIER_LENGTH) + (chara->GetArea().width / 2);
-	//}
-	//else
-	//{
-	//	//2点間の長さ
-	//	length = (GetArea().width / 2) + (chara->GetArea().width / 2);
-	//}
+	if (isAttack && isEquipment && stock[stockCount] == Weapon::Rapier)
+	{
+		length += RAPIER_LENGTH;
+	}
 
-
-	if (abs(disX) < length && !isInvincible && !chara->GetIsInvincible())
+	if (abs(disX) < length)
 	{
 		float dif = length - abs(disX);
 
@@ -443,7 +438,10 @@ void Player::Attack()
 			isAttack = true;
 			actionState = Action::Throw;
 			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
-			normalWeapon->Attack(this, GetWeaponWeight(stock[stockCount]), GetWeaponDamage(stock[stockCount]));
+			normalWeapon->Attack
+			(this, GetWeaponWeight(stock[stockCount])
+				, GetWeaponDamage(stock[stockCount])
+				, GetWeaponKnockBack(stock[stockCount]));
 			stock[stockCount] = Weapon::None;
 			weaponFramCount[stockCount] = PLAYER_WEAPON_TIME;
 		}
@@ -465,7 +463,7 @@ void Player::Attack()
 			}
 			else if (stock[stockCount] == Weapon::Rapier)
 			{
-				isInvincible = true;
+				//isInvincible = true;
 				attackCoolTime = PLAYER_RAPIER_COOLTIME;
 				rapier->Attack(this);
 			}
@@ -473,6 +471,16 @@ void Player::Attack()
 	}
 
 	if (attackCoolTime > 0)attackCoolTime--;
+
+	//装備
+	if (!isKnockBack && stock[stockCount] != Weapon::None && weaponType == Weapon::None && actionState == Action::None &&
+		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
+	{
+		weaponType = stock[stockCount];
+		isEquipment = true;
+		actionState = Action::Equipment;
+	}
+
 
 	//奪う
 	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)) &&
@@ -482,15 +490,6 @@ void Player::Attack()
 		actionState = Action::Steal;
 		stealCoolTime = PLAYER_STEAL_COOLTIME;
 		steal->Attack(this);
-	}
-
-	//装備
-	if (!isKnockBack && stock[stockCount] != Weapon::None && weaponType == Weapon::None && actionState == Action::None &&
-		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
-	{
-		weaponType = stock[stockCount];
-		isEquipment = true;
-		actionState = Action::Equipment;
 	}
 
 	if(steal->GetKeepType()!=Weapon::None)
@@ -630,20 +629,7 @@ void Player::Animation()
 		if (playerAnim <= 41)
 		{
 			once = true;
-			//奪う、ダガーは振っている画像から
-			if (actionState == Action::Steal || (actionState == Action::WeaponAttack && stock[stockCount] == Weapon::Dagger))
-			{
-				playerAnim = 46;
-			}
-			//投げる、大剣は振り始めの画像から
-			if (actionState == Action::Throw || (actionState == Action::WeaponAttack && stock[stockCount] == Weapon::LargeSword))
-			{
-				playerAnim = 45;
-			}
-			if (actionState == Action::WeaponAttack && stock[stockCount] == Weapon::Rapier)
-			{
-				playerAnim = 44;
-			}
+			playerAnim = 46;
 		}
 
 
@@ -751,4 +737,35 @@ float Player::GetWeaponDamage(const Weapon type)
 	}
 
 	return damage;
+}
+
+float Player::GetWeaponKnockBack(const Weapon type)
+{
+	Weapon checkType = type;
+	float knockBack = 0.f;
+
+	switch (checkType)
+	{
+	case Weapon::None:
+		knockBack = 0.f;
+		break;
+
+	case Weapon::LargeSword:
+		knockBack = LARGESWORD_KNOCKBACK;
+		break;
+
+	case Weapon::Dagger:
+		knockBack = DAGGER_KNOCKBACK;
+		break;
+
+	case Weapon::Rapier:
+		knockBack = RAPIER_KNOCKBACK + (DAGGER_KNOCKBACK + 1.f);
+		break;
+
+	default:
+		knockBack = 0.f;
+		break;
+	}
+
+	return knockBack * 1.5f;
 }

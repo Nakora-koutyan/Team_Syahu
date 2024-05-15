@@ -107,7 +107,7 @@ void LargeSwordEnemy::Update()
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 0.5);
-	KnockBack(this,FPS * 0.5, LARGE_SWORD_KNOCKBACK);
+	KnockBack(this,FPS * 0.5, knockBackMove);
 
 	//エネミーアニメーション
 	EnemyAnimation();

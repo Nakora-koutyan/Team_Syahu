@@ -47,8 +47,6 @@ protected:
 	int colorGreen;
 	int colorBlue;
 
-	int hp;				//自身のHP
-
 	bool isFind;		//見つけた？
 
 	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
@@ -65,6 +63,9 @@ public:
 
 	//描画処理
 	void Draw(Player* player);
+
+	//ヒット処理
+	void Hit(ObjectBase* target, const float damage)override;
 
 	//プレイヤーを見つけた？
 	virtual void FindPlayer(const Player* player) = 0;

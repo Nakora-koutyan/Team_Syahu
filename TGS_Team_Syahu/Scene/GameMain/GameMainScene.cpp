@@ -151,6 +151,14 @@ void GameMainScene::HitCheck()
 							}
 						}
 					}
+					//投げるとオブジェクトの当たり判定
+					if (object[j]->GetObjectType() == ObjectType::Object)
+					{
+						if (player->GetNormalWeapon()->CollisionCheck(object[j]))
+						{
+							player->GetNormalWeapon()->Initialize();
+						}
+					}
 				}
 				//ゲームメインにあるオブジェクトの当たり判定
 				if (object[i]->CollisionCheck(object[j]))

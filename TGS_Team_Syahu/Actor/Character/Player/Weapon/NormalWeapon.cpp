@@ -19,6 +19,7 @@ NormalWeapon::NormalWeapon()
 	gravityVelocity = 0.f;
 	weaponWeight = 0.f;
 	weaponDamage = 0.f;
+	weaponKnockBack = 0.f;
 
 	isShow = false;
 }
@@ -26,6 +27,19 @@ NormalWeapon::NormalWeapon()
 NormalWeapon::~NormalWeapon()
 {
 
+}
+
+void NormalWeapon::Initialize()
+{
+	framCount = 0;
+	direction = 0;
+	move.x = 0.f;
+	move.y = 0.f;
+	gravityVelocity = 0.f;
+	weaponWeight = 0.f;
+	weaponDamage = 0.f;
+	weaponKnockBack = 0.f;
+	isShow = false;
 }
 
 void NormalWeapon::Update(CharaBase* chara)
@@ -44,18 +58,10 @@ void NormalWeapon::Update(CharaBase* chara)
 	//攻撃時間を超えたら
 	if (framCount > NORMAL_WEAPON_ATTACK_TIME || location.y > GROUND_LINE)
 	{
-		framCount = 0;
-		direction = 0;
-		move.x = 0.f;
-		move.y = 0.f;
-		gravityVelocity = 0.f;
-		weaponWeight = 0.f;
-		weaponDamage = 0.f;
-		isShow = false;
+		Initialize();
 		chara->SetIsAttack(false);
 	}
 
-	damage = weaponDamage + chara->GetDamage();
 	location.x += move.x;
 	location.y += gravityVelocity;
 	screenLocation = Camera::ConvertScreenPosition(location);
@@ -66,7 +72,7 @@ void NormalWeapon::Draw() const
 	if (isShow)DrawCircleAA(screenLocation.x, screenLocation.y, radius, 90, 0xff0000, TRUE);
 }
 
-void NormalWeapon::Attack(const CharaBase* chara, const float weight, const float damage)
+void NormalWeapon::Attack(const CharaBase* chara, const float weight, const float damage, const float x)
 {
 	//出現させる
 	isShow = true;
@@ -80,12 +86,12 @@ void NormalWeapon::Attack(const CharaBase* chara, const float weight, const floa
 	if (direction < 0)
 	{
 		move.x = -NORMAL_WEAPON_SPEED * cos(angle);
-		location.x = chara->GetMinLocation().x - radius;
+		location.x = chara->GetMinLocation().x;
 	}
 	else
 	{
 		move.x = NORMAL_WEAPON_SPEED * cos(angle);
-		location.x = chara->GetMaxLocation().x + radius;
+		location.x = chara->GetMaxLocation().x;
 	}
 
 	move.y = NORMAL_WEAPON_SPEED * sin(angle);
@@ -93,11 +99,12 @@ void NormalWeapon::Attack(const CharaBase* chara, const float weight, const floa
 
 	weaponWeight = weight;
 	weaponDamage = damage;
+	weaponKnockBack = x;
 }
 
-void NormalWeapon::Hit(ObjectBase* object, const float damage)
+void NormalWeapon::Hit(ObjectBase* target, const float damage)
 {
-	CharaBase* enemy = static_cast<CharaBase*>(object);
+	CharaBase* enemy = static_cast<CharaBase*>(target);
 
 	if (isShow)
 	{
@@ -105,7 +112,9 @@ void NormalWeapon::Hit(ObjectBase* object, const float damage)
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + weaponDamage));
 
-			isShow = false;
+			enemy->SetKnockBackMove(weaponKnockBack);
+
+			Initialize();
 		}
 	}
 }
