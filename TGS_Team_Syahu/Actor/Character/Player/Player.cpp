@@ -15,7 +15,7 @@ Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger
 	direction.x = 1.f;
 	direction.y = 0.f;
 	hp = PLAYER_MAX_HP;
-	damage = 10.f;
+	damage = PLAYER_DAMAGE;
 
 	for (int i = 0; i < PLAYER_MAX_STOCK; i++)
 	{

@@ -9,18 +9,10 @@ class Player;
 class UI
 {
 private:
-	std::map<std::string, int> playerHpBarImage;		//プレイヤーのHPバーの画像
-
 	Weapon stockIcon[5];								//ストックのアイコン
 	Vector2D playerHpBarLocation;						//プレイヤーのHPバーの座標
 
 	short selectCount;									//選択しているストックの番号
-
-	int stockImage;										//ストックの画像
-	int selectImage[2];									//選択しているアイコンの画像
-	int largeSwordIcon;									//大剣のアイコン
-	int daggerIcon;										//短剣のアイコン
-	int rapierIcon;										//レイピアのアイコン
 
 	float playerHp;										//プレイヤーのHP
 

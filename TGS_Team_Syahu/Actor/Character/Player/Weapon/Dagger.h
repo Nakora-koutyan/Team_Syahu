@@ -19,6 +19,7 @@ private:
 	int framCount;			//フレームカウント
 
 	float angle;			//角度
+	float imageAngle;		//画像の角度
 
 	bool isShow;			//表示させる？
 	bool isHit;				//当たったか？

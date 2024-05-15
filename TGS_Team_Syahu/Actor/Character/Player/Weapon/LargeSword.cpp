@@ -1,6 +1,7 @@
 #include"LargeSword.h"
 #include"../../Player/Player.h"
 #include"../../../Camera/Camera.h"
+#include"ResourceManager.h"
 
 LargeSword::LargeSword()
 {
@@ -14,6 +15,7 @@ LargeSword::LargeSword()
 	framCount = 0;
 
 	angle = 0.f;
+	imageAngle = 0.f;
 
 	isShow = false;
 	isHit = false;
@@ -31,6 +33,7 @@ void LargeSword::Update(CharaBase* chara)
 		framCount++;
 		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
 		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
+		imageAngle += DEGREE_TO_RADIAN(angle);
 	}
 	else
 	{
@@ -54,6 +57,7 @@ void LargeSword::Update(CharaBase* chara)
 		framCount = 0;
 		direction = 0;
 		angle = 0.f;
+		imageAngle = 0.f;
 		isShow = false;
 		isHit = false;
 		chara->SetIsAttack(false);
@@ -69,6 +73,19 @@ void LargeSword::Draw() const
 	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
 		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
 		0x000000, 1);
+	if (isShow)
+	{
+		if (direction > 0)
+		{
+			DrawRotaGraph2F(screenLocation.x, screenLocation.y, 0, 100,
+				1, imageAngle, ResourceManager::GetImage("Weapon/largeSword"), TRUE);
+		}
+		else
+		{
+			DrawRotaGraph2F(screenLocation.x, screenLocation.y, 100, 100,
+				1, imageAngle, ResourceManager::GetImage("Weapon/largeSword"), TRUE, TRUE);
+		}
+	}
 }
 
 void LargeSword::Attack(const CharaBase* chara)

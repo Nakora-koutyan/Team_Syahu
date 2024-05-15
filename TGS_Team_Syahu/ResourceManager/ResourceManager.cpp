@@ -30,9 +30,12 @@ void ResourceManager::Initialize()
 	SetImage("UI/stock");
 	SetImage("UI/selectStock");
 	SetImage("UI/kariSelect");
-	SetImage("UI/LargeSwordStockImage");
-	SetImage("UI/DaggerStockImage");
-	SetImage("UI/RapierStockImage");
+	SetImage("UI/dagger");
+	SetImage("UI/largeSword");
+	SetImage("UI/rapier");
+	SetImage("Weapon/dagger");
+	SetImage("Weapon/largeSword");
+	SetImage("Weapon/rapier");
 
 	//BGM
 	
