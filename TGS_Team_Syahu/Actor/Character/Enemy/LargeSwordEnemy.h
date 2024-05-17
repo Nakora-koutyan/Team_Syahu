@@ -1,13 +1,11 @@
 #pragma once
 #include "EnemyBase.h"
 
-class LargeSword;
-
 class LargeSwordEnemy :public EnemyBase
 {
 private:
 
-	LargeSword* largeSword;
+	BoxCollision* largeSwordCollisionBox;
 
 	int largeSwordEnemyImage[115];		//敵画像
 	int largeSwordEnemyImageNumber;		//画像番号
@@ -24,15 +22,17 @@ private:
 
 	int attackCountDown;	//攻撃までのカウントダウン
 
-	int largeSwordAttackTime;		//大剣時の攻撃時間
+	int largeSwordAttackTime;	//大剣時の攻撃時間
 	int rushAttackTime;			//攻撃時間
 
-	bool didAttack;			//攻撃をした？
+	bool didAttack;				//攻撃をした？
 
-	bool canAttack;			//攻撃できる？
-	float correctLocX;		//画像のX座標の修正用変数
+	bool canAttack;				//攻撃できる？
+	float correctLocX;			//画像のX座標の修正用変数
 
-	bool once;				//LargeSwordのAttack関数を一度の攻撃で一回だけ呼ぶためのフラグ
+	bool once;					//LargeSwordのAttack関数を一度の攻撃で一回だけ呼ぶためのフラグ
+
+	bool signToAttack;			//攻撃の時に呼ばれる変数
 
 public:
 	//コンストラクタ

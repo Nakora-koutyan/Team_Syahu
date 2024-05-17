@@ -14,10 +14,13 @@
 #define MAX_ATTACK_TIME			87		//大剣の攻撃時間
 #define MAX_RUSH_ATTACKTIME		30		//突進攻撃の時間
 
+#define LARGESWORD_ATTACKRANGE_X	60	//大剣の攻撃範囲(X)
+#define LARGESWORD_ATTACKRANGE_Y	60	//大剣の攻撃範囲(Y)
+
 //コンストラクタ
 LargeSwordEnemy::LargeSwordEnemy():largeSwordEnemyImage(),largeSwordEnemyImageNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
-distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0),largeSword(nullptr),once(false),
-rushAttackTime(0),largeSwordAttackTime(0),weaponNoneEnemyImage{NULL},weaponNoneEnemyImageNumber(0)
+distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0), largeSwordCollisionBox(nullptr),once(false),
+rushAttackTime(0),largeSwordAttackTime(0),weaponNoneEnemyImage{NULL},weaponNoneEnemyImageNumber(0),signToAttack(false)
 {
 }
 
@@ -138,7 +141,7 @@ void LargeSwordEnemy::Initialize()
 	rushAttackTime = MAX_ATTACK_TIME;
 
 	//大剣を呼び出す
-	largeSword = new LargeSword;
+	largeSwordCollisionBox = new BoxCollision;
 }
 
 //描画以外の更新
@@ -188,10 +191,6 @@ void LargeSwordEnemy::Update()
 		break;
 	}
 
-	//大剣のUpdate呼び出し
-	largeSword->Update(this);
-
-
 	//アニメーションの画像のX座標のずれを修正
 	if (animTurnFlg)
 	{
@@ -225,9 +224,6 @@ void LargeSwordEnemy::Draw() const
 			weaponNoneEnemyImage[weaponNoneEnemyImageNumber], TRUE, animTurnFlg);
 	}
 
-	//大剣の描画
-	largeSword->Draw();
-		
 	//デバッグ用文字列
 	DrawFormatStringF(50.f, 300.f, 0xff0000, "colorRed %d", colorRed);
 	DrawFormatStringF(50.f, 320.f, 0x00ff00, "colorGreen %d", colorGreen);
@@ -451,6 +447,9 @@ void LargeSwordEnemy::AttackStart()
 	//大剣を振るう攻撃
 	if (weaponType == Weapon::LargeSword)
 	{
+		//攻撃OK
+		signToAttack = true;
+
 		//攻撃までのカウントダウンを行う
 		largeSwordAttackTime--;
 
@@ -487,8 +486,6 @@ void LargeSwordEnemy::AttackStart()
 	{
 		//攻撃をしていれば状態を「攻撃終了」に遷移する
 		enemyStatus = EnemyStatus::AttackEnd;
-		animInterval = 0;
-		largeSwordAttackTime = MAX_ATTACK_COUNT_DOWN;
 	}
 }
 
@@ -498,6 +495,7 @@ void LargeSwordEnemy::AttackEnd()
 	enemyStatus = EnemyStatus::Patrol;
 	if (weaponType == Weapon::LargeSword)
 	{
+		signToAttack = false;
 		restTime = 0;
 		didAttack = false;
 		animInterval = 0;

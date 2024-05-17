@@ -242,7 +242,7 @@ void NormalEnemy:: AttackStandBy()
 	}
 
 	//攻撃範囲からプレイヤーが離れた場合
-	if (isFind = false && attackWaitingTime >= 0)
+	if (isFind == false && attackWaitingTime >= 0)
 	{
 		//パトロール状態にする
 		enemyStatus = EnemyStatus::Patrol;
