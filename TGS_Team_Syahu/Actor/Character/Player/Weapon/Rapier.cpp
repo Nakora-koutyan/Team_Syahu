@@ -1,6 +1,7 @@
 #include "Rapier.h"
 #include"../../Player/Player.h"
 #include"../../../Camera/Camera.h"
+#include"ResourceManager.h"
 
 Rapier::Rapier()
 {
@@ -14,12 +15,14 @@ Rapier::Rapier()
 	framCount = 0;
 
 	angle = 0.f;
+	imageAngle = 0.f;
 	dis = 0.f;
 	length = 0.f;
 
 	isShow = false;
 	isHit = false;
 	isUnable = false;
+	stepFlg = false;
 }
 
 Rapier::~Rapier()
@@ -37,12 +40,14 @@ void Rapier::Update(CharaBase* chara)
 		{
 			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
 			directionVector.x = RAPIER_LENGTH;
+			imageAngle = DEGREE_TO_RADIAN(45.f);
 			chara->SetMove({ RAPIER_MOVE ,chara->GetMove().y });
 		}
 		else
 		{
 			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
 			directionVector.x = -RAPIER_LENGTH;
+			imageAngle = DEGREE_TO_RADIAN(-45.f);
 			chara->SetMove({ -RAPIER_MOVE ,chara->GetMove().y });
 		}
 	}
@@ -60,6 +65,7 @@ void Rapier::Update(CharaBase* chara)
 		isShow = false;
 		isHit = false;
 		isUnable = false;
+		stepFlg = true;
 		chara->SetIsAttack(false);
 	}
 
@@ -73,6 +79,21 @@ void Rapier::Draw() const
 	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
 		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
 		0x000000, 1);
+
+	if (isShow)
+	{
+		if (direction > 0)
+		{
+			DrawRotaGraph2F(screenLocation.x, screenLocation.y, 0, 100,
+				1, imageAngle, ResourceManager::GetImage("Weapon/rapier"), TRUE);
+		}
+		else
+		{
+			DrawRotaGraph2F(screenLocation.x, screenLocation.y, 100, 100,
+				1, imageAngle, ResourceManager::GetImage("Weapon/rapier"), TRUE, TRUE);
+		}
+	}
+
 }
 
 void Rapier::Attack(const CharaBase* chara)

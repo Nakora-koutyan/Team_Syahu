@@ -19,12 +19,14 @@ private:
 	int framCount;			//フレームカウント
 
 	float angle;			//角度
+	float imageAngle;		//画像の角度
 	float dis;				//距離
 	float length;			//長さ
 
 	bool isShow;			//表示させる？
 	bool isHit;				//当たったか？
 	bool isUnable;			//当たり判定ができない？
+	bool stepFlg;			//飛ばす？
 
 public:
 	//コンストラクタ
@@ -51,6 +53,12 @@ public:
 
 	//当たっているかどうかを設定
 	void SetIsHit(const bool flg) { isHit = flg; }
+
+	//飛ばすかどうかを取得
+	bool GetStepFlg()const { return stepFlg; }
+
+	//飛ばすかどうかを設定
+	void SetStepFlg(const bool flg) { stepFlg = flg; }
 
 };
 

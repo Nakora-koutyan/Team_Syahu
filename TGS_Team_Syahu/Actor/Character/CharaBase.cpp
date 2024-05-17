@@ -28,6 +28,7 @@ CharaBase::CharaBase()
 	isAttack = false;
 	isKnockBack = false;
 	imageInversionFlg = false;
+	deathFlg = false;
 }
 
 CharaBase::~CharaBase()

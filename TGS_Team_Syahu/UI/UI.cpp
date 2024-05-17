@@ -87,3 +87,15 @@ void UI::PlayerStock() const
 		DrawGraph(10 + (selectCount * 50), 38, ResourceManager::GetImage("UI/kariSelect"), TRUE) :
 		DrawGraph(10 + (selectCount * 50), 38, ResourceManager::GetImage("UI/selectStock"), TRUE);
 }
+
+void UI::EnemyHPBar(const Vector2D location, const float hp) const
+{
+	DrawExtendGraphF
+	(location.x - 20.f, location.y - 20.f,
+		(location.x + 100.f) - 20.f, (location.y + 11.f) - 20.f,
+		ResourceManager::GetImage("UI/barBackground"), FALSE);
+	DrawExtendGraphF
+	(location.x - 20.f, location.y - 20.f,
+		(location.x + hp) - 20.f, (location.y + 11.f) - 20.f,
+		ResourceManager::GetImage("UI/healthBar"), TRUE);
+}

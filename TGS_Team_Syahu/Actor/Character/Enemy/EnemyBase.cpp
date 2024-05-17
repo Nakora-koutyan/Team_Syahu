@@ -41,7 +41,14 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 	{
 		isHit = true;
 
-		if (hp > 0)hp -= damage;
+		if (hp > 0)
+		{
+			hp -= damage;
+		}
+		else
+		{
+			deathFlg = true;
+		}
 	}
 
 	//中心の距離

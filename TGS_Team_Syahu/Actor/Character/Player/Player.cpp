@@ -20,7 +20,7 @@ Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger
 	for (int i = 0; i < PLAYER_MAX_STOCK; i++)
 	{
 		stock[i] = Weapon::None;
-		weaponFramCount[i] = PLAYER_WEAPON_TIME;
+		weaponDurability[i] = PLAYER_WEAPON_DURABILITY;
 	}
 
 	stockCount = 0;
@@ -49,6 +49,7 @@ Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger
 	stealCoolTime = 0.f;
 
 	isEquipment = false;
+	isBackStep = false;
 	landingAnimFlg = false;
 	blinkingFlg = false;
 }
@@ -106,16 +107,17 @@ void Player::Update()
 		{
 			actionState = Action::None;
 		}
+		//当たっている間耐久値が減るのを防ぐため
 		largeSword->SetIsHit(false);
 		dagger->SetIsHit(false);
 		rapier->SetIsHit(false);
-		weaponFramCount[stockCount] = weaponFramCount[stockCount] - (PLAYER_WEAPON_TIME / 2);
+		weaponDurability[stockCount] -= GetWeaponDurability(stock[stockCount], true);
 	}
 
-	if (!isAttack && weaponFramCount[stockCount] <= 0)
+	if (!isAttack && weaponDurability[stockCount] <= 0)
 	{
 		weaponType = Weapon::None;
-		weaponFramCount[stockCount] = PLAYER_WEAPON_TIME;
+		weaponDurability[stockCount] = PLAYER_WEAPON_DURABILITY;
 		stock[stockCount] = Weapon::None;
 		isEquipment = false;
 	}
@@ -124,9 +126,14 @@ void Player::Update()
 
 	KnockBack(this, PLAYER_KNOCKBACK_TIME, knockBackMove);
 
-	Movement();
+	BackStep(30.f, 15.f, 0.f);
 
-	Attack();
+	if (hp > 0)
+	{
+		Movement();
+
+		Attack();
+	}
 
 	StockSelect();
 
@@ -156,7 +163,7 @@ void Player::Draw() const
 	DrawFormatString(600, 15, 0x000000, "attackCoolTime :%f", attackCoolTime);
 	DrawFormatString(600, 30, 0x000000, "stealCoolTime :%f", stealCoolTime);
 	DrawFormatString(850, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
-	DrawFormatString(600, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponFramCount[stockCount]);
+	DrawFormatString(600, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponDurability[stockCount]);
 	DrawFormatString(600, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
 	DrawFormatString(600, 90, 0x000000, "animCount :%d", playerAnim);
 	DrawFormatString(600, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
@@ -298,7 +305,7 @@ void Player::Movement()
 {
 	//右へ移動
 	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) &&
-		!isKnockBack && !isAttack)
+		!isKnockBack && !isAttack && !isBackStep)
 	{
 		isMove = true;
 		direction.x = 1.f;
@@ -323,7 +330,7 @@ void Player::Movement()
 	//左へ移動
 	else
 	if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) &&
-		!isKnockBack && !isAttack)
+			!isKnockBack && !isAttack && !isBackStep)
 	{
 		isMove = true;
 		direction.x = -1.f;
@@ -361,12 +368,12 @@ void Player::Movement()
 			}
 		}
 		//レイピアの攻撃は例外で動けるようにするためにこの条件式を設ける
-		else if ((stock[stockCount] == Weapon::Rapier && isEquipment && isAttack))
+		else if (stock[stockCount] == Weapon::Rapier && isEquipment && isAttack)
 		{
 			//アイドル状態にしないための条件式なので何も書かなくても問題ない
 		}
 		//ノックバックしていないならアイドル状態
-		else if (!isKnockBack)
+		else if (!isKnockBack && !isBackStep)
 		{
 			move.x = 0.f;
 			isMove = false;
@@ -376,7 +383,7 @@ void Player::Movement()
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack && !isBackStep)
 	{
 		move.y = -JUMP_POWER;
 		isAir = true;
@@ -442,7 +449,7 @@ void Player::Attack()
 				, GetWeaponDamage(stock[stockCount])
 				, GetWeaponKnockBack(stock[stockCount]));
 			stock[stockCount] = Weapon::None;
-			weaponFramCount[stockCount] = PLAYER_WEAPON_TIME;
+			weaponDurability[stockCount] = 0;
 		}
 
 		//武器攻撃
@@ -462,7 +469,6 @@ void Player::Attack()
 			}
 			else if (stock[stockCount] == Weapon::Rapier)
 			{
-				//isInvincible = true;
 				attackCoolTime = PLAYER_RAPIER_COOLTIME;
 				rapier->Attack(this);
 			}
@@ -501,6 +507,7 @@ void Player::Attack()
 				stock[j] = steal->GetKeepType();
 				steal->SetKeepType(Weapon::None);
 				weaponType = stock[stockCount];
+				weaponDurability[stockCount] = GetWeaponDurability(stock[stockCount]);
 				isEquipment = true;
 				actionState = Action::Equipment;
 				break;
@@ -543,7 +550,7 @@ void Player::Animation()
 	playerAnimFramCount++;
 
 	//待機
-	if (!isMove && !isAir && !isKnockBack && !landingAnimFlg && !isAttack)
+	if (!isMove && !isAir && !isKnockBack && !landingAnimFlg && !isAttack && hp > 0)
 	{
 		if (playerAnim >= 4)
 		{
@@ -561,7 +568,7 @@ void Player::Animation()
 	}
 
 	//移動
-	if (isMove && !isAir && !isKnockBack)
+	if (isMove && !isAir && !isKnockBack && hp > 0)
 	{
 		if (playerAnim <= 7 || playerAnim >= 16)
 		{
@@ -579,7 +586,7 @@ void Player::Animation()
 	}
 
 	//空中
-	if (isAir && !isKnockBack && !isAttack)
+	if (isAir && !isKnockBack && !isAttack && hp > 0)
 	{
 		landingAnimFlg = false;
 		if (playerAnim <= 21 || playerAnim >= 27)
@@ -604,7 +611,7 @@ void Player::Animation()
 		}
 	}
 	//着地
-	if (landingAnimFlg && !isAir)
+	if (landingAnimFlg && !isAir && hp > 0)
 	{
 		if (playerAnimFramCount % 8 == 0)
 		{
@@ -623,7 +630,7 @@ void Player::Animation()
 	bool once = false;
 
 	//攻撃
-	if (isAttack && !isKnockBack)
+	if (isAttack && !isKnockBack && hp > 0)
 	{
 		if (playerAnim <= 41)
 		{
@@ -659,7 +666,7 @@ void Player::Animation()
 	}
 
 	//点滅
-	if (isHit)
+	if (isHit && hp > 0)
 	{
 		//攻撃を受けたら着地アニメーションはしない
 		landingAnimFlg = false;
@@ -674,6 +681,97 @@ void Player::Animation()
 	{
 		alphaBlend = 255;
 	}
+
+	//死亡
+	if (hp <= 0 && !isKnockBack)
+	{
+		if (playerAnim <= 34 || playerAnim >= 42)
+		{
+			playerAnim = 35;
+		}
+		if (playerAnimFramCount % 8 == 0)
+		{
+			if (playerAnim < 41)
+			{
+				playerAnim++;
+			}
+			else
+			{
+				deathFlg = true;
+			}
+		}
+	}
+}
+
+void Player::BackStep(const float angle, const float speed, const float gravityVelocity)
+{
+	//ダメージを受けたら強制解除
+	if (isHit)
+	{
+		isBackStep = false;
+		rapier->SetStepFlg(false);
+	}
+
+	if (rapier->GetStepFlg() && !isKnockBack && !isAir)
+	{
+		isBackStep = true;
+		if (direction.x < 0)
+		{
+			move.x = speed * cos(DEGREE_TO_RADIAN(angle));
+		}
+		else
+		{
+			move.x = -speed * cos(DEGREE_TO_RADIAN(angle));
+		}
+
+		move.y = -speed * sin(DEGREE_TO_RADIAN(angle));
+
+		rapier->SetStepFlg(false);
+	}
+
+	if (isBackStep && !isKnockBack)
+	{
+		move.y += gravityVelocity;
+		if (isAir)
+		{
+			isBackStep = false;
+		}
+	}
+}
+
+int Player::GetWeaponDurability(const Weapon type, const bool useFlg)
+{
+	Weapon checkType = type;
+	bool flg = useFlg;
+	int durability = 0;
+
+	switch (checkType)
+	{
+	case Weapon::None:
+		durability = 0;
+		break;
+
+	case Weapon::LargeSword:
+		durability = PLAYER_WEAPON_DURABILITY;
+		if (flg)durability /= 2;
+		break;
+
+	case Weapon::Dagger:
+		durability = PLAYER_WEAPON_DURABILITY;
+		if (flg)durability /= 5;
+		break;
+
+	case Weapon::Rapier:
+		durability = PLAYER_WEAPON_DURABILITY;
+		if (flg)durability /= 4;
+		break;
+
+	default:
+		durability = 0;
+		break;
+	}
+
+	return durability;
 }
 
 float Player::GetWeaponWeight(const Weapon type)

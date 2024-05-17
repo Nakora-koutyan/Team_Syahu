@@ -22,7 +22,7 @@
 #define PLAYER_RAPIER_COOLTIME			FPS * 1.0f		//レイピアのクールタイム
 #define PLAYER_KNOCKBACK				5.f				//ノックバックの量
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
-#define PLAYER_WEAPON_TIME				FPS * 30		//武器の使用時間
+#define PLAYER_WEAPON_DURABILITY		100				//武器の耐久力
 #define PLAYER_MAX_STOCK				5				//最大ストック数
 #define WEAPON_DISTANCE					10				//プレイヤーから武器を離す距離
 
@@ -51,7 +51,7 @@ private:
 
 	short stockCount;							//現在のストックの番号
 
-	int weaponFramCount[PLAYER_MAX_STOCK] = {};	//武器のフレームカウント
+	int weaponDurability[PLAYER_MAX_STOCK];		//武器の耐久力
 	int playerAnimFramCount;					//プレイヤーのアニメーションフレームカウント
 	int playerAnim;								//プレイヤーのアニメーション番号
 	int playerImage[50] = {};					//プレイヤー画像
@@ -60,6 +60,7 @@ private:
 	float stealCoolTime;						//奪うのクールタイム
 
 	bool isEquipment;							//装備中？
+	bool isBackStep;							//バックステップ中？
 	bool landingAnimFlg;						//着地アニメーションフラグ
 	bool blinkingFlg;							//点滅フラグ
 
@@ -130,7 +131,13 @@ private:
 	//アニメーション
 	void Animation();
 
+	//バックステップ
+	void BackStep(const float angle, const float speed, const float gravityVelocity);
+
 private:
+	//武器の耐久力を取得
+	int GetWeaponDurability(const Weapon type, const bool useFlg = false);
+
 	//武器の重さを取得
 	float GetWeaponWeight(const Weapon type);
 

@@ -38,6 +38,7 @@ protected:
 	bool isAttack;				//攻撃中？
 	bool isKnockBack;			//ノックバックする？
 	bool imageInversionFlg;		//画像反転フラグ
+	bool deathFlg;				//死亡フラグ
 
 public:
 	//コンストラクタ
@@ -97,6 +98,9 @@ public:
 
 	//ノックバックフラグを設定
 	void SetIsKnockBack(const bool flg) { isKnockBack = flg; }
+
+	//死亡フラグを取得
+	bool GetDeathFlg()const { return deathFlg; }
 
 	//移動量の取得
 	Vector2D GetMove()const { return move; }

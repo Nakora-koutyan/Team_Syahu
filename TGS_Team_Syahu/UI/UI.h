@@ -37,5 +37,8 @@ public:
 
 	//プレイヤーのストック
 	void PlayerStock()const;
+
+	//エネミーのHPバー
+	void EnemyHPBar(const Vector2D location, const float hp)const;
 };
 

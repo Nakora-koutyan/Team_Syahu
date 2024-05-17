@@ -67,8 +67,8 @@ SceneBase* GameMainScene::Update()
 					Player* player = static_cast<Player*>(object[0]);
 					enemy->FindPlayer(player);
 				}
-				//プレイヤーか敵のHPが0以下なら
-				if (chara->GetHp() <= 0.f)
+				//プレイヤーか敵の死亡フラグがたったら
+				if (chara->GetDeathFlg())
 				{
 					//プレイヤーならゲームオーバーに遷移（今はゲームメイン）
 					if (chara->GetObjectType() == ObjectType::Player)
@@ -105,6 +105,11 @@ void GameMainScene::Draw() const
 		if (ob != nullptr)
 		{
 			ob->Draw();
+			if (ob->GetObjectType() == ObjectType::Enemy)
+			{
+				EnemyBase* enemy = static_cast<EnemyBase*>(ob);
+				ui->EnemyHPBar(enemy->GetScreenLocation(), enemy->GetHp());
+			}
 		}
 	}
 }
