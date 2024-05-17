@@ -99,4 +99,3 @@ protected:
 	virtual bool HitLine(const ObjectBase* object)const { return false; }
 
 };
-

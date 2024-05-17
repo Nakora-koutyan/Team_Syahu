@@ -2,15 +2,22 @@
 #include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 
-#define MAX_WAITING_TIME 87
-#define LARGE_WALK_SPEED 3.f			//徘徊時のスピード
-#define MAX_REST_TIME 60				//休息時間
-#define ATTACK_COUNT_DOWN 31
-#define LARGE_SWORD_KNOCKBACK 5		//ノックバック時間
+#define MAX_WAITING_TIME		87		//攻撃開始までの待機時間(MAX値)
+#define LARGE_WALK_SPEED		2.5f	//徘徊時のスピード
+
+#define RUSH_ATTACK_SPEED		5.f		//突進攻撃時の速度
+
+#define MAX_REST_TIME			60		//休息時間
+#define MAX_ATTACK_COUNT_DOWN	31		//
+#define LARGE_SWORD_KNOCKBACK	5		//ノックバック時間
+
+#define MAX_ATTACK_TIME			87		//大剣の攻撃時間
+#define MAX_RUSH_ATTACKTIME		30		//突進攻撃の時間
 
 //コンストラクタ
-LargeSwordEnemy::LargeSwordEnemy():enemyImage(),enemyNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
-distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0),largeSword(nullptr),once(false)
+LargeSwordEnemy::LargeSwordEnemy():largeSwordEnemyImage(),largeSwordEnemyImageNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
+distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0),largeSword(nullptr),once(false),
+rushAttackTime(0),largeSwordAttackTime(0),weaponNoneEnemyImage{NULL},weaponNoneEnemyImageNumber(0)
 {
 }
 
@@ -22,10 +29,12 @@ LargeSwordEnemy::~LargeSwordEnemy()
 //変数などの初期化
 void LargeSwordEnemy::Initialize()
 {
-	//アニメーション画像に関する初期化
-	enemyNumber = 0;
-	int enemyImageOld[115];
-	LoadDivGraph("Resource/Images/Enemy/NightBorne3.png", 115, 23, 5, 240, 240, enemyImageOld);
+	/** アニメーション画像に関する初期化 **/
+	//大剣装備時のアニメーション
+	largeSwordEnemyImageNumber = 0;
+	//画像を仮格納するための配列
+	int largeSwordEnemyImageOld[115];
+	LoadDivGraph("Resource/Images/Enemy/NightBorne.png", 115, 23, 5, 240, 240, largeSwordEnemyImageOld);
 	for (int i = 0; i < 115; i++)
 	{
 		//画像が存在しない部分を読み込まない
@@ -37,8 +46,29 @@ void LargeSwordEnemy::Initialize()
 			//スキップ
 			continue;
 		}
-		enemyImage[enemyNumber] = enemyImageOld[i];
-		enemyNumber++;
+		largeSwordEnemyImage[largeSwordEnemyImageNumber] = largeSwordEnemyImageOld[i];
+		largeSwordEnemyImageNumber++;
+	}
+
+	//大剣を奪われている状態の際のアニメーション
+	weaponNoneEnemyImageNumber = 0;
+	//画像を仮格納するための配列
+	int weaponNoneEnemyImageOld[115];
+	LoadDivGraph("Resource/Images/Enemy/NightBorneWeaponNone.png", 115, 23, 5, 240, 240, weaponNoneEnemyImageOld);
+	for (int i = 0; i < 115; i++)
+	{
+		//画像が存在しない部分を読み込まない
+		if ((8 < i && i < 23) ||
+			(i == 25 || i==28 )||
+			(28 < i && i < 46) ||
+			(57 < i && i < 69) ||
+			73 < i && i < 92)
+		{
+			//スキップ
+			continue;
+		}
+		weaponNoneEnemyImage[weaponNoneEnemyImageNumber] = weaponNoneEnemyImageOld[i];
+		weaponNoneEnemyImageNumber++;
 	}
 
 	//仮ボックスの色
@@ -72,9 +102,9 @@ void LargeSwordEnemy::Initialize()
 
 	//プレイヤーに攻撃を仕掛ける範囲
 	attackCenser[0].x = GetMinLocation().x - 270.f;
-	attackCenser[0].y = GetCenterLocation().y;
+	attackCenser[0].y = GetMinLocation().y - 25;
 	attackCenser[1].x = GetMaxLocation().x + 270.f;
-	attackCenser[1].y = GetCenterLocation().y;
+	attackCenser[1].y = GetMaxLocation().y + 25;
 
 	/*　状態　*/
 	//表示するか?
@@ -91,13 +121,23 @@ void LargeSwordEnemy::Initialize()
 	//エネミーの状態(徘徊状態にする)
 	enemyStatus = Patrol;
 	//画像番号
-	enemyNumber = 0;
-	//休息時間の設定
+	largeSwordEnemyImageNumber = 0;
+	weaponNoneEnemyImageNumber = 0;
+
+	//方向を切り替える前の休息時間
 	restTime = MAX_REST_TIME;
 
-	attackCountDown = ATTACK_COUNT_DOWN;
+	//攻撃までのカウントダウン
+	attackCountDown = MAX_ATTACK_COUNT_DOWN;
 	animTurnFlg = true;
 
+	/** 攻撃時間 **/
+	//大剣
+	largeSwordAttackTime = MAX_RUSH_ATTACKTIME;
+	//突進
+	rushAttackTime = MAX_ATTACK_TIME;
+
+	//大剣を呼び出す
 	largeSword = new LargeSword;
 }
 
@@ -110,36 +150,45 @@ void LargeSwordEnemy::Update()
 	KnockBack(this,FPS * 0.5, knockBackMove);
 
 	//エネミーアニメーション
-	EnemyAnimation();
+	EnemyAnimationManager();
 
 	//状態遷移
 	switch (enemyStatus)
 	{
 		//パトロール処理
 	case EnemyStatus::Patrol:
+
 		EnemyPatrol();
+
 		markStatus = NULL;
 		break;
 
 		//攻撃の予備動作
 	case EnemyStatus::AttackStandBy:
+		
 		AttackStandBy();
+		
 		markStatus = findMark;
 		break;
 
 		//攻撃開始
 	case EnemyStatus::AttackStart:
+		
 		AttackStart();
+
 		markStatus = angryMark;
 		break;
 
 		//攻撃終了
 	case EnemyStatus::AttackEnd:
+		
 		AttackEnd();
+
 		markStatus = NULL;
 		break;
 	}
 
+	//大剣のUpdate呼び出し
 	largeSword->Update(this);
 
 
@@ -155,31 +204,38 @@ void LargeSwordEnemy::Update()
 		correctLocX = 30.f;
 	}
 
+	//移動処理
 	location.x += move.x;
 }
 
 //描画に関する更新
 void LargeSwordEnemy::Draw() const
 {
-	//エネミー表示
-	DrawBoxAA
-	(
-		screenLocation.x, screenLocation.y,
-		screenLocation.x + area.width, screenLocation.y + area.height,
-		GetColor(colorRed, colorGreen, colorBlue), FALSE, 1.0f
-	);
-	DrawRotaGraphF(screenLocation.x + correctLocX, screenLocation.y + 15.f, 1, 0,
-		enemyImage[enemyNumber], TRUE, animTurnFlg);
+	//画像描画
+	//大剣を所持している際
+	if (weaponType == Weapon::LargeSword)
+	{
+		DrawRotaGraphF(screenLocation.x + correctLocX, screenLocation.y + 15.f, 1, 0,
+			largeSwordEnemyImage[largeSwordEnemyImageNumber], TRUE, animTurnFlg);
+	}
+	//武器を取られている場合
+	if (weaponType == Weapon::None)
+	{
+		DrawRotaGraphF(screenLocation.x + correctLocX, screenLocation.y + 15.f, 1, 0,
+			weaponNoneEnemyImage[weaponNoneEnemyImageNumber], TRUE, animTurnFlg);
+	}
 
+	//大剣の描画
 	largeSword->Draw();
 		
 	//デバッグ用文字列
 	DrawFormatStringF(50.f, 300.f, 0xff0000, "colorRed %d", colorRed);
 	DrawFormatStringF(50.f, 320.f, 0x00ff00, "colorGreen %d", colorGreen);
 	DrawFormatStringF(50.f, 340.f, 0x0000ff, "colorBlue %d", colorBlue);
-	DrawFormatStringF(50.f, 360.f, 0xffff00, "enemyImage %d", enemyNumber);
+	DrawFormatStringF(50.f, 360.f, 0xffff00, "enemyImage %d", largeSwordEnemyImageNumber);
 	DrawFormatStringF(50.f, 380.f, 0xff00ff, "animInterval %d", animInterval);
 	DrawFormatStringF(50.f, 400.f, 0xff00ff, "enemystate %d", enemyStatus);
+	DrawFormatStringF(50.f, 420.f, 0x00ff00, "weaponNoneImageNumber %d", weaponNoneEnemyImageNumber);
 
 	if (markStatus != NULL)
 	{
@@ -195,39 +251,55 @@ void LargeSwordEnemy::Draw() const
 	}
 }
 
+//プレイヤーを見つけた？
 void LargeSwordEnemy::FindPlayer(const Player* player)
 {
-	if (attackCenser[0].x < player->GetMaxLocation().x &&
-		attackCenser[1].x > player->GetMinLocation().x)
+	if ((enemyStatus == EnemyStatus::Patrol ||
+		enemyStatus == EnemyStatus::AttackStandBy) &&
+		player->GetIsHit() == false)
 	{
-		//方向変化処理
-		if (location.x >= player->GetCenterLocation().x)
+		if (attackCenser[0].x <= player->GetMaxLocation().x &&
+			attackCenser[1].x >= player->GetMinLocation().x &&
+			attackCenser[0].y <= player->GetMinLocation().y &&
+			attackCenser[1].y >= player->GetMaxLocation().y)
 		{
-			direction.x = DIRECTION_LEFT;
-			animTurnFlg = true;
+			//方向変化処理
+			if (location.x >= player->GetCenterLocation().x)
+			{
+				//左向き
+				direction.x = DIRECTION_LEFT;
+				//画像を反転させる
+				animTurnFlg = true;
+			}
+			else
+			{
+				//右向き
+				direction.x = DIRECTION_RIGHT;
+				//画像反転無し
+				animTurnFlg = false;
+			}
+
+			//見つけた？
+			isFind = true;
 		}
 		else
 		{
-			direction.x = DIRECTION_RIGHT;
-			animTurnFlg = false;
+			isFind = false;
 		}
-
-		isFind = true;
 	}
-	else
-	{
-		isFind = false;
-	}
-	if (enemyStatus == EnemyStatus::AttackStandBy)
+	//攻撃準備状態&大剣を持っている場合、接近処理を行う
+	if (enemyStatus == EnemyStatus::AttackStandBy && 
+		weaponType==Weapon::LargeSword)
 	{
 		//プレイヤーへの接近処理
 		SuddenApproachToPlayer(player);
 	}
 }
 
-//エネミーの徘徊処理
+//パトロール処理
 void LargeSwordEnemy::EnemyPatrol()
 {
+	//playerを見つけることが出来ていない場合
 	if (isFind == false)
 	{
 		//左向きの場合
@@ -264,6 +336,7 @@ void LargeSwordEnemy::EnemyPatrol()
 	}
 
 	//エネミーの状態遷移の処理
+	//playerを発見した場合
 	if (isFind)
 	{
 		//攻撃準備の状態にする
@@ -272,6 +345,10 @@ void LargeSwordEnemy::EnemyPatrol()
 		restTime = MAX_REST_TIME;
 		//アニメーション制御用のタイマーをリセット
 		animInterval=0;
+		if (weaponType == Weapon::None)
+		{
+			weaponNoneEnemyImageNumber = 6;
+		}
 	}
 
 	//エネミーの色変更
@@ -296,39 +373,62 @@ void LargeSwordEnemy::SuddenApproachToPlayer(const Player* player)
 			//画像：左向き
 			animTurnFlg = true;
 			//速度：８で移動
-			move.x = -8.f;
+			move.x = -3.f;
 		}
 		if (direction.x == DIRECTION_RIGHT)
 		{
 			//画像：右向き
 			animTurnFlg = false;
 			//速度：８で移動
-			move.x = 8.f;
+			move.x = 3.f;
 		}
 	}
 	else if (distance <= 100)
 	{
 		canAttack = true;
 	}
-	//攻撃準備処理
-	if (distance <= 100)
-	{
-		//移動を０にする
-		move.x = 0.f;
-
-		//待機時間のリセット
-		restTime = MAX_REST_TIME;
-
-		//エネミーの状態を「攻撃開始」に遷移する
-		enemyStatus = EnemyStatus::AttackStart;
-
-		canAttack = false;
-	}
 }
 
-//攻撃の準備時間
+//攻撃準備
 void LargeSwordEnemy::AttackStandBy()
 {
+	//大剣を持っている場合
+	if (weaponType == Weapon::LargeSword)
+	{
+		//攻撃準備処理
+		if (distance <= 100)
+		{
+			//移動を０にする
+			move.x = 0.f;
+			//待機時間のリセット
+			restTime = MAX_REST_TIME;
+
+			//エネミーの状態を「攻撃開始」に遷移する
+			enemyStatus = EnemyStatus::AttackStart;
+			//攻撃できない
+			canAttack = false;
+		}
+	}
+	//大剣を持っていない場合
+	if (weaponType == Weapon::None)
+	{
+		if (attackWaitingTime >= 0)
+		{
+			//攻撃までの時間を減少
+			attackWaitingTime--;
+			//移動量は０のまま
+			move.x = 0.f;
+		}
+		else if (attackWaitingTime <= 0)
+		{
+			//攻撃までの準備時間をリセット
+			attackWaitingTime = MAX_WAITING_TIME;
+
+			//エネミーの状態を「攻撃開始」に遷移する
+			enemyStatus = EnemyStatus::AttackStart;
+		}
+	}
+
 	//攻撃範囲からプレイヤーが離れた場合
 	if (!isFind)
 	{
@@ -348,41 +448,47 @@ void LargeSwordEnemy::AttackStandBy()
 //攻撃開始
 void LargeSwordEnemy::AttackStart()
 {
-	//攻撃ができるなら
-	if (attackWaitingTime <= 0)
+	//大剣を振るう攻撃
+	if (weaponType == Weapon::LargeSword)
 	{
 		//攻撃までのカウントダウンを行う
-		attackCountDown--;
-		
-		if (attackCountDown >= 0)
+		largeSwordAttackTime--;
+
+		if (largeSwordAttackTime >= 0)
 		{
-			//カウントダウンが行われている間は動けない
+			//カウントダウンが行われている間は動けない(その場で剣をふるう攻撃のため)
 			move.x = 0;
 		}
-		else if (attackCountDown <= 0)
+	}
+	//大剣がない場合は突進攻撃になる
+	if (weaponType == Weapon::None)
+	{
+		//攻撃時間を減算
+		rushAttackTime--;
+
+		//突進攻撃の時間
+		if (rushAttackTime >= 0)
 		{
-			if (enemyNumber >= 23)
+			if (direction.x == DIRECTION_LEFT)
 			{
-				largeSword->Attack(this);
+				move.x = -RUSH_ATTACK_SPEED;
 			}
-			//カウントダウンが０になったらリセット
-			attackCountDown = ATTACK_COUNT_DOWN;
+			else if (direction.x == DIRECTION_RIGHT)
+			{
+				move.x = RUSH_ATTACK_SPEED;
+			}
+		}
+		else if (rushAttackTime <= 0)
+		{
+			enemyStatus = EnemyStatus::AttackEnd;
 		}
 	}
-	//攻撃の待ち時間の制御
-	if (attackWaitingTime >= 0)
-	{
-		//攻撃時間を減算していく
-		attackWaitingTime--;
-	}
-
 	if (didAttack == true)
 	{
 		//攻撃をしていれば状態を「攻撃終了」に遷移する
 		enemyStatus = EnemyStatus::AttackEnd;
 		animInterval = 0;
-		//攻撃待機時間をリセットする
-		attackWaitingTime = MAX_WAITING_TIME;
+		largeSwordAttackTime = MAX_ATTACK_COUNT_DOWN;
 	}
 }
 
@@ -390,86 +496,176 @@ void LargeSwordEnemy::AttackStart()
 void LargeSwordEnemy::AttackEnd()
 {
 	enemyStatus = EnemyStatus::Patrol;
-	restTime = 0;
-	enemyNumber = 0;
-	didAttack = false;
-	animInterval = 0;
+	if (weaponType == Weapon::LargeSword)
+	{
+		restTime = 0;
+		didAttack = false;
+		animInterval = 0;
+		largeSwordAttackTime = MAX_ATTACK_TIME;
+	}
+	if (weaponType == Weapon::None)
+	{
+		move.x = 0.f;
+		weaponNoneEnemyImageNumber = 0;
+		//カウントダウンをリセット
+		rushAttackTime = MAX_RUSH_ATTACKTIME;
+	}
 }
 
 //アニメーション制御関数
-void LargeSwordEnemy::EnemyAnimation()
+void LargeSwordEnemy::EnemyAnimationManager()
 {
 	//パトロール時のアニメーション
 	if (enemyStatus == EnemyStatus::Patrol)
 	{
-		//待機時間が０より大きい場合：待機アニメーション
-		if (restTime >= 0)
-		{
-			//画像番号が８より大きい場合:0にする
-			if (enemyNumber > 8)
-			{
-				enemyNumber = 0;
-			}
-
-			//5フレームに1回
-			if (animInterval % 5 == 0)
-			{
-				//アニメーションを更新
-				enemyNumber++;
-			}
-		}
-		else if (restTime <= 0)
-		{
-			if (enemyNumber > 14)
-			{
-				enemyNumber = 9;
-			}
-			if (animInterval % 3 == 0)
-			{
-				enemyNumber++;
-			}
-		}
+		PatrolAnim();
 	}
 	//攻撃準備中のアニメーション
 	if (enemyStatus == EnemyStatus::AttackStandBy)
 	{
-		//9番目の画像から14番目までを使い回す
-		if (enemyNumber > 14)
+		//大剣を持っている場合のアニメーション
+		if (weaponType == Weapon::LargeSword)
 		{
-			enemyNumber = 9;
+			LargeSwordAttackStandByAnim();
 		}
-		//3フレーム毎にアニメーションを切り替え
-		if (animInterval % 3 == 0)
+		//武器がないときのアニメーション
+		if (weaponType == Weapon::None)
 		{
-			enemyNumber++;
+			WeaponNoneAttackStandByAnim();
 		}
 	}
 	//攻撃開始時のアニメーション
 	if (enemyStatus == EnemyStatus::AttackStart)
 	{
-		if (attackWaitingTime >= 0)
+		if (weaponType == Weapon::LargeSword)
 		{
-			if (enemyNumber >= 20)
-			{
-				enemyNumber = 18;
-			}
-			if (animInterval % 5 == 0)
-			{
-				enemyNumber++;
-			}
+			LargeSwordAttackStartAnim();
 		}
-		else if (attackWaitingTime <= 0)
+		if (weaponType == Weapon::None)
 		{
-			if (enemyNumber >= 26)
-			{
-				enemyNumber = 15;
-				didAttack = true;
-			}
-			if (animInterval % 7 == 0)
-			{
-				enemyNumber++;
-			}
+			WeaponNoneAttackStartAnim();
 		}
 	}
 	animInterval++;
+}
+
+//パトロール時のアニメーション
+void LargeSwordEnemy::PatrolAnim()
+{
+	//待機時間が０より大きい場合：待機アニメーション
+	if (restTime >= 0)
+	{
+		//画像番号が８より大きい場合:0にする
+		if (largeSwordEnemyImageNumber > 8)
+		{
+			largeSwordEnemyImageNumber = 0;
+		}
+
+		//5フレームに1回
+		if (animInterval % 5 == 0)
+		{
+			//アニメーションを更新
+			largeSwordEnemyImageNumber++;
+		}
+	}
+	else if (restTime <= 0)
+	{
+		if (largeSwordEnemyImageNumber > 14)
+		{
+			largeSwordEnemyImageNumber = 9;
+		}
+		if (animInterval % 3 == 0)
+		{
+			largeSwordEnemyImageNumber++;
+		}
+	}
+}
+
+//大剣を持っているときの攻撃準備アニメーション
+void LargeSwordEnemy::LargeSwordAttackStandByAnim()
+{
+	//9番目の画像から14番目までを使い回す
+	if (largeSwordEnemyImageNumber > 14)
+	{
+		largeSwordEnemyImageNumber = 9;
+	}
+	//3フレーム毎にアニメーションを切り替え
+	if (animInterval % 3 == 0)
+	{
+		largeSwordEnemyImageNumber++;
+	}
+}
+//大剣がない場合の攻撃準備アニメーション
+void LargeSwordEnemy::WeaponNoneAttackStandByAnim()
+{
+	if (weaponNoneEnemyImageNumber >= 8)
+	{
+		weaponNoneEnemyImageNumber = 6;
+	}
+	if (animInterval % 3 == 0)
+	{
+		weaponNoneEnemyImageNumber++;
+	}
+}
+
+//大剣を持っている場合の攻撃開始アニメーション
+void LargeSwordEnemy::LargeSwordAttackStartAnim()
+{
+	/** 剣に力を込めている **/
+		//攻撃待機時間が０以上の場合
+	if (largeSwordAttackTime >= 0)
+	{
+		//画像番号が20以上になった場合
+		if (largeSwordEnemyImageNumber >= 20)
+		{
+			//18番にする
+			largeSwordEnemyImageNumber = 18;
+		}
+		// 5フレーム毎にアニメーションを切り替える
+		if (animInterval % 5 == 0)
+		{
+			largeSwordEnemyImageNumber++;
+		}
+	}
+	/** 剣を振り下ろす **/
+	//攻撃待機時間が０以下になった場合
+	else if (largeSwordAttackTime <= 0)
+	{
+		//画像番号が26以上なら
+		if (largeSwordEnemyImageNumber >= 26)
+		{
+			//画像の番号を15番に設定
+			largeSwordEnemyImageNumber = 15;
+			//攻撃したかのフラグ変数をtruenにする
+			didAttack = true;
+		}
+		// 7フレーム毎にアニメーションを切り替える
+		if (animInterval % 7 == 0)
+		{
+			largeSwordEnemyImageNumber++;
+		}
+	}
+}
+//大剣をもっていない場合の攻撃開始アニメーション
+void LargeSwordEnemy::WeaponNoneAttackStartAnim()
+{
+	//画像番号のループ
+	if (weaponNoneEnemyImageNumber >= 12)
+	{
+		weaponNoneEnemyImageNumber = 9;
+	}
+	else if (animInterval % 4 == 0)
+	{
+		weaponNoneEnemyImageNumber++;
+	}
+
+}
+
+//攻撃を持っている場合の攻撃終了アニメーション
+void LargeSwordEnemy::LargeSwordAttackEndAnim()
+{
+}
+//攻撃を持っていない場合の攻撃終了アニメーション
+void LargeSwordEnemy::WeaponNoneAttackEndAnim()
+{
 }

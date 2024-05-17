@@ -113,7 +113,7 @@ void NormalEnemy::Update()
 	}
 	
 	//エネミーアニメーション
-	EnemyAnimation();
+	EnemyAnimationManager();
 
 	location.x += move.x;
 }
@@ -121,13 +121,17 @@ void NormalEnemy::Update()
 //描画に関する更新
 void NormalEnemy::Draw() const
 {
+	//描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, enemyAlpha);
 	DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
 		enemyImage[enemyNumber], TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	//攻撃範囲用の矩形
 	DrawBoxAA(GetMinScreenLocation().x - (410.f/2.f),GetMinScreenLocation().y - (75.f/2.f),
 			GetMaxScreenLocation().x + (410.f/2.f),GetMaxScreenLocation().y + (75.f/2.f),
 			0x00ffff, FALSE, 1.f);
+	//体力表示用のデバッグ表示
+	DrawFormatString(250, 300, 0xff0f0f, "HP　%d", hp);
 
 	if (markStatus != NULL)
 	{
@@ -150,8 +154,8 @@ void NormalEnemy::FindPlayer(const Player* player)
 		enemyStatus == EnemyStatus::AttackStandBy)&&
 		player->GetIsHit() == false)
 	{
-		if ((attackRange[0].x < player->GetCenterLocation().x &&
-			attackRange[1].x > player->GetCenterLocation().x)
+		if ((attackRange[0].x <= player->GetCenterLocation().x &&
+			attackRange[1].x >= player->GetCenterLocation().x)
 			&& attackRange[0].y <= player->GetCenterLocation().y &&
 			attackRange[1].y >= player->GetCenterLocation().y)
 		{
@@ -306,7 +310,7 @@ void NormalEnemy::AttackEnd()
 }
 
 //アニメーション制御関数
-void NormalEnemy::EnemyAnimation()
+void NormalEnemy::EnemyAnimationManager()
 {
 	animInterval++;
 	//パトロール状態の場合

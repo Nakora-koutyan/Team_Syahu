@@ -124,8 +124,8 @@ void Steal::Hit(ObjectBase* target, const float damage)
 				//敵の能力を奪う
 				keepType = chara->GetWeaponType();
 
-				//敵は無能力になる
-				//chara->SetWeaponType(Weapon::None);
+					//敵は無能力になる
+					chara->SetWeaponType(Weapon::None);
 
 				chara->SetHp(chara->GetHp() - (damage));
 				chara->SetKnockBackMove(STEAL_KNOCKBACK);

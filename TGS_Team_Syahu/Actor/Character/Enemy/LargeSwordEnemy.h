@@ -9,8 +9,12 @@ private:
 
 	LargeSword* largeSword;
 
-	int enemyImage[115];	//敵画像
-	int enemyNumber;		//画像番号
+	int largeSwordEnemyImage[115];		//敵画像
+	int largeSwordEnemyImageNumber;		//画像番号
+
+	int weaponNoneEnemyImage[115];		//敵画像配列
+	int weaponNoneEnemyImageNumber;		//画像番号
+
 	int animInterval;		//画像のインターバル
 	bool animCountDown;		//画像インターバルのカウントダウン
 	bool animTurnFlg;		//アニメーションを左右反転する？(yes：true,no：false)
@@ -19,6 +23,10 @@ private:
 	int restTime;			//回転時の休憩
 
 	int attackCountDown;	//攻撃までのカウントダウン
+
+	int largeSwordAttackTime;		//大剣時の攻撃時間
+	int rushAttackTime;			//攻撃時間
+
 	bool didAttack;			//攻撃をした？
 
 	bool canAttack;			//攻撃できる？
@@ -45,7 +53,7 @@ public:
 
 protected:
 	//エネミーのアニメーション制御関数
-	void EnemyAnimation() override;
+	void EnemyAnimationManager() override;
 
 	//パトロール関数
 	void EnemyPatrol() override;
@@ -53,13 +61,32 @@ protected:
 	//プレイヤーに急接近する
 	void SuddenApproachToPlayer(const Player* player);
 
-	//攻撃準備に入るか？
+protected:
+	//武器ありの場合に呼び出される関数
+	//攻撃準備
 	void AttackStandBy() override;
 
-	//攻撃を行うか？
+	//攻撃開始
 	void AttackStart() override;
 
-	//攻撃の終了
+	//攻撃終了
 	void AttackEnd() override;
+
+protected:
+	//ステータスアニメーション用関数
+	//パトロールアニメーション
+	void PatrolAnim();
+	
+	//攻撃準備アニメーション
+	void LargeSwordAttackStandByAnim();
+	void WeaponNoneAttackStandByAnim();
+
+	//攻撃開始アニメーション
+	void LargeSwordAttackStartAnim();
+	void WeaponNoneAttackStartAnim();
+
+	//攻撃終了
+	void LargeSwordAttackEndAnim();
+	void WeaponNoneAttackEndAnim();
 };
 
