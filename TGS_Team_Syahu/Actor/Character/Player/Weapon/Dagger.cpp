@@ -1,6 +1,7 @@
-#include "Dagger.h"
+#include"Dagger.h"
 #include"../../Player/Player.h"
 #include"../../../Camera/Camera.h"
+#include"ResourceManager.h"
 
 Dagger::Dagger()
 {
@@ -14,6 +15,7 @@ Dagger::Dagger()
 	framCount = 0;
 
 	angle = 0.f;
+	imageAngle = 0.f;
 
 	isShow = false;
 	isHit = false;
@@ -31,21 +33,30 @@ void Dagger::Update(CharaBase* chara)
 		framCount++;
 		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
 		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
-
-		//右に出す
+		
 		if (direction > 0)
 		{
-			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+			imageAngle += DEGREE_TO_RADIAN(angle) + DEGREE_TO_RADIAN(5.f);
 		}
-		//左に出す
 		else
 		{
-			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+			imageAngle += DEGREE_TO_RADIAN(angle) + DEGREE_TO_RADIAN(-5.f);
 		}
 	}
 	else
 	{
 		location = chara->GetCenterLocation();
+	}
+
+	//右に出す
+	if (direction > 0)
+	{
+		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+	}
+	//左に出す
+	else
+	{
+		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
 	}
 
 	//攻撃時間を超えたら
@@ -54,6 +65,7 @@ void Dagger::Update(CharaBase* chara)
 		framCount = 0;
 		direction = 0;
 		angle = 0.f;
+		imageAngle = 0.f;
 		isShow = false;
 		isHit = false;
 		chara->SetIsAttack(false);
@@ -69,6 +81,19 @@ void Dagger::Draw() const
 	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
 		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
 		0x000000, 1);
+	if (isShow)
+	{
+		if (direction > 0)
+		{
+			DrawRotaGraph2F(screenLocation.x - 10.f, screenLocation.y, 0, 75,
+				1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE);
+		}
+		else
+		{
+			DrawRotaGraph2F(screenLocation.x + 10.f, screenLocation.y, 75, 75,
+				1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE, TRUE);
+		}
+	}
 }
 
 void Dagger::Attack(const CharaBase* chara)
@@ -98,15 +123,16 @@ void Dagger::Attack(const CharaBase* chara)
 	directionVector.y = -40.f;
 }
 
-void Dagger::Hit(ObjectBase* object, const float damage)
+void Dagger::Hit(ObjectBase* target, const float damage)
 {
-	CharaBase* enemy = static_cast<CharaBase*>(object);
+	CharaBase* enemy = static_cast<CharaBase*>(target);
 
 	if (isShow)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + DAGGER_DAMAGE));
+			enemy->SetKnockBackMove(DAGGER_KNOCKBACK);
 			isHit = true;
 		}
 	}

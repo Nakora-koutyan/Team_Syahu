@@ -1,28 +1,10 @@
 #include"UI.h"
 #include"DxLib.h"
 #include"../Actor/Character/Player/Player.h"
+#include"ResourceManager.h"
 
 UI::UI()
 {
-	//画像フォルダまでのパス
-	std::string imageFilePath = "Resource/Images/UI/";
-	//画像のファイルパス
-	std::string filePath = "";
-	//拡張子
-	std::string extension = ".png";
-
-	filePath = imageFilePath + "bar" + extension;
-	playerHpBarImage.emplace("bar", LoadGraph(filePath.c_str()));
-	if (playerHpBarImage["bar"] == -1)throw;
-
-	filePath = imageFilePath + "bar_background" + extension;
-	playerHpBarImage.emplace("bar_background", LoadGraph(filePath.c_str()));
-	if (playerHpBarImage["bar_background"] == -1)throw;
-
-	filePath = imageFilePath + "health_bar" + extension;
-	playerHpBarImage.emplace("health_bar", LoadGraph(filePath.c_str()));
-	if (playerHpBarImage["health_bar"] == -1)throw;
-
 	for (int i = 0; i < 5; i++)
 	{
 		stockIcon[i] = Weapon::None;
@@ -32,30 +14,6 @@ UI::UI()
 	playerHpBarLocation.y = 11.5f;
 
 	selectCount = 0;
-
-	filePath = imageFilePath + "stock" + extension;
-	stockImage = LoadGraph(filePath.c_str());
-	if (stockImage == -1)throw;
-
-	filePath = imageFilePath + "selectStock" + extension;
-	selectImage[0] = LoadGraph(filePath.c_str());
-	if (selectImage[0] == -1)throw;
-
-	filePath = imageFilePath + "kariSelect" + extension;
-	selectImage[1] = LoadGraph(filePath.c_str());
-	if (selectImage[1] == -1)throw;
-
-	filePath = imageFilePath + "LargeSwordStockImage" + extension;
-	largeSwordIcon = LoadGraph(filePath.c_str());
-	if (largeSwordIcon == -1)throw;	
-
-	filePath = imageFilePath + "DaggerStockImage" + extension;
-	daggerIcon = LoadGraph(filePath.c_str());
-	if (daggerIcon == -1)throw;
-
-	filePath = imageFilePath + "RapierStockImage" + extension;
-	rapierIcon = LoadGraph(filePath.c_str());
-	if (rapierIcon == -1)throw;
 	
 	playerHp = 0.f;
 
@@ -93,19 +51,19 @@ void UI::PlayerHPBar() const
 	DrawExtendGraphF
 	(playerHpBarLocation.x, playerHpBarLocation.y,
 		playerHpBarLocation.x + 300.f, playerHpBarLocation.y + 21.f,
-		playerHpBarImage.find("bar_background")->second, FALSE);
+		ResourceManager::GetImage("UI/barBackground"), FALSE);
 	DrawExtendGraphF
 	(playerHpBarLocation.x, playerHpBarLocation.y,
 		playerHpBarLocation.x + playerHp, playerHpBarLocation.y + 21.f,
-		playerHpBarImage.find("health_bar")->second, TRUE);
-	DrawGraphF(0.f, 2.f, playerHpBarImage.find("bar")->second, TRUE);
+		ResourceManager::GetImage("UI/healthBar"), TRUE);
+	DrawGraphF(0.f, 2.f, ResourceManager::GetImage("UI/bar"), TRUE);
 }
 
 void UI::PlayerStock() const
 {
 	for (int i = 0; i < 5; i++)
 	{
-		DrawGraph(10 + (i * 50), 38, stockImage, TRUE);
+		DrawGraph(10 + (i * 50), 38, ResourceManager::GetImage("UI/stock"), TRUE);
 
 		if (stockIcon[i] == Weapon::None)
 		{
@@ -113,19 +71,19 @@ void UI::PlayerStock() const
 		}
 		else if (stockIcon[i] == Weapon::LargeSword)
 		{
-			DrawGraph(20 + (i * 50), 48, largeSwordIcon, TRUE);
+			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/largeSword"), TRUE);
 		}
 		else if (stockIcon[i] == Weapon::Dagger)
 		{
-			DrawGraph(20 + (i * 50), 48, daggerIcon, TRUE);
+			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/dagger"), TRUE);
 		}
 		else if (stockIcon[i] == Weapon::Rapier)
 		{
-			DrawGraph(20 + (i * 50), 48, rapierIcon, TRUE);
+			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/rapier"), TRUE);
 		}
 	}
 
 	decisionFlg ?
-		DrawGraph(10 + (selectCount * 50), 38, selectImage[1], TRUE) :
-		DrawGraph(10 + (selectCount * 50), 38, selectImage[0], TRUE);
+		DrawGraph(10 + (selectCount * 50), 38, ResourceManager::GetImage("UI/kariSelect"), TRUE) :
+		DrawGraph(10 + (selectCount * 50), 38, ResourceManager::GetImage("UI/selectStock"), TRUE);
 }

@@ -51,7 +51,7 @@ public:
 	virtual void Draw()const {};
 
 	//ヒット処理
-	virtual void Hit(ObjectBase* object, const float damage) {};
+	virtual void Hit(ObjectBase* target, const float damage) {};
 
 public:
 	//当たり判定

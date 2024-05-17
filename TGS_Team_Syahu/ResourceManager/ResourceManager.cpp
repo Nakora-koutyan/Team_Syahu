@@ -22,7 +22,24 @@ void ResourceManager::DeleteManager()
 
 void ResourceManager::Initialize()
 {
+	//画像
+	SetDivImage("Player/player", 72, 8, 9, 96, 96);
+	SetImage("UI/bar");
+	SetImage("UI/barBackground");
+	SetImage("UI/healthBar");
+	SetImage("UI/stock");
+	SetImage("UI/selectStock");
+	SetImage("UI/kariSelect");
+	SetImage("UI/dagger");
+	SetImage("UI/largeSword");
+	SetImage("UI/rapier");
+	SetImage("Weapon/dagger");
+	SetImage("Weapon/largeSword");
+	SetImage("Weapon/rapier");
 
+	//BGM
+	
+	//SE
 }
 
 void ResourceManager::SetBGM(const std::string fileName)
@@ -101,12 +118,12 @@ void ResourceManager::SetDivImage(const std::string fileName, const int max, con
 	{
 		//ファイルのパス
 		std::string filePath;
-		filePath = std::string("Resource/Images") + fileName + std::string(".png");
+		filePath = std::string("Resource/Images/") + fileName + std::string(".png");
 
 		//キーにImageを読みこむ
-		LoadDivGraph(fileName.c_str(), max, x, y, sizeX, sizeY, manager->divImage[fileName]);
+		LoadDivGraph(filePath.c_str(), max, x, y, sizeX, sizeY, manager->divImage[fileName]);
 
-		if (manager->bgm[fileName] == -1)
+		if (manager->divImage[fileName][0] == -1)
 		{
 			throw(std::invalid_argument("Imageが読み込めません。"));
 		}

@@ -28,6 +28,7 @@ protected:
 	int alphaBlend;				//画像の透明値
 
 	float hp;					//HP
+	float knockBackMove;		//ノックバックの移動量
 
 	bool isAir;					//空中？
 	bool isJump;				//ジャンプしている？
@@ -37,7 +38,6 @@ protected:
 	bool isAttack;				//攻撃中？
 	bool isKnockBack;			//ノックバックする？
 	bool imageInversionFlg;		//画像反転フラグ
-	bool isInvincible;			//無敵フラグ
 
 public:
 	//コンストラクタ
@@ -58,9 +58,7 @@ public:
 	//描画
 	void Draw()const override {};
 
-	//ヒット処理
-	void Hit(ObjectBase* object, const float damage)override;
-
+	//着地
 	virtual void Landing(const float height);
 
 public:
@@ -70,8 +68,11 @@ public:
 	//HPを設定
 	void SetHp(const float hp) { this->hp = hp; }
 
-	//ダメージを取得
-	float GetDamage()const { return damage; }
+	//ノックバックの移動量を取得
+	float GetKnockBackMove()const { return knockBackMove; }
+
+	//ノックバックの移動量を設定
+	void SetKnockBackMove(const float x) { knockBackMove = x; }
 
 	//当たっているかどうかを取得
 	bool GetIsHit()const { return isHit; }
@@ -96,12 +97,6 @@ public:
 
 	//ノックバックフラグを設定
 	void SetIsKnockBack(const bool flg) { isKnockBack = flg; }
-
-	//無敵フラグを取得
-	bool GetIsInvincible()const { return isInvincible; }
-
-	//無敵フラグを設定
-	void SetIsInvincible(const bool flg) { isInvincible = flg; }
 
 	//移動量の取得
 	Vector2D GetMove()const { return move; }

@@ -14,6 +14,8 @@ Rapier::Rapier()
 	framCount = 0;
 
 	angle = 0.f;
+	dis = 0.f;
+	length = 0.f;
 
 	isShow = false;
 	isHit = false;
@@ -59,8 +61,6 @@ void Rapier::Update(CharaBase* chara)
 		isHit = false;
 		isUnable = false;
 		chara->SetIsAttack(false);
-		chara->SetIsInvincible(false);
-		chara->SetArea({ 56.f,chara->GetArea().height });
 	}
 
 	damage = chara->GetDamage() + RAPIER_DAMAGE;
@@ -85,17 +85,19 @@ void Rapier::Attack(const CharaBase* chara)
 		//プレイヤーの方向情報を保持する
 		direction = (short)chara->GetDirection().x;
 	}
+
 }
 
-void Rapier::Hit(ObjectBase* object, const float damage)
+void Rapier::Hit(ObjectBase* target, const float damage)
 {
-	CharaBase* enemy = static_cast<CharaBase*>(object);
+	CharaBase* enemy = static_cast<CharaBase*>(target);
 
 	if (isShow && !isUnable)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + RAPIER_DAMAGE));
+			enemy->SetKnockBackMove(RAPIER_KNOCKBACK);
 			isHit = true;
 			isUnable = true;
 		}

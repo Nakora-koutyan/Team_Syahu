@@ -13,17 +13,18 @@
 #define PLAYER_AIR_MOVE_SPEED			0.1f			//空中移動移動
 #define PLAYER_MAX_MOVE_SPEED			9.f				//最高速度
 #define PLAYER_MAX_HP					100.f			//最大HP
+#define PLAYER_DAMAGE					5.f				//プレイヤーの基礎ダメージ値
 #define PLAYER_DAMAGE_INTERVAL			FPS * 1.0		//プレイヤーが再度ダメージを受けるまでの時間
 #define PLAYER_NORMALWEAPON_COOLTIME	FPS * 1.f		//投げるのクールタイム
 #define PLAYER_STEAL_COOLTIME			FPS * 1.2f		//奪うのクールタイム
-#define PLAYER_LARGESWORD_COOLTIME		FPS * 1.7f		//大剣のクールタイム
-#define PLAYER_DAGGER_COOLTIME			FPS * 0.5f		//短剣のクールタイム
-#define PLAYER_RAPIER_COOLTIME			FPS * 1.2f		//短剣のクールタイム
-#define PLAYER_KNOCKBACK				5.f				//ノックバックの移動距離/f
+#define PLAYER_LARGESWORD_COOLTIME		FPS * 1.5f		//大剣のクールタイム
+#define PLAYER_DAGGER_COOLTIME			FPS * 0.2f		//短剣のクールタイム
+#define PLAYER_RAPIER_COOLTIME			FPS * 1.0f		//レイピアのクールタイム
+#define PLAYER_KNOCKBACK				5.f				//ノックバックの量
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
 #define PLAYER_WEAPON_TIME				FPS * 30		//武器の使用時間
 #define PLAYER_MAX_STOCK				5				//最大ストック数
-#define WEAPON_DISTANCE					20				//プレイヤーから武器を離す距離
+#define WEAPON_DISTANCE					10				//プレイヤーから武器を離す距離
 
 enum class Action
 {
@@ -135,4 +136,7 @@ private:
 
 	//武器のダメージを取得
 	float GetWeaponDamage(const Weapon type);
+
+	//武器のノックバック量を取得
+	float GetWeaponKnockBack(const Weapon type);
 };

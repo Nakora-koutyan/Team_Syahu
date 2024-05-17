@@ -1,11 +1,14 @@
-#include "SceneManager.h"
+#include"SceneManager.h"
 #include"../Scene/GameMain/GameMainScene.h"
+#include"ResourceManager.h"
 
 void SceneManager::Update()
 {
 	SceneBase* next_scene;
 
 	double nextTime = GetNowCount();	//システム時間の取得
+
+	ResourceManager::Initialize();
 
 	//ゲームループ
 	while ((ProcessMessage() == 0) && !(CheckHitKey(KEY_INPUT_ESCAPE)))
@@ -91,6 +94,8 @@ void SceneManager::Initialize()
 	{
 		now_sceen = dynamic_cast<SceneBase*>(new GameMainScene());
 	}
+
+	ResourceManager::CreateManager();
 }
 
 void SceneManager::Finalize()
@@ -102,6 +107,8 @@ void SceneManager::Finalize()
 		now_sceen = nullptr;
 		initFlg = false;
 	}
+
+	ResourceManager::DeleteManager();
 
 	//DXライブラリ使用の終了処理
 	DxLib_End();

@@ -21,6 +21,7 @@ private:
 	float gravityVelocity;	//重力速度
 	float weaponWeight;		//武器の重さ
 	float weaponDamage;		//武器のダメージ
+	float weaponKnockBack;	//武器のノックバック量
 
 	bool isShow;			//表示させる？
 
@@ -31,6 +32,9 @@ public:
 	//デストラクタ
 	~NormalWeapon();
 
+	//初期化処理
+	void Initialize()override;
+
 	//更新
 	void Update(CharaBase* chara);
 
@@ -38,10 +42,10 @@ public:
 	void Draw()const override;
 
 	//攻撃
-	void Attack(const CharaBase* chara, const float weight, const float damage);
+	void Attack(const CharaBase* chara, const float weight, const float damage,const float x);
 
 	//ヒット処理
-	void Hit(ObjectBase* object, const float damage)override;
+	void Hit(ObjectBase* target, const float damage)override;
 
 	//表示フラグを取得
 	bool GetIsShow()const { return isShow; }
