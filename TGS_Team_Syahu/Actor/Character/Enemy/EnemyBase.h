@@ -71,7 +71,7 @@ public:
 
 protected:
 
-	virtual void EnemyAnimation() = 0;
+	virtual void EnemyAnimationManager() = 0;
 
 	//パトロール関数
 	virtual void EnemyPatrol() = 0;

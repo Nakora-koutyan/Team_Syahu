@@ -42,7 +42,7 @@ public:
 private:
 
 	//エネミーのアニメーション制御関数
-	void EnemyAnimation() override;
+	void EnemyAnimationManager() override;
 
 	//パトロール関数
 	void EnemyPatrol() override;

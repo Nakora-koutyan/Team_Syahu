@@ -127,7 +127,7 @@ void Steal::Hit(ObjectBase* object, const float damage)
 					keepType = chara->GetWeaponType();
 
 					//敵は無能力になる
-					//chara->SetWeaponType(Weapon::None);
+					chara->SetWeaponType(Weapon::None);
 
 					chara->SetHp(chara->GetHp() - (damage));
 				}
