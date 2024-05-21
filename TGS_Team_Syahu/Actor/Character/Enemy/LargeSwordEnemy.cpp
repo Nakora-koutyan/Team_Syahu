@@ -469,6 +469,9 @@ void LargeSwordEnemy::AttackStandBy()
 		//パトロール状態にする
 		enemyStatus = EnemyStatus::Patrol;
 		animInterval = 0;
+		canAttack = false;
+		attackChargeTime = MAX_ATTACK_CHARGE_TIME;
+		isFind = false;
 	}
 
 	//エネミーの色変更
@@ -666,6 +669,10 @@ void LargeSwordEnemy::LargeSwordAttackStartAnim()
 	/** 剣を振り下ろす **/
 	//攻撃待機時間が０以下になった場合
 	//画像番号が26以上なら
+	if (largeSwordEnemyImageNumber < 24)
+	{
+		largeSwordEnemyImageNumber = 24;
+	}
 	if (largeSwordEnemyImageNumber > 26)
 	{
 		//画像の番号を15番に設定
@@ -674,7 +681,7 @@ void LargeSwordEnemy::LargeSwordAttackStartAnim()
 		didAttack = true;
 	}
 	// 7フレーム毎にアニメーションを切り替える
-	if (animInterval % 7 == 0 && !didAttack)
+	if (animInterval % 5 == 0 && !didAttack)
 	{
 		largeSwordEnemyImageNumber++;
 	}
