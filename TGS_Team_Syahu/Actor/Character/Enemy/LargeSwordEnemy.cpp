@@ -86,6 +86,7 @@ void LargeSwordEnemy::Initialize()
 	
 	//自身の持つ武器
 	weaponType = Weapon::LargeSword;	//大剣
+	enemyType = EnemyType::LargeSwordEnemy;
 
 	//プレイヤーを見つけた際のマーク
 	findMark = LoadGraph("Resource/Images/Exclamation.png");
@@ -113,7 +114,7 @@ void LargeSwordEnemy::Initialize()
 	//表示するか?
 	isShow = true;
 
-	damage = 20.f;
+	damage = 5.f;
 
 	//攻撃時間
 	attackWaitingTime = MAX_WAITING_TIME;
@@ -142,6 +143,7 @@ void LargeSwordEnemy::Initialize()
 
 	//大剣を呼び出す
 	largeSwordCollisionBox = new BoxCollision;
+	largeSwordCollisionBox->SetArea({ 60,150 });
 }
 
 //描画以外の更新
@@ -196,12 +198,18 @@ void LargeSwordEnemy::Update()
 	{
 		//左向き
 		correctLocX = 45.f;
+		largeSwordCollisionBox->SetLocationX(GetMinLocation().x - GetArea().width);
 	}
 	else
 	{
 		//右向き
 		correctLocX = 30.f;
+		largeSwordCollisionBox->SetLocationX(GetMaxLocation().x);
 	}
+
+	largeSwordCollisionBox->SetLocationY(location.y - 60.f);
+
+	largeSwordCollisionBox->SetScreenLocation(Camera::ConvertScreenPosition(largeSwordCollisionBox->GetLocation()));
 
 	//移動処理
 	location.x += move.x;
@@ -232,6 +240,9 @@ void LargeSwordEnemy::Draw() const
 	DrawFormatStringF(50.f, 380.f, 0xff00ff, "animInterval %d", animInterval);
 	DrawFormatStringF(50.f, 400.f, 0xff00ff, "enemystate %d", enemyStatus);
 	DrawFormatStringF(50.f, 420.f, 0x00ff00, "weaponNoneImageNumber %d", weaponNoneEnemyImageNumber);
+	DrawBoxAA(largeSwordCollisionBox->GetMinScreenLocation().x, largeSwordCollisionBox->GetMinScreenLocation().y,
+		largeSwordCollisionBox->GetMaxScreenLocation().x, largeSwordCollisionBox->GetMaxScreenLocation().y,
+		0xff00ff, FALSE);
 
 	if (markStatus != NULL)
 	{
@@ -289,6 +300,19 @@ void LargeSwordEnemy::FindPlayer(const Player* player)
 	{
 		//プレイヤーへの接近処理
 		SuddenApproachToPlayer(player);
+	}
+}
+
+void LargeSwordEnemy::HitWeapon(ObjectBase* object)
+{
+	CharaBase* target = static_cast<CharaBase*>(object);
+
+	if (signToAttack)
+	{
+		if (target->GetIsShow() && !target->GetIsHit())
+		{
+			target->SetKnockBackMove(LARGESWORD_KNOCKBACK);
+		}
 	}
 }
 

@@ -37,6 +37,7 @@ void NormalEnemy::Initialize()
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
 	weaponType = Weapon::Rapier;	//突進(武器無し)
+	enemyType = EnemyType::None;
 
 	//プレイヤーを見つけた際のマーク
 	findMark = LoadGraph("Resource/Images/Exclamation.png");

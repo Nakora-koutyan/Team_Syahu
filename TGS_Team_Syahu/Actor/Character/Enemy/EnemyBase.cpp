@@ -5,6 +5,7 @@ findMark(NULL),angryMark(NULL),attackRange{}, attackCenser{0}, colorRed(NULL), c
 markStatus(NULL),isBlink(false),blinkCounter(0),enemyAlpha(255),isFind(false)
 {
 	objectType = ObjectType::Enemy;
+	enemyType = EnemyType::None;
 }
 
 EnemyBase::~EnemyBase()

@@ -4,6 +4,8 @@
 
 NormalWeapon::NormalWeapon()
 {
+	objectType = ObjectType::Weapon;
+
 	location.x = 300.f;
 	location.y = GROUND_LINE + radius;
 	radius = 25.f;

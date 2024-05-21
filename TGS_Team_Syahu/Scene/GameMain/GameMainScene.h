@@ -44,4 +44,7 @@ private:
     //ヒットチェック
     void HitCheck();
 
+    //プレイヤーの武器のヒットチェック
+    void HitCheckPlayerWeapon(const int i, const int j);
+
 };

@@ -17,7 +17,8 @@ enum class ObjectType
 	Object,			//物体
 	Player,			//プレイヤー
 	Enemy,			//敵
-	Camera			//カメラ
+	Camera,			//カメラ
+	Weapon			//武器
 };
 
 class ObjectBase
