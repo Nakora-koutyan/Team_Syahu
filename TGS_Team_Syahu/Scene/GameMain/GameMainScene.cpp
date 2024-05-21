@@ -138,7 +138,8 @@ void GameMainScene::HitCheck()
 					{
 						LargeSwordEnemy* largeSwordEnemy = static_cast<LargeSwordEnemy*>(object[j]);
 
-						if (largeSwordEnemy->GetLargeSwordCollisionBox()->CollisionCheck(player))
+						if (largeSwordEnemy->GetLargeSwordCollisionBox()->CollisionCheck(player) &&
+							largeSwordEnemy->GetSignToAttack())
 						{
 							largeSwordEnemy->HitWeapon(player);
 							player->Hit(largeSwordEnemy, largeSwordEnemy->GetDamage() * 3);
