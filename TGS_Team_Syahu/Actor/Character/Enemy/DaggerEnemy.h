@@ -7,7 +7,7 @@ class DaggerEnemy :public EnemyBase
 {
 private:
 
-	int drawnSwordTime;		//抜刀時間
+	bool drawnSword;		//抜刀した？
 
 public:
 	//コンストラクタ

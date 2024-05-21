@@ -115,7 +115,7 @@ void NormalEnemy::Update()
 	//エネミーアニメーション
 	EnemyAnimationManager();
 
-	//画面端を越えない
+	//世界の両端を越えない
 	DontCrossBorder();
 
 	location.x += move.x;

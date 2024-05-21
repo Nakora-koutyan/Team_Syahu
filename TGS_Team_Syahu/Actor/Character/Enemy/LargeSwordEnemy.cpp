@@ -17,10 +17,13 @@
 #define LARGESWORD_ATTACKRANGE_X	60	//大剣の攻撃範囲(X)
 #define LARGESWORD_ATTACKRANGE_Y	60	//大剣の攻撃範囲(Y)
 
+#define MAX_ATTACK_CHARGE_TIME		60	//攻撃までの最大の貯め時間
+
 //コンストラクタ
 LargeSwordEnemy::LargeSwordEnemy():largeSwordEnemyImage(),largeSwordEnemyImageNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
 distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0), largeSwordCollisionBox(nullptr),once(false),
-rushAttackTime(0),largeSwordAttackTime(0),weaponNoneEnemyImage{NULL},weaponNoneEnemyImageNumber(0),signToAttack(false)
+rushAttackTime(0),largeSwordAttackTime(0),weaponNoneEnemyImage{NULL},weaponNoneEnemyImageNumber(0),signToAttack(false),closeToPlayer(false),
+attackChargeTime(0)
 {
 }
 
@@ -140,6 +143,9 @@ void LargeSwordEnemy::Initialize()
 	largeSwordAttackTime = MAX_RUSH_ATTACKTIME;
 	//突進
 	rushAttackTime = MAX_ATTACK_TIME;
+
+	//攻撃開始までの貯め時間の設定
+	attackChargeTime = MAX_ATTACK_CHARGE_TIME;
 
 	//大剣を呼び出す
 	largeSwordCollisionBox = new BoxCollision;
@@ -365,7 +371,7 @@ void LargeSwordEnemy::SuddenApproachToPlayer(const Player* player)
 	//プレイヤーと自身の距離を計算
 	distance = abs(player->GetCenterLocation().x - GetCenterLocation().x);
 	//距離が100以上の場合
-	if (distance > 100 && canAttack == false)
+	if (abs(distance) > 100 && canAttack == false)
 	{
 		//左向きの場合
 		if (direction.x == DIRECTION_LEFT)
@@ -395,17 +401,21 @@ void LargeSwordEnemy::AttackStandBy()
 	//大剣を持っている場合
 	if (weaponType == Weapon::LargeSword)
 	{
-		//攻撃準備処理
-		if (distance <= 100)
+		if (canAttack == true)
 		{
-			//移動を０にする
+			//移動を0にする
 			move.x = 0.f;
-			//待機時間のリセット
-			restTime = MAX_REST_TIME;
 
+			attackChargeTime--;
+		}
+		if (attackChargeTime <= 0)
+		{
 			//エネミーの状態を「攻撃開始」に遷移する
 			enemyStatus = EnemyStatus::AttackStart;
-			//攻撃できない
+
+			//貯め時間のリセット
+			attackChargeTime = MAX_ATTACK_CHARGE_TIME;
+			//プレイヤーに近づいか？(リセット)
 			canAttack = false;
 		}
 	}
@@ -454,10 +464,7 @@ void LargeSwordEnemy::AttackStart()
 		//攻撃OK
 		signToAttack = true;
 
-		//攻撃までのカウントダウンを行う
-		largeSwordAttackTime--;
-
-		if (largeSwordAttackTime >= 0)
+		if (!didAttack)
 		{
 			//カウントダウンが行われている間は動けない(その場で剣をふるう攻撃のため)
 			move.x = 0;
@@ -586,15 +593,34 @@ void LargeSwordEnemy::PatrolAnim()
 //大剣を持っているときの攻撃準備アニメーション
 void LargeSwordEnemy::LargeSwordAttackStandByAnim()
 {
-	//9番目の画像から14番目までを使い回す
-	if (largeSwordEnemyImageNumber > 14)
+	if (!canAttack)
 	{
-		largeSwordEnemyImageNumber = 9;
+		//9番目の画像から14番目までを使い回す
+		if (largeSwordEnemyImageNumber > 14)
+		{
+			largeSwordEnemyImageNumber = 9;
+		}
+		//3フレーム毎にアニメーションを切り替え
+		if (animInterval % 3 == 0)
+		{
+			largeSwordEnemyImageNumber++;
+		}
 	}
-	//3フレーム毎にアニメーションを切り替え
-	if (animInterval % 3 == 0)
+	/** 剣に力を込めている **/
+		//攻撃待機時間が０以上の場合
+	if (canAttack && attackChargeTime >= 0)
 	{
-		largeSwordEnemyImageNumber++;
+		//画像番号が20以上になった場合
+		if (largeSwordEnemyImageNumber >= 20)
+		{
+			//18番にする
+			largeSwordEnemyImageNumber = 18;
+		}
+		// 5フレーム毎にアニメーションを切り替える
+		if (animInterval % 5 == 0)
+		{
+			largeSwordEnemyImageNumber++;
+		}
 	}
 }
 //大剣がない場合の攻撃準備アニメーション
@@ -613,39 +639,20 @@ void LargeSwordEnemy::WeaponNoneAttackStandByAnim()
 //大剣を持っている場合の攻撃開始アニメーション
 void LargeSwordEnemy::LargeSwordAttackStartAnim()
 {
-	/** 剣に力を込めている **/
-		//攻撃待機時間が０以上の場合
-	if (largeSwordAttackTime >= 0)
-	{
-		//画像番号が20以上になった場合
-		if (largeSwordEnemyImageNumber >= 20)
-		{
-			//18番にする
-			largeSwordEnemyImageNumber = 18;
-		}
-		// 5フレーム毎にアニメーションを切り替える
-		if (animInterval % 5 == 0)
-		{
-			largeSwordEnemyImageNumber++;
-		}
-	}
 	/** 剣を振り下ろす **/
 	//攻撃待機時間が０以下になった場合
-	else if (largeSwordAttackTime <= 0)
+	//画像番号が26以上なら
+	if (largeSwordEnemyImageNumber > 26)
 	{
-		//画像番号が26以上なら
-		if (largeSwordEnemyImageNumber >= 26)
-		{
-			//画像の番号を15番に設定
-			largeSwordEnemyImageNumber = 15;
-			//攻撃したかのフラグ変数をtruenにする
-			didAttack = true;
-		}
-		// 7フレーム毎にアニメーションを切り替える
-		if (animInterval % 7 == 0)
-		{
-			largeSwordEnemyImageNumber++;
-		}
+		//画像の番号を15番に設定
+		largeSwordEnemyImageNumber = 13;
+		//攻撃したかのフラグ変数をtruenにする
+		didAttack = true;
+	}
+	// 7フレーム毎にアニメーションを切り替える
+	if (animInterval % 7 == 0 && !didAttack)
+	{
+		largeSwordEnemyImageNumber++;
 	}
 }
 //大剣をもっていない場合の攻撃開始アニメーション

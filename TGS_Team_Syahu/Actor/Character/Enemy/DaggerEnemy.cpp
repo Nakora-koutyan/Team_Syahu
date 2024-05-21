@@ -1,7 +1,7 @@
 #include "DaggerEnemy.h"
 
 //コンストラクタ
-DaggerEnemy::DaggerEnemy():drawnSwordTime(0)
+DaggerEnemy::DaggerEnemy():drawnSword(false)
 {
 
 }
@@ -130,20 +130,41 @@ void DaggerEnemy::FindPlayer(const Player* player)
 //パトロール処理
 void DaggerEnemy::EnemyPatrol()
 {
-	//発見出来ていない場合
-	if (isFind == false)
+	//左向き
+	if (direction.x == DIRECTION_LEFT)
 	{
-		//左向き
-		if (direction.x == DIRECTION_LEFT)
+		move.x = -DAGGER_ENEMY_WALK_SPEED;
+		patrolCounter -= DAGGER_ENEMY_WALK_SPEED;
+		//左に200進んだら右向きにする
+		if (patrolCounter <= -80.f)
 		{
-			move.x = 0.f;
+			direction.x = DIRECTION_RIGHT;
 		}
+	}
+	//右向き
+	else if (direction.x == DIRECTION_RIGHT)
+	{
+		move.x = DAGGER_ENEMY_WALK_SPEED;
+		patrolCounter += DAGGER_ENEMY_WALK_SPEED;
+		//右に200進んだら左向きにする
+		if (patrolCounter >= 80.f)
+		{
+			direction.x = DIRECTION_LEFT;
+		}
+	}
+
+	//プレイヤーを見つけたら攻撃準備に入る
+	if (isFind)
+	{
+		enemyStatus = EnemyStatus::AttackStandBy;
+		patrolCounter = 0.f;
 	}
 }
 
 //攻撃準備
 void DaggerEnemy::AttackStandBy()
 {
+
 }
 
 //攻撃開始
