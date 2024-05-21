@@ -4,6 +4,10 @@
 
 #define MAX_COOL_TIME 50
 
+#define DIRECTION_LEFT -1				//左向き
+#define DIRECTION_RIGHT 1				//右向き
+
+
 enum EnemyStatus
 {
 	Patrol,
@@ -69,6 +73,8 @@ public:
 
 	//プレイヤーを見つけた？
 	virtual void FindPlayer(const Player* player) = 0;
+
+	void DontCrossBorder();
 
 protected:
 

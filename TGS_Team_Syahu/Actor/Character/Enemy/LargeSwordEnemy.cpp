@@ -95,7 +95,7 @@ void LargeSwordEnemy::Initialize()
 	direction.x = DIRECTION_LEFT;
 
 	//体力
-	hp = 100;
+	hp = 130.f;
 
 	//攻撃状態に入る範囲
 	attackRange[0].x = GetMinLocation().x - 250.f;
@@ -123,6 +123,7 @@ void LargeSwordEnemy::Initialize()
 
 	//エネミーの状態(徘徊状態にする)
 	enemyStatus = Patrol;
+
 	//画像番号
 	largeSwordEnemyImageNumber = 0;
 	weaponNoneEnemyImageNumber = 0;
@@ -205,6 +206,9 @@ void LargeSwordEnemy::Update()
 
 	//移動処理
 	location.x += move.x;
+
+	//画面端を越えない
+	DontCrossBorder();
 }
 
 //描画に関する更新
@@ -368,15 +372,15 @@ void LargeSwordEnemy::SuddenApproachToPlayer(const Player* player)
 		{
 			//画像：左向き
 			animTurnFlg = true;
-			//速度：８で移動
-			move.x = -3.f;
+			//速度：4で移動
+			move.x = -4.f;
 		}
 		if (direction.x == DIRECTION_RIGHT)
 		{
 			//画像：右向き
 			animTurnFlg = false;
-			//速度：８で移動
-			move.x = 3.f;
+			//速度：4で移動
+			move.x = 4.f;
 		}
 	}
 	else if (distance <= 100)
