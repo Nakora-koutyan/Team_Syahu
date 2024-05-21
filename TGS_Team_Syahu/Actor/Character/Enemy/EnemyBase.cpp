@@ -79,3 +79,20 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 		}
 	}
 }
+
+//画面端を越えない
+void EnemyBase::DontCrossBorder()
+{
+	//左端を超えない
+	if (GetMinLocation().x < 0.f)
+	{
+		location.x = 0.f;
+		move.x = 0.f;
+	}
+	//右端を超えない
+	else if (GetMaxLocation().x > WORLD_WIDTH)
+	{
+		location.x = WORLD_WIDTH - area.width;
+		move.x = 0.f;
+	}
+}

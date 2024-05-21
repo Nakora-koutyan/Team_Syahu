@@ -2,9 +2,9 @@
 #include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 
-#define MAX_WAITING_TIME 120
+#define MAX_WAITING_TIME 40
 #define NORMAL_ENEMY_KNOCKBACK 3.f
-#define MAX_ATTACK_TIME 40
+#define MAX_ATTACK_TIME 60
 
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
@@ -115,6 +115,9 @@ void NormalEnemy::Update()
 	
 	//エネミーアニメーション
 	EnemyAnimationManager();
+
+	//画面端を越えない
+	DontCrossBorder();
 
 	location.x += move.x;
 }

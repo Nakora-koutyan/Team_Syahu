@@ -1,12 +1,8 @@
 #pragma once
 #include"EnemyBase.h"
 
-#define NORMAL_WALK_SPEED 1.f			//徘徊時のスピード
-#define CHASE_SPEED 2.f					//追跡時のスピード
-#define ATTACK_SPEED 5.f				//攻撃時のスピード
-
-#define DIRECTION_LEFT -1				//左向き
-#define DIRECTION_RIGHT 1				//右向き
+#define NORMAL_WALK_SPEED 0.5f			//徘徊時のスピード
+#define ATTACK_SPEED 10.f				//攻撃時のスピード
 
 class Player;
 
