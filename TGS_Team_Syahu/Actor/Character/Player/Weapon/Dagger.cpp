@@ -5,6 +5,8 @@
 
 Dagger::Dagger()
 {
+	objectType = ObjectType::Weapon;
+
 	directionVector.x = DAGGER_LENGTH;
 	directionVector.y = 0.f;
 

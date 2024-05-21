@@ -24,11 +24,12 @@ CharaBase::CharaBase()
 	isJump = false;
 	isMove = false;
 	isHit = false;
-	isShow = false;
+	isShow = true;
 	isAttack = false;
 	isKnockBack = false;
 	imageInversionFlg = false;
 	deathFlg = false;
+	invincibleFlg = false;
 }
 
 CharaBase::~CharaBase()
@@ -101,6 +102,7 @@ void CharaBase::KnockBack(const CharaBase* chara, const double time, const float
 			isKnockBack = false;
 			knockBackCount = 0;
 			knockBackDirection = 0;
+			knockBackMove = 0.f;
 			move.x = 0.f;
 			move.y = 0.f;
 		}

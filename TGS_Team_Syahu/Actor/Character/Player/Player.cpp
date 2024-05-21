@@ -128,12 +128,9 @@ void Player::Update()
 
 	BackStep(30.f, 15.f, 0.f);
 
-	if (hp > 0)
-	{
-		Movement();
+	Movement();
 
-		Attack();
-	}
+	Attack();
 
 	StockSelect();
 
@@ -223,7 +220,7 @@ void Player::Hit(ObjectBase* object, const float damage)
 {
 	const CharaBase* chara = static_cast<const CharaBase*>(object);
 
-	if (!isKnockBack && !isHit)
+	if (!isKnockBack && !isHit && hp > 0 && !invincibleFlg)
 	{
 		isKnockBack = true;
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
@@ -234,15 +231,20 @@ void Player::Hit(ObjectBase* object, const float damage)
 		{
 			knockBackDirection = 1;
 		}
-		knockBackMove = PLAYER_KNOCKBACK;
+		if (knockBackMove == 0)knockBackMove = PLAYER_KNOCKBACK;
 	}
 
 	//すでに当たってないならかつ同じオブジェクトじゃないなら
-	if (!isHit && objectType != chara->GetObjectType())
+	if (!isHit && objectType != chara->GetObjectType() && hp > 0 && !invincibleFlg)
 	{
 		isHit = true;
 
 		if (hp > 0)hp -= damage;
+	}
+
+	if (hp < 0)
+	{
+		hp = 0;
 	}
 
 	//中心の距離
@@ -305,7 +307,7 @@ void Player::Movement()
 {
 	//右へ移動
 	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) &&
-		!isKnockBack && !isAttack && !isBackStep)
+		!isKnockBack && !isAttack && !isBackStep && hp > 0)
 	{
 		isMove = true;
 		direction.x = 1.f;
@@ -330,7 +332,7 @@ void Player::Movement()
 	//左へ移動
 	else
 	if ((KeyInput::GetKeyDown(KEY_INPUT_A) || PadInput::GetLStickRationX() < -NEED_STICK_RATIO) &&
-			!isKnockBack && !isAttack && !isBackStep)
+			!isKnockBack && !isAttack && !isBackStep && hp > 0)
 	{
 		isMove = true;
 		direction.x = -1.f;
@@ -356,7 +358,7 @@ void Player::Movement()
 	else
 	{
 		//空中で動きながら攻撃しているなら移動量を少しずつ減らす
-		if (isAir && isAttack && move.x != 0)
+		if (isAir && isAttack && move.x != 0 && hp > 0)
 		{
 			if (direction.x < 0)
 			{
@@ -368,12 +370,12 @@ void Player::Movement()
 			}
 		}
 		//レイピアの攻撃は例外で動けるようにするためにこの条件式を設ける
-		else if (stock[stockCount] == Weapon::Rapier && isEquipment && isAttack)
+		else if (stock[stockCount] == Weapon::Rapier && isEquipment && isAttack && hp > 0)
 		{
 			//アイドル状態にしないための条件式なので何も書かなくても問題ない
 		}
 		//ノックバックしていないならアイドル状態
-		else if (!isKnockBack && !isBackStep)
+		else if (!isKnockBack && !isBackStep && hp > 0)
 		{
 			move.x = 0.f;
 			isMove = false;
@@ -383,7 +385,7 @@ void Player::Movement()
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack && !isBackStep)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack && !isBackStep && hp > 0)
 	{
 		move.y = -JUMP_POWER;
 		isAir = true;

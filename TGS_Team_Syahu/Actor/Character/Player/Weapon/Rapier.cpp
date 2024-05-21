@@ -5,6 +5,8 @@
 
 Rapier::Rapier()
 {
+	objectType = ObjectType::Weapon;
+
 	directionVector.x = RAPIER_LENGTH;
 	directionVector.y = 0.f;
 
@@ -23,6 +25,7 @@ Rapier::Rapier()
 	isHit = false;
 	isUnable = false;
 	stepFlg = false;
+	isAirAttack = false;
 }
 
 Rapier::~Rapier()
@@ -32,7 +35,8 @@ Rapier::~Rapier()
 
 void Rapier::Update(CharaBase* chara)
 {
-	if (isShow)
+	//地上での攻撃なら
+	if (isShow && !isAirAttack)
 	{
 		framCount++;
 		//右に出す
@@ -51,13 +55,32 @@ void Rapier::Update(CharaBase* chara)
 			chara->SetMove({ -RAPIER_MOVE ,chara->GetMove().y });
 		}
 	}
+	//空中攻撃なら
+	else if (isAirAttack)
+	{
+		directionVector.x = 0;
+		directionVector.y = RAPIER_LENGTH;
+		chara->SetMove({ chara->GetMove().x , RAPIER_AIR_MOVE });
+		chara->SetInvincibleFlg(true);
+		//右に出す
+		if (direction > 0)
+		{
+			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+			imageAngle = DEGREE_TO_RADIAN(135.f);
+		}
+		else
+		{
+			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+			imageAngle = DEGREE_TO_RADIAN(-135.f);
+		}
+	}
 	else
 	{
 		location = chara->GetCenterLocation();
 	}
 
-	//攻撃時間を超えたら
-	if (framCount > RAPIER_ATTACK_TIME || chara->GetIsKnockBack())
+	//地上攻撃の時間を超えたら
+	if ((framCount > RAPIER_ATTACK_TIME || chara->GetIsKnockBack()) && !isAirAttack)
 	{
 		framCount = 0;
 		direction = 0;
@@ -67,6 +90,22 @@ void Rapier::Update(CharaBase* chara)
 		isUnable = false;
 		stepFlg = true;
 		chara->SetIsAttack(false);
+	}
+	//空中攻撃が地面に着地したら
+	else if (isAirAttack && !chara->GetIsAir())
+	{
+		framCount = 0;
+		direction = 0;
+		angle = 0.f;
+		directionVector.x = 0.f;
+		directionVector.y = 0.f;
+		isShow = false;
+		isHit = false;
+		isUnable = false;
+		stepFlg = true;
+		isAirAttack = false;
+		chara->SetIsAttack(false);
+		chara->SetInvincibleFlg(false);
 	}
 
 	damage = chara->GetDamage() + RAPIER_DAMAGE;
@@ -107,6 +146,11 @@ void Rapier::Attack(const CharaBase* chara)
 		direction = (short)chara->GetDirection().x;
 	}
 
+	if (chara->GetIsAir())
+	{
+		isAirAttack = true;
+	}
+
 }
 
 void Rapier::Hit(ObjectBase* target, const float damage)
@@ -118,9 +162,16 @@ void Rapier::Hit(ObjectBase* target, const float damage)
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + RAPIER_DAMAGE));
-			enemy->SetKnockBackMove(RAPIER_KNOCKBACK);
 			isHit = true;
 			isUnable = true;
+			if (isAirAttack)
+			{
+				enemy->SetKnockBackMove(RAPIER_AIR_ATTAK_KNOCKBACK);
+			}
+			else
+			{
+				enemy->SetKnockBackMove(RAPIER_KNOCKBACK);
+			}
 		}
 	}
 }

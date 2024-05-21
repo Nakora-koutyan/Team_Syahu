@@ -39,6 +39,7 @@ protected:
 	bool isKnockBack;			//ノックバックする？
 	bool imageInversionFlg;		//画像反転フラグ
 	bool deathFlg;				//死亡フラグ
+	bool invincibleFlg;			//無敵フラグ
 
 public:
 	//コンストラクタ
@@ -75,6 +76,9 @@ public:
 	//ノックバックの移動量を設定
 	void SetKnockBackMove(const float x) { knockBackMove = x; }
 
+	//空中かどうかを取得
+	bool GetIsAir()const { return isAir; }
+
 	//当たっているかどうかを取得
 	bool GetIsHit()const { return isHit; }
 
@@ -101,6 +105,12 @@ public:
 
 	//死亡フラグを取得
 	bool GetDeathFlg()const { return deathFlg; }
+
+	//無敵フラグを取得
+	bool GetInvincibleFlg()const { return invincibleFlg; }
+
+	//無敵フラグを設定
+	void SetInvincibleFlg(const bool flg) { invincibleFlg = flg; }
 
 	//移動量の取得
 	Vector2D GetMove()const { return move; }

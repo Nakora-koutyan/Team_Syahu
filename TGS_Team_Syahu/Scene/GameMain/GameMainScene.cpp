@@ -126,51 +126,34 @@ void GameMainScene::HitCheck()
 				//i番目がプレイヤーなら武器の当たり判定
 				if (object[i]->GetObjectType() == ObjectType::Player)
 				{
-					const Player* player = static_cast<const Player*>(object[i]);
-					//武器と敵の当たり判定
-					if (object[j]->GetObjectType() == ObjectType::Enemy && player->GetIsAttack())
-					{
-						CharaBase* enemy = static_cast<CharaBase*>(object[j]);
+					HitCheckPlayerWeapon(i, j);
+				}
+				//j番目がエネミーなら武器の当たり判定
+				if (object[j]->GetObjectType() == ObjectType::Enemy)
+				{
+					EnemyBase* enemy = static_cast<EnemyBase*>(object[j]);
+					Player* player = static_cast<Player*>(object[0]);
 
-						for (int k = 0; k < 5; k++)
-						{
-							if (k != 1)
-							{
-								//武器のポインタが格納されている配列の要素を呼ぶ
-								if (player->GetWeapon(k)->CollisionCheck(enemy))
-								{
-									player->GetWeapon(k)->Hit(enemy, player->GetDamage());
-									enemy->Hit(object[i], 0);
-								}
-							}
-							//奪うだけ特殊なので直接呼ぶ
-							else
-							{
-								if (player->GetSteal()->CollisionCheck(object[j]) ||
-									player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
-									player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j]))
-								{
-									player->GetSteal()->Hit(object[j], player->GetDamage());
-									enemy->Hit(object[i], 0);
-								}
-							}
-						}
-					}
-					//投げるとオブジェクトの当たり判定
-					if (object[j]->GetObjectType() == ObjectType::Object)
+					if (enemy->GetEnemyType() == EnemyType::LargeSwordEnemy)
 					{
-						if (player->GetNormalWeapon()->CollisionCheck(object[j]))
+						LargeSwordEnemy* largeSwordEnemy = static_cast<LargeSwordEnemy*>(object[j]);
+
+						if (largeSwordEnemy->GetLargeSwordCollisionBox()->CollisionCheck(player) &&
+							largeSwordEnemy->GetSignToAttack())
 						{
-							player->GetNormalWeapon()->Initialize();
+							largeSwordEnemy->HitWeapon(player);
+							player->Hit(largeSwordEnemy, largeSwordEnemy->GetDamage() * 3);
 						}
 					}
 				}
+				
 				//ゲームメインにあるオブジェクトの当たり判定
 				if (object[i]->CollisionCheck(object[j]))
 				{
 					//ステージの場合
 					if (object[j]->GetObjectType() == ObjectType::Object)
 					{
+						//ステージのHitを呼ぶ
 						object[j]->Hit(object[i], 0.f);
 					}
 					//ステージじゃないなら
@@ -180,6 +163,48 @@ void GameMainScene::HitCheck()
 					}
 				}
 			}
+		}
+	}
+}
+
+void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
+{
+	const Player* player = static_cast<const Player*>(object[i]);
+	//武器と敵の当たり判定
+	if (object[j]->GetObjectType() == ObjectType::Enemy && player->GetIsAttack())
+	{
+		CharaBase* enemy = static_cast<CharaBase*>(object[j]);
+
+		for (int k = 0; k < 5; k++)
+		{
+			if (k != 1)
+			{
+				//武器のポインタが格納されている配列の要素を呼ぶ
+				if (player->GetWeapon(k)->CollisionCheck(enemy))
+				{
+					player->GetWeapon(k)->Hit(enemy, player->GetDamage());
+					enemy->Hit(object[i], 0);
+				}
+			}
+			//奪うだけ特殊なので直接呼ぶ
+			else
+			{
+				if (player->GetSteal()->CollisionCheck(object[j]) ||
+					player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
+					player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j]))
+				{
+					player->GetSteal()->Hit(object[j], player->GetDamage());
+					enemy->Hit(object[i], 0);
+				}
+			}
+		}
+	}
+	//投げるとオブジェクトの当たり判定
+	if (object[j]->GetObjectType() == ObjectType::Object)
+	{
+		if (player->GetNormalWeapon()->CollisionCheck(object[j]))
+		{
+			player->GetNormalWeapon()->Initialize();
 		}
 	}
 }

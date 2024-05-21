@@ -16,6 +16,14 @@ enum EnemyStatus
 	AttackEnd
 };
 
+enum class EnemyType
+{
+	None = 0,				//武器無し
+	LargeSwordEnemy,		//大剣持ち
+	DaggerEnemy,			//短剣持ち
+	RapierEnemy				//レイピア持ち
+};
+
 class EnemyBase :public CharaBase
 {
 protected:
@@ -36,6 +44,9 @@ protected:
 
 	//エネミーの状態
 	EnemyStatus enemyStatus;
+
+	//エネミーの種類
+	EnemyType enemyType;
 
 	int markStatus;		//符号の状態遷移
 	int findMark;		//プレイヤーを発見した際に出現する画像
@@ -75,6 +86,13 @@ public:
 	virtual void FindPlayer(const Player* player) = 0;
 
 	void DontCrossBorder();
+
+	//武器のヒット処理
+	virtual void HitWeapon(ObjectBase* object) {};
+
+public:
+	//エネミーの種類を取得
+	EnemyType GetEnemyType()const { return enemyType; }
 
 protected:
 

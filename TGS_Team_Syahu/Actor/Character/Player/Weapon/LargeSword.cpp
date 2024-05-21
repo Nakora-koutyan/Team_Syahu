@@ -5,6 +5,8 @@
 
 LargeSword::LargeSword()
 {
+	objectType = ObjectType::Weapon;
+
 	directionVector.x = LARGRSWORD_LENGTH;
 	directionVector.y = 0.f;
 

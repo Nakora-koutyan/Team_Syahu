@@ -55,6 +55,16 @@ public:
 	//プレイヤーを見つけた？
 	void FindPlayer(const Player* player)override;
 
+	//武器のヒット処理
+	void HitWeapon(ObjectBase* object)override;
+
+public:
+	//largeSwordCollisionBoxを取得
+	BoxCollision* GetLargeSwordCollisionBox()const { return largeSwordCollisionBox; }
+
+	//signToAttackを取得
+	bool GetSignToAttack()const { return signToAttack; }
+
 protected:
 	//エネミーのアニメーション制御関数
 	void EnemyAnimationManager() override;

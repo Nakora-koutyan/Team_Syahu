@@ -5,6 +5,8 @@
 
 Steal::Steal()
 {	
+	objectType = ObjectType::Weapon;
+
 	keepType = Weapon::None;
 
 	damage = 10.f;
