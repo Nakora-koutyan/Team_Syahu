@@ -1,7 +1,7 @@
 #include"Dagger.h"
 #include"../../Player/Player.h"
 #include"../../../Camera/Camera.h"
-#include"ResourceManager.h"
+#include"../../../../ResourceManager/ResourceManager.h"
 
 Dagger::Dagger()
 {

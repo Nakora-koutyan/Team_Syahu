@@ -1,6 +1,6 @@
 #include"Player.h"
 #include"../../Camera/Camera.h"
-#include"ResourceManager.h"
+#include"../../../ResourceManager/ResourceManager.h"
 
 #define DEBUG
 

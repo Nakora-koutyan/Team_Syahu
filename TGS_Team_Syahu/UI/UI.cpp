@@ -1,7 +1,7 @@
 #include"UI.h"
 #include"DxLib.h"
 #include"../Actor/Character/Player/Player.h"
-#include"ResourceManager.h"
+#include"../ResourceManager/ResourceManager.h"
 
 UI::UI()
 {
