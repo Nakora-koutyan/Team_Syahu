@@ -6,6 +6,7 @@
 #include"../../Actor/Character//Enemy/LargeSwordEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../../UI/UI.h"
+#include"../Debug/Edit.h"
 #include"vector"
 
 #define LINE_NUM 12                     //ラインの数

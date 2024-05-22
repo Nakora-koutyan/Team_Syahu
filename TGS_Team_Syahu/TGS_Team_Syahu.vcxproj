@@ -27,6 +27,7 @@
     <ClCompile Include="Actor\Character\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Actor\Character\Enemy\DaggerEnemy.cpp" />
     <ClCompile Include="Actor\Character\Player\Weapon\Dagger.cpp" />
+    <ClCompile Include="Scene\Debug\Edit.cpp" />
     <ClCompile Include="InputControl\Key\KeyInput.cpp" />
     <ClCompile Include="InputControl\Pad\PadInput.cpp" />
     <ClCompile Include="Collision\Line\LineCollision.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Actor\Character\Enemy\EnemyBase.h" />
     <ClInclude Include="Actor\Character\Enemy\DaggerEnemy.h" />
     <ClInclude Include="Actor\Character\Player\Weapon\Dagger.h" />
+    <ClInclude Include="Scene\Debug\Edit.h" />
     <ClInclude Include="InputControl\Key\KeyInput.h" />
     <ClInclude Include="InputControl\Pad\PadInput.h" />
     <ClInclude Include="Actor\Character\Enemy\NormalEnemy.h" />
