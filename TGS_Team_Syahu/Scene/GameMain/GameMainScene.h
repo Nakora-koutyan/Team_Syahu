@@ -4,6 +4,7 @@
 #include"../../Actor/Camera/Camera.h"
 #include"../../Actor/Character/Enemy/NormalEnemy.h"
 #include"../../Actor/Character//Enemy/LargeSwordEnemy.h"
+#include"../../Actor/Character/Enemy/DaggerEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../../UI/UI.h"
 #include"vector"

@@ -27,10 +27,6 @@ void NormalEnemy::Initialize()
 	//エネミー画像の格納
 	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 6, 1, 120, 130, enemyImage);
 
-	colorRed = 255;
-	colorGreen = 255;
-	colorBlue = 255;
-
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
 	//表示座標{ x , y }
@@ -38,10 +34,6 @@ void NormalEnemy::Initialize()
 	//キャラクターの能力
 	weaponType = Weapon::Rapier;	//突進(武器無し)
 	enemyType = EnemyType::None;
-
-	//プレイヤーを見つけた際のマーク
-	findMark = LoadGraph("Resource/Images/Exclamation.png");
-	angryMark = LoadGraph("Resource/images/Angry.png");
 
 	//体の向き
 	direction.x = DIRECTION_LEFT;
@@ -91,25 +83,21 @@ void NormalEnemy::Update()
 		//パトロール処理
 	case EnemyStatus::Patrol:
 		EnemyPatrol();
-		markStatus = NULL;
 		break;
 
 		//攻撃の予備動作
 	case EnemyStatus::AttackStandBy:
 		AttackStandBy();
-		markStatus = findMark;
 		break;
 
 		//攻撃開始
 	case EnemyStatus::AttackStart:
 		AttackStart();
-		markStatus = angryMark;
 		break;
 
 		//攻撃終了
 	case EnemyStatus::AttackEnd:
 		AttackEnd();
-		markStatus = NULL;
 		break;
 	}
 	
@@ -136,19 +124,6 @@ void NormalEnemy::Draw() const
 			0x00ffff, FALSE, 1.f);
 	//体力表示用のデバッグ表示
 	DrawFormatString(250, 300, 0xff0f0f, "HP　%d", hp);
-
-	if (markStatus != NULL)
-	{
-		//プレイヤーを発見した場合、状態に応じて符号を表示する
-		if (direction.x == DIRECTION_LEFT)
-		{
-			DrawGraphF(screenLocation.x + 35, screenLocation.y - 20, markStatus, TRUE);
-		}
-		if (direction.x == DIRECTION_RIGHT)
-		{
-			DrawGraphF(screenLocation.x, screenLocation.y - 20, markStatus, TRUE);
-		}
-	}
 }
 
 void NormalEnemy::FindPlayer(const Player* player)
@@ -218,12 +193,6 @@ void NormalEnemy::EnemyPatrol()
 		enemyStatus = EnemyStatus::AttackStandBy;
 	}
 
-	//エネミーの色変更
-	if (colorBlue < 255 && colorGreen < 255)
-	{
-		colorBlue += 15;
-		colorGreen += 15;
-	}
 }
 
 void NormalEnemy:: AttackStandBy()
@@ -252,13 +221,6 @@ void NormalEnemy:: AttackStandBy()
 		enemyStatus = EnemyStatus::Patrol;
 		//攻撃待機時間をリセットする
 		attackWaitingTime = MAX_WAITING_TIME;
-	}
-
-	//エネミーの色変更
-	if (colorBlue > 0 && colorGreen > 0)
-	{
-		colorBlue -= 4;
-		colorGreen -= 4;
 	}
 }
 

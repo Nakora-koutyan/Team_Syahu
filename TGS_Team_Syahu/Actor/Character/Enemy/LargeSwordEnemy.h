@@ -89,7 +89,8 @@ protected:
 protected:
 	//ステータスアニメーション用関数
 	//パトロールアニメーション
-	void PatrolAnim();
+	void LargeSwordPatrolAnim();
+	void WeaponNonePatrolAnim();
 	
 	//攻撃準備アニメーション
 	void LargeSwordAttackStandByAnim();

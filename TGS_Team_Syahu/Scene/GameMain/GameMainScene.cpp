@@ -19,6 +19,7 @@ void GameMainScene::Initialize()
 	object.push_back(new Camera);
 	object.push_back(new NormalEnemy);
 	object.push_back(new LargeSwordEnemy);
+	object.push_back(new DaggerEnemy);
 	object.push_back(new StageBlock);
 
 	for (ObjectBase* ob : object)

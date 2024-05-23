@@ -1,4 +1,6 @@
 #include "DaggerEnemy.h"
+#include "../../../Scene/GameMain/GameMainScene.h"
+#include "../Player/Player.h"
 
 //コンストラクタ
 DaggerEnemy::DaggerEnemy():drawnSword(false)
@@ -18,10 +20,11 @@ void DaggerEnemy::Initialize()
 	//サイズ{ x , y }
 	area = { 80.f,85.f };
 	//表示座標{ x , y }
-	location = { 1100,GROUND_LINE - area.height };
+	location = { 500,GROUND_LINE - area.height };
 
 	//武器の種類：短剣
 	weaponType = Weapon::Dagger;
+	enemyType = EnemyType::DaggerEnemy;
 
 	//体の向き
 	direction.x = DIRECTION_LEFT;
@@ -53,6 +56,11 @@ void DaggerEnemy::Initialize()
 //更新処理
 void DaggerEnemy::Update()
 {
+	//現在の座標をスクリーン座標へ変換
+	screenLocation = Camera::ConvertScreenPosition(location);
+	DamageInterval(FPS * 0.5);
+	KnockBack(this, FPS * 0.5, knockBackMove);
+
 	switch (enemyStatus)
 	{
 	case EnemyStatus::Patrol:
@@ -84,12 +92,17 @@ void DaggerEnemy::Update()
 	//アニメーション処理
 	EnemyAnimationManager();
 
+	//画面端を越えない
+	DontCrossBorder();
+
 	location.x += move.x;
 }
 
 //描画
 void DaggerEnemy::Draw() const
 {
+	DrawBoxAA(GetMinScreenLocation().x, GetMinScreenLocation().y, 
+		GetMaxScreenLocation().x, GetMaxScreenLocation().y,0x00ff00, TRUE, 1.0f);
 }
 
 //プレイヤーをみつけた？
