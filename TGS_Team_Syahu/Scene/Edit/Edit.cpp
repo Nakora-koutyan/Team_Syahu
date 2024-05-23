@@ -1,5 +1,6 @@
 #include "Edit.h"
 #include<string>
+#include"../Scene/GameMain/GameMainScene.h"
 
 Edit::Edit()
 {
@@ -9,7 +10,6 @@ Edit::Edit()
 
 Edit::~Edit()
 {
-
 }
 
 void Edit::Initialize()
