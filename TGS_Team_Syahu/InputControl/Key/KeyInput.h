@@ -15,16 +15,18 @@ struct MOUSE_INPUT
 class KeyInput
 {
 private:
-	static char now_key[MAX_KEY];
-	static char old_key[MAX_KEY];
-	static MOUSE_INPUT now_mouse;
-	static MOUSE_INPUT old_mouse;
-	static MOUSE_INPUT mouse_vec;
-	static float mouse_sensitivity;
+	static char nowKey[MAX_KEY];
+	static char oldKey[MAX_KEY];
+	static MOUSE_INPUT nowMouse;
+	static MOUSE_INPUT oldMouse;
+	static MOUSE_INPUT mouseVec;
+	static float mouseSensitivity;
+	static bool isShowMouse;
 public:
 	//更新
 	static void Update();
 
+public:
 	//押したキーを取得
 	static bool GetKey(int key);
 
@@ -54,4 +56,11 @@ public:
 
 	//離したボタンを取得
 	static bool GetButtonUp(int key);
+
+	//マウスの表示フラグの設定
+	static void SetIsShowMouse(const bool flg) 
+	{
+		isShowMouse = flg; 
+		flg ? SetMouseDispFlag(TRUE) : SetMouseDispFlag(FALSE);
+	}
 };

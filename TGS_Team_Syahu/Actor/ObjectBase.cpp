@@ -14,6 +14,8 @@ ObjectBase::ObjectBase()
 	objectType = ObjectType::None;
 
 	damage = 0.f;
+
+	isShow = false;
 }
 
 ObjectBase::~ObjectBase()

@@ -2,8 +2,6 @@
 #include"../../Camera/Camera.h"
 #include"../../../ResourceManager/ResourceManager.h"
 
-#define DEBUG
-
 Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger(nullptr),rapier(nullptr)
 {
 	objectType = ObjectType::Player;

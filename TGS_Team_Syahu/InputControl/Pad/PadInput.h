@@ -14,8 +14,8 @@ struct Stick
 class PadInput
 {
 private:
-	static char now_key[BUTTON];	//更新前のキー
-	static char old_key[BUTTON];	//更新後のキー
+	static char nowKey[BUTTON];	//更新前のキー
+	static char oldKey[BUTTON];	//更新後のキー
 	static XINPUT_STATE input;		//入力
 	static Stick l_stick;			//左スティック
 	static Stick r_stick;			//右スティック
@@ -30,8 +30,8 @@ public:
 
 		for (int i = 0; i < BUTTON; i++)
 		{
-			old_key[i] = now_key[i];
-			now_key[i] = input.Buttons[i];
+			oldKey[i] = nowKey[i];
+			nowKey[i] = input.Buttons[i];
 		}
 
 		//左スティック
@@ -46,21 +46,21 @@ public:
 	//押したボタンを取得
 	static bool OnButton(int button)
 	{
-		bool ret = (now_key[button] == TRUE && old_key[button] == FALSE);
+		bool ret = (nowKey[button] == TRUE && oldKey[button] == FALSE);
 		return ret;
 	}
 
 	//押しているボタンを取得
 	static bool OnPressed(int button)
 	{
-		bool ret = (now_key[button] == TRUE);
+		bool ret = (nowKey[button] == TRUE);
 		return ret;
 	}
 
 	//離したボタンを取得
 	static bool OnRelease(int button)
 	{
-		bool ret = (now_key[button] == FALSE && old_key[button] == TRUE);
+		bool ret = (nowKey[button] == FALSE && oldKey[button] == TRUE);
 		return ret;
 	}
 

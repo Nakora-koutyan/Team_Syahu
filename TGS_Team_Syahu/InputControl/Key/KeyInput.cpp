@@ -1,100 +1,104 @@
 #include"../../Utility/common.h"
 
 //実体化
-char KeyInput::now_key[MAX_KEY];
-char KeyInput::old_key[MAX_KEY];
-MOUSE_INPUT KeyInput::now_mouse;
-MOUSE_INPUT KeyInput::old_mouse;
-MOUSE_INPUT KeyInput::mouse_vec;
-float KeyInput::mouse_sensitivity = 1.f;
+char KeyInput::nowKey[MAX_KEY];
+char KeyInput::oldKey[MAX_KEY];
+MOUSE_INPUT KeyInput::nowMouse;
+MOUSE_INPUT KeyInput::oldMouse;
+MOUSE_INPUT KeyInput::mouseVec;
+float KeyInput::mouseSensitivity = 1.f;
+bool KeyInput::isShowMouse = false;
 
 void KeyInput::Update()
 {
 	for (int i = 0; i < MAX_KEY; i++) 
 	{
-		old_key[i] = now_key[i];
+		oldKey[i] = nowKey[i];
 	}
 
-	old_mouse = now_mouse;
+	oldMouse = nowMouse;
 	//マウスの更新
-	now_mouse.button = GetMouseInput();
-	GetMousePoint(&now_mouse.x, &now_mouse.y);
-	mouse_vec.x = (int)((now_mouse.x - MOUSE_OFFSET_X) * mouse_sensitivity);
-	mouse_vec.y = (int)((now_mouse.y - MOUSE_OFFSET_Y) * mouse_sensitivity);
+	nowMouse.button = GetMouseInput();
+	GetMousePoint(&nowMouse.x, &nowMouse.y);
+	mouseVec.x = (int)((nowMouse.x - MOUSE_OFFSET_X) * mouseSensitivity);
+	mouseVec.y = (int)((nowMouse.y - MOUSE_OFFSET_Y) * mouseSensitivity);
 
-	SetMousePoint(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	if (!isShowMouse)
+	{
+		SetMousePoint(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	}
 
 	//キーの取得
-	GetHitKeyStateAll(now_key);
+	GetHitKeyStateAll(nowKey);
 
 }
 
 bool KeyInput::GetKey(int key)
 {
-	bool ret = (now_key[key] == TRUE) && (old_key[key] != TRUE);
+	bool ret = (nowKey[key] == TRUE) && (oldKey[key] != TRUE);
 
 	return ret;
 }
 
 bool KeyInput::GetKeyDown(int key)
 {
-	bool ret = (now_key[key] == TRUE) && (old_key[key] == TRUE);
+	bool ret = (nowKey[key] == TRUE) && (oldKey[key] == TRUE);
 
 	return ret;
 }
 
 bool KeyInput::GetKeyUp(int key)
 {
-	bool ret = (now_key[key] != TRUE) && (old_key[key] == TRUE);
+	bool ret = (nowKey[key] != TRUE) && (oldKey[key] == TRUE);
 
 	return ret;
 }
 
 int KeyInput::GetMouseLocationX()
 {
-	int ret = now_mouse.x;
+	int ret = nowMouse.x;
 
 	return ret;
 }
 
 int KeyInput::GetMouseLocationY()
 {
-	int ret = now_mouse.y;
+	int ret = nowMouse.y;
 
 	return ret;
 }
 
 int KeyInput::GetMouseVecX()
 {
-	int ret = mouse_vec.x;
+	int ret = mouseVec.x;
 
 	return ret;
 }
 
 int KeyInput::GetMouseVecY()
 {
-	int ret = mouse_vec.y;
+	int ret = mouseVec.y;
 
 	return ret;
 }
 
 bool KeyInput::GetButton(int key)
 {
-	bool ret = ~(old_mouse.button & key) & (now_mouse.button & key);
+	bool ret = ~(oldMouse.button & key) & (nowMouse.button & key);
 
 	return ret;
 }
 
 bool KeyInput::GetButtonDown(int key)
 {
-	bool ret = (old_mouse.button & key) & (now_mouse.button & key);
+	bool ret = (oldMouse.button & key) & (nowMouse.button & key);
 
 	return ret;
 }
 
 bool KeyInput::GetButtonUp(int key)
 {
-	bool ret = (old_mouse.button & key) & ~(now_mouse.button & key);
+	bool ret = (oldMouse.button & key) & ~(nowMouse.button & key);
 
 	return ret;
 }

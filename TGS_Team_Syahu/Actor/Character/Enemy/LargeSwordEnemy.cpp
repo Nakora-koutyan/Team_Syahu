@@ -99,7 +99,7 @@ void LargeSwordEnemy::Initialize()
 	direction.x = DIRECTION_LEFT;
 
 	//体力
-	hp = 130.f;
+	hp = 100.f;
 
 	//攻撃状態に入る範囲
 	attackRange[0].x = GetMinLocation().x - 250.f;

@@ -23,8 +23,6 @@ private:
 	float weaponDamage;		//武器のダメージ
 	float weaponKnockBack;	//武器のノックバック量
 
-	bool isShow;			//表示させる？
-
 public:
 	//コンストラクタ
 	NormalWeapon();
@@ -46,8 +44,5 @@ public:
 
 	//ヒット処理
 	void Hit(ObjectBase* target, const float damage)override;
-
-	//表示フラグを取得
-	bool GetIsShow()const { return isShow; }
 };
 

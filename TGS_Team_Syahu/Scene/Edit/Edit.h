@@ -3,10 +3,10 @@
 #include "../SceneBase.h"
 #include "../../Actor/ObjectBase.h"
 #include "../../InputControl/Key/KeyInput.h"
-#include "../GameMain/GameMainScene.h"
 
-class Edit :
-    public SceneBase
+class GameMainScene;
+
+class Edit : public SceneBase
 {
 private:
 
