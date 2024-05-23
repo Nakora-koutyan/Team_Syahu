@@ -32,6 +32,8 @@ protected:
 
 	float damage;						//ダメージ量
 
+	bool isShow;						//表示する？
+
 public:
 	//コンストラクタ
 	ObjectBase();
@@ -88,6 +90,12 @@ public:
 
 	//ダメージを取得
 	float GetDamage()const { return damage; }
+
+	//表示フラグを取得
+	bool GetIsShow()const { return isShow; }
+
+	//表示フラグを設定
+	void SetIsShow(const bool flg) { isShow = flg; }
 	
 protected:
 	//四角の当たり判定

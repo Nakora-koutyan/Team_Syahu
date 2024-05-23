@@ -1,9 +1,14 @@
 #pragma once
 
+#define DEBUG
+
 #define FPS				60									//FPS
 
 #define SCREEN_WIDTH	1280								//スクリーンの横幅
 #define SCREEN_HEIGHT	720									//スクリーンの縦幅
+
+#define BLOCK_WIDTH     50                                  //1ブロックの横幅
+#define BLOCK_HEIGHT    50                                  //1ブロックの縦幅
 
 #define WORLD_WIDTH		2560								//ワールドの横幅
 #define WORLD_HEIGHT	1440								//ワールドの縦幅

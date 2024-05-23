@@ -1,7 +1,7 @@
 #include"Dagger.h"
 #include"../../Player/Player.h"
 #include"../../../Camera/Camera.h"
-#include"ResourceManager.h"
+#include"../../../../ResourceManager/ResourceManager.h"
 
 Dagger::Dagger()
 {
@@ -11,6 +11,9 @@ Dagger::Dagger()
 	directionVector.y = 0.f;
 
 	damage = 0.f;
+
+	move.x = 0.f;
+	move.y = 0.f;
 
 	direction = 0;
 
@@ -32,38 +35,29 @@ void Dagger::Update(CharaBase* chara)
 {
 	if (isShow)
 	{
-		framCount++;
-		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
-		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
+		//framCount++;
+		//directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
+		//directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
 		
-		if (direction > 0)
-		{
-			imageAngle += DEGREE_TO_RADIAN(angle) + DEGREE_TO_RADIAN(5.f);
-		}
-		else
-		{
-			imageAngle += DEGREE_TO_RADIAN(angle) + DEGREE_TO_RADIAN(-5.f);
-		}
+		//if (direction > 0)
+		//{
+		//	imageAngle += DEGREE_TO_RADIAN(angle) + DEGREE_TO_RADIAN(5.f);
+		//}
+		//else
+		//{
+		//	imageAngle += DEGREE_TO_RADIAN(angle) + DEGREE_TO_RADIAN(-5.f);
+		//}
 	}
 	else
 	{
 		location = chara->GetCenterLocation();
 	}
 
-	//右に出す
-	if (direction > 0)
-	{
-		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
-	}
-	//左に出す
-	else
-	{
-		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
-	}
-
 	//攻撃時間を超えたら
-	if (framCount > DAGGER_ATTACK_TIME || chara->GetIsKnockBack())
+	if (chara->GetIsKnockBack() || screenLocation.x + directionVector.x < 0 || screenLocation.x > SCREEN_WIDTH)
 	{
+		move.x = 0.f;
+		move.y = 0.f;
 		framCount = 0;
 		direction = 0;
 		angle = 0.f;
@@ -74,7 +68,8 @@ void Dagger::Update(CharaBase* chara)
 	}
 
 	damage = chara->GetDamage() + DAGGER_DAMAGE;
-	location.y = chara->GetCenterLocation().y;
+	location.x += move.x;
+	location.y += move.y;
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
@@ -113,16 +108,20 @@ void Dagger::Attack(const CharaBase* chara)
 	if (direction > 0)
 	{
 		directionVector.x = DAGGER_LENGTH;
+		move.x = DAGGER_SPEED;
 		angle = DAGGER_ANGLE;
+		imageAngle += DEGREE_TO_RADIAN(45.f);
 	}
 	//左に出す
 	else
 	{
 		directionVector.x = -DAGGER_LENGTH;
+		move.x = -DAGGER_SPEED;
 		angle = -DAGGER_ANGLE;
+		imageAngle += DEGREE_TO_RADIAN(-45.f);
 	}
 
-	directionVector.y = -40.f;
+	directionVector.y = 0.f;
 }
 
 void Dagger::Hit(ObjectBase* target, const float damage)
@@ -136,6 +135,18 @@ void Dagger::Hit(ObjectBase* target, const float damage)
 			enemy->SetHp(enemy->GetHp() - (damage + DAGGER_DAMAGE));
 			enemy->SetKnockBackMove(DAGGER_KNOCKBACK);
 			isHit = true;
+			Init();
 		}
 	}
+}
+
+void Dagger::Init()
+{
+	move.x = 0.f;
+	move.y = 0.f;
+	framCount = 0;
+	direction = 0;
+	angle = 0.f;
+	imageAngle = 0.f;
+	isShow = false;
 }

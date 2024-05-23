@@ -34,7 +34,6 @@ protected:
 	bool isJump;				//ジャンプしている？
 	bool isMove;				//移動している？
 	bool isHit;					//当たっている？
-	bool isShow;				//表示する？
 	bool isAttack;				//攻撃中？
 	bool isKnockBack;			//ノックバックする？
 	bool imageInversionFlg;		//画像反転フラグ
@@ -84,12 +83,6 @@ public:
 
 	//当たっているかどうかを設定
 	void SetIsHit(const bool flg) { isHit = flg; }
-
-	//表示フラグを取得
-	bool GetIsShow()const { return isShow; }
-
-	//表示フラグを設定
-	void SetIsShow(const bool flg) { isShow = flg; }
 
 	//攻撃中かどうかを取得
 	bool GetIsAttack()const { return isAttack; }

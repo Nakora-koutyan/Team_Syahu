@@ -1,7 +1,7 @@
 #include "Rapier.h"
 #include"../../Player/Player.h"
 #include"../../../Camera/Camera.h"
-#include"ResourceManager.h"
+#include"../../../../ResourceManager/ResourceManager.h"
 
 Rapier::Rapier()
 {

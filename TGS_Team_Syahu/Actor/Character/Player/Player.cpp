@@ -1,8 +1,6 @@
 #include"Player.h"
 #include"../../Camera/Camera.h"
-#include"ResourceManager.h"
-
-#define DEBUG
+#include"../../../ResourceManager/ResourceManager.h"
 
 Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger(nullptr),rapier(nullptr)
 {

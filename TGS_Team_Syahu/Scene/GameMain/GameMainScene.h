@@ -7,6 +7,7 @@
 #include"../../Actor/Character/Enemy/DaggerEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../../UI/UI.h"
+#include"../Edit/Edit.h"
 #include"vector"
 
 #define LINE_NUM 12                     //ラインの数

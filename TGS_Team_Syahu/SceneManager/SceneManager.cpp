@@ -1,6 +1,6 @@
 #include"SceneManager.h"
 #include"../Scene/GameMain/GameMainScene.h"
-#include"ResourceManager.h"
+#include"../ResourceManager/ResourceManager.h"
 
 void SceneManager::Update()
 {

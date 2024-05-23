@@ -83,6 +83,15 @@ SceneBase* GameMainScene::Update()
 		}
 	}
 
+#ifdef DEBUG
+
+	if (KeyInput::GetKey(KEY_INPUT_L)) {
+		return new Edit();
+	}
+
+#endif // DEBUG
+
+
 	return this;
 }
 

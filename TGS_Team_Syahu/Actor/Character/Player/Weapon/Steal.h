@@ -19,8 +19,6 @@ private:
 
 	int framCount;						//フレームカウント
 
-	bool isShow;						//表示させる？
-
 public:
 	//コンストラクタ
 	Steal();

@@ -25,7 +25,6 @@ private:
 	float dis;				//距離
 	float length;			//長さ
 
-	bool isShow;			//表示させる？
 	bool isHit;				//当たったか？
 	bool isUnable;			//当たり判定ができない？
 	bool stepFlg;			//飛ばす？
