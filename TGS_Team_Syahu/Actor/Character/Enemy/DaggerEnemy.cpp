@@ -3,7 +3,7 @@
 #include "../../Camera/Camera.h"
 
 //コンストラクタ
-DaggerEnemy::DaggerEnemy():drawnSword(false)
+DaggerEnemy::DaggerEnemy():drawnSword(false),dagger(nullptr)
 {
 
 }
@@ -214,6 +214,46 @@ void DaggerEnemy::AttackEnd()
 //アニメーションマネージャー
 void DaggerEnemy::EnemyAnimationManager()
 {
+	if (enemyStatus == EnemyStatus::Patrol)
+	{
+		if (weaponType == Weapon::Dagger)
+		{
+			PatrolAnim();
+		}
+	}
+	if (enemyStatus == EnemyStatus::AttackStandBy)
+	{
+		if (weaponType == Weapon::Dagger)
+		{
+			DaggerAttackStandByAnim();
+		}
+		else if (weaponType == Weapon::None)
+		{
+			WeaponNoneAttackStandByAnim();
+		}
+	}
+	if (enemyStatus == EnemyStatus::AttackStart)
+	{
+		if (weaponType == Weapon::Dagger)
+		{
+			DaggerAttackStartAnim();
+		}
+		else if (weaponType == Weapon::None)
+		{
+			WeaponNoneAttackStartAnim();
+		}
+	}
+	if (enemyStatus == EnemyStatus::AttackEnd)
+	{
+		if (weaponType == Weapon::Dagger)
+		{
+			DaggerAttackEndAnim();
+		}
+		else if (weaponType == Weapon::None)
+		{
+			WeaponNoneAttackEndAnim();
+		}
+	}
 }
 
 //パトロールアニメーション
