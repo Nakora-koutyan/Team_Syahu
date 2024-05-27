@@ -216,4 +216,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resource\StageData\FirstStage.txt" />
+  </ItemGroup>
 </Project>

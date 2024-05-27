@@ -75,6 +75,9 @@
     <ClInclude Include="Utility\common.h" />
     <ClInclude Include="Utility\Vector2D.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resource\StageData\FirstStage.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

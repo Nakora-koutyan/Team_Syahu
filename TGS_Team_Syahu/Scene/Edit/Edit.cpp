@@ -1,11 +1,16 @@
 #include "Edit.h"
 #include<string>
-#include"../Scene/GameMain/GameMainScene.h"
+#include"../GameMain/GameMainScene.h"
 
 Edit::Edit()
 {
 	GameMain = new GameMainScene;
+	keyInput = new KeyInput;
+	
+	keyInput->SetIsShowMouse(TRUE);
 	mouseX = 0; mouseY = 0;
+	toolSelect = 1;
+	LoadStage(0);
 }
 
 Edit::~Edit()
@@ -23,8 +28,18 @@ void Edit::Finalize()
 }
 
 SceneBase* Edit::Update() {
+	if (resultDisplay > 0) {
+		resultDisplay--;
+	}
 
-	GetMousePoint(mouseX, mouseY);
+	GetMousePoint(&mouseX, &mouseY);
+	blockX = mouseX / BLOCK_WIDTH;
+	blockY = mouseY / BLOCK_HEIGHT;
+
+	if (KeyInput::GetButtonDown(MOUSE_INPUT_LEFT)) {
+
+		stageData[blockY][blockX] = toolSelect;
+	}
 
 	if (KeyInput::GetKey(KEY_INPUT_L))
 	{
@@ -44,142 +59,36 @@ void Edit::Draw()const {
 		DrawLine(0, BLOCK_HEIGHT * i, WORLD_WIDTH, BLOCK_HEIGHT * i, 0xffffff, 0);
 	}
 
-	DrawFormatString(50, 50, 0xffff00, "X:%d,Y:%d", mouseX, mouseY);
-	//int old_size = GetFontSize();
-	//SetFontSize(24);
-	//for (int i = 0; i < stage_height_num; i++)
-	//{
-	//	for (int j = 0; j < stage_width_num; j++)
-	//	{
-	//		stage[i][j]->Draw();
-	//		if (select_data[i][j] == true)
-	//		{
-	//			DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0xff0000, false);
-	//		}
-	//		//�e�Ŕ�
-	//		if (stage_data[i][j] == 9)
-	//		{
-	//			DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x892F1B, true);
-	//			DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "�U��", 0x76D0E4);
-	//		}
-	//		if (stage_data[i][j] == 10)
-	//		{
-	//			DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x892F1B, true);
-	//			DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "�W�����v", 0x76D0E4);
-	//		}
-	//		if (stage_data[i][j] == 11)
-	//		{
-	//			DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x892F1B, true);
-	//			DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "�W�����v�U��", 0x76D0E4);
-	//		}
-	//		if (stage_data[i][j] == 12)
-	//		{
-	//			DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x892F1B, true);
-	//			DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "�������", 0x76D0E4);
-	//		}
-	//	}
-	//}
-	SetFontSize(16);
-	/*DrawBoxAA(tool_location.x, tool_location.y, tool_location.x + tool_size.width, tool_location.y + tool_size.height, 0x000000, true);
-	DrawBoxAA(tool_location.x, tool_location.y, tool_location.x + tool_size.width, tool_location.y + tool_size.height, 0xffffff, false);
-	DrawStringF(tool_location.x, tool_location.y + 60, "���N���b�N�őI����z�u", 0xffffff);
-	DrawStringF(tool_location.x, tool_location.y + 80, "ctrl+z�ň�߂�", 0xffffff);
-	DrawStringF(tool_location.x + tool_size.width - 270, tool_location.y + 80, "B�L�[�ŕۑ����Q�[�����C���֖߂�", 0xffffff);*/
-
-	//���ݑI�𒆂̃I�u�W�F�N�g�𕪂���₷��	
-	/*for (int i = 0; i < OBJECT_TYPE_NUM; i++)
+	for (int i = 0; i < WORLD_HEIGHT / BLOCK_HEIGHT; i++)
 	{
-		if (current_type == i)
+		for (int j = 0; j < WORLD_WIDTH / BLOCK_WIDTH; j++)
 		{
-			DrawBoxAA(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0xffffff, true);
-			DrawBoxAA(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0x000000, false);
-			DrawFormatStringF(tool_location.x + (i * 50), tool_location.y + 15, 0x000000, "%s", obj_string[i]);
+			DrawFormatString(50 * i + 2, 50 * j + 2, 0x606000, "%d", stageData[j][i]);
+		}
+	}
+
+	DrawBox(BLOCK_WIDTH * blockX, BLOCK_HEIGHT * blockY, BLOCK_WIDTH * (blockX + 1), BLOCK_HEIGHT * (blockY + 1), 0xFFFF00, 0);
+
+
+
+	DrawFormatString(0, 0, 0xffff00, "X:%d,Y:%d", mouseX, mouseY);
+
+	if (resultDisplay > 0) {
+		if (success) {
+			DrawFormatString(50, 50, 0x00ff00, "file opened!");
 		}
 		else
 		{
-			DrawBoxAA(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0x000000, true);
-			DrawBoxAA(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0xffffff, false);
-			DrawFormatStringF(tool_location.x + (i * 50), tool_location.y + 15, 0xffffff, "%s", obj_string[i]);
+			DrawFormatString(50, 50, 0xff0000, "file not open!");
 		}
-	}*/
+	}
 
-	////�X�e�[�W���ύX�p�\��
-	//DrawStringF(width_button_location.x - 5, width_button_location.y - 20, "�X�e�[�W��", 0xffffff);
-
-	////�X�e�[�W�̉��̃u���b�N�����\�������G���A
-	//DrawBoxAA(width_button_location.x + 15, width_button_location.y, width_button_location.x + 65, width_button_location.y + 25, 0x000000, true);
-	//DrawBoxAA(width_button_location.x + 15, width_button_location.y, width_button_location.x + 65, width_button_location.y + 25, 0xffffff, false);
-	//DrawFormatStringF(width_button_location.x + 25, width_button_location.y + 5, 0xffffff, "%d", stage_width_num);
-
-	////�X�e�[�W�T�C�Y�ύX�{�^��
-	//if (current_leftbutton_flg == false)
-	//{
-	//	DrawBoxAA(width_button_location.x, width_button_location.y, width_button_location.x + 15, width_button_location.y + 25, 0x000000, true);
-	//	DrawBoxAA(width_button_location.x, width_button_location.y, width_button_location.x + 15, width_button_location.y + 25, 0xffffff, false);
-	//	DrawStringF(width_button_location.x + 5, width_button_location.y + 5, "<", 0xffffff);
-	//}
-	//else
-	//{
-	//	DrawBoxAA(width_button_location.x, width_button_location.y, width_button_location.x + 15, width_button_location.y + 25, 0xffffff, true);
-	//	DrawBoxAA(width_button_location.x, width_button_location.y, width_button_location.x + 15, width_button_location.y + 25, 0x000000, false);
-	//	DrawStringF(width_button_location.x + 5, width_button_location.y + 5, "<", 0x000000);
-	//}
-	//if (current_rightbutton_flg == false)
-	//{
-	//	DrawBoxAA(width_button_location.x + 65, width_button_location.y, width_button_location.x + 80, width_button_location.y + 25, 0x000000, true);
-	//	DrawBoxAA(width_button_location.x + 65, width_button_location.y, width_button_location.x + 80, width_button_location.y + 25, 0xffffff, false);
-	//	DrawStringF(width_button_location.x + 70, width_button_location.y + 5, ">", 0xffffff);
-	//}
-	//else
-	//{
-	//	DrawBoxAA(width_button_location.x + 65, width_button_location.y, width_button_location.x + 80, width_button_location.y + 25, 0xffffff, true);
-	//	DrawBoxAA(width_button_location.x + 65, width_button_location.y, width_button_location.x + 80, width_button_location.y + 25, 0x000000, false);
-	//	DrawStringF(width_button_location.x + 70, width_button_location.y + 5, ">", 0x000000);
-	//}
-
-	////�X�e�[�W�����ύX�p�\��
-	//DrawStringF(height_button_location.x - 15, height_button_location.y - 30, "�X�e�[�W����", 0xffffff);
-
-	////�X�e�[�W�̏c�̃u���b�N�����\�������G���A
-	//DrawBoxAA(height_button_location.x, height_button_location.y, height_button_location.x + 65, height_button_location.y + 25, 0x000000, true);
-	//DrawBoxAA(height_button_location.x, height_button_location.y, height_button_location.x + 65, height_button_location.y + 25, 0xffffff, false);
-	//DrawFormatStringF(height_button_location.x + 25, height_button_location.y + 5, 0xffffff, "%d", stage_height_num);
-
-	////�X�e�[�W�T�C�Y�ύX�{�^��
-	//if (current_upbutton_flg == false)
-	//{
-	//	DrawBoxAA(height_button_location.x, height_button_location.y - 15, height_button_location.x + 65, height_button_location.y, 0x000000, true);
-	//	DrawBoxAA(height_button_location.x, height_button_location.y - 15, height_button_location.x + 65, height_button_location.y, 0xffffff, false);
-	//	DrawRotaStringF(height_button_location.x + 40, height_button_location.y - 10, 1, 1, 0, 0, 1.6f, 0xffffff, 0, 0, "<");
-	//}
-	//else
-	//{
-	//	DrawBoxAA(height_button_location.x, height_button_location.y - 15, height_button_location.x + 65, height_button_location.y, 0xffffff, true);
-	//	DrawBoxAA(height_button_location.x, height_button_location.y - 15, height_button_location.x + 65, height_button_location.y, 0x000000, false);
-	//	DrawRotaStringF(height_button_location.x + 40, height_button_location.y - 10, 1, 1, 0, 0, 1.6f, 0x000000, 0, 0, "<");
-	//}
-	////�X�e�[�W�T�C�Y�ύX�{�^��
-	//if (current_downbutton_flg == false)
-	//{
-	//	DrawBoxAA(height_button_location.x, height_button_location.y + 25, height_button_location.x + 65, height_button_location.y + 40, 0x000000, true);
-	//	DrawBoxAA(height_button_location.x, height_button_location.y + 25, height_button_location.x + 65, height_button_location.y + 40, 0xffffff, false);
-	//	DrawRotaStringF(height_button_location.x + 25, height_button_location.y + 35, 1, 1, 0, 0, 4.7f, 0xffffff, 0, 0, "<");
-	//}
-	//else
-	//{
-	//	DrawBoxAA(height_button_location.x, height_button_location.y + 25, height_button_location.x + 65, height_button_location.y + 40, 0xffffff, true);
-	//	DrawBoxAA(height_button_location.x, height_button_location.y + 25, height_button_location.x + 65, height_button_location.y + 40, 0x000000, false);
-	//	DrawRotaStringF(height_button_location.x + 25, height_button_location.y + 35, 1, 1, 0, 0, 4.7f, 0x000000, 0, 0, "<");
-	//}
-
-	//SetFontSize(old_size);
 }
 
 void Edit::LoadStage(int stage) 
 {
-	FILE* fp;
-	std::string  fname;
-	std::string fpassCoupling = "../../Resource/StageData/";
+	std::string fname;
+	std::string fpassCoupling = "Resource/StageData/";
 	std::string fpass;
 
 	switch (stage)
@@ -198,17 +107,29 @@ void Edit::LoadStage(int stage)
 	}
 
 	// 文字列の連結
-	//sprintf_s(fpass, "%s%s", &fpassCoupling, &fname);
 	fpass = fpassCoupling + fname;
 
-	fopen_s(&fp, fpass.c_str(), "r"); // ファイルを開く。失敗するとNULLを返す。
-	if (fp == NULL) {
-		DrawFormatString(50, 50, 0xff0000, "%s file not open!", fname);
+	std::ifstream file(fpass.c_str());
+	if (file)
+	{
+		file >> stageWidth;
+		file >> stageHeight;
+		for (int i = 0; i < stageHeight; i++)
+		{
+			for (int j = 0; j < stageWidth; j++)
+			{
+				file >> stageData[i][j];
+				stageOldData[i][j] = stageData[i][j];
+			}
+		}
+		success = TRUE;
 	}
 	else {
-		DrawFormatString(50, 50, 0xffffff, "%s file opened!", fname);
+		success = FALSE;
+	}
+	resultDisplay = 180;
+}
 
-	};
+void Edit::SaveStage() {
 
-	fclose(fp); // ファイルを閉じる
 }
