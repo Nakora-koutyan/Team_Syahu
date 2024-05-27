@@ -5,7 +5,7 @@
 #define LARGESWORD_ANGLE		15.5f			//大剣の振る角度/f
 #define LARGRSWORD_LENGTH		100.f			//大剣の長さ
 #define LARGESWORD_WEIGHT		0.75f			//大剣の重さ
-#define LARGESWORD_DAMAGE		50.f			//大剣のダメージ
+#define LARGESWORD_DAMAGE		100.f			//大剣のダメージ
 #define LARGESWORD_KNOCKBACK	7.f				//大剣のノックバックの量
 
 class CharaBase;

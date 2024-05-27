@@ -7,6 +7,8 @@ class DaggerEnemy :public EnemyBase
 {
 private:
 
+	Dagger* dagger;			//短剣を呼び出す
+
 	bool drawnSword;		//抜刀した？
 
 public:

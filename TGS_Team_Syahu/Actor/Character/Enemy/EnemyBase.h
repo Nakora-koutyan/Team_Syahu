@@ -48,19 +48,11 @@ protected:
 	//エネミーの種類
 	EnemyType enemyType;
 
-	int markStatus;		//符号の状態遷移
-	int findMark;		//プレイヤーを発見した際に出現する画像
-	int angryMark;		//プレイヤーに攻撃する際の画像
-
 	bool isBlink;
 
 	int blinkCounter;
 
 	int enemyAlpha;
-
-	int colorRed;
-	int colorGreen;
-	int colorBlue;
 
 	bool isFind;		//見つけた？
 

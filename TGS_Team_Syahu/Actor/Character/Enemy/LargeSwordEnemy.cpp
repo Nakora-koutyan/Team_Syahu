@@ -1,6 +1,6 @@
 #include "LargeSwordEnemy.h"
-#include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
+#include "../../Camera/Camera.h"
 
 #define MAX_WAITING_TIME		87		//攻撃開始までの待機時間(MAX値)
 #define LARGE_WALK_SPEED		2.5f	//徘徊時のスピード
@@ -77,11 +77,6 @@ void LargeSwordEnemy::Initialize()
 		weaponNoneEnemyImageNumber++;
 	}
 
-	//仮ボックスの色
-	colorRed = 255;
-	colorGreen = 255;
-	colorBlue = 255;
-
 	//サイズ{ x , y }
 	area = { 80.f,85.f };
 	//表示座標{ x , y }
@@ -90,10 +85,6 @@ void LargeSwordEnemy::Initialize()
 	//自身の持つ武器
 	weaponType = Weapon::LargeSword;	//大剣
 	enemyType = EnemyType::LargeSwordEnemy;
-
-	//プレイヤーを見つけた際のマーク
-	findMark = LoadGraph("Resource/Images/Exclamation.png");
-	angryMark = LoadGraph("Resource/images/Angry.png");
 
 	//体の向き
 	direction.x = DIRECTION_LEFT;
@@ -171,32 +162,24 @@ void LargeSwordEnemy::Update()
 	case EnemyStatus::Patrol:
 
 		EnemyPatrol();
-
-		markStatus = NULL;
 		break;
 
 		//攻撃の予備動作
 	case EnemyStatus::AttackStandBy:
 		
 		AttackStandBy();
-		
-		markStatus = findMark;
 		break;
 
 		//攻撃開始
 	case EnemyStatus::AttackStart:
 		
 		AttackStart();
-
-		markStatus = angryMark;
 		break;
 
 		//攻撃終了
 	case EnemyStatus::AttackEnd:
 		
 		AttackEnd();
-
-		markStatus = NULL;
 		break;
 	}
 
@@ -243,9 +226,6 @@ void LargeSwordEnemy::Draw() const
 	}
 
 	//デバッグ用文字列
-	DrawFormatStringF(50.f, 300.f, 0xff0000, "colorRed %d", colorRed);
-	DrawFormatStringF(50.f, 320.f, 0x00ff00, "colorGreen %d", colorGreen);
-	DrawFormatStringF(50.f, 340.f, 0x0000ff, "colorBlue %d", colorBlue);
 	DrawFormatStringF(50.f, 360.f, 0xffff00, "enemyImage %d", largeSwordEnemyImageNumber);
 	DrawFormatStringF(50.f, 380.f, 0xff00ff, "animInterval %d", animInterval);
 	DrawFormatStringF(50.f, 400.f, 0xff00ff, "enemystate %d", enemyStatus);
@@ -253,19 +233,6 @@ void LargeSwordEnemy::Draw() const
 	DrawBoxAA(largeSwordCollisionBox->GetMinScreenLocation().x, largeSwordCollisionBox->GetMinScreenLocation().y,
 		largeSwordCollisionBox->GetMaxScreenLocation().x, largeSwordCollisionBox->GetMaxScreenLocation().y,
 		0xff00ff, FALSE);
-
-	if (markStatus != NULL)
-	{
-		//プレイヤーを発見した場合、状態に応じて符号を表示する
-		if (direction.x == DIRECTION_LEFT)
-		{
-			DrawGraphF(screenLocation.x + 75, screenLocation.y - 30, markStatus, TRUE);
-		}
-		if (direction.x == DIRECTION_RIGHT)
-		{
-			DrawGraphF(screenLocation.x - 25, screenLocation.y - 30, markStatus, TRUE);
-		}
-	}
 }
 
 //プレイヤーを見つけた？
@@ -380,13 +347,6 @@ void LargeSwordEnemy::EnemyPatrol()
 			weaponNoneEnemyImageNumber = 6;
 		}
 	}
-
-	//エネミーの色変更
-	if (colorBlue < 255 && colorGreen < 255)
-	{
-		colorBlue += 15;
-		colorGreen += 15;
-	}
 }
 
 //プレイヤーへの接近処理
@@ -473,13 +433,6 @@ void LargeSwordEnemy::AttackStandBy()
 		attackChargeTime = MAX_ATTACK_CHARGE_TIME;
 		isFind = false;
 	}
-
-	//エネミーの色変更
-	if (colorBlue > 0 && colorGreen > 0)
-	{
-		colorBlue -= 4;
-		colorGreen -= 4;
-	}
 }
 
 //攻撃開始
@@ -554,7 +507,16 @@ void LargeSwordEnemy::EnemyAnimationManager()
 	//パトロール時のアニメーション
 	if (enemyStatus == EnemyStatus::Patrol)
 	{
-		PatrolAnim();
+		//大剣を持っている場合のアニメーション
+		if (weaponType == Weapon::LargeSword)
+		{
+			LargeSwordPatrolAnim();
+		}
+		//武器がないときのアニメーション
+		if (weaponType == Weapon::None)
+		{
+			WeaponNonePatrolAnim();
+		}
 	}
 	//攻撃準備中のアニメーション
 	if (enemyStatus == EnemyStatus::AttackStandBy)
@@ -585,8 +547,8 @@ void LargeSwordEnemy::EnemyAnimationManager()
 	animInterval++;
 }
 
-//パトロール時のアニメーション
-void LargeSwordEnemy::PatrolAnim()
+//パトロール時のアニメーション(大剣所持)
+void LargeSwordEnemy::LargeSwordPatrolAnim()
 {
 	//待機時間が０より大きい場合：待機アニメーション
 	if (restTime >= 0)
@@ -613,6 +575,37 @@ void LargeSwordEnemy::PatrolAnim()
 		if (animInterval % 3 == 0)
 		{
 			largeSwordEnemyImageNumber++;
+		}
+	}
+}
+//パトロールアニメーション(武器無し)
+void LargeSwordEnemy::WeaponNonePatrolAnim()
+{
+	//待機時間が０より大きい場合：待機アニメーション
+	if (restTime >= 0)
+	{
+		//画像番号が８より大きい場合:0にする
+		if (weaponNoneEnemyImageNumber > 8)
+		{
+			weaponNoneEnemyImageNumber = 0;
+		}
+
+		//5フレームに1回
+		if (animInterval % 5 == 0)
+		{
+			//アニメーションを更新
+			weaponNoneEnemyImageNumber++;
+		}
+	}
+	else if (restTime <= 0)
+	{
+		if (weaponNoneEnemyImageNumber > 14)
+		{
+			weaponNoneEnemyImageNumber = 9;
+		}
+		if (animInterval % 3 == 0)
+		{
+			weaponNoneEnemyImageNumber++;
 		}
 	}
 }

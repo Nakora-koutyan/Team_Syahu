@@ -2,7 +2,7 @@
 #include"../../Camera/Camera.h"
 #include"../../../ResourceManager/ResourceManager.h"
 
-Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger(nullptr),rapier(nullptr)
+Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 {
 	objectType = ObjectType::Player;
 
@@ -19,6 +19,11 @@ Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger
 	{
 		stock[i] = Weapon::None;
 		weaponDurability[i] = PLAYER_WEAPON_DURABILITY;
+	}
+
+	for (int i = 0; i < PLAYER_MAX_DAGGER; i++)
+	{
+		dagger[i] = nullptr;
 	}
 
 	stockCount = 0;
@@ -42,6 +47,10 @@ Player::Player():normalWeapon(nullptr),steal(nullptr),largeSword(nullptr),dagger
 		playerAnim++;
 	}
 	playerAnim = 0;
+	for (int i = 0; i < 5; i++)
+	{
+		daggerCount[i] = PLAYER_MAX_DAGGER - 1;
+	}
 
 	attackCoolTime = 0.f;
 	stealCoolTime = 0.f;
@@ -59,25 +68,28 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	normalWeapon = new NormalWeapon();
 	steal = new Steal();
 	largeSword = new LargeSword();
-	dagger = new Dagger();
 	rapier = new Rapier();
 
-	weapon.push_back(normalWeapon);
-	weapon.push_back(steal);
+	for (int i = 0; i < PLAYER_MAX_DAGGER; i++)
+	{
+		dagger[i] = new Dagger();
+		weapon.push_back(dagger[i]);
+	}
+
 	weapon.push_back(largeSword);
-	weapon.push_back(dagger);
 	weapon.push_back(rapier);
 }
 
 void Player::Finalize()
 {
-	delete normalWeapon;
 	delete steal;
 	delete largeSword;
-	delete dagger;
+	for (int i = 0; i < PLAYER_MAX_DAGGER; i++)
+	{
+		delete dagger[i];
+	}
 	delete rapier;
 }
 
@@ -99,7 +111,7 @@ void Player::Update()
 #endif // DEBUG
 
 	if (isEquipment && isAttack && stock[stockCount] != Weapon::None &&
-		(largeSword->GetIsHit() || dagger->GetIsHit() || rapier->GetIsHit()))
+		(largeSword->GetIsHit() || rapier->GetIsHit()))
 	{
 		if (actionState == Action::Equipment)
 		{
@@ -107,12 +119,30 @@ void Player::Update()
 		}
 		//当たっている間耐久値が減るのを防ぐため
 		largeSword->SetIsHit(false);
-		dagger->SetIsHit(false);
 		rapier->SetIsHit(false);
 		weaponDurability[stockCount] -= GetWeaponDurability(stock[stockCount], true);
+		if (daggerCount[stockCount] > 0)
+		{
+			daggerCount[stockCount]--;
+		}
 	}
 
 	if (!isAttack && weaponDurability[stockCount] <= 0)
+	{
+		weaponType = Weapon::None;
+		weaponDurability[stockCount] = PLAYER_WEAPON_DURABILITY;
+		stock[stockCount] = Weapon::None;
+		isEquipment = false;
+	}
+	else if (daggerCount[stockCount] < 0)
+	{
+		daggerCount[stockCount] = PLAYER_MAX_DAGGER - 1;
+		weaponType = Weapon::None;
+		weaponDurability[stockCount] = PLAYER_WEAPON_DURABILITY;
+		stock[stockCount] = Weapon::None;
+		isEquipment = false;
+	}
+	else if ((KeyInput::GetKey(KEY_INPUT_R)) || PadInput::OnButton(XINPUT_BUTTON_Y))
 	{
 		weaponType = Weapon::None;
 		weaponDurability[stockCount] = PLAYER_WEAPON_DURABILITY;
@@ -134,10 +164,12 @@ void Player::Update()
 
 	Animation();
 
-	normalWeapon->Update(this);
 	steal->Update(this);
 	largeSword->Update(this);
-	dagger->Update(this);
+	for (int i = 0; i < PLAYER_MAX_DAGGER; i++)
+	{
+		dagger[i]->Update(this);
+	}
 	rapier->Update(this);
 
 	screenLocation = Camera::ConvertScreenPosition(location);
@@ -203,13 +235,15 @@ void Player::Draw() const
 			1, 0, playerImage[playerAnim], TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
-	normalWeapon->Draw();
 
 	steal->Draw();
 
 	largeSword->Draw();
 
-	dagger->Draw();
+	for (int i = 0; i < PLAYER_MAX_DAGGER; i++)
+	{
+		dagger[i]->Draw();
+	}
 
 	rapier->Draw();
 }
@@ -434,24 +468,10 @@ void Player::Attack()
 		actionState = Action::None;
 	}
 
-	//投げるまたは武器攻撃
+	//武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
 		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None)
 	{
-		//武器を持っているないなら投げる
-		if (stock[stockCount] != Weapon::None && !isEquipment)
-		{		
-			isAttack = true;
-			actionState = Action::Throw;
-			attackCoolTime = PLAYER_NORMALWEAPON_COOLTIME;
-			normalWeapon->Attack
-			(this, GetWeaponWeight(stock[stockCount])
-				, GetWeaponDamage(stock[stockCount])
-				, GetWeaponKnockBack(stock[stockCount]));
-			stock[stockCount] = Weapon::None;
-			weaponDurability[stockCount] = 0;
-		}
-
 		//武器攻撃
 		if (weaponType != Weapon::None)
 		{
@@ -465,7 +485,8 @@ void Player::Attack()
 			else if (stock[stockCount] == Weapon::Dagger)
 			{
 				attackCoolTime = PLAYER_DAGGER_COOLTIME;
-				dagger->Attack(this);
+				dagger[daggerCount[stockCount]]->Attack(this);
+				daggerCount[stockCount]--;
 			}
 			else if (stock[stockCount] == Weapon::Rapier)
 			{
@@ -745,7 +766,7 @@ int Player::GetWeaponDurability(const Weapon type, const bool useFlg)
 	bool flg = useFlg;
 	int durability = 0;
 
-	switch (checkType)
+	switch (checkType) 
 	{
 	case Weapon::None:
 		durability = 0;
@@ -758,7 +779,7 @@ int Player::GetWeaponDurability(const Weapon type, const bool useFlg)
 
 	case Weapon::Dagger:
 		durability = PLAYER_WEAPON_DURABILITY;
-		if (flg)durability /= 5;
+		if (flg)durability = 0;
 		break;
 
 	case Weapon::Rapier:

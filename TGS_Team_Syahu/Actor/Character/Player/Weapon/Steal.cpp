@@ -1,15 +1,14 @@
-#include "Steal.h"
+#include"Steal.h"
 #include"../../../../Scene/GameMain/GameMainScene.h"
 #include"../../../../Actor/Character/Player/Player.h"
 #include"../../../../Utility/common.h"
+#include"../../../Camera/Camera.h"
 
 Steal::Steal()
 {	
 	objectType = ObjectType::Weapon;
 
 	keepType = Weapon::None;
-
-	damage = 10.f;
 
 	direction = 0;
 
@@ -126,10 +125,10 @@ void Steal::Hit(ObjectBase* target, const float damage)
 				//敵の能力を奪う
 				keepType = chara->GetWeaponType();
 
-					//敵は無能力になる
-					chara->SetWeaponType(Weapon::None);
+				//敵は無能力になる
+				//chara->SetWeaponType(Weapon::None);
 
-				chara->SetHp(chara->GetHp() - (damage));
+				chara->SetHp(chara->GetHp() - (damage + STEAL_DAMAGE));
 				chara->SetKnockBackMove(STEAL_KNOCKBACK);
 			}
 		}
