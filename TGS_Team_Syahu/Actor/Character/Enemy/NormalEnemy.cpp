@@ -1,5 +1,4 @@
 #include "NormalEnemy.h"
-#include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 #include "../../Camera/Camera.h"
 

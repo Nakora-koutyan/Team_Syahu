@@ -1,6 +1,6 @@
 #include "DaggerEnemy.h"
-#include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
+#include "../../Camera/Camera.h"
 
 //コンストラクタ
 DaggerEnemy::DaggerEnemy():drawnSword(false)
