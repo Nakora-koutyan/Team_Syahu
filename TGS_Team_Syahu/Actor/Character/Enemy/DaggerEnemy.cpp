@@ -3,9 +3,9 @@
 #include "../../Camera/Camera.h"
 
 //コンストラクタ
-DaggerEnemy::DaggerEnemy():drawnSword(false),dagger(nullptr)
+DaggerEnemy::DaggerEnemy() :drawnSword(false), dagger(nullptr), daggerEnemyAnimNumber{(0)}, 
+daggerEnemyAnim{NULL},enemyAnimInterval(0),correctLocX(0.f),correctLocY(0.f)
 {
-
 }
 //デストラクタ
 DaggerEnemy::~DaggerEnemy()
@@ -16,6 +16,23 @@ DaggerEnemy::~DaggerEnemy()
 void DaggerEnemy::Initialize()
 {
 	//画像配列の初期化
+	daggerEnemyAnimNumber = 0;
+	int daggerEnemyAnimNumberOld[60];
+	LoadDivGraph("Resource/Images/Enemy/DaggerEnemy.png", 60, 12, 5, 160, 160, daggerEnemyAnimNumberOld);
+	for (int i = 0; i < 60; i++)
+	{
+		//画像の存在しない部分を読み込まない
+		if (6 <= i && 11 >= i ||
+			30 <= i && 35 >= i ||
+			46 <= i && 47 >= i ||
+			55 <= i && 60 >= i)
+		{
+			//スキップ
+			continue;
+		}
+		daggerEnemyAnim[daggerEnemyAnimNumber] = daggerEnemyAnimNumberOld[i];
+		daggerEnemyAnimNumber++;
+	}
 
 	//サイズ{ x , y }
 	area = { 80.f,85.f };
@@ -46,17 +63,17 @@ void DaggerEnemy::Initialize()
 	//daggerクラスの生成
 	dagger = new Dagger;
 
-	//攻撃状態に入る範囲
-	attackRange[0].x = GetMinLocation().x - 275.f;
-	attackRange[0].y = GetCenterLocation().y;
-	attackRange[1].x = GetMaxLocation().x + 275.f;
-	attackRange[1].y = GetCenterLocation().y;
-
 	//プレイヤーに攻撃を仕掛ける範囲
 	attackCenser[0].x = GetMinLocation().x - 300.f;
 	attackCenser[0].y = GetMinLocation().y - 25;
 	attackCenser[1].x = GetMaxLocation().x + 300.f;
 	attackCenser[1].y = GetMaxLocation().y + 25;
+
+	correctLocX = 48.f;
+	correctLocY = -48.f;
+
+	daggerEnemyAnimNumber = 0;
+	enemyAnimInterval = 0;
 }
 
 //更新処理
@@ -94,6 +111,8 @@ void DaggerEnemy::Update()
 		break;
 
 	}
+	//攻撃範囲更新
+	AttackRange();
 
 	//アニメーション処理
 	EnemyAnimationManager();
@@ -107,8 +126,10 @@ void DaggerEnemy::Update()
 //描画
 void DaggerEnemy::Draw() const
 {
-	DrawBoxAA(GetMinScreenLocation().x, GetMinScreenLocation().y, 
-		GetMaxScreenLocation().x, GetMaxScreenLocation().y,0x00ff00, TRUE, 1.0f);
+	//エネミーの描画
+	DrawRotaGraphF(GetMinScreenLocation().x + correctLocX,
+		GetMaxScreenLocation().y + correctLocY, 1, 0,
+		daggerEnemyAnim[daggerEnemyAnimNumber], TRUE, TRUE);
 
 	DrawFormatString(500, 600, 0xffff00, "%lf PatrolCounter", patrolCounter);
 }
@@ -147,6 +168,17 @@ void DaggerEnemy::FindPlayer(const Player* player)
 		}
 	}
 }
+
+//攻撃の範囲
+void DaggerEnemy::AttackRange()
+{
+	//攻撃状態に入る範囲
+	attackRange[0].x = GetMinLocation().x - 275.f;
+	attackRange[0].y = GetCenterLocation().y;
+	attackRange[1].x = GetMaxLocation().x + 275.f;
+	attackRange[1].y = GetCenterLocation().y;
+}
+
 
 //パトロール処理
 void DaggerEnemy::EnemyPatrol()
@@ -214,12 +246,10 @@ void DaggerEnemy::AttackEnd()
 //アニメーションマネージャー
 void DaggerEnemy::EnemyAnimationManager()
 {
+	enemyAnimInterval++;
 	if (enemyStatus == EnemyStatus::Patrol)
 	{
-		if (weaponType == Weapon::Dagger)
-		{
-			PatrolAnim();
-		}
+		PatrolAnim();
 	}
 	if (enemyStatus == EnemyStatus::AttackStandBy)
 	{
@@ -259,11 +289,37 @@ void DaggerEnemy::EnemyAnimationManager()
 //パトロールアニメーション
 void DaggerEnemy::PatrolAnim()
 {
+	if (daggerEnemyAnimNumber >= 5)
+	{
+		daggerEnemyAnimNumber = 0;
+	}
+	else if (enemyAnimInterval % 7 == 0)
+	{
+		daggerEnemyAnimNumber++;
+	}
 }
 
 //攻撃準備時のアニメーション(短剣装備中)
 void DaggerEnemy::DaggerAttackStandByAnim()
 {
+	//画像番号設定
+	if (daggerEnemyAnimNumber < 35)
+	{
+		daggerEnemyAnimNumber = 35;
+	}
+	else if (daggerEnemyAnimNumber >= 39)
+	{
+		daggerEnemyAnimNumber = 35;
+
+		//仮の処理
+		drawnSword = true;
+	}
+
+	//画像番号の更新
+	if (enemyAnimInterval % 8 == 0)
+	{
+		daggerEnemyAnimNumber++;
+	}
 }
 //攻撃準備時のアニメーション(短剣装備無し)
 void DaggerEnemy::WeaponNoneAttackStandByAnim()
@@ -273,6 +329,19 @@ void DaggerEnemy::WeaponNoneAttackStandByAnim()
 //攻撃開始アニメーション(短剣装備あり)
 void DaggerEnemy::DaggerAttackStartAnim()
 {
+	if (daggerEnemyAnimNumber < 6)
+	{
+		daggerEnemyAnimNumber = 6;
+	}
+	else if (daggerEnemyAnimNumber >= 16)
+	{
+		daggerEnemyAnimNumber = 6;
+	}
+
+	if (enemyAnimInterval % 6 == 0)
+	{
+		daggerEnemyAnimNumber++;
+	}
 }
 //攻撃開始アニメーション(短剣装備無し)
 void DaggerEnemy::WeaponNoneAttackStartAnim()

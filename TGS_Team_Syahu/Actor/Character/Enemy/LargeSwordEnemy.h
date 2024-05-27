@@ -66,6 +66,12 @@ public:
 	bool GetSignToAttack()const { return signToAttack; }
 
 protected:
+	//攻撃範囲関数
+	void AttackRange()override;
+
+	//攻撃センサー
+	void AttackCenser();
+
 	//エネミーのアニメーション制御関数
 	void EnemyAnimationManager() override;
 

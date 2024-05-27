@@ -48,13 +48,13 @@ protected:
 	//エネミーの種類
 	EnemyType enemyType;
 
-	bool isBlink;
+	bool isBlink;					//点滅する？
 
-	int blinkCounter;
+	int blinkCounter;				//点滅処理専用のカウンター
 
 	int enemyAlpha;
 
-	bool isFind;		//見つけた？
+	bool isFind;					//見つけた？
 
 	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
 	Vector2D attackRange[2];		//0:左センサー	1:右センサー
@@ -87,6 +87,7 @@ public:
 	EnemyType GetEnemyType()const { return enemyType; }
 
 protected:
+	virtual void AttackRange() = 0;
 
 	virtual void EnemyAnimationManager() = 0;
 

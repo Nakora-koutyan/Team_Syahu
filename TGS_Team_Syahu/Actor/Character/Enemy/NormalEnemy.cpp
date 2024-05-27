@@ -38,18 +38,6 @@ void NormalEnemy::Initialize()
 	//体の向き
 	direction.x = DIRECTION_LEFT;
 
-	//攻撃状態に入る範囲
-	attackRange[0].x = GetMinLocation().x - 410.f;
-	attackRange[0].y = GetMinLocation().y - 75;
-	attackRange[1].x = GetMaxLocation().x + 410.f;
-	attackRange[1].y = GetMaxLocation().y + 75;
-
-	//プレイヤーを追跡する範囲
-	attackCenser[0].x = GetMinLocation().x - 430.f;
-	attackCenser[0].y = GetMinLocation().y - 75;
-	attackCenser[1].x = GetMaxLocation().x + 430.f;
-	attackCenser[1].y = GetMaxLocation().y + 75;
-
 	//体力
 	hp = 100;
 
@@ -100,6 +88,9 @@ void NormalEnemy::Update()
 		AttackEnd();
 		break;
 	}
+
+	//攻撃範囲
+	AttackRange();
 	
 	//エネミーアニメーション
 	EnemyAnimationManager();
@@ -124,6 +115,16 @@ void NormalEnemy::Draw() const
 			0x00ffff, FALSE, 1.f);
 	//体力表示用のデバッグ表示
 	DrawFormatString(250, 300, 0xff0f0f, "HP　%d", hp);
+}
+
+//攻撃範囲の指定
+void NormalEnemy::AttackRange()
+{
+	//攻撃状態に入る範囲
+	attackRange[0].x = GetMinLocation().x - 410.f;
+	attackRange[0].y = GetMinLocation().y - 75;
+	attackRange[1].x = GetMaxLocation().x + 410.f;
+	attackRange[1].y = GetMaxLocation().y + 75;
 }
 
 void NormalEnemy::FindPlayer(const Player* player)

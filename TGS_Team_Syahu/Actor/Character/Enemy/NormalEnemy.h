@@ -36,6 +36,8 @@ public:
 	void FindPlayer(const Player* player)override;
 
 private:
+	//攻撃範囲関数
+	void AttackRange()override;
 
 	//エネミーのアニメーション制御関数
 	void EnemyAnimationManager() override;

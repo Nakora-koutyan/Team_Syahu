@@ -92,18 +92,6 @@ void LargeSwordEnemy::Initialize()
 	//体力
 	hp = 100.f;
 
-	//攻撃状態に入る範囲
-	attackRange[0].x = GetMinLocation().x - 250.f;
-	attackRange[0].y = GetCenterLocation().y;
-	attackRange[1].x = GetMaxLocation().x + 250.f;
-	attackRange[1].y = GetCenterLocation().y;
-
-	//プレイヤーに攻撃を仕掛ける範囲
-	attackCenser[0].x = GetMinLocation().x - 270.f;
-	attackCenser[0].y = GetMinLocation().y - 25;
-	attackCenser[1].x = GetMaxLocation().x + 270.f;
-	attackCenser[1].y = GetMaxLocation().y + 25;
-
 	/*　状態　*/
 	//表示するか?
 	isShow = true;
@@ -182,6 +170,11 @@ void LargeSwordEnemy::Update()
 		AttackEnd();
 		break;
 	}
+	//攻撃範囲更新
+	AttackRange();
+
+	//攻撃センサー更新
+	AttackCenser();
 
 	//アニメーションの画像のX座標のずれを修正
 	if (animTurnFlg)
@@ -278,6 +271,25 @@ void LargeSwordEnemy::FindPlayer(const Player* player)
 		//プレイヤーへの接近処理
 		SuddenApproachToPlayer(player);
 	}
+}
+
+//攻撃範囲
+void LargeSwordEnemy::AttackRange()
+{
+	//攻撃状態に入る範囲
+	attackRange[0].x = GetMinLocation().x - 250.f;
+	attackRange[0].y = GetCenterLocation().y;
+	attackRange[1].x = GetMaxLocation().x + 250.f;
+	attackRange[1].y = GetCenterLocation().y;
+}
+//攻撃センサー
+void LargeSwordEnemy::AttackCenser()
+{
+	//プレイヤーに攻撃を仕掛ける範囲
+	attackCenser[0].x = GetMinLocation().x - 270.f;
+	attackCenser[0].y = GetMinLocation().y - 25;
+	attackCenser[1].x = GetMaxLocation().x + 270.f;
+	attackCenser[1].y = GetMaxLocation().y + 25;
 }
 
 void LargeSwordEnemy::HitWeapon(ObjectBase* object)
