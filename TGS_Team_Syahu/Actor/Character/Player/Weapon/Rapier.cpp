@@ -10,8 +10,6 @@ Rapier::Rapier()
 	directionVector.x = RAPIER_LENGTH;
 	directionVector.y = 0.f;
 
-	damage = 0.f;
-
 	direction = 0;
 
 	framCount = 0;

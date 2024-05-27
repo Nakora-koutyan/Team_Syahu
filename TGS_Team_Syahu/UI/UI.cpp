@@ -8,6 +8,7 @@ UI::UI()
 	for (int i = 0; i < 5; i++)
 	{
 		stockIcon[i] = Weapon::None;
+		playerDaggerCnt[i] = PLAYER_WEAPON_DURABILITY;
 	}
 
 	playerHpBarLocation.x = 27.f;
@@ -34,6 +35,10 @@ void UI::Update(const Player* player)
 	for (int i = 0; i < 5; i++)
 	{
 		stockIcon[i] = player->GetStock(i);
+		if (player->GetStock(i) == Weapon::Dagger)
+		{
+			playerDaggerCnt[i] = player->GetDaggerCount(i);
+		}
 	}
 
 	decisionFlg = player->GetIsEquipment();
@@ -61,6 +66,7 @@ void UI::PlayerHPBar() const
 
 void UI::PlayerStock() const
 {
+	//50は画像サイズ
 	for (int i = 0; i < 5; i++)
 	{
 		DrawGraph(10 + (i * 50), 38, ResourceManager::GetImage("UI/stock"), TRUE);
@@ -76,6 +82,7 @@ void UI::PlayerStock() const
 		else if (stockIcon[i] == Weapon::Dagger)
 		{
 			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/dagger"), TRUE);
+			DrawFormatString(20 + (i * 50) + 5, 58, 0xffffff, "%d", playerDaggerCnt[i] + 1);
 		}
 		else if (stockIcon[i] == Weapon::Rapier)
 		{

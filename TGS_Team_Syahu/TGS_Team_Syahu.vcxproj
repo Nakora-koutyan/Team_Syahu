@@ -34,7 +34,6 @@
     <ClCompile Include="Actor\Character\Enemy\LargeSwordEnemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Actor\Character\Enemy\NormalEnemy.cpp" />
-    <ClCompile Include="Actor\Character\Player\Weapon\NormalWeapon.cpp" />
     <ClCompile Include="Map\StageBlock.cpp" />
     <ClCompile Include="Actor\Character\Player\Weapon\Rapier.cpp" />
     <ClCompile Include="ResourceManager\ResourceManager.cpp" />
@@ -58,7 +57,6 @@
     <ClInclude Include="InputControl\Key\KeyInput.h" />
     <ClInclude Include="InputControl\Pad\PadInput.h" />
     <ClInclude Include="Actor\Character\Enemy\NormalEnemy.h" />
-    <ClInclude Include="Actor\Character\Player\Weapon\NormalWeapon.h" />
     <ClInclude Include="Collision\Line\LineCollision.h" />
     <ClInclude Include="Actor\Character\Enemy\LargeSwordEnemy.h" />
     <ClInclude Include="Map\StageBlock.h" />

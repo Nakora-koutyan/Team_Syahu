@@ -1,5 +1,11 @@
 #include"../../Utility/common.h"
 #include "GameMainScene.h"
+#include"../../Actor/Character/Player/Player.h"
+#include"../../Actor/Camera/Camera.h"
+#include"../../Actor/Character/Enemy/NormalEnemy.h"
+#include"../../Actor/Character//Enemy/LargeSwordEnemy.h"
+#include"../../Map/StageBlock.h"
+#include"../Edit/Edit.h"
 
 GameMainScene::GameMainScene() :ui(nullptr), debugModeFlg(false)
 {
@@ -180,13 +186,13 @@ void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
 {
 	const Player* player = static_cast<const Player*>(object[i]);
 	//武器と敵の当たり判定
-	if (object[j]->GetObjectType() == ObjectType::Enemy && player->GetIsAttack())
+	if (object[j]->GetObjectType() == ObjectType::Enemy)
 	{
-		CharaBase* enemy = static_cast<CharaBase*>(object[j]);
+		EnemyBase* enemy = static_cast<EnemyBase*>(object[j]);
 
-		for (int k = 0; k < 5; k++)
+		for (int k = 0; k < 8; k++)
 		{
-			if (k != 1)
+			if (player->GetWeapon(k)->GetIsShow())
 			{
 				//武器のポインタが格納されている配列の要素を呼ぶ
 				if (player->GetWeapon(k)->CollisionCheck(enemy))
@@ -195,25 +201,15 @@ void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
 					enemy->Hit(object[i], 0);
 				}
 			}
-			//奪うだけ特殊なので直接呼ぶ
-			else
-			{
-				if (player->GetSteal()->CollisionCheck(object[j]) ||
-					player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
-					player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j]))
-				{
-					player->GetSteal()->Hit(object[j], player->GetDamage());
-					enemy->Hit(object[i], 0);
-				}
-			}
 		}
-	}
-	//投げるとオブジェクトの当たり判定
-	if (object[j]->GetObjectType() == ObjectType::Object)
-	{
-		if (player->GetNormalWeapon()->CollisionCheck(object[j]))
+		//奪うだけ特殊なので直接呼ぶ
+		if (player->GetSteal()->GetIsShow()&&
+			(player->GetSteal()->CollisionCheck(object[j]) ||
+				player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
+				player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j])))
 		{
-			player->GetNormalWeapon()->Initialize();
+			player->GetSteal()->Hit(object[j], player->GetDamage());
+			enemy->Hit(object[i], 0);
 		}
 	}
 }

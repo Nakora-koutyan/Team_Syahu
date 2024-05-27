@@ -6,7 +6,7 @@
 #define RAPIER_AIR_MOVE					12.5f			//レイピアの空中での移動量/f
 #define RAPIER_LENGTH					100.f			//レイピアの長さ
 #define RAPIER_WEIGHT					0.35f			//レイピアの重さ
-#define RAPIER_DAMAGE					30.f			//レイピアのダメージ
+#define RAPIER_DAMAGE					50.f			//レイピアのダメージ
 #define RAPIER_KNOCKBACK				0.f				//レイピアのノックバックの量
 #define RAPIER_AIR_ATTAK_KNOCKBACK		5.f				//レイピアの空中攻撃のノックバックの量
 

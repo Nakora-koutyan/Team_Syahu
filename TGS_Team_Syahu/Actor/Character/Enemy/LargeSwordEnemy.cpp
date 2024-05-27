@@ -1,6 +1,7 @@
 #include "LargeSwordEnemy.h"
 #include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
+#include "../../Camera/Camera.h"
 
 #define MAX_WAITING_TIME		87		//攻撃開始までの待機時間(MAX値)
 #define LARGE_WALK_SPEED		2.5f	//徘徊時のスピード

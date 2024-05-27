@@ -6,7 +6,7 @@
 #define DAGGER_LENGTH		75.f			//短剣の長さ
 #define DAGGER_SPEED		20.f			//短剣の速さ
 #define DAGGER_WEIGHT		0.05f			//ダガーの重さ
-#define DAGGER_DAMAGE		10.5f			//ダガーのダメージ
+#define DAGGER_DAMAGE		40.f			//ダガーのダメージ
 #define DAGGER_KNOCKBACK	3.f				//短剣のノックバックの量
 
 class CharaBase;

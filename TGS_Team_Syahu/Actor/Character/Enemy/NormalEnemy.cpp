@@ -1,6 +1,7 @@
 #include "NormalEnemy.h"
 #include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
+#include "../../Camera/Camera.h"
 
 #define MAX_WAITING_TIME 40
 #define NORMAL_ENEMY_KNOCKBACK 3.f
@@ -36,7 +37,7 @@ void NormalEnemy::Initialize()
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
-	weaponType = Weapon::Rapier;	//突進(武器無し)
+	weaponType = Weapon::Dagger;	//突進(武器無し)
 	enemyType = EnemyType::None;
 
 	//プレイヤーを見つけた際のマーク
