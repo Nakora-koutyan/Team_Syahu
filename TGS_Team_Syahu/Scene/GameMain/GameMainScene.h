@@ -1,13 +1,7 @@
 #pragma once
-#include "../SceneBase.h"
-#include"../../Actor/Character/Player/Player.h"
-#include"../../Actor/Camera/Camera.h"
-#include"../../Actor/Character/Enemy/NormalEnemy.h"
-#include"../../Actor/Character//Enemy/LargeSwordEnemy.h"
-#include"../../Actor/Character/Enemy/DaggerEnemy.h"
-#include"../../Map/StageBlock.h"
+#include"../SceneBase.h"
+#include"../Actor/ObjectBase.h" 
 #include"../../UI/UI.h"
-#include"../Edit/Edit.h"
 #include"vector"
 
 #define LINE_NUM 12                     //ラインの数

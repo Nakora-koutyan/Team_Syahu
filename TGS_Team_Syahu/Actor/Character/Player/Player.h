@@ -1,6 +1,5 @@
 #pragma once
 #include"../CharaBase.h"
-#include"Weapon/NormalWeapon.h"
 #include"Weapon/Steal.h"
 #include"Weapon/LargeSword.h"
 #include"Weapon/Dagger.h"
@@ -24,6 +23,7 @@
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
 #define PLAYER_WEAPON_DURABILITY		100				//武器の耐久力
 #define PLAYER_MAX_STOCK				5				//最大ストック数
+#define PLAYER_MAX_DAGGER				6				//短剣の最大数
 #define WEAPON_DISTANCE					10				//プレイヤーから武器を離す距離
 
 enum class Action
@@ -31,7 +31,6 @@ enum class Action
 	None = 0,		//なし
 	Steal,			//奪う
 	WeaponAttack,	//武器攻撃
-	Throw,			//投げる
 	Equipment		//装備
 };
 
@@ -43,10 +42,9 @@ private:
 	Weapon stock[PLAYER_MAX_STOCK];				//ストック
 	Action actionState;							//行動状態
 
-	NormalWeapon* normalWeapon;					//投げる
 	Steal* steal;								//奪う
 	LargeSword* largeSword;						//大剣
-	Dagger* dagger;								//短剣
+	Dagger* dagger[PLAYER_MAX_DAGGER];			//短剣
 	Rapier* rapier;								//レイピア
 
 	short stockCount;							//現在のストックの番号
@@ -55,6 +53,7 @@ private:
 	int playerAnimFramCount;					//プレイヤーのアニメーションフレームカウント
 	int playerAnim;								//プレイヤーのアニメーション番号
 	int playerImage[50] = {};					//プレイヤー画像
+	int daggerCount[PLAYER_MAX_DAGGER];			//短剣の本数
 
 	float attackCoolTime;						//攻撃のクールタイム
 	float stealCoolTime;						//奪うのクールタイム
@@ -93,20 +92,8 @@ public:
 	//ストックを取得
 	Weapon GetStock(const int element)const { return stock[element]; }
 
-	//投げるを取得
-	NormalWeapon* GetNormalWeapon()const { return normalWeapon; }
-
 	//奪うを取得
 	Steal* GetSteal()const { return steal; }
-
-	//大剣を取得
-	LargeSword* GetLargeSword()const { return largeSword; }
-
-	//短剣を取得
-	Dagger* GetDagger()const { return dagger; }
-
-	//レイピアを取得
-	Rapier* GetRapier()const { return rapier; }
 
 	//武器を取得
 	ObjectBase* GetWeapon(const int element)const { return weapon[element]; }
@@ -114,6 +101,9 @@ public:
 public:
 	//ストックの番号を取得
 	short GetStockCount()const { return stockCount; }
+
+	//短剣の本数を取得
+	int GetDaggerCount(const int element)const { return daggerCount[element]; }
 
 	//装備中かどうか取得
 	bool GetIsEquipment()const { return isEquipment; }

@@ -14,6 +14,8 @@ private:
 
 	short selectCount;									//選択しているストックの番号
 
+	int playerDaggerCnt[5] = {};						//ダガーの本数
+
 	float playerHp;										//プレイヤーのHP
 
 	bool decisionFlg;									//決定している？

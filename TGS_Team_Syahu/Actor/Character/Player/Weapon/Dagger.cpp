@@ -134,7 +134,6 @@ void Dagger::Hit(ObjectBase* target, const float damage)
 		{
 			enemy->SetHp(enemy->GetHp() - (damage + DAGGER_DAMAGE));
 			enemy->SetKnockBackMove(DAGGER_KNOCKBACK);
-			isHit = true;
 			Init();
 		}
 	}

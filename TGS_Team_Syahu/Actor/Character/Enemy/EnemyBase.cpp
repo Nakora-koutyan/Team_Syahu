@@ -21,12 +21,12 @@ void EnemyBase::Draw(Player* player)
 
 void EnemyBase::Hit(ObjectBase* target, const float damage)
 {
-	const Player* player = static_cast<const Player*>(target);
+	const CharaBase* chara = static_cast<const CharaBase*>(target);
 
 	if (!isKnockBack && !isHit)
 	{
 		isKnockBack = true;
-		if (GetCenterLocation().x < player->GetCenterLocation().x)
+		if (GetCenterLocation().x < chara->GetCenterLocation().x)
 		{
 			knockBackDirection = -1;
 		}
@@ -37,7 +37,7 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 	}
 
 	//すでに当たってないならかつ同じオブジェクトじゃないなら
-	if (!isHit && objectType != player->GetObjectType())
+	if (!isHit && objectType != chara->GetObjectType())
 	{
 		isHit = true;
 
@@ -52,14 +52,18 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 	}
 
 	//中心の距離
-	float disX = player->GetCenterLocation().x - GetCenterLocation().x;
+	float disX = chara->GetCenterLocation().x - GetCenterLocation().x;
 
 	//2点間の長さ
-	float length = (GetArea().width / 2) + (player->GetArea().width / 2);
+	float length = (GetArea().width / 2) + (chara->GetArea().width / 2);
 
-	if (player->GetIsAttack() && player->GetIsEquipment() && player->GetStock(player->GetStockCount()) == Weapon::Rapier)
+	if (chara->GetObjectType() == ObjectType::Player)
 	{
-		length += RAPIER_LENGTH;
+		const Player* player = static_cast<const Player*>(chara);
+		if (chara->GetIsAttack() && player->GetIsEquipment() && player->GetStock(player->GetStockCount()) == Weapon::Rapier)
+		{
+			length += RAPIER_LENGTH;
+		}
 	}
 
 	if (abs(disX) < length)
@@ -67,7 +71,7 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 		float dif = length - abs(disX);
 
 		//左
-		if (GetCenterLocation().x < player->GetCenterLocation().x)
+		if (GetCenterLocation().x < chara->GetCenterLocation().x)
 		{
 			SetLocationX(location.x - dif);
 		}

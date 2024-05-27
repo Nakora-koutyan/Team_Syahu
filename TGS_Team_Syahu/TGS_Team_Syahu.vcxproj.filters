@@ -87,9 +87,6 @@
     <ClCompile Include="Actor\Character\Enemy\NormalEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Character\Player\Weapon\NormalWeapon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Collision\Sphere\SphereCollision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -171,9 +168,6 @@
       <Filter>ヘッダー ファイル\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Character\Enemy\NormalEnemy.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Actor\Character\Player\Weapon\NormalWeapon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Collision\Sphere\SphereCollision.h">
