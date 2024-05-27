@@ -40,6 +40,12 @@ void DaggerEnemy::Initialize()
 	//エネミーの遷移状態
 	enemyStatus = Patrol;
 
+	//パトロールカウンターの初期設定
+	patrolCounter = 0.f;
+
+	//daggerクラスの生成
+	dagger = new Dagger;
+
 	//攻撃状態に入る範囲
 	attackRange[0].x = GetMinLocation().x - 275.f;
 	attackRange[0].y = GetCenterLocation().y;
@@ -103,6 +109,8 @@ void DaggerEnemy::Draw() const
 {
 	DrawBoxAA(GetMinScreenLocation().x, GetMinScreenLocation().y, 
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,0x00ff00, TRUE, 1.0f);
+
+	DrawFormatString(500, 600, 0xffff00, "%lf PatrolCounter", patrolCounter);
 }
 
 //プレイヤーをみつけた？
@@ -149,7 +157,7 @@ void DaggerEnemy::EnemyPatrol()
 		move.x = -DAGGER_ENEMY_WALK_SPEED;
 		patrolCounter -= DAGGER_ENEMY_WALK_SPEED;
 		//左に200進んだら右向きにする
-		if (patrolCounter <= -80.f)
+		if (patrolCounter <= -20.f)
 		{
 			direction.x = DIRECTION_RIGHT;
 		}
@@ -160,7 +168,7 @@ void DaggerEnemy::EnemyPatrol()
 		move.x = DAGGER_ENEMY_WALK_SPEED;
 		patrolCounter += DAGGER_ENEMY_WALK_SPEED;
 		//右に200進んだら左向きにする
-		if (patrolCounter >= 80.f)
+		if (patrolCounter >= 40.f)
 		{
 			direction.x = DIRECTION_LEFT;
 		}
@@ -177,17 +185,30 @@ void DaggerEnemy::EnemyPatrol()
 //攻撃準備
 void DaggerEnemy::AttackStandBy()
 {
-
+	//抜刀するまでの間、停止する
+	move.x = 0.f;
+	if (drawnSword == true)
+	{
+		//攻撃開始に遷移
+		enemyStatus = EnemyStatus::AttackStart;
+	}
 }
 
 //攻撃開始
 void DaggerEnemy::AttackStart()
 {
+	move.x = 0;
+	dagger->Attack(this);
 }
 
 //攻撃終了
 void DaggerEnemy::AttackEnd()
 {
+	move.x = 0;
+	if (drawnSword == false)
+	{
+		enemyStatus = EnemyStatus::Patrol;
+	}
 }
 
 //アニメーションマネージャー
