@@ -1,6 +1,6 @@
 #pragma once
 #include"../SceneBase.h"
-#include"../Actor/ObjectBase.h" 
+#include"../../Actor/ObjectBase.h" 
 #include"../../UI/UI.h"
 #include"vector"
 

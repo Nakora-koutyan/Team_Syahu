@@ -211,6 +211,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <Text Include="Resource\StageData\FirstStage.txt" />
   </ItemGroup>
 </Project>

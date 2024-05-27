@@ -11,16 +11,24 @@ class Edit : public SceneBase
 private:
 
     GameMainScene* GameMain;
+    KeyInput* keyInput;
 
-    int *mouseX, *mouseY;
+    int mouseX, mouseY;
+    int blockX, blockY;
+    int stageWidth, stageHeight;
     int stageData[100][100];
     int stageOldData[100][100];
 
     int toolSelect;
 
+    bool success;
+    int resultDisplay;
+
     void LoadStage(int Stage);
 
     void SaveStage();
+
+
 public:
     //コンストラクタ
     Edit();
