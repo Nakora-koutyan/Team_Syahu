@@ -43,6 +43,7 @@ SceneBase* Edit::Update() {
 
 	if (KeyInput::GetKey(KEY_INPUT_L))
 	{
+		SaveStage();
 		return new GameMainScene();
 	}
 
@@ -87,6 +88,7 @@ void Edit::Draw()const {
 
 void Edit::LoadStage(int stage) 
 {
+	stageNum = stage;
 	std::string fname;
 	std::string fpassCoupling = "Resource/StageData/";
 	std::string fpass;
@@ -131,5 +133,31 @@ void Edit::LoadStage(int stage)
 }
 
 void Edit::SaveStage() {
-
+	const char* fpass = "";
+	switch (stageNum)
+	{
+	case 0:
+		fpass = "Resource/StageData/FirstStage.txt";
+		break;
+	case 1:
+		fpass = "Resource/StageData/SecondStage.txt";
+		break;
+	case 2:
+		fpass = "Resource/StageData/ThirdStage.txt";
+		break;
+	}
+	std::ofstream file(fpass);
+	if (file)
+	{
+		file << stageWidth << "\n";
+		file << stageHeight << "\n";
+		//�����L���O�f�[�^�z����f�[�^��ǂݍ���
+		for (int i = 0; i < stageHeight; i++)
+		{
+			for (int j = 0; j < stageWidth; j++)
+			{
+				file << stageData[i][j] << "\n";
+			}
+		}
+	}
 }
