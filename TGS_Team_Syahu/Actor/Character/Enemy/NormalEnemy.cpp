@@ -1,5 +1,4 @@
 #include "NormalEnemy.h"
-#include "../../../Scene/GameMain/GameMainScene.h"
 #include "../Player/Player.h"
 #include "../../Camera/Camera.h"
 
@@ -28,10 +27,6 @@ void NormalEnemy::Initialize()
 	//エネミー画像の格納
 	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 6, 1, 120, 130, enemyImage);
 
-	colorRed = 255;
-	colorGreen = 255;
-	colorBlue = 255;
-
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
 	//表示座標{ x , y }
@@ -40,24 +35,8 @@ void NormalEnemy::Initialize()
 	weaponType = Weapon::Dagger;	//突進(武器無し)
 	enemyType = EnemyType::None;
 
-	//プレイヤーを見つけた際のマーク
-	findMark = LoadGraph("Resource/Images/Exclamation.png");
-	angryMark = LoadGraph("Resource/images/Angry.png");
-
 	//体の向き
 	direction.x = DIRECTION_LEFT;
-
-	//攻撃状態に入る範囲
-	attackRange[0].x = GetMinLocation().x - 410.f;
-	attackRange[0].y = GetMinLocation().y - 75;
-	attackRange[1].x = GetMaxLocation().x + 410.f;
-	attackRange[1].y = GetMaxLocation().y + 75;
-
-	//プレイヤーを追跡する範囲
-	attackCenser[0].x = GetMinLocation().x - 430.f;
-	attackCenser[0].y = GetMinLocation().y - 75;
-	attackCenser[1].x = GetMaxLocation().x + 430.f;
-	attackCenser[1].y = GetMaxLocation().y + 75;
 
 	//体力
 	hp = 100;
@@ -92,27 +71,26 @@ void NormalEnemy::Update()
 		//パトロール処理
 	case EnemyStatus::Patrol:
 		EnemyPatrol();
-		markStatus = NULL;
 		break;
 
 		//攻撃の予備動作
 	case EnemyStatus::AttackStandBy:
 		AttackStandBy();
-		markStatus = findMark;
 		break;
 
 		//攻撃開始
 	case EnemyStatus::AttackStart:
 		AttackStart();
-		markStatus = angryMark;
 		break;
 
 		//攻撃終了
 	case EnemyStatus::AttackEnd:
 		AttackEnd();
-		markStatus = NULL;
 		break;
 	}
+
+	//攻撃範囲
+	AttackRange();
 	
 	//エネミーアニメーション
 	EnemyAnimationManager();
@@ -137,19 +115,16 @@ void NormalEnemy::Draw() const
 			0x00ffff, FALSE, 1.f);
 	//体力表示用のデバッグ表示
 	DrawFormatString(250, 300, 0xff0f0f, "HP　%d", hp);
+}
 
-	if (markStatus != NULL)
-	{
-		//プレイヤーを発見した場合、状態に応じて符号を表示する
-		if (direction.x == DIRECTION_LEFT)
-		{
-			DrawGraphF(screenLocation.x + 35, screenLocation.y - 20, markStatus, TRUE);
-		}
-		if (direction.x == DIRECTION_RIGHT)
-		{
-			DrawGraphF(screenLocation.x, screenLocation.y - 20, markStatus, TRUE);
-		}
-	}
+//攻撃範囲の指定
+void NormalEnemy::AttackRange()
+{
+	//攻撃状態に入る範囲
+	attackRange[0].x = GetMinLocation().x - 410.f;
+	attackRange[0].y = GetMinLocation().y - 75;
+	attackRange[1].x = GetMaxLocation().x + 410.f;
+	attackRange[1].y = GetMaxLocation().y + 75;
 }
 
 void NormalEnemy::FindPlayer(const Player* player)
@@ -219,12 +194,6 @@ void NormalEnemy::EnemyPatrol()
 		enemyStatus = EnemyStatus::AttackStandBy;
 	}
 
-	//エネミーの色変更
-	if (colorBlue < 255 && colorGreen < 255)
-	{
-		colorBlue += 15;
-		colorGreen += 15;
-	}
 }
 
 void NormalEnemy:: AttackStandBy()
@@ -253,13 +222,6 @@ void NormalEnemy:: AttackStandBy()
 		enemyStatus = EnemyStatus::Patrol;
 		//攻撃待機時間をリセットする
 		attackWaitingTime = MAX_WAITING_TIME;
-	}
-
-	//エネミーの色変更
-	if (colorBlue > 0 && colorGreen > 0)
-	{
-		colorBlue -= 4;
-		colorGreen -= 4;
 	}
 }
 

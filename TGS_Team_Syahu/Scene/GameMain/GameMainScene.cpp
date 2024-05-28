@@ -3,7 +3,8 @@
 #include"../../Actor/Character/Player/Player.h"
 #include"../../Actor/Camera/Camera.h"
 #include"../../Actor/Character/Enemy/NormalEnemy.h"
-#include"../../Actor/Character//Enemy/LargeSwordEnemy.h"
+#include"../../Actor/Character/Enemy/LargeSwordEnemy.h"
+#include "../../Actor/Character/Enemy/DaggerEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../Edit/Edit.h"
 
@@ -25,6 +26,7 @@ void GameMainScene::Initialize()
 	object.push_back(new Camera);
 	for (int i = 0; i < 5; i++)	object.push_back(new NormalEnemy);
 	for (int i = 0; i < 5; i++)object.push_back(new LargeSwordEnemy);
+	object.push_back(new DaggerEnemy);
 	object.push_back(new StageBlock);
 
 	for (ObjectBase* ob : object)

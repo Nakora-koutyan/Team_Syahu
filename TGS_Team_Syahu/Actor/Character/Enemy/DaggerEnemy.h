@@ -7,7 +7,17 @@ class DaggerEnemy :public EnemyBase
 {
 private:
 
+	int daggerEnemyAnimNumber;
+	int daggerEnemyAnim[60];
+
+	int enemyAnimInterval;
+	
+	Dagger* dagger;			//短剣を呼び出す
+
 	bool drawnSword;		//抜刀した？
+
+	float correctLocX;		//画像の位置ずれを修正するための変数(X)
+	float correctLocY;		//画像の位置ずれを修正するための変数(Y)
 
 public:
 	//コンストラクタ
@@ -35,6 +45,9 @@ protected:
 	void EnemyPatrol() override;
 
 protected:
+	//攻撃範囲関数
+	void AttackRange()override;
+
 	//武器ありの場合に呼び出される関数
 	//攻撃準備
 	void AttackStandBy() override;
