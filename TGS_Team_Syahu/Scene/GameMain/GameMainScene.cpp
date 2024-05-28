@@ -162,6 +162,15 @@ void GameMainScene::HitCheck()
 							player->Hit(largeSwordEnemy, largeSwordEnemy->GetDamage() * 3);
 						}
 					}
+					if (enemy->GetEnemyType() == EnemyType::DaggerEnemy)
+					{
+						DaggerEnemy* daggerEnemy = static_cast<DaggerEnemy*>(object[j]);
+						if (daggerEnemy->CollisionCheck(player) && daggerEnemy->GetSignToAttack())
+						{
+							daggerEnemy->HitWeapon(player);
+							player->Hit(daggerEnemy, daggerEnemy->GetDamage() * 3);
+						}
+					}
 				}
 				
 				//ゲームメインにあるオブジェクトの当たり判定

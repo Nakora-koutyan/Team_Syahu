@@ -2,6 +2,7 @@
 #include "EnemyBase.h"
 
 #define DAGGER_ENEMY_WALK_SPEED		2.5f
+#define DAGGER_ENEMY_KNOCKBACK		1.5f
 
 class DaggerEnemy :public EnemyBase
 {
@@ -18,6 +19,8 @@ private:
 
 	float correctLocX;		//画像の位置ずれを修正するための変数(X)
 	float correctLocY;		//画像の位置ずれを修正するための変数(Y)
+
+	int animTurnFlg;		//画像の反転処理
 
 public:
 	//コンストラクタ
@@ -37,12 +40,16 @@ public:
 	//Playerを見つけたか？
 	void FindPlayer(const Player* player)override;
 
-protected:
+public:
+	void GetDaggerCollision();
+
 	//エネミーのアニメーション制御関数
 	void EnemyAnimationManager() override;
 
 	//パトロール関数
 	void EnemyPatrol() override;
+
+	void HitWeapon(ObjectBase* object)override;
 
 protected:
 	//攻撃範囲関数

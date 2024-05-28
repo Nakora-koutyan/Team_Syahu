@@ -36,8 +36,6 @@ private:
 
 	bool once;							//LargeSwordのAttack関数を一度の攻撃で一回だけ呼ぶためのフラグ
 
-	bool signToAttack;					//攻撃の時に呼ばれる変数
-
 public:
 	//コンストラクタ
 	LargeSwordEnemy();
@@ -55,15 +53,12 @@ public:
 	//プレイヤーを見つけた？
 	void FindPlayer(const Player* player)override;
 
-	//武器のヒット処理
-	void HitWeapon(ObjectBase* object)override;
-
 public:
 	//largeSwordCollisionBoxを取得
 	BoxCollision* GetLargeSwordCollisionBox()const { return largeSwordCollisionBox; }
 
-	//signToAttackを取得
-	bool GetSignToAttack()const { return signToAttack; }
+	//武器のヒット処理
+	void HitWeapon(ObjectBase* object)override;
 
 protected:
 	//攻撃範囲関数

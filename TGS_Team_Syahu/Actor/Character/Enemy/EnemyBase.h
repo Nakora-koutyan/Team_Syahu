@@ -59,6 +59,8 @@ protected:
 	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
 	Vector2D attackRange[2];		//0:左センサー	1:右センサー
 
+	bool signToAttack;					//攻撃の時に呼ばれる変数
+
 public:
 	//コンストラクタ
 	EnemyBase();
@@ -79,12 +81,14 @@ public:
 
 	void DontCrossBorder();
 
-	//武器のヒット処理
-	virtual void HitWeapon(ObjectBase* object) {};
-
 public:
 	//エネミーの種類を取得
 	EnemyType GetEnemyType()const { return enemyType; }
+
+	bool GetSignToAttack()const { return signToAttack; }
+
+	//武器のヒット処理
+	virtual void HitWeapon(ObjectBase* object) = 0;
 
 protected:
 	virtual void AttackRange() = 0;

@@ -159,6 +159,19 @@ void NormalEnemy::FindPlayer(const Player* player)
 	}
 }
 
+void NormalEnemy::HitWeapon(ObjectBase* object)
+{
+	CharaBase* target = static_cast<CharaBase*>(object);
+
+	if (signToAttack)
+	{
+		if (target->GetIsShow() && !target->GetIsHit())
+		{
+			target->SetKnockBackMove(NORMAL_ENEMY_KNOCKBACK);
+		}
+	}
+}
+
 //プレイヤーのいる方向に向かう
 void NormalEnemy::EnemyPatrol()
 {

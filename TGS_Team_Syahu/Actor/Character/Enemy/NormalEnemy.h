@@ -32,8 +32,12 @@ public:
 	//描画更新処理
 	void Draw()const override;
 
+public:
+
 	//プレイヤーを見つけた？
 	void FindPlayer(const Player* player)override;
+
+	void HitWeapon(ObjectBase* object)override;
 
 private:
 	//攻撃範囲関数
