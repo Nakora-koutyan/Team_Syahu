@@ -13,6 +13,8 @@ private:
     GameMainScene* GameMain;
     KeyInput* keyInput;
 
+    Vector2D move;
+
     int mouseX, mouseY;
     int blockX, blockY;
     int stageWidth, stageHeight;

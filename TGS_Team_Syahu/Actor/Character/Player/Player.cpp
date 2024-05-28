@@ -197,6 +197,7 @@ void Player::Draw() const
 	DrawFormatString(600, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
 	DrawFormatString(600, 90, 0x000000, "animCount :%d", playerAnim);
 	DrawFormatString(600, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
+	DrawFormatString(600, 120, 0x000000, "location x:%f location y:%f", location.x, location.y);
 	if (weaponType == Weapon::None)
 	{
 		DrawFormatString(600, 45, 0x000000, "WeaponType:None");
