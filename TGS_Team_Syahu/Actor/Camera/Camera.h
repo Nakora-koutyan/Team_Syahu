@@ -10,6 +10,8 @@ private:
 	static Vector2D cameraPosition;		//カメラの座標
 	static Vector2D screenPosition;		//スクリーンの座標
 
+	static bool debugModeFlg;			//デバッグ状態のフラグ
+
 public:
 	//コンストラクタ
 	Camera();
@@ -36,4 +38,10 @@ public:
 	//対象を設定する
 	static void SetTarget(const Vector2D location, const bool debugFlg = false);
 
+	//カメラを動かす
+	static void DebugCamera();
+
+public:
+	//デバッグ状態の設定
+	void SetDebugModeFlg(const bool flg) { debugModeFlg = flg; }
 };

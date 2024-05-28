@@ -19,11 +19,12 @@ Dagger::Dagger()
 
 	framCount = 0;
 
-	angle = 0.f;
 	imageAngle = 0.f;
 
 	isShow = false;
 	isHit = false;
+	isAirAttack = false;
+	attackEndFlg = false;
 }
 
 Dagger::~Dagger()
@@ -33,38 +34,30 @@ Dagger::~Dagger()
 
 void Dagger::Update(CharaBase* chara)
 {
-	if (isShow)
-	{
-		//framCount++;
-		//directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
-		//directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
-		
-		//if (direction > 0)
-		//{
-		//	imageAngle += DEGREE_TO_RADIAN(angle) + DEGREE_TO_RADIAN(5.f);
-		//}
-		//else
-		//{
-		//	imageAngle += DEGREE_TO_RADIAN(angle) + DEGREE_TO_RADIAN(-5.f);
-		//}
-	}
-	else
+	if (!isShow)
 	{
 		location = chara->GetCenterLocation();
 	}
 
 	//攻撃時間を超えたら
-	if (chara->GetIsKnockBack() || screenLocation.x + directionVector.x < 0 || screenLocation.x > SCREEN_WIDTH)
+	if (chara->GetIsKnockBack() ||
+		screenLocation.x + directionVector.x < 0 || screenLocation.x > SCREEN_WIDTH ||
+		screenLocation.y < 0 || location.y + directionVector.y > GROUND_LINE)
 	{
 		move.x = 0.f;
 		move.y = 0.f;
 		framCount = 0;
 		direction = 0;
-		angle = 0.f;
 		imageAngle = 0.f;
 		isShow = false;
 		isHit = false;
 		chara->SetIsAttack(false);
+	}
+
+	if (attackEndFlg)
+	{
+		chara->SetIsAttack(false);
+		attackEndFlg = false;
 	}
 
 	damage = chara->GetDamage() + DAGGER_DAMAGE;
@@ -80,15 +73,31 @@ void Dagger::Draw() const
 		0x000000, 1);
 	if (isShow)
 	{
-		if (direction > 0)
+		if (!isAirAttack)
 		{
-			DrawRotaGraph2F(screenLocation.x - 10.f, screenLocation.y, 0, 75,
-				1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE);
+			if (direction > 0)
+			{
+				DrawRotaGraph2F(screenLocation.x - 10.f, screenLocation.y, 0, 75,
+					1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE);
+			}
+			else
+			{
+				DrawRotaGraph2F(screenLocation.x + 10.f, screenLocation.y, 75, 75,
+					1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE, TRUE);
+			}
 		}
 		else
 		{
-			DrawRotaGraph2F(screenLocation.x + 10.f, screenLocation.y, 75, 75,
-				1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE, TRUE);
+			if (direction > 0)
+			{
+				DrawRotaGraph2F(screenLocation.x, screenLocation.y, 0, 75,
+					1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE);
+			}
+			else
+			{
+				DrawRotaGraph2F(screenLocation.x - 5.f, screenLocation.y, 75, 75,
+					1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE, TRUE);
+			}
 		}
 	}
 }
@@ -105,23 +114,40 @@ void Dagger::Attack(const CharaBase* chara)
 	}
 
 	//右に出す
-	if (direction > 0)
+	if (direction > 0 && !chara->GetIsAir())
 	{
 		directionVector.x = DAGGER_LENGTH;
+		directionVector.y = 0.f;
 		move.x = DAGGER_SPEED;
-		angle = DAGGER_ANGLE;
 		imageAngle += DEGREE_TO_RADIAN(45.f);
 	}
 	//左に出す
-	else
+	else if (direction < 0 && !chara->GetIsAir())
 	{
 		directionVector.x = -DAGGER_LENGTH;
+		directionVector.y = 0.f;
 		move.x = -DAGGER_SPEED;
-		angle = -DAGGER_ANGLE;
 		imageAngle += DEGREE_TO_RADIAN(-45.f);
 	}
-
-	directionVector.y = 0.f;
+	//下に出す
+	else if (chara->GetIsAir())
+	{
+		isAirAttack = true;
+		directionVector.y = DAGGER_LENGTH;
+		move.y = DAGGER_SPEED * sin(DEGREE_TO_RADIAN(150.f));
+		if (direction > 0)
+		{
+			directionVector.x = DAGGER_LENGTH;
+			move.x = -10.f * cos(DEGREE_TO_RADIAN(-150.f));
+			imageAngle += DEGREE_TO_RADIAN(90.f);
+		}
+		else
+		{
+			directionVector.x = -DAGGER_LENGTH;
+			move.x = 10.f * cos(DEGREE_TO_RADIAN(-150.f));
+			imageAngle += DEGREE_TO_RADIAN(-90.f);
+		}
+	}
 }
 
 void Dagger::Hit(ObjectBase* target, const float damage)
@@ -145,7 +171,8 @@ void Dagger::Init()
 	move.y = 0.f;
 	framCount = 0;
 	direction = 0;
-	angle = 0.f;
 	imageAngle = 0.f;
 	isShow = false;
+	isHit = false;
+	attackEndFlg = true;
 }

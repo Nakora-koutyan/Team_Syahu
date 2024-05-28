@@ -2,6 +2,7 @@
 #include "../../../../Collision/Line/LineCollision.h"
 
 #define RAPIER_ATTACK_TIME				FPS * 0.4		//レイピア攻撃の時間
+#define RAPIER_CHARGE_TIME				FPS * 0.2		//レイピアの溜め時間
 #define RAPIER_MOVE						15.5f			//レイピアの移動量/f
 #define RAPIER_AIR_MOVE					12.5f			//レイピアの空中での移動量/f
 #define RAPIER_LENGTH					100.f			//レイピアの長さ
@@ -19,6 +20,7 @@ private:
 	short direction;		//方向
 
 	int framCount;			//フレームカウント
+	int chargeTime;			//溜める時間
 
 	float angle;			//角度
 	float imageAngle;		//画像の角度
@@ -50,6 +52,9 @@ public:
 	void Hit(ObjectBase* target, const float damage)override;
 
 public:
+	//溜める時間を取得
+	int GetChargeTime()const { return chargeTime; }
+
 	//当たったかどうか取得
 	bool GetIsHit()const { return isHit; }
 

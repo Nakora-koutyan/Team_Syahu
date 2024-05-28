@@ -96,6 +96,11 @@ void CharaBase::KnockBack(const CharaBase* chara, const double time, const float
 			move.x = x;
 		}
 
+		if (isAir)
+		{
+			move.x /= 2;
+		}
+
 		location.x += move.x;
 		if (knockBackCount > time)
 		{
@@ -105,6 +110,13 @@ void CharaBase::KnockBack(const CharaBase* chara, const double time, const float
 			knockBackMove = 0.f;
 			move.x = 0.f;
 			move.y = 0.f;
+		}
+	}
+	else
+	{
+		if (hp <= 0 && objectType == ObjectType::Enemy)
+		{
+			deathFlg = true;
 		}
 	}
 }

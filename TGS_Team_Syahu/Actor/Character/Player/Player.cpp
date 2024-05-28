@@ -127,6 +127,7 @@ void Player::Update()
 		}
 	}
 
+	//攻撃終了後に耐久値が0以下なら
 	if (!isAttack && weaponDurability[stockCount] <= 0)
 	{
 		weaponType = Weapon::None;
@@ -134,6 +135,7 @@ void Player::Update()
 		stock[stockCount] = Weapon::None;
 		isEquipment = false;
 	}
+	//短剣の残り本数が0以下なら
 	else if (daggerCount[stockCount] < 0)
 	{
 		daggerCount[stockCount] = PLAYER_MAX_DAGGER - 1;
@@ -142,6 +144,7 @@ void Player::Update()
 		stock[stockCount] = Weapon::None;
 		isEquipment = false;
 	}
+	//捨てる
 	else if ((KeyInput::GetKey(KEY_INPUT_R)) || PadInput::OnButton(XINPUT_BUTTON_Y))
 	{
 		weaponType = Weapon::None;
@@ -316,7 +319,7 @@ void Player::Landing(const float height)
 		move.y = 0.f;
 		isAir = false;
 		//空中の画像かつ動いていないなら
-		if (playerAnim == 27 && !isMove && !isHit)
+		if (playerAnim == 27 && !isMove && !isHit && !isKnockBack)
 		{
 			landingAnimFlg = true;
 		}
@@ -402,7 +405,8 @@ void Player::Movement()
 			}
 		}
 		//レイピアの攻撃は例外で動けるようにするためにこの条件式を設ける
-		else if (stock[stockCount] == Weapon::Rapier && isEquipment && isAttack && hp > 0)
+		else if (stock[stockCount] == Weapon::Rapier && rapier->GetChargeTime() > RAPIER_CHARGE_TIME &&
+			isEquipment && isAttack && hp > 0)
 		{
 			//アイドル状態にしないための条件式なので何も書かなくても問題ない
 		}
@@ -477,17 +481,24 @@ void Player::Attack()
 		{
 			actionState = Action::WeaponAttack;
 			isAttack = true;
+			//大剣
 			if (stock[stockCount] == Weapon::LargeSword)
 			{
 				attackCoolTime = PLAYER_LARGESWORD_COOLTIME;
 				largeSword->Attack(this);
+				if (largeSword->GetIsAirAttack())
+				{
+					weaponDurability[stockCount] -= GetWeaponDurability(stock[stockCount], true);
+				}
 			}
+			//短剣
 			else if (stock[stockCount] == Weapon::Dagger)
 			{
 				attackCoolTime = PLAYER_DAGGER_COOLTIME;
 				dagger[daggerCount[stockCount]]->Attack(this);
 				daggerCount[stockCount]--;
 			}
+			//レイピア
 			else if (stock[stockCount] == Weapon::Rapier)
 			{
 				attackCoolTime = PLAYER_RAPIER_COOLTIME;
@@ -632,7 +643,7 @@ void Player::Animation()
 		}
 	}
 	//着地
-	if (landingAnimFlg && !isAir && hp > 0)
+	if (landingAnimFlg && !isAir && hp > 0 && !isKnockBack)
 	{
 		if (playerAnimFramCount % 8 == 0)
 		{
@@ -664,7 +675,17 @@ void Player::Animation()
 		{
 			if (playerAnim < 49)
 			{
-				playerAnim++;
+				if (largeSword->GetIsAirAttack())
+				{
+					//if (playerAnim < 46)
+					//{
+					//	playerAnim++;
+					//}
+				}
+				else
+				{
+					playerAnim++;
+				}
 			}
 			else
 			{
@@ -687,7 +708,7 @@ void Player::Animation()
 	}
 
 	//点滅
-	if (isHit && hp > 0)
+	if (isHit && hp > 0 && !isKnockBack)
 	{
 		//攻撃を受けたら着地アニメーションはしない
 		landingAnimFlg = false;
@@ -793,97 +814,4 @@ int Player::GetWeaponDurability(const Weapon type, const bool useFlg)
 	}
 
 	return durability;
-}
-
-float Player::GetWeaponWeight(const Weapon type)
-{
-	Weapon checkType = type;
-	float weight = 0.f;
-
-	switch (checkType)
-	{
-	case Weapon::None:
-		weight = 0.f;
-		break;
-
-	case Weapon::LargeSword:
-		weight = LARGESWORD_WEIGHT;
-		break;
-
-	case Weapon::Dagger:
-		weight = DAGGER_WEIGHT;
-		break;
-
-	case Weapon::Rapier:
-		weight = RAPIER_WEIGHT;
-		break;
-
-	default:
-		weight = 0.f;
-		break;
-	}
-
-	return weight;
-}
-
-float Player::GetWeaponDamage(const Weapon type)
-{
-	Weapon checkType = type;
-	float damage = 0.f;
-
-	switch (checkType)
-	{
-	case Weapon::None:
-		damage = 0.f;
-		break;
-
-	case Weapon::LargeSword:
-		damage = LARGESWORD_DAMAGE;
-		break;
-
-	case Weapon::Dagger:
-		damage = DAGGER_DAMAGE;
-		break;
-
-	case Weapon::Rapier:
-		damage = RAPIER_DAMAGE;
-		break;
-
-	default:
-		damage = 0.f;
-		break;
-	}
-
-	return damage;
-}
-
-float Player::GetWeaponKnockBack(const Weapon type)
-{
-	Weapon checkType = type;
-	float knockBack = 0.f;
-
-	switch (checkType)
-	{
-	case Weapon::None:
-		knockBack = 0.f;
-		break;
-
-	case Weapon::LargeSword:
-		knockBack = LARGESWORD_KNOCKBACK;
-		break;
-
-	case Weapon::Dagger:
-		knockBack = DAGGER_KNOCKBACK;
-		break;
-
-	case Weapon::Rapier:
-		knockBack = RAPIER_KNOCKBACK + (DAGGER_KNOCKBACK + 1.f);
-		break;
-
-	default:
-		knockBack = 0.f;
-		break;
-	}
-
-	return knockBack * 1.5f;
 }

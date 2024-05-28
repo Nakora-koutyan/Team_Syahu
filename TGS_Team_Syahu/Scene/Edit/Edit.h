@@ -16,6 +16,7 @@ private:
     int mouseX, mouseY;
     int blockX, blockY;
     int stageWidth, stageHeight;
+    int stageNum;
     int stageData[100][100];
     int stageOldData[100][100];
 
