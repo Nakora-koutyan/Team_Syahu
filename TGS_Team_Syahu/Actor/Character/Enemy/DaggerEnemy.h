@@ -41,7 +41,7 @@ public:
 	void FindPlayer(const Player* player)override;
 
 public:
-	void GetDaggerCollision();
+	Dagger* GetDagger()const { return dagger; }
 
 	//エネミーのアニメーション制御関数
 	void EnemyAnimationManager() override;

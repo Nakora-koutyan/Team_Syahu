@@ -41,6 +41,8 @@ void GameMainScene::Initialize()
 			object[i]->SetLocationX(300.f * i);
 		}
 	}
+
+	object[object.size()-2]->SetLocationX(500);
 }
 
 void GameMainScene::Finalize()
@@ -173,7 +175,7 @@ void GameMainScene::HitCheck()
 					if (enemy->GetEnemyType() == EnemyType::DaggerEnemy)
 					{
 						DaggerEnemy* daggerEnemy = static_cast<DaggerEnemy*>(object[j]);
-						if (daggerEnemy->CollisionCheck(player) && daggerEnemy->GetSignToAttack())
+						if (daggerEnemy->GetDagger()->CollisionCheck(player) && daggerEnemy->GetSignToAttack())
 						{
 							daggerEnemy->HitWeapon(player);
 							player->Hit(daggerEnemy, daggerEnemy->GetDamage() * 3);
