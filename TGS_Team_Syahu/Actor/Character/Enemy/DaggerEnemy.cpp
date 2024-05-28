@@ -120,6 +120,9 @@ void DaggerEnemy::Update()
 	//画面端を越えない
 	DontCrossBorder();
 
+	//短剣の更新処理の呼び出し
+	dagger->Update(this);
+
 	location.x += move.x;
 }
 
@@ -130,6 +133,8 @@ void DaggerEnemy::Draw() const
 	DrawRotaGraphF(GetMinScreenLocation().x + correctLocX,
 		GetMaxScreenLocation().y + correctLocY, 1, 0,
 		daggerEnemyAnim[daggerEnemyAnimNumber], TRUE, TRUE);
+
+	dagger->Draw();
 
 	DrawFormatString(500, 600, 0xffff00, "%lf PatrolCounter", patrolCounter);
 }
@@ -230,7 +235,10 @@ void DaggerEnemy::AttackStandBy()
 void DaggerEnemy::AttackStart()
 {
 	move.x = 0;
-	dagger->Attack(this);
+	if (weaponType == Weapon::Dagger)
+	{
+		dagger->Attack(this);
+	}
 }
 
 //攻撃終了
