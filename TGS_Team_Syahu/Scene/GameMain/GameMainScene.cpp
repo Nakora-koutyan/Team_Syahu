@@ -23,13 +23,21 @@ void GameMainScene::Initialize()
 
 	object.push_back(new Player);
 	object.push_back(new Camera);
-	object.push_back(new NormalEnemy);
-	object.push_back(new LargeSwordEnemy);
+	for (int i = 0; i < 5; i++)	object.push_back(new NormalEnemy);
+	for (int i = 0; i < 5; i++)object.push_back(new LargeSwordEnemy);
 	object.push_back(new StageBlock);
 
 	for (ObjectBase* ob : object)
 	{
 		ob->Initialize();
+	}
+
+	for (auto i = 0; i < object.size(); i++)
+	{
+		if (object[i]->GetObjectType() == ObjectType::Enemy)
+		{
+			object[i]->SetLocationX(300.f * i);
+		}
 	}
 }
 
@@ -47,7 +55,7 @@ SceneBase* GameMainScene::Update()
 
 	HitCheck();
 
-	for (int i = 0; i < object.size(); i++)
+	for (auto i = 0; i < object.size(); i++)
 	{
 		if (object[i] !=  nullptr)
 		{
@@ -58,7 +66,7 @@ SceneBase* GameMainScene::Update()
 				//カメラの前にプレイヤーが格納されている
 				Player* player = static_cast<Player*>(object[i - 1]);
 				ui->Update(player);
-				camera->SetTarget(object[i - 1]->GetLocation());
+				camera->SetTarget(object[i - 1]->GetLocation(), debugModeFlg);
 			}
 
 			object[i]->Update();
@@ -131,9 +139,9 @@ void GameMainScene::Draw() const
 
 void GameMainScene::HitCheck()
 {
-	for (int i = 0; i < object.size(); i++)
+	for (auto i = 0; i < object.size(); i++)
 	{
-		for (int j = i + 1; j < object.size(); j++)
+		for (auto j = 0; j < object.size(); j++)
 		{
 			//i,j番目がnullじゃないかつコリジョンがあるなら
 			if (object[i] && object[j] != nullptr && object[j]->GetCollisionType() != CollisionType::None)
@@ -163,7 +171,8 @@ void GameMainScene::HitCheck()
 				}
 				
 				//ゲームメインにあるオブジェクトの当たり判定
-				if (object[i]->CollisionCheck(object[j]))
+				if (object[i] != object[j] &&
+					object[i]->CollisionCheck(object[j]))
 				{
 					//ステージの場合
 					if (object[j]->GetObjectType() == ObjectType::Object)
@@ -190,7 +199,7 @@ void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
 	{
 		EnemyBase* enemy = static_cast<EnemyBase*>(object[j]);
 
-		for (int k = 0; k < 8; k++)
+		for (auto k = 0; k < player->GetWeaponSize(); k++)
 		{
 			if (player->GetWeapon(k)->GetIsShow())
 			{
@@ -210,6 +219,17 @@ void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
 		{
 			player->GetSteal()->Hit(object[j], player->GetDamage());
 			enemy->Hit(object[i], 0);
+		}
+	}
+	//短剣とオブジェクトの当たり判定
+	if (object[j]->GetObjectType() == ObjectType::Object)
+	{
+		for (int i = 0; i < PLAYER_MAX_DAGGER; i++)
+		{
+			if (player->GetDagger(i)->CollisionCheck(object[j]))
+			{
+				player->GetDagger(i)->Init();
+			}
 		}
 	}
 }

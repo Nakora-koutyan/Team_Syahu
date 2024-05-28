@@ -95,8 +95,14 @@ public:
 	//奪うを取得
 	Steal* GetSteal()const { return steal; }
 
+	//短剣を取得
+	Dagger* GetDagger(const int element)const  { return dagger[element]; }
+
 	//武器を取得
 	ObjectBase* GetWeapon(const int element)const { return weapon[element]; }
+
+	//武器の数を取得
+	size_t GetWeaponSize()const { return weapon.size(); }
 
 public:
 	//ストックの番号を取得
@@ -128,12 +134,4 @@ private:
 	//武器の耐久力を取得
 	int GetWeaponDurability(const Weapon type, const bool useFlg = false);
 
-	//武器の重さを取得
-	float GetWeaponWeight(const Weapon type);
-
-	//武器のダメージを取得
-	float GetWeaponDamage(const Weapon type);
-
-	//武器のノックバック量を取得
-	float GetWeaponKnockBack(const Weapon type);
 };

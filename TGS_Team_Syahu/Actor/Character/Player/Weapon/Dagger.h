@@ -21,10 +21,11 @@ private:
 
 	int framCount;			//フレームカウント
 
-	float angle;			//角度
 	float imageAngle;		//画像の角度
 
 	bool isHit;				//当たったか？
+	bool isAirAttack;		//空中攻撃？
+	bool attackEndFlg;		//攻撃終了フラグ
 
 public:
 	//コンストラクタ

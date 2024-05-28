@@ -6,6 +6,7 @@
 #define LARGRSWORD_LENGTH		100.f			//大剣の長さ
 #define LARGESWORD_WEIGHT		0.75f			//大剣の重さ
 #define LARGESWORD_DAMAGE		100.f			//大剣のダメージ
+#define LARGESWORD_FALL_SPEED	15.5f			//大剣の落下速度
 #define LARGESWORD_KNOCKBACK	7.f				//大剣のノックバックの量
 
 class CharaBase;
@@ -22,6 +23,7 @@ private:
 	float imageAngle;		//画像の角度
 
 	bool isHit;				//当たったか？
+	bool isAirAttack;		//空中攻撃？
 
 public:
 	//コンストラクタ
@@ -48,6 +50,9 @@ public:
 
 	//当たっているかどうかを設定
 	void SetIsHit(const bool flg) { isHit = flg; }
+
+	//空中攻撃かどうかを取得
+	bool GetIsAirAttack()const { return isAirAttack; }
 
 };
 

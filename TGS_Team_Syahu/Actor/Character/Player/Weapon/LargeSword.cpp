@@ -10,7 +10,6 @@ LargeSword::LargeSword()
 	directionVector.x = LARGRSWORD_LENGTH;
 	directionVector.y = 0.f;
 
-	damage = 0.f;
 
 	direction = 0;
 
@@ -21,6 +20,7 @@ LargeSword::LargeSword()
 
 	isShow = false;
 	isHit = false;
+	isAirAttack = false;
 }
 
 LargeSword::~LargeSword()
@@ -30,31 +30,52 @@ LargeSword::~LargeSword()
 
 void LargeSword::Update(CharaBase* chara)
 {
-	if (isShow)
+	//地上での攻撃なら
+	if (isShow && !isAirAttack)
 	{
 		framCount++;
 		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
 		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
 		imageAngle += DEGREE_TO_RADIAN(angle);
+
+		//右に出す
+		if (direction > 0)
+		{
+			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+		}
+		//左に出す
+		else
+		{
+			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+		}
+		location.y = chara->GetCenterLocation().y;
+	}
+	//空中攻撃なら
+	else if (isAirAttack)
+	{
+		chara->SetMove({ chara->GetMove().x , LARGESWORD_FALL_SPEED });
+		chara->SetInvincibleFlg(true);
+		//右に出す
+		if (direction > 0)
+		{
+			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+		}
+		//左に出す
+		else
+		{
+			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+		}
+		directionVector.y = 0.f;
+		location.y = chara->GetCenterLocation().y + 20.f;
 	}
 	else
 	{
 		location = chara->GetCenterLocation();
 	}
 
-	//右に出す
-	if (direction > 0)
-	{
-		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
-	}
-	//左に出す
-	else
-	{
-		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
-	}
 
 	//攻撃時間を超えたら
-	if (framCount > LARGESWORD_ATTACK_TIME || chara->GetIsKnockBack())
+	if ((framCount > LARGESWORD_ATTACK_TIME || chara->GetIsKnockBack()) && !isAirAttack)
 	{
 		framCount = 0;
 		direction = 0;
@@ -64,10 +85,20 @@ void LargeSword::Update(CharaBase* chara)
 		isHit = false;
 		chara->SetIsAttack(false);
 	}
-	damage = chara->GetDamage() + LARGESWORD_DAMAGE;
-	location.y = chara->GetCenterLocation().y;
-	screenLocation = Camera::ConvertScreenPosition(location);
+	else if (isAirAttack && !chara->GetIsAir())
+	{
+		framCount = 0;
+		direction = 0;
+		angle = 0.f;
+		imageAngle = 0.f;
+		isShow = false;
+		isHit = false;
+		isAirAttack = false;
+		chara->SetIsAttack(false);
+		chara->SetInvincibleFlg(false);
+	}
 
+	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void LargeSword::Draw() const
@@ -101,20 +132,39 @@ void LargeSword::Attack(const CharaBase* chara)
 		direction = (short)chara->GetDirection().x;
 	}
 
-	//右に出す
-	if (direction > 0)
+	if (chara->GetIsAir())
 	{
-		directionVector.x = LARGRSWORD_LENGTH;
-		angle = LARGESWORD_ANGLE;
+		isAirAttack = true;
+		//右に出す
+		if (direction > 0)
+		{
+			directionVector.x = LARGRSWORD_LENGTH;
+			imageAngle = DEGREE_TO_RADIAN(45.f);
+		}
+		//左に出す
+		else
+		{
+			directionVector.x = -LARGRSWORD_LENGTH;
+			imageAngle = DEGREE_TO_RADIAN(-45.f);
+		}
+		directionVector.y = 0.f;
 	}
-	//左に出す
 	else
 	{
-		directionVector.x = -LARGRSWORD_LENGTH;
-		angle = -LARGESWORD_ANGLE;
+		//右に出す
+		if (direction > 0)
+		{
+			directionVector.x = LARGRSWORD_LENGTH;
+			angle = LARGESWORD_ANGLE;
+		}
+		//左に出す
+		else
+		{
+			directionVector.x = -LARGRSWORD_LENGTH;
+			angle = -LARGESWORD_ANGLE;
+		}
+		directionVector.y = -100.f;
 	}
-
-	directionVector.y = -100.f;
 }
 
 void LargeSword::Hit(ObjectBase* target, const float damage)

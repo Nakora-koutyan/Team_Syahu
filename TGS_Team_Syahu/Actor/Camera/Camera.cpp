@@ -1,8 +1,10 @@
 #include"Camera.h"
 #include"../../Scene/GameMain/GameMainScene.h"
+#include"../InputControl/Key/KeyInput.h"
 
 Vector2D Camera::cameraPosition;
 Vector2D Camera::screenPosition;
+bool Camera::debugModeFlg = false;
 
 Camera::Camera()
 {	
@@ -77,15 +79,39 @@ Vector2D Camera::ConvertScreenPosition(const Vector2D location)
 
 void Camera::SetTarget(const Vector2D location, const bool debugFlg)
 {
-	if (!debugFlg)
+	if (!debugFlg && !debugModeFlg)
 	{
 		//対象を追尾
 		cameraPosition = location;
 	}
 	else
 	{
-		//マウスでカメラ移動
-		cameraPosition.x += (float)KeyInput::GetMouseVecX();
-		cameraPosition.y += (float)KeyInput::GetMouseVecY();
+		DebugCamera();
 	}
+}
+
+void Camera::DebugCamera()
+{
+	if (KeyInput::GetKeyDown(KEY_INPUT_W))
+	{
+		cameraPosition.y -= 10;
+	}
+	else if (KeyInput::GetKeyDown(KEY_INPUT_S))
+	{
+		cameraPosition.y += 10;
+	}
+
+	if (KeyInput::GetKeyDown(KEY_INPUT_A))
+	{
+		cameraPosition.x -= 10;
+	}
+	else if (KeyInput::GetKeyDown(KEY_INPUT_D))
+	{
+		cameraPosition.x += 10;
+	}
+
+	//マウスでカメラ移動
+	cameraPosition.x += (float)KeyInput::GetMouseVecX();
+	cameraPosition.y += (float)KeyInput::GetMouseVecY();
+
 }

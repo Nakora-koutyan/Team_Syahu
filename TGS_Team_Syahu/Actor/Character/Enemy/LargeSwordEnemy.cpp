@@ -118,7 +118,7 @@ void LargeSwordEnemy::Initialize()
 	//表示するか?
 	isShow = true;
 
-	damage = 5.f;
+	damage = 15.f;
 
 	//攻撃時間
 	attackWaitingTime = MAX_WAITING_TIME;

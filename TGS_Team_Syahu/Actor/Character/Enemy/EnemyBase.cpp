@@ -22,9 +22,9 @@ void EnemyBase::Draw(Player* player)
 
 void EnemyBase::Hit(ObjectBase* target, const float damage)
 {
-	const CharaBase* chara = static_cast<const CharaBase*>(target);
+	CharaBase* chara = static_cast<CharaBase*>(target);
 
-	if (!isKnockBack && !isHit)
+	if (!isKnockBack && !isHit && objectType != chara->GetObjectType())
 	{
 		isKnockBack = true;
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
@@ -38,9 +38,13 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 	}
 
 	//すでに当たってないならかつ同じオブジェクトじゃないなら
-	if (!isHit && objectType != chara->GetObjectType())
+	if ((!isHit && objectType != chara->GetObjectType()) || chara->GetIsKnockBack())
 	{
 		isHit = true;
+		if (chara->GetIsKnockBack())
+		{
+			chara->SetIsKnockBack(false);
+		}
 
 		if (hp > 0)
 		{
@@ -48,7 +52,15 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 		}
 		else
 		{
-			deathFlg = true;
+			hp = 0;
+		}
+	}
+
+	if (isKnockBack && !chara->GetIsKnockBack())
+	{
+		if (CollisionCheck(chara))
+		{
+			chara->Hit(this, this->damage);
 		}
 	}
 

@@ -13,6 +13,7 @@ Rapier::Rapier()
 	direction = 0;
 
 	framCount = 0;
+	chargeTime = 0;
 
 	angle = 0.f;
 	imageAngle = 0.f;
@@ -36,21 +37,25 @@ void Rapier::Update(CharaBase* chara)
 	//地上での攻撃なら
 	if (isShow && !isAirAttack)
 	{
-		framCount++;
-		//右に出す
-		if (direction > 0)
+		chargeTime++;
+		if (chargeTime > RAPIER_CHARGE_TIME)
 		{
-			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
-			directionVector.x = RAPIER_LENGTH;
-			imageAngle = DEGREE_TO_RADIAN(45.f);
-			chara->SetMove({ RAPIER_MOVE ,chara->GetMove().y });
-		}
-		else
-		{
-			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
-			directionVector.x = -RAPIER_LENGTH;
-			imageAngle = DEGREE_TO_RADIAN(-45.f);
-			chara->SetMove({ -RAPIER_MOVE ,chara->GetMove().y });
+			framCount++;
+			//右に出す
+			if (direction > 0)
+			{
+				location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+				directionVector.x = RAPIER_LENGTH;
+				imageAngle = DEGREE_TO_RADIAN(45.f);
+				chara->SetMove({ RAPIER_MOVE ,chara->GetMove().y });
+			}
+			else
+			{
+				location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+				directionVector.x = -RAPIER_LENGTH;
+				imageAngle = DEGREE_TO_RADIAN(-45.f);
+				chara->SetMove({ -RAPIER_MOVE ,chara->GetMove().y });
+			}
 		}
 	}
 	//空中攻撃なら
@@ -81,6 +86,7 @@ void Rapier::Update(CharaBase* chara)
 	if ((framCount > RAPIER_ATTACK_TIME || chara->GetIsKnockBack()) && !isAirAttack)
 	{
 		framCount = 0;
+		chargeTime = 0;
 		direction = 0;
 		angle = 0.f;
 		isShow = false;
@@ -142,6 +148,16 @@ void Rapier::Attack(const CharaBase* chara)
 	{
 		//プレイヤーの方向情報を保持する
 		direction = (short)chara->GetDirection().x;
+	}
+
+	//右に出す
+	if (direction > 0)
+	{
+		imageAngle = DEGREE_TO_RADIAN(45.f);
+	}
+	else
+	{
+		imageAngle = DEGREE_TO_RADIAN(-45.f);
 	}
 
 	if (chara->GetIsAir())
