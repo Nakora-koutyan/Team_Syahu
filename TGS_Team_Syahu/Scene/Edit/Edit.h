@@ -3,15 +3,14 @@
 #include "../SceneBase.h"
 #include "../../Actor/ObjectBase.h"
 #include "../../InputControl/Key/KeyInput.h"
+#include "../../Actor/Camera/Camera.h"
 
 class GameMainScene;
 
 class Edit : public SceneBase
 {
 private:
-
-    GameMainScene* GameMain;
-    KeyInput* keyInput;
+    Camera* camera;
 
     int mouseX, mouseY;
     int blockX, blockY;
@@ -24,6 +23,8 @@ private:
 
     bool success;
     int resultDisplay;
+
+    bool cameraflg = true;
 
     void LoadStage(int Stage);
 

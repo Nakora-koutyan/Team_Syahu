@@ -4,10 +4,8 @@
 
 Edit::Edit()
 {
-	GameMain = new GameMainScene;
-	keyInput = new KeyInput;
-	
-	keyInput->SetIsShowMouse(TRUE);
+	camera = new Camera;
+	KeyInput::SetIsShowMouse(TRUE);
 	mouseX = 0; mouseY = 0;
 	toolSelect = 1;
 	LoadStage(0);
@@ -28,10 +26,13 @@ void Edit::Finalize()
 }
 
 SceneBase* Edit::Update() {
+
+	Camera::SetTarget({ 520,0 }, true);
+
 	if (resultDisplay > 0) {
 		resultDisplay--;
 	}
-
+	camera->DebugCamera();
 	GetMousePoint(&mouseX, &mouseY);
 	blockX = mouseX / BLOCK_WIDTH;
 	blockY = mouseY / BLOCK_HEIGHT;
@@ -40,7 +41,7 @@ SceneBase* Edit::Update() {
 
 		stageData[blockY][blockX] = toolSelect;
 	}
-
+	
 	if (KeyInput::GetKey(KEY_INPUT_L))
 	{
 		SaveStage();
