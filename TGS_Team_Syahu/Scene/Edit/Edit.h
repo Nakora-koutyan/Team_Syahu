@@ -12,6 +12,8 @@ class Edit : public SceneBase
 private:
     Camera* camera;
 
+    Vector2D move;
+
     int mouseX, mouseY;
     int blockX, blockY;
     int stageWidth, stageHeight;

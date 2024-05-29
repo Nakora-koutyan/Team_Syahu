@@ -4,7 +4,7 @@
 
 //コンストラクタ
 DaggerEnemy::DaggerEnemy() :drawnSword(false), dagger(nullptr), daggerEnemyAnimNumber{(0)}, 
-daggerEnemyAnim{NULL},enemyAnimInterval(0),correctLocX(0.f),correctLocY(0.f)
+daggerEnemyAnim{NULL},enemyAnimInterval(0),correctLocX(0.f),correctLocY(0.f),animTurnFlg(TRUE)
 {
 }
 //デストラクタ
@@ -74,6 +74,7 @@ void DaggerEnemy::Initialize()
 
 	daggerEnemyAnimNumber = 0;
 	enemyAnimInterval = 0;
+	signToAttack=false;
 }
 
 //更新処理
@@ -132,7 +133,7 @@ void DaggerEnemy::Draw() const
 	//エネミーの描画
 	DrawRotaGraphF(GetMinScreenLocation().x + correctLocX,
 		GetMaxScreenLocation().y + correctLocY, 1, 0,
-		daggerEnemyAnim[daggerEnemyAnimNumber], TRUE, TRUE);
+		daggerEnemyAnim[daggerEnemyAnimNumber], TRUE, animTurnFlg);
 
 	dagger->Draw();
 
@@ -157,11 +158,13 @@ void DaggerEnemy::FindPlayer(const Player* player)
 			{
 				//左向き
 				direction.x = DIRECTION_LEFT;
+				animTurnFlg = TRUE;
 			}
 			else if (location.x <= player->GetCenterLocation().x)
 			{
 				//右向き
 				direction.x = DIRECTION_RIGHT;
+				animTurnFlg = FALSE;
 			}
 			//見つけた？ -> Yes
 			isFind = true;
@@ -219,6 +222,19 @@ void DaggerEnemy::EnemyPatrol()
 	}
 }
 
+void DaggerEnemy::HitWeapon(ObjectBase* object)
+{
+	CharaBase* target = static_cast<CharaBase*>(object);
+
+	if (signToAttack)
+	{
+		if (target->GetIsShow() && !target->GetIsHit())
+		{
+			target->SetKnockBackMove(DAGGER_ENEMY_KNOCKBACK);
+		}
+	}
+}
+
 //攻撃準備
 void DaggerEnemy::AttackStandBy()
 {
@@ -237,7 +253,11 @@ void DaggerEnemy::AttackStart()
 	move.x = 0;
 	if (weaponType == Weapon::Dagger)
 	{
-		dagger->Attack(this);
+		if (signToAttack)
+		{
+			dagger->Attack(this);
+			enemyStatus = EnemyStatus::AttackEnd;
+		}
 	}
 }
 
@@ -311,14 +331,12 @@ void DaggerEnemy::PatrolAnim()
 void DaggerEnemy::DaggerAttackStandByAnim()
 {
 	//画像番号設定
-	if (daggerEnemyAnimNumber < 35)
+	if (daggerEnemyAnimNumber < 7)
 	{
-		daggerEnemyAnimNumber = 35;
+		daggerEnemyAnimNumber = 6;
 	}
-	else if (daggerEnemyAnimNumber >= 39)
+	else if (daggerEnemyAnimNumber >= 11)
 	{
-		daggerEnemyAnimNumber = 35;
-
 		//仮の処理
 		drawnSword = true;
 	}
@@ -337,13 +355,14 @@ void DaggerEnemy::WeaponNoneAttackStandByAnim()
 //攻撃開始アニメーション(短剣装備あり)
 void DaggerEnemy::DaggerAttackStartAnim()
 {
-	if (daggerEnemyAnimNumber < 6)
+	if (daggerEnemyAnimNumber < 11)
 	{
-		daggerEnemyAnimNumber = 6;
+		daggerEnemyAnimNumber = 11;
 	}
-	else if (daggerEnemyAnimNumber >= 16)
+	else if (daggerEnemyAnimNumber >= 17)
 	{
-		daggerEnemyAnimNumber = 6;
+		daggerEnemyAnimNumber = 11;
+		signToAttack = true;
 	}
 
 	if (enemyAnimInterval % 6 == 0)

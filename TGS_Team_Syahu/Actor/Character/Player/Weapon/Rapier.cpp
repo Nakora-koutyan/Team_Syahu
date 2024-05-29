@@ -153,10 +153,14 @@ void Rapier::Attack(const CharaBase* chara)
 	//右に出す
 	if (direction > 0)
 	{
+		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+		directionVector.x = RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(45.f);
 	}
 	else
 	{
+		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+		directionVector.x = -RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(-45.f);
 	}
 
