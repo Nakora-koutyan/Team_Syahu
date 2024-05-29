@@ -49,7 +49,11 @@ void GameMainScene::Finalize()
 {
 	for (ObjectBase* ob : object)
 	{
-		delete ob;
+		if (ob != nullptr)
+		{
+			ob->Finalize();
+			delete ob;
+		}
 	}
 }
 

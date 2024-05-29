@@ -116,6 +116,7 @@ void Dagger::Attack(const CharaBase* chara)
 	//右に出す
 	if (direction > 0 && !chara->GetIsAir())
 	{
+		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
 		directionVector.x = DAGGER_LENGTH;
 		directionVector.y = 0.f;
 		move.x = DAGGER_SPEED;
@@ -124,6 +125,7 @@ void Dagger::Attack(const CharaBase* chara)
 	//左に出す
 	else if (direction < 0 && !chara->GetIsAir())
 	{
+		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
 		directionVector.x = -DAGGER_LENGTH;
 		directionVector.y = 0.f;
 		move.x = -DAGGER_SPEED;
@@ -135,14 +137,18 @@ void Dagger::Attack(const CharaBase* chara)
 		isAirAttack = true;
 		directionVector.y = DAGGER_LENGTH;
 		move.y = DAGGER_SPEED * sin(DEGREE_TO_RADIAN(150.f));
+		//右に出す
 		if (direction > 0)
 		{
+			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
 			directionVector.x = DAGGER_LENGTH;
 			move.x = -10.f * cos(DEGREE_TO_RADIAN(-150.f));
 			imageAngle += DEGREE_TO_RADIAN(90.f);
 		}
+		//左に出す
 		else
 		{
+			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
 			directionVector.x = -DAGGER_LENGTH;
 			move.x = 10.f * cos(DEGREE_TO_RADIAN(-150.f));
 			imageAngle += DEGREE_TO_RADIAN(-90.f);

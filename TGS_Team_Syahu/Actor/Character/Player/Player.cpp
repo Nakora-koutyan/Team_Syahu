@@ -26,6 +26,9 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 		dagger[i] = nullptr;
 	}
 
+	jumpEffectLocation.x = 0.f;
+	jumpEffectLocation.y = 0.f;
+
 	stockCount = 0;
 	actionState = Action::None;
 
@@ -54,7 +57,6 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	jumpEffectAnimCount = 0;
 	jumpEffectAnim = 0;
 
-	jumpEffectLocY = 0.f;
 	attackCoolTime = 0.f;
 	stealCoolTime = 0.f;
 
@@ -62,6 +64,7 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	isBackStep = false;
 	landingAnimFlg = false;
 	blinkingFlg = false;
+	jumpEffectInversionFlg = false;
 }
 
 Player::~Player()
@@ -201,6 +204,7 @@ void Player::Draw() const
 	DrawFormatString(600, 90, 0x000000, "animCount :%d", playerAnim);
 	DrawFormatString(600, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
 	DrawFormatString(600, 120, 0x000000, "location x:%f location y:%f", location.x, location.y);
+	DrawFormatString(600, 135, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
 	if (weaponType == Weapon::None)
 	{
 		DrawFormatString(600, 45, 0x000000, "WeaponType:None");
@@ -245,7 +249,24 @@ void Player::Draw() const
 
 	if (isJump)
 	{
-		DrawGraphF(screenLocation.x, Camera::ConvertScreenPosition({0,jumpEffectLocY}).y, ResourceManager::GetDivImage("Effect/jumpEffect", jumpEffectAnim), TRUE);
+		if (jumpEffectInversionFlg)
+		{
+			DrawRotaGraphF
+			(Camera::ConvertScreenPosition(jumpEffectLocation).x + 10.f, 
+				Camera::ConvertScreenPosition(jumpEffectLocation).y - 15.f,
+				1, 0,
+				ResourceManager::GetDivImage("Effect/jumpEffect", jumpEffectAnim),
+				TRUE, TRUE);
+		}
+		else
+		{
+			DrawRotaGraphF
+			(Camera::ConvertScreenPosition(jumpEffectLocation).x - 10.f, 
+				Camera::ConvertScreenPosition(jumpEffectLocation).y - 15.f,
+				1, 0,
+				ResourceManager::GetDivImage("Effect/jumpEffect", jumpEffectAnim),
+				TRUE);
+		}
 	}
 
 	steal->Draw();
@@ -325,7 +346,7 @@ void Player::Landing(const float height)
 	if (GetMaxLocation().y > height)
 	{
 		location.y = height - area.height;
-		jumpEffectLocY = height;
+		jumpEffectLocation.y = height;
 		move.y = 0.f;
 		isAir = false;
 		//空中の画像かつ動いていないなら
@@ -437,6 +458,16 @@ void Player::Movement()
 		isAir = true;
 		isJump = true;
 		direction.y = -1.f;
+		if (direction.x < 0)
+		{
+			jumpEffectLocation.x = location.x + area.width;
+			jumpEffectInversionFlg = true;
+		}
+		else
+		{
+			jumpEffectLocation.x = location.x;
+			jumpEffectInversionFlg = false;
+		}
 	}
 
 	//下に落ちているなら
@@ -483,8 +514,8 @@ void Player::Attack()
 	}
 
 	//武器攻撃
-	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
-		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None)
+	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) || PadInput::OnButton(XINPUT_BUTTON_X)) &&
+		attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None && hp > 0)
 	{
 		//武器攻撃
 		if (weaponType != Weapon::None)
@@ -520,7 +551,8 @@ void Player::Attack()
 	if (attackCoolTime > 0)attackCoolTime--;
 
 	//装備
-	if (!isKnockBack && stock[stockCount] != Weapon::None && weaponType == Weapon::None && actionState == Action::None &&
+	if (!isKnockBack && stock[stockCount] != Weapon::None && weaponType == Weapon::None &&
+		actionState == Action::None && hp > 0 &&
 		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
 	{
 		weaponType = stock[stockCount];
@@ -531,7 +563,7 @@ void Player::Attack()
 
 	//奪う
 	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)) &&
-		stealCoolTime <= 0.f && !isKnockBack && actionState == Action::None)
+		stealCoolTime <= 0.f && !isKnockBack && actionState == Action::None && hp > 0)
 	{
 		isAttack = true;
 		actionState = Action::Steal;
@@ -756,9 +788,9 @@ void Player::Animation()
 
 	if (!isKnockBack && isJump)
 	{
-		if (jumpEffectAnimCount % 30 == 0)
+		if (jumpEffectAnimCount % 15 == 0)
 		{
-			if (jumpEffectAnim < 9)
+			if (jumpEffectAnim < 14)
 			{
 				jumpEffectAnim++;
 			}

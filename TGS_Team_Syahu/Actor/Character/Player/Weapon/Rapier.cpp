@@ -10,10 +10,20 @@ Rapier::Rapier()
 	directionVector.x = RAPIER_LENGTH;
 	directionVector.y = 0.f;
 
+	effectLocation.x = 0.f;
+	effectLocation.y = 0.f;
+
+	airAttackEffectLocation.x = 0.f;
+	airAttackEffectLocation.y = 0.f;
+
 	direction = 0;
 
 	framCount = 0;
 	chargeTime = 0;
+	effectAnim = 0;
+	effectAnimcount = 0;
+	airAttackEffectAnim = 0;
+	airAttackEffectAnimcount = 0;
 
 	angle = 0.f;
 	imageAngle = 0.f;
@@ -25,6 +35,7 @@ Rapier::Rapier()
 	isUnable = false;
 	stepFlg = false;
 	isAirAttack = false;
+	airAttackAnimFlg = false;
 }
 
 Rapier::~Rapier()
@@ -41,6 +52,11 @@ void Rapier::Update(CharaBase* chara)
 		if (chargeTime > RAPIER_CHARGE_TIME)
 		{
 			framCount++;
+			effectAnimcount++;
+			if (effectAnim < 6)
+			{
+				effectAnim++;
+			}
 			//右に出す
 			if (direction > 0)
 			{
@@ -82,12 +98,32 @@ void Rapier::Update(CharaBase* chara)
 		location = chara->GetCenterLocation();
 	}
 
+	//落下攻撃のエフェクト
+	if (airAttackAnimFlg)
+	{
+		airAttackEffectAnimcount++;
+		if (airAttackEffectAnimcount % 5 == 0)
+		{
+			if (airAttackEffectAnim < 7)
+			{
+				airAttackEffectAnim++;
+			}
+			else
+			{
+				airAttackAnimFlg = false;
+				airAttackEffectLocation = { 0.f,0.f };
+				airAttackEffectAnim = 0;
+			}
+		}
+	}
+
 	//地上攻撃の時間を超えたら
 	if ((framCount > RAPIER_ATTACK_TIME || chara->GetIsKnockBack()) && !isAirAttack)
 	{
 		framCount = 0;
 		chargeTime = 0;
 		direction = 0;
+		effectAnim = 0;
 		angle = 0.f;
 		isShow = false;
 		isHit = false;
@@ -103,11 +139,14 @@ void Rapier::Update(CharaBase* chara)
 		angle = 0.f;
 		directionVector.x = 0.f;
 		directionVector.y = 0.f;
+		airAttackEffectLocation.x = location.x;
+		airAttackEffectLocation.y = chara->GetMaxLocation().y;
 		isShow = false;
 		isHit = false;
 		isUnable = false;
 		stepFlg = true;
 		isAirAttack = false;
+		airAttackAnimFlg = true;
 		chara->SetIsAttack(false);
 		chara->SetInvincibleFlg(false);
 	}
@@ -129,14 +168,42 @@ void Rapier::Draw() const
 		{
 			DrawRotaGraph2F(screenLocation.x, screenLocation.y, 0, 100,
 				1, imageAngle, ResourceManager::GetImage("Weapon/rapier"), TRUE);
+
+			if (chargeTime > RAPIER_CHARGE_TIME)
+			DrawRotaGraphF(Camera::ConvertScreenPosition(effectLocation).x, 
+				Camera::ConvertScreenPosition(effectLocation).y,1, 0,
+				ResourceManager::GetDivImage("Effect/rapierEffect", effectAnim),
+				TRUE);
 		}
 		else
 		{
 			DrawRotaGraph2F(screenLocation.x, screenLocation.y, 100, 100,
 				1, imageAngle, ResourceManager::GetImage("Weapon/rapier"), TRUE, TRUE);
+
+			if (chargeTime > RAPIER_CHARGE_TIME)
+			DrawRotaGraphF(Camera::ConvertScreenPosition(effectLocation).x,
+				Camera::ConvertScreenPosition(effectLocation).y, 1, 0,
+				ResourceManager::GetDivImage("Effect/rapierEffect", effectAnim),
+				TRUE,TRUE);
 		}
 	}
 
+	if (direction > 0)
+	{
+		if (airAttackAnimFlg)
+			DrawRotaGraphF(Camera::ConvertScreenPosition(airAttackEffectLocation).x,
+				Camera::ConvertScreenPosition(airAttackEffectLocation).y - 100.f, 1, 0,
+				ResourceManager::GetDivImage("Effect/fallAttackEffect",
+					airAttackEffectAnim), TRUE);
+	}
+	else
+	{
+		if (airAttackAnimFlg)
+			DrawRotaGraphF(Camera::ConvertScreenPosition(airAttackEffectLocation).x,
+				Camera::ConvertScreenPosition(airAttackEffectLocation).y - 100.f, 1, 0,
+				ResourceManager::GetDivImage("Effect/fallAttackEffect",
+					airAttackEffectAnim), TRUE);
+	}
 }
 
 void Rapier::Attack(const CharaBase* chara)
@@ -154,12 +221,14 @@ void Rapier::Attack(const CharaBase* chara)
 	if (direction > 0)
 	{
 		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+		effectLocation = location;
 		directionVector.x = RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(45.f);
 	}
 	else
 	{
 		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+		effectLocation = location;
 		directionVector.x = -RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(-45.f);
 	}

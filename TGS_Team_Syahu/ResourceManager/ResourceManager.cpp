@@ -36,9 +36,10 @@ void ResourceManager::Initialize()
 	SetImage("Weapon/dagger");
 	SetImage("Weapon/largeSword");
 	SetImage("Weapon/rapier");
-	SetDivImage("Effect/jumpEffect", 9, 9, 1, 60, 38);
-	SetDivImage("Effect/rapierEffect", 6, 1, 6, 256, 74);
+	SetDivImage("Effect/jumpEffect", 14, 14, 1, 60, 32);
+	SetDivImage("Effect/rapierEffect", 6, 1, 6, 239, 60);
 	SetDivImage("Effect/slashEffect", 7, 7, 1, 224, 208);
+	SetDivImage("Effect/fallAttackEffect", 7, 7, 1, 200, 224);
 
 	//BGM
 	
