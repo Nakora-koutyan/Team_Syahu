@@ -51,7 +51,10 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	{
 		daggerCount[i] = PLAYER_MAX_DAGGER - 1;
 	}
+	jumpEffectAnimCount = 0;
+	jumpEffectAnim = 0;
 
+	jumpEffectLocY = 0.f;
 	attackCoolTime = 0.f;
 	stealCoolTime = 0.f;
 
@@ -240,6 +243,11 @@ void Player::Draw() const
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
+	if (isJump)
+	{
+		DrawGraphF(screenLocation.x, Camera::ConvertScreenPosition({0,jumpEffectLocY}).y, ResourceManager::GetDivImage("Effect/jumpEffect", jumpEffectAnim), TRUE);
+	}
+
 	steal->Draw();
 
 	largeSword->Draw();
@@ -317,6 +325,7 @@ void Player::Landing(const float height)
 	if (GetMaxLocation().y > height)
 	{
 		location.y = height - area.height;
+		jumpEffectLocY = height;
 		move.y = 0.f;
 		isAir = false;
 		//空中の画像かつ動いていないなら
@@ -624,10 +633,10 @@ void Player::Animation()
 		landingAnimFlg = false;
 		if (playerAnim <= 21 || playerAnim >= 27)
 		{
+			//ジャンプ
 			if (isJump)
 			{
 				playerAnim = 23;
-				isJump = false;
 			}
 			else
 			{
@@ -678,10 +687,10 @@ void Player::Animation()
 			{
 				if (largeSword->GetIsAirAttack())
 				{
-					//if (playerAnim < 46)
-					//{
-					//	playerAnim++;
-					//}
+					if (playerAnim < 46)
+					{
+						playerAnim++;
+					}
 				}
 				else
 				{
@@ -741,6 +750,22 @@ void Player::Animation()
 			else
 			{
 				deathFlg = true;
+			}
+		}
+	}
+
+	if (!isKnockBack && isJump)
+	{
+		if (jumpEffectAnimCount % 30 == 0)
+		{
+			if (jumpEffectAnim < 9)
+			{
+				jumpEffectAnim++;
+			}
+			else
+			{
+				isJump = false;
+				jumpEffectAnim = 0;
 			}
 		}
 	}

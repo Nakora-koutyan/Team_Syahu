@@ -54,7 +54,10 @@ private:
 	int playerAnim;								//プレイヤーのアニメーション番号
 	int playerImage[50] = {};					//プレイヤー画像
 	int daggerCount[PLAYER_MAX_DAGGER];			//短剣の本数
+	int jumpEffectAnimCount;					//ジャンプのエフェクトのアニメーションカウント
+	int jumpEffectAnim;							//ジャンプのエフェクトのアニメーション番号
 
+	float jumpEffectLocY;						//ジャンプのエフェクトのy座標
 	float attackCoolTime;						//攻撃のクールタイム
 	float stealCoolTime;						//奪うのクールタイム
 
