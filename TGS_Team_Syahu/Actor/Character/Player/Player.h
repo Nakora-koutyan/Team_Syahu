@@ -67,6 +67,7 @@ private:
 	bool landingAnimFlg;						//着地アニメーションフラグ
 	bool blinkingFlg;							//点滅フラグ
 	bool jumpEffectInversionFlg;				//ジャンプのエフェクト反転フラグ
+	bool equipmentAnimFlg;						//装備アニメーションフラグ
 
 public:
 	//コンストラクタ
@@ -118,6 +119,9 @@ public:
 
 	//装備中かどうか取得
 	bool GetIsEquipment()const { return isEquipment; }
+
+	//装備のアニメーションフラグを取得
+	bool GetEquipmentAnimFlg()const { return equipmentAnimFlg; }
 
 private:
 	//移動

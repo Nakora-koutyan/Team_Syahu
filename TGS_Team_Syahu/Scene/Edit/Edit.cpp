@@ -72,8 +72,8 @@ SceneBase* Edit::Update() {
 	}
 
 	GetMousePoint(&mouseX, &mouseY);
-	mouseX += move.x;
-	mouseY += move.y;
+	mouseX += (int)move.x;
+	mouseY += (int)move.y;
 	blockX = mouseX / BLOCK_WIDTH;
 	blockY = mouseY / BLOCK_HEIGHT;
 
@@ -94,22 +94,22 @@ SceneBase* Edit::Update() {
 void Edit::Draw()const {
 	for (int i = 0; i < WORLD_HEIGHT / BLOCK_HEIGHT; i++)
 	{
-		DrawLine(BLOCK_WIDTH * i - move.x, 0 - move.y, BLOCK_WIDTH * i - move.x, WORLD_HEIGHT - move.y, 0xffffff, 0);
+		DrawLineAA(BLOCK_WIDTH * i - move.x, 0 - move.y, BLOCK_WIDTH * i - move.x, WORLD_HEIGHT - move.y, 0xffffff, 0);
 	}
 	for (int i = 0; i < WORLD_WIDTH / BLOCK_WIDTH; i++)
 	{
-		DrawLine(0 - move.x, BLOCK_HEIGHT * i - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * i - move.y, 0xffffff, 0);
+		DrawLineAA(0 - move.x, BLOCK_HEIGHT * i - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * i - move.y, 0xffffff, 0);
 	}
 
 	for (int i = 0; i < WORLD_HEIGHT / BLOCK_HEIGHT; i++)
 	{
 		for (int j = 0; j < WORLD_WIDTH / BLOCK_WIDTH; j++)
 		{
-			DrawFormatString(50 * i + 2 - move.x, 50 * j + 2 - move.y, 0x606000, "%d", stageData[j][i]);
+			DrawFormatStringF(50 * i + 2 - move.x, 50 * j + 2 - move.y, 0x606000, "%d", stageData[j][i]);
 		}
 	}
 
-	DrawBox(BLOCK_WIDTH * blockX - move.x, BLOCK_HEIGHT * blockY - move.y, BLOCK_WIDTH * (blockX + 1) - move.x, BLOCK_HEIGHT * (blockY + 1) - move.y, 0xFFFF00, 0);
+	DrawBoxAA(BLOCK_WIDTH * blockX - move.x, BLOCK_HEIGHT * blockY - move.y, BLOCK_WIDTH * (blockX + 1) - move.x, BLOCK_HEIGHT * (blockY + 1) - move.y, 0xFFFF00, 0);
 
 
 

@@ -49,7 +49,7 @@ void DaggerEnemy::Initialize()
 	//体力
 	hp = 100;
 	//ダメージ
-	damage = 5.f;
+	damage = 8.f;
 
 	//プレイヤーを見つけた？
 	isFind = false;

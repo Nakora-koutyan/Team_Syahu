@@ -65,6 +65,7 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	landingAnimFlg = false;
 	blinkingFlg = false;
 	jumpEffectInversionFlg = false;
+	equipmentAnimFlg = false;
 }
 
 Player::~Player()
@@ -165,11 +166,14 @@ void Player::Update()
 
 	BackStep(30.f, 15.f, 0.f);
 
-	Movement();
+	if (!equipmentAnimFlg)
+	{
+		Movement();
 
-	Attack();
+		Attack();
 
-	StockSelect();
+		StockSelect();
+	}
 
 	Animation();
 
@@ -283,7 +287,7 @@ void Player::Draw() const
 
 void Player::Hit(ObjectBase* object, const float damage)
 {
-	const CharaBase* chara = static_cast<const CharaBase*>(object);
+	CharaBase* chara = static_cast<CharaBase*>(object);
 
 	if (!isKnockBack && !isHit && hp > 0 && !invincibleFlg)
 	{
@@ -310,6 +314,14 @@ void Player::Hit(ObjectBase* object, const float damage)
 	if (hp < 0)
 	{
 		hp = 0;
+	}
+
+	if (location.x <= 0 || location.x + area.width >= WORLD_WIDTH)
+	{
+		if (CollisionCheck(chara))
+		{
+			chara->Hit(this, 0);
+		}
 	}
 
 	//中心の距離
@@ -558,6 +570,8 @@ void Player::Attack()
 		weaponType = stock[stockCount];
 		isEquipment = true;
 		actionState = Action::Equipment;
+		invincibleFlg = true;
+		equipmentAnimFlg = true;
 	}
 
 
@@ -582,8 +596,14 @@ void Player::Attack()
 				steal->SetKeepType(Weapon::None);
 				weaponType = stock[stockCount];
 				weaponDurability[stockCount] = GetWeaponDurability(stock[stockCount]);
-				isEquipment = true;
-				actionState = Action::Equipment;
+				if (!isEquipment)
+				{
+					stockCount = j;
+					isEquipment = true;
+					actionState = Action::Equipment;
+					invincibleFlg = true;
+					equipmentAnimFlg = true;
+				}
 				break;
 			}
 		}
@@ -624,7 +644,7 @@ void Player::Animation()
 	playerAnimFramCount++;
 
 	//待機
-	if (!isMove && !isAir && !isKnockBack && !landingAnimFlg && !isAttack && hp > 0)
+	if (!isMove && !isAir && !isKnockBack && !landingAnimFlg && !isAttack && hp > 0 && !equipmentAnimFlg)
 	{
 		if (playerAnim >= 4)
 		{
@@ -642,7 +662,7 @@ void Player::Animation()
 	}
 
 	//移動
-	if (isMove && !isAir && !isKnockBack && hp > 0)
+	if (isMove && !isAir && !isKnockBack && hp > 0 && !equipmentAnimFlg)
 	{
 		if (playerAnim <= 7 || playerAnim >= 16)
 		{
@@ -660,7 +680,7 @@ void Player::Animation()
 	}
 
 	//空中
-	if (isAir && !isKnockBack && !isAttack && hp > 0)
+	if (isAir && !isKnockBack && !isAttack && hp > 0 && !equipmentAnimFlg)
 	{
 		landingAnimFlg = false;
 		if (playerAnim <= 21 || playerAnim >= 27)
@@ -685,7 +705,7 @@ void Player::Animation()
 		}
 	}
 	//着地
-	if (landingAnimFlg && !isAir && hp > 0 && !isKnockBack)
+	if (landingAnimFlg && !isAir && hp > 0 && !isKnockBack && !equipmentAnimFlg)
 	{
 		if (playerAnimFramCount % 8 == 0)
 		{
@@ -701,10 +721,32 @@ void Player::Animation()
 		}
 	}
 
+	//装備
+	if (isEquipment && equipmentAnimFlg && !isAttack)
+	{
+		if (playerAnim <= 16 || playerAnim >= 22)
+		{
+			playerAnim = 17;
+		}
+		if (playerAnimFramCount % 8 == 0)
+		{
+			if (playerAnim < 22)
+			{
+				playerAnim++;
+			}
+		}
+		//装備のアニメーションが終わったら
+		if (playerAnim >= 22)
+		{
+			equipmentAnimFlg = false;
+			invincibleFlg = false;
+		}
+	}
+
 	bool once = false;
 
 	//攻撃
-	if (isAttack && !isKnockBack && hp > 0)
+	if (isAttack && !isKnockBack && hp > 0 && !equipmentAnimFlg)
 	{
 		if (playerAnim <= 41)
 		{
@@ -786,6 +828,7 @@ void Player::Animation()
 		}
 	}
 
+	//ジャンプのエフェクト
 	if (!isKnockBack && isJump)
 	{
 		if (jumpEffectAnimCount % 15 == 0)

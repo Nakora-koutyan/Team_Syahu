@@ -55,7 +55,7 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 		}
 	}
 
-	if (isKnockBack && !chara->GetIsKnockBack())
+	if (isKnockBack && !chara->GetIsKnockBack() && chara->GetObjectType() == ObjectType::Enemy)
 	{
 		if (CollisionCheck(chara))
 		{
