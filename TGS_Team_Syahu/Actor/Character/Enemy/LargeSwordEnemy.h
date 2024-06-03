@@ -36,6 +36,8 @@ private:
 
 	bool once;							//LargeSwordのAttack関数を一度の攻撃で一回だけ呼ぶためのフラグ
 
+	int attackEndCounter;				//attackEnd時に呼ばれるカウンター変数
+
 public:
 	//コンストラクタ
 	LargeSwordEnemy();

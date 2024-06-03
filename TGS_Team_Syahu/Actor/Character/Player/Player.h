@@ -17,7 +17,7 @@
 #define PLAYER_NORMALWEAPON_COOLTIME	FPS * 1.f		//投げるのクールタイム
 #define PLAYER_STEAL_COOLTIME			FPS * 1.2f		//奪うのクールタイム
 #define PLAYER_LARGESWORD_COOLTIME		FPS * 1.5f		//大剣のクールタイム
-#define PLAYER_DAGGER_COOLTIME			FPS * 0.2f		//短剣のクールタイム
+#define PLAYER_DAGGER_COOLTIME			FPS * 0.3f		//短剣のクールタイム
 #define PLAYER_RAPIER_COOLTIME			FPS * 1.0f		//レイピアのクールタイム
 #define PLAYER_KNOCKBACK				5.f				//ノックバックの量
 #define PLAYER_KNOCKBACK_TIME			FPS * 0.25		//ノックバックの時間
@@ -47,6 +47,8 @@ private:
 	Dagger* dagger[PLAYER_MAX_DAGGER];			//短剣
 	Rapier* rapier;								//レイピア
 
+	Vector2D jumpEffectLocation;				//ジャンプのエフェクト座標
+
 	short stockCount;							//現在のストックの番号
 
 	int weaponDurability[PLAYER_MAX_STOCK];		//武器の耐久力
@@ -54,6 +56,8 @@ private:
 	int playerAnim;								//プレイヤーのアニメーション番号
 	int playerImage[50] = {};					//プレイヤー画像
 	int daggerCount[PLAYER_MAX_DAGGER];			//短剣の本数
+	int jumpEffectAnimCount;					//ジャンプのエフェクトのアニメーションカウント
+	int jumpEffectAnim;							//ジャンプのエフェクトのアニメーション番号
 
 	float attackCoolTime;						//攻撃のクールタイム
 	float stealCoolTime;						//奪うのクールタイム
@@ -62,6 +66,8 @@ private:
 	bool isBackStep;							//バックステップ中？
 	bool landingAnimFlg;						//着地アニメーションフラグ
 	bool blinkingFlg;							//点滅フラグ
+	bool jumpEffectInversionFlg;				//ジャンプのエフェクト反転フラグ
+	bool equipmentAnimFlg;						//装備アニメーションフラグ
 
 public:
 	//コンストラクタ
@@ -113,6 +119,9 @@ public:
 
 	//装備中かどうか取得
 	bool GetIsEquipment()const { return isEquipment; }
+
+	//装備のアニメーションフラグを取得
+	bool GetEquipmentAnimFlg()const { return equipmentAnimFlg; }
 
 private:
 	//移動

@@ -22,7 +22,7 @@
 //コンストラクタ
 LargeSwordEnemy::LargeSwordEnemy():largeSwordEnemyImage(),largeSwordEnemyImageNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
 distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0), largeSwordCollisionBox(nullptr),once(false),
-rushAttackTime(0),largeSwordAttackTime(0),weaponNoneEnemyImage{NULL},weaponNoneEnemyImageNumber(0),closeToPlayer(false),
+rushAttackTime(0),largeSwordAttackTime(0),weaponNoneEnemyImage{NULL},weaponNoneEnemyImageNumber(0),closeToPlayer(false), attackEndCounter(0),
 attackChargeTime(0)
 {
 }
@@ -137,7 +137,7 @@ void LargeSwordEnemy::Update()
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
-	DamageInterval(FPS * 0.5);
+	DamageInterval(FPS * 0.2);
 	KnockBack(this,FPS * 0.5, knockBackMove);
 
 	//エネミーアニメーション
@@ -221,7 +221,7 @@ void LargeSwordEnemy::Draw() const
 	//デバッグ用文字列
 	DrawFormatStringF(50.f, 360.f, 0xffff00, "enemyImage %d", largeSwordEnemyImageNumber);
 	DrawFormatStringF(50.f, 380.f, 0xff00ff, "animInterval %d", animInterval);
-	DrawFormatStringF(50.f, 400.f, 0xff00ff, "enemystate %d", enemyStatus);
+	DrawFormatStringF(50.f, 400.f, 0xff00ff, "enemyStatus %d", enemyStatus);
 	DrawFormatStringF(50.f, 420.f, 0x00ff00, "weaponNoneImageNumber %d", weaponNoneEnemyImageNumber);
 	DrawBoxAA(largeSwordCollisionBox->GetMinScreenLocation().x, largeSwordCollisionBox->GetMinScreenLocation().y,
 		largeSwordCollisionBox->GetMaxScreenLocation().x, largeSwordCollisionBox->GetMaxScreenLocation().y,
@@ -495,12 +495,10 @@ void LargeSwordEnemy::AttackStart()
 //攻撃終了
 void LargeSwordEnemy::AttackEnd()
 {
-	enemyStatus = EnemyStatus::Patrol;
 	if (weaponType == Weapon::LargeSword)
 	{
 		signToAttack = false;
 		restTime = 0;
-		didAttack = false;
 		animInterval = 0;
 		largeSwordAttackTime = MAX_ATTACK_TIME;
 	}
@@ -510,6 +508,11 @@ void LargeSwordEnemy::AttackEnd()
 		weaponNoneEnemyImageNumber = 0;
 		//カウントダウンをリセット
 		rushAttackTime = MAX_RUSH_ATTACKTIME;
+	}
+
+	if (didAttack == false)
+	{
+		enemyStatus = EnemyStatus::Patrol;
 	}
 }
 
@@ -554,6 +557,17 @@ void LargeSwordEnemy::EnemyAnimationManager()
 		if (weaponType == Weapon::None)
 		{
 			WeaponNoneAttackStartAnim();
+		}
+	}
+	if (enemyStatus == EnemyStatus::AttackEnd)
+	{
+		if (weaponType == Weapon::LargeSword)
+		{
+			LargeSwordAttackEndAnim();
+		}
+		if (weaponType == Weapon::None)
+		{
+			WeaponNoneAttackEndAnim();
 		}
 	}
 	animInterval++;
@@ -682,7 +696,7 @@ void LargeSwordEnemy::LargeSwordAttackStartAnim()
 	{
 		//画像の番号を15番に設定
 		largeSwordEnemyImageNumber = 13;
-		//攻撃したかのフラグ変数をtruenにする
+		//攻撃したかのフラグ変数をtrueにする
 		didAttack = true;
 	}
 	// 7フレーム毎にアニメーションを切り替える
@@ -703,14 +717,32 @@ void LargeSwordEnemy::WeaponNoneAttackStartAnim()
 	{
 		weaponNoneEnemyImageNumber++;
 	}
-
 }
 
-//攻撃を持っている場合の攻撃終了アニメーション
+//武器を持っている場合の攻撃終了アニメーション
 void LargeSwordEnemy::LargeSwordAttackEndAnim()
 {
+	if (largeSwordEnemyImageNumber <= 6)
+	{
+		largeSwordEnemyImageNumber = 6;
+	}
+	else if (largeSwordEnemyImageNumber >= 8)
+	{
+		largeSwordEnemyImageNumber = 6;
+		attackEndCounter++;
+	}
+	if (attackEndCounter > 3)
+	{
+		didAttack = false;
+		attackEndCounter = 0;
+	}
+
+	if (animInterval % 4 == 0)
+	{
+		largeSwordEnemyImageNumber++;
+	}
 }
-//攻撃を持っていない場合の攻撃終了アニメーション
+//武器を持っていない場合の攻撃終了アニメーション
 void LargeSwordEnemy::WeaponNoneAttackEndAnim()
 {
 }

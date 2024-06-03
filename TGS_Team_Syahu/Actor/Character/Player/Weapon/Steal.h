@@ -1,6 +1,7 @@
 #pragma once
 #include"../../../../Collision/Line/LineCollision.h"
 #include"../../CharaBase.h"
+#include<vector>
 
 #define STEAL_ATTACK_TIME	FPS * 0.2		//奪う攻撃の時間
 #define STEAL_DAMAGE		10.f			//奪うのダメージ
@@ -15,9 +16,14 @@ private:
 	LineCollision sideClaw[2] = {};		//鉤爪の横2つの判定用 0:上 1:下
 	Weapon keepType;					//能力の保存用
 
+	std::vector<int> stealEffect;		//奪うのエフェクト画像
+
 	short direction;					//方向
 
 	int framCount;						//フレームカウント
+	int effectAnim;						//エフェクトのアニメーション番号
+	int effectAnimcount;				//エフェクトのアニメーションカウント
+
 
 public:
 	//コンストラクタ

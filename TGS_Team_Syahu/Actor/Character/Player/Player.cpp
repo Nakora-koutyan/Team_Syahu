@@ -26,6 +26,9 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 		dagger[i] = nullptr;
 	}
 
+	jumpEffectLocation.x = 0.f;
+	jumpEffectLocation.y = 0.f;
+
 	stockCount = 0;
 	actionState = Action::None;
 
@@ -51,6 +54,8 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	{
 		daggerCount[i] = PLAYER_MAX_DAGGER - 1;
 	}
+	jumpEffectAnimCount = 0;
+	jumpEffectAnim = 0;
 
 	attackCoolTime = 0.f;
 	stealCoolTime = 0.f;
@@ -59,6 +64,8 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	isBackStep = false;
 	landingAnimFlg = false;
 	blinkingFlg = false;
+	jumpEffectInversionFlg = false;
+	equipmentAnimFlg = false;
 }
 
 Player::~Player()
@@ -159,11 +166,14 @@ void Player::Update()
 
 	BackStep(30.f, 15.f, 0.f);
 
-	Movement();
+	if (!equipmentAnimFlg)
+	{
+		Movement();
 
-	Attack();
+		Attack();
 
-	StockSelect();
+		StockSelect();
+	}
 
 	Animation();
 
@@ -198,6 +208,7 @@ void Player::Draw() const
 	DrawFormatString(600, 90, 0x000000, "animCount :%d", playerAnim);
 	DrawFormatString(600, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
 	DrawFormatString(600, 120, 0x000000, "location x:%f location y:%f", location.x, location.y);
+	DrawFormatString(600, 135, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
 	if (weaponType == Weapon::None)
 	{
 		DrawFormatString(600, 45, 0x000000, "WeaponType:None");
@@ -240,6 +251,28 @@ void Player::Draw() const
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
+	if (isJump)
+	{
+		if (jumpEffectInversionFlg)
+		{
+			DrawRotaGraphF
+			(Camera::ConvertScreenPosition(jumpEffectLocation).x + 10.f, 
+				Camera::ConvertScreenPosition(jumpEffectLocation).y - 15.f,
+				1, 0,
+				ResourceManager::GetDivImage("Effect/jumpEffect", jumpEffectAnim),
+				TRUE, TRUE);
+		}
+		else
+		{
+			DrawRotaGraphF
+			(Camera::ConvertScreenPosition(jumpEffectLocation).x - 10.f, 
+				Camera::ConvertScreenPosition(jumpEffectLocation).y - 15.f,
+				1, 0,
+				ResourceManager::GetDivImage("Effect/jumpEffect", jumpEffectAnim),
+				TRUE);
+		}
+	}
+
 	steal->Draw();
 
 	largeSword->Draw();
@@ -254,7 +287,7 @@ void Player::Draw() const
 
 void Player::Hit(ObjectBase* object, const float damage)
 {
-	const CharaBase* chara = static_cast<const CharaBase*>(object);
+	CharaBase* chara = static_cast<CharaBase*>(object);
 
 	if (!isKnockBack && !isHit && hp > 0 && !invincibleFlg)
 	{
@@ -281,6 +314,14 @@ void Player::Hit(ObjectBase* object, const float damage)
 	if (hp < 0)
 	{
 		hp = 0;
+	}
+
+	if (location.x <= 0 || location.x + area.width >= WORLD_WIDTH)
+	{
+		if (CollisionCheck(chara))
+		{
+			chara->Hit(this, 0);
+		}
 	}
 
 	//中心の距離
@@ -317,6 +358,7 @@ void Player::Landing(const float height)
 	if (GetMaxLocation().y > height)
 	{
 		location.y = height - area.height;
+		jumpEffectLocation.y = height;
 		move.y = 0.f;
 		isAir = false;
 		//空中の画像かつ動いていないなら
@@ -428,6 +470,16 @@ void Player::Movement()
 		isAir = true;
 		isJump = true;
 		direction.y = -1.f;
+		if (direction.x < 0)
+		{
+			jumpEffectLocation.x = location.x + area.width;
+			jumpEffectInversionFlg = true;
+		}
+		else
+		{
+			jumpEffectLocation.x = location.x;
+			jumpEffectInversionFlg = false;
+		}
 	}
 
 	//下に落ちているなら
@@ -474,8 +526,8 @@ void Player::Attack()
 	}
 
 	//武器攻撃
-	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) ||
-		PadInput::OnButton(XINPUT_BUTTON_X)) && attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None)
+	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) || PadInput::OnButton(XINPUT_BUTTON_X)) &&
+		attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None && hp > 0)
 	{
 		//武器攻撃
 		if (weaponType != Weapon::None)
@@ -511,18 +563,21 @@ void Player::Attack()
 	if (attackCoolTime > 0)attackCoolTime--;
 
 	//装備
-	if (!isKnockBack && stock[stockCount] != Weapon::None && weaponType == Weapon::None && actionState == Action::None &&
+	if (!isKnockBack && stock[stockCount] != Weapon::None && weaponType == Weapon::None &&
+		actionState == Action::None && hp > 0 &&
 		(KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)))
 	{
 		weaponType = stock[stockCount];
 		isEquipment = true;
 		actionState = Action::Equipment;
+		invincibleFlg = true;
+		equipmentAnimFlg = true;
 	}
 
 
 	//奪う
 	if ((KeyInput::GetButton(MOUSE_INPUT_LEFT) || PadInput::OnButton(XINPUT_BUTTON_B)) &&
-		stealCoolTime <= 0.f && !isKnockBack && actionState == Action::None)
+		stealCoolTime <= 0.f && !isKnockBack && actionState == Action::None && hp > 0)
 	{
 		isAttack = true;
 		actionState = Action::Steal;
@@ -541,8 +596,14 @@ void Player::Attack()
 				steal->SetKeepType(Weapon::None);
 				weaponType = stock[stockCount];
 				weaponDurability[stockCount] = GetWeaponDurability(stock[stockCount]);
-				isEquipment = true;
-				actionState = Action::Equipment;
+				if (!isEquipment)
+				{
+					stockCount = j;
+					isEquipment = true;
+					actionState = Action::Equipment;
+					invincibleFlg = true;
+					equipmentAnimFlg = true;
+				}
 				break;
 			}
 		}
@@ -583,7 +644,7 @@ void Player::Animation()
 	playerAnimFramCount++;
 
 	//待機
-	if (!isMove && !isAir && !isKnockBack && !landingAnimFlg && !isAttack && hp > 0)
+	if (!isMove && !isAir && !isKnockBack && !landingAnimFlg && !isAttack && hp > 0 && !equipmentAnimFlg)
 	{
 		if (playerAnim >= 4)
 		{
@@ -601,7 +662,7 @@ void Player::Animation()
 	}
 
 	//移動
-	if (isMove && !isAir && !isKnockBack && hp > 0)
+	if (isMove && !isAir && !isKnockBack && hp > 0 && !equipmentAnimFlg)
 	{
 		if (playerAnim <= 7 || playerAnim >= 16)
 		{
@@ -619,15 +680,15 @@ void Player::Animation()
 	}
 
 	//空中
-	if (isAir && !isKnockBack && !isAttack && hp > 0)
+	if (isAir && !isKnockBack && !isAttack && hp > 0 && !equipmentAnimFlg)
 	{
 		landingAnimFlg = false;
 		if (playerAnim <= 21 || playerAnim >= 27)
 		{
+			//ジャンプ
 			if (isJump)
 			{
 				playerAnim = 23;
-				isJump = false;
 			}
 			else
 			{
@@ -644,7 +705,7 @@ void Player::Animation()
 		}
 	}
 	//着地
-	if (landingAnimFlg && !isAir && hp > 0 && !isKnockBack)
+	if (landingAnimFlg && !isAir && hp > 0 && !isKnockBack && !equipmentAnimFlg)
 	{
 		if (playerAnimFramCount % 8 == 0)
 		{
@@ -660,10 +721,32 @@ void Player::Animation()
 		}
 	}
 
+	//装備
+	if (isEquipment && equipmentAnimFlg && !isAttack)
+	{
+		if (playerAnim <= 16 || playerAnim >= 22)
+		{
+			playerAnim = 17;
+		}
+		if (playerAnimFramCount % 8 == 0)
+		{
+			if (playerAnim < 22)
+			{
+				playerAnim++;
+			}
+		}
+		//装備のアニメーションが終わったら
+		if (playerAnim >= 22)
+		{
+			equipmentAnimFlg = false;
+			invincibleFlg = false;
+		}
+	}
+
 	bool once = false;
 
 	//攻撃
-	if (isAttack && !isKnockBack && hp > 0)
+	if (isAttack && !isKnockBack && hp > 0 && !equipmentAnimFlg)
 	{
 		if (playerAnim <= 41)
 		{
@@ -678,10 +761,10 @@ void Player::Animation()
 			{
 				if (largeSword->GetIsAirAttack())
 				{
-					//if (playerAnim < 46)
-					//{
-					//	playerAnim++;
-					//}
+					if (playerAnim < 46)
+					{
+						playerAnim++;
+					}
 				}
 				else
 				{
@@ -741,6 +824,23 @@ void Player::Animation()
 			else
 			{
 				deathFlg = true;
+			}
+		}
+	}
+
+	//ジャンプのエフェクト
+	if (!isKnockBack && isJump)
+	{
+		if (jumpEffectAnimCount % 15 == 0)
+		{
+			if (jumpEffectAnim < 14)
+			{
+				jumpEffectAnim++;
+			}
+			else
+			{
+				isJump = false;
+				jumpEffectAnim = 0;
 			}
 		}
 	}

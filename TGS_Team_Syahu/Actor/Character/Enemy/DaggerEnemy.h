@@ -1,7 +1,7 @@
 #pragma once
 #include "EnemyBase.h"
 
-#define DAGGER_ENEMY_WALK_SPEED		2.5f
+#define DAGGER_ENEMY_WALK_SPEED		1.5f
 #define DAGGER_ENEMY_KNOCKBACK		1.5f
 
 class DaggerEnemy :public EnemyBase
@@ -21,6 +21,10 @@ private:
 	float correctLocY;		//画像の位置ずれを修正するための変数(Y)
 
 	int animTurnFlg;		//画像の反転処理
+
+	bool animCountDown;		//アニメーションの番号の減算をする？
+
+	int attackEndCount;		//攻撃終了時アニメーション関数で使用するカウンター
 
 public:
 	//コンストラクタ

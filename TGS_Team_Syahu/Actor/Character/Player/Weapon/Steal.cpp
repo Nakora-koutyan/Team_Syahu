@@ -3,6 +3,7 @@
 #include"../../../../Actor/Character/Player/Player.h"
 #include"../../../../Utility/common.h"
 #include"../../../Camera/Camera.h"
+#include"../../../../ResourceManager/ResourceManager.h"
 
 Steal::Steal()
 {	
@@ -10,9 +11,16 @@ Steal::Steal()
 
 	keepType = Weapon::None;
 
+	for (int i = 1; i < 11; i++)
+	{
+		stealEffect.push_back(ResourceManager::GetImage("Effect/Steal/steal_" + std::to_string(i)));
+	}
+
 	direction = 0;
 
 	framCount = 0;
+	effectAnim = 0;
+	effectAnimcount = 0;
 
 	isShow = false;
 }
@@ -27,6 +35,15 @@ void Steal::Update(CharaBase* chara)
 	if (isShow)
 	{
 		framCount++;
+		effectAnimcount++;
+
+		if (effectAnimcount % 3 == 0)
+		{
+			if (effectAnim < 10)
+			{
+				effectAnim++;
+			}
+		}
 	}
 	else
 	{
@@ -41,6 +58,8 @@ void Steal::Update(CharaBase* chara)
 	{
 		framCount = 0;
 		direction = 0;
+		effectAnimcount = 0;
+		effectAnim = 0;
 		isShow = false;
 		chara->SetIsAttack(false);
 	}
@@ -53,6 +72,7 @@ void Steal::Draw() const
 {
 	if (isShow)
 	{
+#ifdef DEBUG
 		DrawLineAA(screenLocation.x, screenLocation.y,
 			screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
 			0x00ff00, 1);
@@ -64,6 +84,17 @@ void Steal::Draw() const
 			sideClaw[1].GetScreenLocation().x + sideClaw[1].GetDirectionVector().x,
 			sideClaw[1].GetScreenLocation().y + sideClaw[1].GetDirectionVector().y,
 			0x00ff00, 1);
+#endif // DEBUG
+		if (direction > 0)
+		{
+			DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y - 35.f, 1, 0,
+				stealEffect[effectAnim], TRUE, TRUE);
+		}
+		else
+		{
+			DrawRotaGraphF(screenLocation.x - 50.f, screenLocation.y - 35.f, 1, 0,
+				stealEffect[effectAnim], TRUE);
+		}
 	}
 }
 
@@ -72,8 +103,15 @@ void Steal::Attack(const CharaBase* chara)
 	//出現させる
 	isShow = true;
 
+	//まだ方向が決まってないなら
+	if (direction == 0)
+	{
+		//プレイヤーの方向情報を保持する
+		direction = (short)chara->GetDirection().x;
+	}
+
 	//右に出す
-	if (chara->GetDirection().x > 0)
+	if (direction > 0)
 	{
 		location.x = chara->GetMaxLocation().x + (STEAL_DISTANCE - 20.f);
 		sideClaw[0].SetLocationX(chara->GetMaxLocation().x + (STEAL_DISTANCE - 10.f));
@@ -102,13 +140,6 @@ void Steal::Attack(const CharaBase* chara)
 	directionVector.y = -100.f;
 	sideClaw[0].SetDirectionVectorY(-60.f);
 	sideClaw[1].SetDirectionVectorY(-70.f);
-
-	//まだ方向が決まってないなら
-	if (direction == 0)
-	{
-		//プレイヤーの方向情報を保持する
-		direction = (short)chara->GetDirection().x;
-	}
 }
 
 void Steal::Hit(ObjectBase* target, const float damage)

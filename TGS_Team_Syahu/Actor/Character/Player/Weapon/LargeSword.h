@@ -1,8 +1,8 @@
 #pragma once
 #include"../../../../Collision/Line/LineCollision.h"
 
-#define LARGESWORD_ATTACK_TIME	FPS * 0.09		//大剣攻撃の時間
-#define LARGESWORD_ANGLE		15.5f			//大剣の振る角度/f
+#define LARGESWORD_ATTACK_TIME	FPS * 0.15		//大剣攻撃の時間
+#define LARGESWORD_ANGLE		11.5f			//大剣の振る角度/f
 #define LARGRSWORD_LENGTH		100.f			//大剣の長さ
 #define LARGESWORD_WEIGHT		0.75f			//大剣の重さ
 #define LARGESWORD_DAMAGE		100.f			//大剣のダメージ
@@ -15,15 +15,22 @@ class Player;
 class LargeSword :public LineCollision
 {
 private:
-	short direction;		//方向
+	Vector2D airAttackEffectLocation;	//空中攻撃のエフェクトの座標
 
-	int framCount;			//フレームカウント
+	short direction;					//方向
 
-	float angle;			//角度
-	float imageAngle;		//画像の角度
+	int framCount;						//フレームカウント
+	int effectAnim;						//エフェクトのアニメーション番号
+	int effectAnimcount;				//エフェクトのアニメーションカウント
+	int airAttackEffectAnim;			//落下攻撃エフェクトのアニメーション番号
+	int airAttackEffectAnimcount;		//落下攻撃エフェクトのアニメーションカウント
 
-	bool isHit;				//当たったか？
-	bool isAirAttack;		//空中攻撃？
+	float angle;						//角度
+	float imageAngle;					//画像の角度
+
+	bool isHit;							//当たったか？
+	bool isAirAttack;					//空中攻撃？
+	bool airAttackAnimFlg;				//空中攻撃のアニメーションフラグ
 
 public:
 	//コンストラクタ
@@ -39,7 +46,7 @@ public:
 	void Draw()const override;
 
 	//攻撃
-	void Attack(const CharaBase* chara);
+	void Attack(CharaBase* chara);
 
 	//ヒット処理
 	void Hit(ObjectBase* target, const float damage)override;
