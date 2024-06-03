@@ -19,6 +19,8 @@ private:
 
 	bool once;
 
+	Rapier* rapier;		//レイピアを呼び出す
+
 public:
 	//コンストラクタ
 	NormalEnemy();
@@ -33,6 +35,8 @@ public:
 	void Draw()const override;
 
 public:
+
+	Rapier* GetRapier()const { return rapier; }
 
 	//プレイヤーを見つけた？
 	void FindPlayer(const Player* player)override;

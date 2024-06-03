@@ -260,4 +260,13 @@ void GameMainScene::HitCheckEnemyWeapon(const int j)
 			player->Hit(daggerEnemy, daggerEnemy->GetDamage() * 3);
 		}
 	}
+	if (enemy->GetEnemyType() == EnemyType::RapierEnemy)
+	{
+		NormalEnemy* normalEnemy = static_cast<NormalEnemy* > (object[j]);
+		if (normalEnemy->GetRapier()->CollisionCheck(player) && normalEnemy->GetSignToAttack())
+		{
+			normalEnemy->HitWeapon(player);
+			player->Hit(normalEnemy, normalEnemy->GetDamage() * 3);
+		}
+	}
 }

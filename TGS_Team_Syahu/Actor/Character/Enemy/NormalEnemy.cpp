@@ -33,7 +33,7 @@ void NormalEnemy::Initialize()
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
 	weaponType = Weapon::Rapier;	//突進(武器無し)
-	enemyType = EnemyType::None;
+	enemyType = EnemyType::RapierEnemy;
 
 	//体の向き
 	direction.x = DIRECTION_LEFT;
@@ -46,6 +46,8 @@ void NormalEnemy::Initialize()
 	isShow = true;
 
 	damage = 15.f;
+
+	rapier = new Rapier;
 
 	//攻撃時間
 	attackWaitingTime = MAX_WAITING_TIME;
@@ -98,6 +100,8 @@ void NormalEnemy::Update()
 	//世界の両端を越えない
 	DontCrossBorder();
 
+	rapier->Update(this);
+
 	location.x += move.x;
 }
 
@@ -115,6 +119,7 @@ void NormalEnemy::Draw() const
 			0x00ffff, FALSE, 1.f);
 	//体力表示用のデバッグ表示
 	DrawFormatString(250, 300, 0xff0f0f, "HP　%d", hp);
+	rapier->Draw();
 }
 
 //攻撃範囲の指定
@@ -240,40 +245,52 @@ void NormalEnemy:: AttackStandBy()
 
 void NormalEnemy::AttackStart()
 {
-	//攻撃時間が０秒以上であれば
-	if (attackTime >= 0)
+	if (weaponType == Weapon::Rapier)
 	{
-		//攻撃可能にする
-		isAttack = true;
-	}
-	else
-	{
-		isAttack = false;
-	}
-
-	//攻撃可能なら
-	if (isAttack == true)
-	{
-		//左向きに攻撃を行う
-		if (direction.x == DIRECTION_LEFT)
+		if (signToAttack)
 		{
-			animTurnFlg = false;
-			move.x = -(NORMAL_WALK_SPEED * ATTACK_SPEED);
+			rapier->Attack(this);
+			enemyStatus = EnemyStatus::AttackEnd;
 		}
-		//右向きに攻撃を行う
-		if (direction.x == DIRECTION_RIGHT)
+	}
+	if (weaponType == Weapon::None)
+	{
+		//攻撃時間が０秒以上であれば
+		if (attackTime >= 0)
 		{
-			animTurnFlg = true;
-			move.x = (NORMAL_WALK_SPEED * ATTACK_SPEED);
+			//攻撃可能にする
+			isAttack = true;
+		}
+		else
+		{
+			isAttack = false;
 		}
 
-		attackTime--;
-	}
-	//攻撃を続行しない場合またはプレイヤーと衝突した場合
-	if (!isAttack || isKnockBack)
-	{
-		//エネミーの状態を攻撃終了に遷移する
-		enemyStatus = EnemyStatus::AttackEnd;
+		//攻撃可能なら
+		if (isAttack == true)
+		{
+			//左向きに攻撃を行う
+			if (direction.x == DIRECTION_LEFT)
+			{
+				animTurnFlg = false;
+				move.x = -(NORMAL_WALK_SPEED * ATTACK_SPEED);
+			}
+			//右向きに攻撃を行う
+			if (direction.x == DIRECTION_RIGHT)
+			{
+				animTurnFlg = true;
+				move.x = (NORMAL_WALK_SPEED * ATTACK_SPEED);
+			}
+
+			attackTime--;
+		}
+
+		//攻撃を続行しない場合またはプレイヤーと衝突した場合
+		if (!isAttack || isKnockBack)
+		{
+			//エネミーの状態を攻撃終了に遷移する
+			enemyStatus = EnemyStatus::AttackEnd;
+		}
 	}
 }
 
@@ -334,6 +351,7 @@ void NormalEnemy::EnemyAnimationManager()
 	//攻撃中の場合
 	if (enemyStatus == EnemyStatus::AttackStart)
 	{
+		signToAttack = true;
 		//画像の番号が３以下の場合
 		if (enemyNumber <= 3)
 		{
