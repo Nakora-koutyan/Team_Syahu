@@ -7,6 +7,22 @@
 
 class GameMainScene;
 
+#define OBJECT_TYPE_MAX 5
+
+static char objString[OBJECT_TYPE_MAX][256] =
+{
+    "None",
+    "Block",
+    "Sword",
+    "Dagger",
+    "Rapier",
+};
+
+enum MODE {
+    Normal,
+    Range,
+};
+
 class Edit : public SceneBase
 {
 private:
@@ -14,8 +30,12 @@ private:
 
     Vector2D move;
 
+    MODE mode = Normal;
+
     int mouseX, mouseY;
     int blockX, blockY;
+    int rSelectX, rSelectY;
+    bool rangeflg;
     int stageWidth, stageHeight;
     int stageNum;
     int stageData[100][100];
