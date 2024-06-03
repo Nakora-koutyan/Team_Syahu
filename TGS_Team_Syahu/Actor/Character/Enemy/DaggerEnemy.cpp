@@ -4,7 +4,8 @@
 
 //コンストラクタ
 DaggerEnemy::DaggerEnemy() :drawnSword(false), dagger(nullptr), daggerEnemyAnimNumber{(0)}, 
-daggerEnemyAnim{NULL},enemyAnimInterval(0),correctLocX(0.f),correctLocY(0.f),animTurnFlg(TRUE)
+daggerEnemyAnim{NULL},enemyAnimInterval(0),correctLocX(0.f),correctLocY(0.f),animTurnFlg(TRUE),
+animCountDown(false),attackEndCount(0)
 {
 }
 //デストラクタ
@@ -138,6 +139,7 @@ void DaggerEnemy::Draw() const
 	dagger->Draw();
 
 	DrawFormatString(500, 600, 0xffff00, "%lf PatrolCounter", patrolCounter);
+	DrawFormatString(500, 620, 0xffff00, "%d daggerEnemyAnimNumber", daggerEnemyAnimNumber);
 }
 
 //プレイヤーをみつけた？
@@ -208,7 +210,7 @@ void DaggerEnemy::EnemyPatrol()
 		move.x = DAGGER_ENEMY_WALK_SPEED;
 		patrolCounter += DAGGER_ENEMY_WALK_SPEED;
 		//右に200進んだら左向きにする
-		if (patrolCounter >= 40.f)
+		if (patrolCounter >= 20.f)
 		{
 			direction.x = DIRECTION_LEFT;
 		}
@@ -330,18 +332,27 @@ void DaggerEnemy::PatrolAnim()
 //攻撃準備時のアニメーション(短剣装備中)
 void DaggerEnemy::DaggerAttackStandByAnim()
 {
-	//画像番号設定
-	if (daggerEnemyAnimNumber < 7)
+
+	//attackStartに初めて入った場合の画像番号設定
+	if (daggerEnemyAnimNumber <= 6)
 	{
 		daggerEnemyAnimNumber = 6;
 	}
-	else if (daggerEnemyAnimNumber >= 11)
+	
+
+	//アニメーション番号を加算する場合の処理
+	if (daggerEnemyAnimNumber <= 8)
 	{
-		//仮の処理
+		daggerEnemyAnimNumber = 8;
+	}
+	if (daggerEnemyAnimNumber >= 12)
+	{
 		drawnSword = true;
+		daggerEnemyAnimNumber = 8;
 	}
 
 	//画像番号の更新
+	//画像番号の加算
 	if (enemyAnimInterval % 8 == 0)
 	{
 		daggerEnemyAnimNumber++;
@@ -355,13 +366,13 @@ void DaggerEnemy::WeaponNoneAttackStandByAnim()
 //攻撃開始アニメーション(短剣装備あり)
 void DaggerEnemy::DaggerAttackStartAnim()
 {
-	if (daggerEnemyAnimNumber < 11)
+	if (daggerEnemyAnimNumber < 13)
 	{
-		daggerEnemyAnimNumber = 11;
+		daggerEnemyAnimNumber = 13;
 	}
 	else if (daggerEnemyAnimNumber >= 17)
 	{
-		daggerEnemyAnimNumber = 11;
+		daggerEnemyAnimNumber = 13;
 		signToAttack = true;
 	}
 
@@ -378,6 +389,27 @@ void DaggerEnemy::WeaponNoneAttackStartAnim()
 //攻撃終了アニメーション(短剣装備あり)
 void DaggerEnemy::DaggerAttackEndAnim()
 {
+	if (daggerEnemyAnimNumber < 34)
+	{
+		daggerEnemyAnimNumber = 34;
+	}
+	else if (daggerEnemyAnimNumber >= 39)
+	{
+		daggerEnemyAnimNumber = 34;
+		attackEndCount++;
+	}
+
+	//drawnSwordをfalse(この処理が通るとPatrolになる)
+	if (attackEndCount >= 2)
+	{
+		drawnSword = false;
+		attackEndCount = 0;
+	}
+
+	if (enemyAnimInterval % 7 == 0)
+	{
+		daggerEnemyAnimNumber++;
+	}
 }
 //攻撃終了時アニメーション(短剣装備無し)
 void DaggerEnemy::WeaponNoneAttackEndAnim()
