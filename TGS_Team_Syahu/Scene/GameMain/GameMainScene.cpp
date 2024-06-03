@@ -49,7 +49,11 @@ void GameMainScene::Finalize()
 {
 	for (ObjectBase* ob : object)
 	{
-		delete ob;
+		if (ob != nullptr)
+		{
+			ob->Finalize();
+			delete ob;
+		}
 	}
 }
 
@@ -63,17 +67,24 @@ SceneBase* GameMainScene::Update()
 	{
 		if (object[i] !=  nullptr)
 		{
+			const Player* player = static_cast<const Player*>(object[0]);
+
 			//カメラなら
 			if (object[i]->GetObjectType() == ObjectType::Camera && object[i - 1] != nullptr)
 			{
 				Camera* camera = static_cast<Camera*>(object[i]);
-				//カメラの前にプレイヤーが格納されている
-				Player* player = static_cast<Player*>(object[i - 1]);
 				ui->Update(player);
 				camera->SetTarget(object[i - 1]->GetLocation(), debugModeFlg);
 			}
 
-			object[i]->Update();
+			if (object[i]->GetObjectType() == ObjectType::Enemy && player->GetEquipmentAnimFlg())
+			{
+
+			}
+			else
+			{
+				object[i]->Update();
+			}
 
 			if (object[i]->GetObjectType() == ObjectType::Player || object[i]->GetObjectType() == ObjectType::Enemy)
 			{
@@ -82,7 +93,6 @@ SceneBase* GameMainScene::Update()
 				if (object[i]->GetObjectType() == ObjectType::Enemy)
 				{
 					EnemyBase* enemy = static_cast<EnemyBase*>(object[i]);
-					Player* player = static_cast<Player*>(object[0]);
 					enemy->FindPlayer(player);
 				}
 				//プレイヤーか敵の死亡フラグがたったら
@@ -158,29 +168,7 @@ void GameMainScene::HitCheck()
 				//j番目がエネミーなら武器の当たり判定
 				if (object[j]->GetObjectType() == ObjectType::Enemy)
 				{
-					EnemyBase* enemy = static_cast<EnemyBase*>(object[j]);
-					Player* player = static_cast<Player*>(object[0]);
-
-					if (enemy->GetEnemyType() == EnemyType::LargeSwordEnemy)
-					{
-						LargeSwordEnemy* largeSwordEnemy = static_cast<LargeSwordEnemy*>(object[j]);
-
-						if (largeSwordEnemy->GetLargeSwordCollisionBox()->CollisionCheck(player) &&
-							largeSwordEnemy->GetSignToAttack())
-						{
-							largeSwordEnemy->HitWeapon(player);
-							player->Hit(largeSwordEnemy, largeSwordEnemy->GetDamage() * 3);
-						}
-					}
-					if (enemy->GetEnemyType() == EnemyType::DaggerEnemy)
-					{
-						DaggerEnemy* daggerEnemy = static_cast<DaggerEnemy*>(object[j]);
-						if (daggerEnemy->GetDagger()->CollisionCheck(player) && daggerEnemy->GetSignToAttack())
-						{
-							daggerEnemy->HitWeapon(player);
-							player->Hit(daggerEnemy, daggerEnemy->GetDamage() * 3);
-						}
-					}
+					HitCheckEnemyWeapon(j);
 				}
 				
 				//ゲームメインにあるオブジェクトの当たり判定
@@ -243,6 +231,33 @@ void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
 			{
 				player->GetDagger(i)->Init();
 			}
+		}
+	}
+}
+
+void GameMainScene::HitCheckEnemyWeapon(const int j)
+{
+	EnemyBase* enemy = static_cast<EnemyBase*>(object[j]);
+	Player* player = static_cast<Player*>(object[0]);
+
+	if (enemy->GetEnemyType() == EnemyType::LargeSwordEnemy)
+	{
+		LargeSwordEnemy* largeSwordEnemy = static_cast<LargeSwordEnemy*>(object[j]);
+
+		if (largeSwordEnemy->GetLargeSwordCollisionBox()->CollisionCheck(player) &&
+			largeSwordEnemy->GetSignToAttack())
+		{
+			largeSwordEnemy->HitWeapon(player);
+			player->Hit(largeSwordEnemy, largeSwordEnemy->GetDamage() * 3);
+		}
+	}
+	if (enemy->GetEnemyType() == EnemyType::DaggerEnemy)
+	{
+		DaggerEnemy* daggerEnemy = static_cast<DaggerEnemy*>(object[j]);
+		if (daggerEnemy->GetDagger()->CollisionCheck(player) && daggerEnemy->GetSignToAttack())
+		{
+			daggerEnemy->HitWeapon(player);
+			player->Hit(daggerEnemy, daggerEnemy->GetDamage() * 3);
 		}
 	}
 }

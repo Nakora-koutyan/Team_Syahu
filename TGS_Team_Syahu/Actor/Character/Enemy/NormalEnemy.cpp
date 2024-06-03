@@ -32,7 +32,7 @@ void NormalEnemy::Initialize()
 	//表示座標{ x , y }
 	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
-	weaponType = Weapon::Dagger;	//突進(武器無し)
+	weaponType = Weapon::Rapier;	//突進(武器無し)
 	enemyType = EnemyType::None;
 
 	//体の向き
@@ -61,7 +61,7 @@ void NormalEnemy::Update()
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
-	DamageInterval(FPS * 0.5);
+	DamageInterval(FPS * 0.2);
 	KnockBack(this, FPS * 0.5f, knockBackMove);
 
 	

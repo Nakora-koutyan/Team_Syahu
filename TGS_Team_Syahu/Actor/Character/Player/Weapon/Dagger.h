@@ -1,7 +1,7 @@
 #pragma once
 #include"../../../../Collision/Line/LineCollision.h"
 
-#define DAGGER_ATTACK_TIME	FPS * 0.1		//短剣攻撃の時間
+#define DAGGER_ATTACK_TIME	FPS * 0.15		//短剣攻撃の時間
 #define DAGGER_ANGLE		5.5f			//短剣の振る角度/f
 #define DAGGER_LENGTH		75.f			//短剣の長さ
 #define DAGGER_SPEED		20.f			//短剣の速さ

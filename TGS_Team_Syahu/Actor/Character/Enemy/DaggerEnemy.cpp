@@ -48,9 +48,9 @@ void DaggerEnemy::Initialize()
 	direction.x = DIRECTION_LEFT;
 
 	//体力
-	hp = 110;
+	hp = 100;
 	//ダメージ
-	damage = 5.f;
+	damage = 8.f;
 
 	//プレイヤーを見つけた？
 	isFind = false;
@@ -83,7 +83,7 @@ void DaggerEnemy::Update()
 {
 	//現在の座標をスクリーン座標へ変換
 	screenLocation = Camera::ConvertScreenPosition(location);
-	DamageInterval(FPS * 0.5);
+	DamageInterval(FPS * 0.2);
 	KnockBack(this, FPS * 0.5, knockBackMove);
 
 	switch (enemyStatus)

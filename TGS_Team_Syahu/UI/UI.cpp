@@ -82,7 +82,9 @@ void UI::PlayerStock() const
 		else if (stockIcon[i] == Weapon::Dagger)
 		{
 			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/dagger"), TRUE);
-			DrawFormatString(20 + (i * 50) + 5, 58, 0xffffff, "%d", playerDaggerCnt[i] + 1);
+			SetFontSize(14);
+			DrawFormatString(20 + (i * 50) + 23, 66, 0xffffff, "%d", playerDaggerCnt[i] + 1);
+			SetFontSize(16);
 		}
 		else if (stockIcon[i] == Weapon::Rapier)
 		{

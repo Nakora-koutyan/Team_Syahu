@@ -17,20 +17,28 @@ class Player;
 class Rapier :public LineCollision
 {
 private:
-	short direction;		//方向
+	Vector2D effectLocation;			//エフェクト座標
+	Vector2D airAttackEffectLocation;	//空中攻撃のエフェクトの座標
 
-	int framCount;			//フレームカウント
-	int chargeTime;			//溜める時間
+	short direction;					//方向
 
-	float angle;			//角度
-	float imageAngle;		//画像の角度
-	float dis;				//距離
-	float length;			//長さ
+	int framCount;						//フレームカウント
+	int chargeTime;						//溜める時間
+	int effectAnim;						//エフェクトのアニメーション番号
+	int effectAnimcount;				//エフェクトのアニメーションカウント
+	int airAttackEffectAnim;			//落下攻撃エフェクトのアニメーション番号
+	int airAttackEffectAnimcount;		//落下攻撃エフェクトのアニメーションカウント
 
-	bool isHit;				//当たったか？
-	bool isUnable;			//当たり判定ができない？
-	bool stepFlg;			//飛ばす？
-	bool isAirAttack;		//空中攻撃？
+	float angle;						//角度
+	float imageAngle;					//画像の角度
+	float dis;							//距離
+	float length;						//長さ
+
+	bool isHit;							//当たったか？
+	bool isUnable;						//当たり判定ができない？
+	bool stepFlg;						//飛ばす？
+	bool isAirAttack;					//空中攻撃？
+	bool airAttackAnimFlg;				//空中攻撃のアニメーションフラグ
 
 public:
 	//コンストラクタ

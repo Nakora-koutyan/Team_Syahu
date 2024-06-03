@@ -10,8 +10,14 @@ LargeSword::LargeSword()
 	directionVector.x = LARGRSWORD_LENGTH;
 	directionVector.y = 0.f;
 
+	airAttackEffectLocation.x = 0.f;
+	airAttackEffectLocation.y = 0.f;
 
 	direction = 0;
+	effectAnim = 3;
+	effectAnimcount = 0;
+	airAttackEffectAnim = 0;
+	airAttackEffectAnimcount = 0;
 
 	framCount = 0;
 
@@ -21,6 +27,7 @@ LargeSword::LargeSword()
 	isShow = false;
 	isHit = false;
 	isAirAttack = false;
+	airAttackAnimFlg = false;
 }
 
 LargeSword::~LargeSword()
@@ -34,10 +41,15 @@ void LargeSword::Update(CharaBase* chara)
 	if (isShow && !isAirAttack)
 	{
 		framCount++;
+		effectAnimcount++;
 		directionVector.x = directionVector.x * cos(DEGREE_TO_RADIAN(angle)) - directionVector.y * sin(DEGREE_TO_RADIAN(angle));
 		directionVector.y = directionVector.x * sin(DEGREE_TO_RADIAN(angle)) + directionVector.y * cos(DEGREE_TO_RADIAN(angle));
 		imageAngle += DEGREE_TO_RADIAN(angle);
 
+		if (effectAnimcount % 3 == 0)
+		{
+			effectAnim++;
+		}
 		//右に出す
 		if (direction > 0)
 		{
@@ -53,7 +65,7 @@ void LargeSword::Update(CharaBase* chara)
 	//空中攻撃なら
 	else if (isAirAttack)
 	{
-		chara->SetMove({ chara->GetMove().x , LARGESWORD_FALL_SPEED });
+		chara->SetMove({ chara->GetMove().x , chara->GetMove().y / 2 + LARGESWORD_FALL_SPEED });
 		chara->SetInvincibleFlg(true);
 		//右に出す
 		if (direction > 0)
@@ -73,12 +85,38 @@ void LargeSword::Update(CharaBase* chara)
 		location = chara->GetCenterLocation();
 	}
 
+	//落下攻撃のエフェクト
+	if (airAttackAnimFlg)
+	{
+		airAttackEffectAnimcount++;
+		if (airAttackEffectAnimcount % 5 == 0)
+		{
+			if (airAttackEffectAnim < 7)
+			{
+				if (airAttackEffectLocation.x == 0.f)
+				{
+					airAttackEffectLocation.x = location.x + directionVector.x;
+					airAttackEffectLocation.y = chara->GetMaxLocation().y;
+				}
+				airAttackEffectAnim++;
+			}
+			else
+			{
+				airAttackAnimFlg = false;
+				airAttackEffectLocation = { 0.f,0.f };
+				airAttackEffectAnim = 0;
+			}
+		}
+	}
+
 
 	//攻撃時間を超えたら
 	if ((framCount > LARGESWORD_ATTACK_TIME || chara->GetIsKnockBack()) && !isAirAttack)
 	{
 		framCount = 0;
 		direction = 0;
+		effectAnimcount = 0;
+		effectAnim = 3;
 		angle = 0.f;
 		imageAngle = 0.f;
 		isShow = false;
@@ -94,6 +132,7 @@ void LargeSword::Update(CharaBase* chara)
 		isShow = false;
 		isHit = false;
 		isAirAttack = false;
+		airAttackAnimFlg = true;
 		chara->SetIsAttack(false);
 		chara->SetInvincibleFlg(false);
 	}
@@ -110,18 +149,47 @@ void LargeSword::Draw() const
 	{
 		if (direction > 0)
 		{
+			if (!isAirAttack)
+				DrawRotaGraphF(screenLocation.x + 30.f, screenLocation.y, 1, DEGREE_TO_RADIAN(-12.f),
+					ResourceManager::GetDivImage("Effect/slashEffect", effectAnim),
+					TRUE);
+
 			DrawRotaGraph2F(screenLocation.x, screenLocation.y, 0, 100,
-				1, imageAngle, ResourceManager::GetImage("Weapon/largeSword"), TRUE);
+				1, imageAngle, ResourceManager::GetImage("Weapon/largeSword"),
+				TRUE);
 		}
 		else
 		{
+			if (!isAirAttack)
+				DrawRotaGraphF(screenLocation.x - 30.f, screenLocation.y, 1, DEGREE_TO_RADIAN(12.f),
+					ResourceManager::GetDivImage("Effect/slashEffect", effectAnim),
+					TRUE, TRUE);
+
 			DrawRotaGraph2F(screenLocation.x, screenLocation.y, 100, 100,
-				1, imageAngle, ResourceManager::GetImage("Weapon/largeSword"), TRUE, TRUE);
+				1, imageAngle, ResourceManager::GetImage("Weapon/largeSword"),
+				TRUE, TRUE);
 		}
+	}
+
+	if (direction > 0)
+	{
+		if (airAttackAnimFlg)
+			DrawRotaGraphF(Camera::ConvertScreenPosition(airAttackEffectLocation).x,
+				Camera::ConvertScreenPosition(airAttackEffectLocation).y - 100.f, 1, 0,
+				ResourceManager::GetDivImage("Effect/fallAttackEffect",
+					airAttackEffectAnim), TRUE);
+	}
+	else
+	{
+		if (airAttackAnimFlg)
+			DrawRotaGraphF(Camera::ConvertScreenPosition(airAttackEffectLocation).x,
+				Camera::ConvertScreenPosition(airAttackEffectLocation).y - 100.f, 1, 0,
+				ResourceManager::GetDivImage("Effect/fallAttackEffect",
+					airAttackEffectAnim), TRUE);
 	}
 }
 
-void LargeSword::Attack(const CharaBase* chara)
+void LargeSword::Attack(CharaBase* chara)
 {
 	isShow = true;
 
@@ -148,6 +216,7 @@ void LargeSword::Attack(const CharaBase* chara)
 			imageAngle = DEGREE_TO_RADIAN(-45.f);
 		}
 		directionVector.y = 0.f;
+		chara->SetMove({ chara->GetMove().x,0 });
 	}
 	else
 	{

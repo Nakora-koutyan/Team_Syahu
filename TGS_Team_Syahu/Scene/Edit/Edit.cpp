@@ -6,6 +6,9 @@ Edit::Edit()
 {
 	GameMain = new GameMainScene;
 	keyInput = new KeyInput;
+
+	move.x = 0.f;
+	move.y = 0.f;
 	
 	keyInput->SetIsShowMouse(TRUE);
 	mouseX = 0; mouseY = 0;
@@ -32,7 +35,45 @@ SceneBase* Edit::Update() {
 		resultDisplay--;
 	}
 
+	if (KeyInput::GetKeyDown(KEY_INPUT_W))
+	{
+		move.y -= 10.f;
+	}
+	else if (KeyInput::GetKeyDown(KEY_INPUT_S))
+	{
+		move.y += 10.f;
+	}
+
+	if (KeyInput::GetKeyDown(KEY_INPUT_A))
+	{
+		move.x -= 10.f;
+	}
+	else if (KeyInput::GetKeyDown(KEY_INPUT_D))
+	{
+		move.x += 10.f;
+	}
+
+	if (move.x < 0)
+	{
+		move.x = 0.f;
+	}
+	else if (move.x > WORLD_WIDTH - 1280)
+	{
+		move.x = WORLD_WIDTH - 1280;
+	}
+
+	if (move.y < 0)
+	{
+		move.y = 0.f;
+	}
+	else if (move.y > WORLD_HEIGHT - 720)
+	{
+		move.y = WORLD_HEIGHT - 720;
+	}
+
 	GetMousePoint(&mouseX, &mouseY);
+	mouseX += (int)move.x;
+	mouseY += (int)move.y;
 	blockX = mouseX / BLOCK_WIDTH;
 	blockY = mouseY / BLOCK_HEIGHT;
 
@@ -53,22 +94,22 @@ SceneBase* Edit::Update() {
 void Edit::Draw()const {
 	for (int i = 0; i < WORLD_HEIGHT / BLOCK_HEIGHT; i++)
 	{
-		DrawLine(BLOCK_WIDTH * i, 0, BLOCK_WIDTH * i, WORLD_HEIGHT, 0xffffff, 0);
+		DrawLineAA(BLOCK_WIDTH * i - move.x, 0 - move.y, BLOCK_WIDTH * i - move.x, WORLD_HEIGHT - move.y, 0xffffff, 0);
 	}
 	for (int i = 0; i < WORLD_WIDTH / BLOCK_WIDTH; i++)
 	{
-		DrawLine(0, BLOCK_HEIGHT * i, WORLD_WIDTH, BLOCK_HEIGHT * i, 0xffffff, 0);
+		DrawLineAA(0 - move.x, BLOCK_HEIGHT * i - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * i - move.y, 0xffffff, 0);
 	}
 
 	for (int i = 0; i < WORLD_HEIGHT / BLOCK_HEIGHT; i++)
 	{
 		for (int j = 0; j < WORLD_WIDTH / BLOCK_WIDTH; j++)
 		{
-			DrawFormatString(50 * i + 2, 50 * j + 2, 0x606000, "%d", stageData[j][i]);
+			DrawFormatStringF(50 * i + 2 - move.x, 50 * j + 2 - move.y, 0x606000, "%d", stageData[j][i]);
 		}
 	}
 
-	DrawBox(BLOCK_WIDTH * blockX, BLOCK_HEIGHT * blockY, BLOCK_WIDTH * (blockX + 1), BLOCK_HEIGHT * (blockY + 1), 0xFFFF00, 0);
+	DrawBoxAA(BLOCK_WIDTH * blockX - move.x, BLOCK_HEIGHT * blockY - move.y, BLOCK_WIDTH * (blockX + 1) - move.x, BLOCK_HEIGHT * (blockY + 1) - move.y, 0xFFFF00, 0);
 
 
 
