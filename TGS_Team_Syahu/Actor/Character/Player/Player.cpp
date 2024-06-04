@@ -56,6 +56,8 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	}
 	jumpEffectAnimCount = 0;
 	jumpEffectAnim = 0;
+	equipmentEffectAnimCount = 0;
+	equipmentEffectAnim = 0;
 
 	attackCoolTime = 0.f;
 	stealCoolTime = 0.f;
@@ -66,6 +68,7 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	blinkingFlg = false;
 	jumpEffectInversionFlg = false;
 	equipmentAnimFlg = false;
+	equipmentEffectFlg = false;
 }
 
 Player::~Player()
@@ -234,6 +237,13 @@ void Player::Draw() const
 	//画像反転フラグ
 	if (imageInversionFlg)
 	{
+		if (equipmentEffectFlg)
+		{
+			DrawRotaGraphF
+			(GetCenterScreenLocation().x, GetCenterScreenLocation().y, 1, 0,
+				ResourceManager::GetDivImage("Effect/transformEffect", 
+					equipmentEffectAnim), TRUE, TRUE);
+		}
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
 		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
@@ -243,6 +253,13 @@ void Player::Draw() const
 	}
 	else
 	{
+		if (equipmentEffectFlg)
+		{
+			DrawRotaGraphF
+			(GetCenterScreenLocation().x, GetCenterScreenLocation().y, 1, 0,
+				ResourceManager::GetDivImage("Effect/transformEffect",
+					equipmentEffectAnim), TRUE);
+		}
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
 		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X,
@@ -733,6 +750,10 @@ void Player::Animation()
 			if (playerAnim < 22)
 			{
 				playerAnim++;
+				if (playerAnim == 19)
+				{
+					equipmentEffectFlg = true;
+				}
 			}
 		}
 		//装備のアニメーションが終わったら
@@ -740,6 +761,24 @@ void Player::Animation()
 		{
 			equipmentAnimFlg = false;
 			invincibleFlg = false;
+		}
+	}
+
+	if (equipmentEffectFlg)
+	{
+		equipmentEffectAnimCount++;
+		if (equipmentEffectAnimCount % 5 == 0)
+		{
+			if (equipmentEffectAnim < 9)
+			{
+				equipmentEffectAnim++;
+			}
+			else
+			{
+				equipmentEffectFlg = false;
+				equipmentEffectAnim = 0;
+				equipmentEffectAnimCount = 0;
+			}
 		}
 	}
 

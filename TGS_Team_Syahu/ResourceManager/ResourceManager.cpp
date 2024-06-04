@@ -50,6 +50,7 @@ void ResourceManager::Initialize()
 	SetImage("Effect/Steal/steal_8");
 	SetImage("Effect/Steal/steal_9");
 	SetImage("Effect/Steal/steal_10");
+	SetDivImage("Effect/transformEffect", 9, 9, 1, 240, 240);
 
 	//BGM
 	

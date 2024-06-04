@@ -58,6 +58,8 @@ private:
 	int daggerCount[PLAYER_MAX_DAGGER];			//短剣の本数
 	int jumpEffectAnimCount;					//ジャンプのエフェクトのアニメーションカウント
 	int jumpEffectAnim;							//ジャンプのエフェクトのアニメーション番号
+	int equipmentEffectAnimCount;				//装備のエフェクトアニメーションカウント
+	int equipmentEffectAnim;					//装備のエフェクトアニメーション番号
 
 	float attackCoolTime;						//攻撃のクールタイム
 	float stealCoolTime;						//奪うのクールタイム
@@ -68,6 +70,7 @@ private:
 	bool blinkingFlg;							//点滅フラグ
 	bool jumpEffectInversionFlg;				//ジャンプのエフェクト反転フラグ
 	bool equipmentAnimFlg;						//装備アニメーションフラグ
+	bool equipmentEffectFlg;					//装備エフェクトフラグ
 
 public:
 	//コンストラクタ
