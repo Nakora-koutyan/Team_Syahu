@@ -121,16 +121,15 @@ void Player::Update()
 #endif // DEBUG
 
 	if (isEquipment && isAttack && stock[stockCount] != Weapon::None &&
-		(largeSword->GetIsHit() || rapier->GetIsHit()))
+		(rapier->GetIsHit()))
 	{
 		if (actionState == Action::Equipment)
 		{
 			actionState = Action::None;
 		}
 		//当たっている間耐久値が減るのを防ぐため
-		largeSword->SetIsHit(false);
 		rapier->SetIsHit(false);
-		weaponDurability[stockCount] -= GetWeaponDurability(stock[stockCount], true);
+		weaponDurability[stockCount] -= GetDurability(stock[stockCount], true);
 		if (daggerCount[stockCount] > 0)
 		{
 			daggerCount[stockCount]--;
@@ -558,7 +557,7 @@ void Player::Attack()
 				largeSword->Attack(this);
 				if (largeSword->GetIsAirAttack())
 				{
-					weaponDurability[stockCount] -= GetWeaponDurability(stock[stockCount], true);
+					weaponDurability[stockCount] -= GetDurability(stock[stockCount], true);
 				}
 			}
 			//短剣
@@ -612,7 +611,7 @@ void Player::Attack()
 				stock[j] = steal->GetKeepType();
 				steal->SetKeepType(Weapon::None);
 				weaponType = stock[stockCount];
-				weaponDurability[stockCount] = GetWeaponDurability(stock[stockCount]);
+				weaponDurability[stockCount] = GetDurability(stock[stockCount]);
 				if (!isEquipment)
 				{
 					stockCount = j;
@@ -921,7 +920,7 @@ void Player::BackStep(const float angle, const float speed, const float gravityV
 	}
 }
 
-int Player::GetWeaponDurability(const Weapon type, const bool useFlg)
+int Player::GetDurability(const Weapon type, const bool useFlg)
 {
 	Weapon checkType = type;
 	bool flg = useFlg;

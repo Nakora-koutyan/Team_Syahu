@@ -51,7 +51,7 @@ private:
 
 	short stockCount;							//現在のストックの番号
 
-	int weaponDurability[PLAYER_MAX_STOCK];		//武器の耐久力
+	int weaponDurability[PLAYER_MAX_STOCK];		//武器の耐久値
 	int playerAnimFramCount;					//プレイヤーのアニメーションフレームカウント
 	int playerAnim;								//プレイヤーのアニメーション番号
 	int playerImage[50] = {};					//プレイヤー画像
@@ -117,6 +117,9 @@ public:
 	//ストックの番号を取得
 	short GetStockCount()const { return stockCount; }
 
+	//武器の耐久値を取得
+	int GetWeaponDurability(const int element)const { return weaponDurability[element]; }
+
 	//短剣の本数を取得
 	int GetDaggerCount(const int element)const { return daggerCount[element]; }
 
@@ -144,6 +147,6 @@ private:
 
 private:
 	//武器の耐久力を取得
-	int GetWeaponDurability(const Weapon type, const bool useFlg = false);
+	int GetDurability(const Weapon type, const bool useFlg = false);
 
 };

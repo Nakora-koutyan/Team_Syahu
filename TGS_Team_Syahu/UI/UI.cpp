@@ -9,10 +9,13 @@ UI::UI()
 	{
 		stockIcon[i] = Weapon::None;
 		playerDaggerCnt[i] = PLAYER_WEAPON_DURABILITY;
+		playerWeaponDurability[i] = PLAYER_WEAPON_DURABILITY;
 	}
 
 	playerHpBarLocation.x = 27.f;
 	playerHpBarLocation.y = 11.5f;
+	playerLocation.x = 0.f;
+	playerLocation.y = 0.f;
 
 	selectCount = 0;
 	
@@ -29,8 +32,12 @@ UI::~UI()
 void UI::Update(const Player* player)
 {
 	this->playerHp = player->GetHp() * 3.f;
+	playerLocation.x = player->GetCenterScreenLocation().x;
+	playerLocation.y = player->GetMinScreenLocation().y;
 
 	selectCount = player->GetStockCount();
+
+	playerWeaponDurability[selectCount] = player->GetWeaponDurability(player->GetStockCount()) / 2;
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -78,10 +85,28 @@ void UI::PlayerStock() const
 		else if (stockIcon[i] == Weapon::LargeSword)
 		{
 			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/largeSword"), TRUE);
+			if (decisionFlg)
+			{
+				DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/largeSword"), TRUE);
+				DrawExtendGraphF
+				(playerLocation.x - 25.f, playerLocation.y - 18.f,
+					(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
+					ResourceManager::GetImage("UI/barBackground"), FALSE);
+				DrawExtendGraphF
+				(playerLocation.x - 25.f, playerLocation.y - 18.f,
+					(playerLocation.x + playerWeaponDurability[selectCount]) - 25.f, (playerLocation.y + 11.f) - 18.f,
+					ResourceManager::GetImage("UI/durabilityBar"), TRUE);
+
+			}
 		}
 		else if (stockIcon[i] == Weapon::Dagger)
 		{
 			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/dagger"), TRUE);
+			if (decisionFlg) 
+			{
+				DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/dagger"), TRUE);
+				DrawFormatStringF(playerLocation.x - 5.f, playerLocation.y - 20.f, 0xffffff, "%d", playerDaggerCnt[i] + 1);
+			}
 			SetFontSize(14);
 			DrawFormatString(20 + (i * 50) + 23, 66, 0xffffff, "%d", playerDaggerCnt[i] + 1);
 			SetFontSize(16);
@@ -89,6 +114,18 @@ void UI::PlayerStock() const
 		else if (stockIcon[i] == Weapon::Rapier)
 		{
 			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/rapier"), TRUE);
+			if (decisionFlg)
+			{
+				DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/rapier"), TRUE);
+				DrawExtendGraphF
+				(playerLocation.x - 25.f, playerLocation.y - 18.f,
+					(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
+					ResourceManager::GetImage("UI/barBackground"), FALSE);
+				DrawExtendGraphF
+				(playerLocation.x - 25.f, playerLocation.y - 18.f,
+					(playerLocation.x + playerWeaponDurability[selectCount]) - 25.f, (playerLocation.y + 11.f) - 18.f,
+					ResourceManager::GetImage("UI/durabilityBar"), TRUE);
+			}
 		}
 	}
 
