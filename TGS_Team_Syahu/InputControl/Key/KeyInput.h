@@ -8,6 +8,7 @@
 struct MOUSE_INPUT
 {
 	int button;
+	int wheel;
 	int x;
 	int y;
 };
@@ -20,6 +21,7 @@ private:
 	static MOUSE_INPUT nowMouse;
 	static MOUSE_INPUT oldMouse;
 	static MOUSE_INPUT mouseVec;
+	static MOUSE_INPUT mouseWheel;
 	static float mouseSensitivity;
 	static bool isShowMouse;
 public:
@@ -47,6 +49,9 @@ public:
 
 	//マウスの移動量yを取得
 	static int GetMouseVecY();
+
+	//ホイールの回転量の取得
+	static int GetMouseWheel();
 	
 	//押したボタンを取得
 	static bool GetButton(int key);

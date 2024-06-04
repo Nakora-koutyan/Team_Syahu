@@ -260,4 +260,63 @@ void GameMainScene::HitCheckEnemyWeapon(const int j)
 			player->Hit(daggerEnemy, daggerEnemy->GetDamage() * 3);
 		}
 	}
+	if (enemy->GetEnemyType() == EnemyType::RapierEnemy)
+	{
+		NormalEnemy* normalEnemy = static_cast<NormalEnemy* > (object[j]);
+		if (normalEnemy->GetRapier()->CollisionCheck(player) && normalEnemy->GetSignToAttack())
+		{
+			normalEnemy->HitWeapon(player);
+			player->Hit(normalEnemy, normalEnemy->GetDamage() * 3);
+		}
+	}
+}
+
+void GameMainScene::createStage() {
+	std::string fname;
+	std::string fpassCoupling = "Resource/StageData/";
+	std::string fpass;
+
+	switch (0)
+	{
+	case 0:
+		fname = "FirstStage.txt";
+		break;
+	case 1:
+		fname = "SecondStage.txt";
+		break;
+	case 2:
+		fname = "ThirdStage.txt";
+		break;
+	default:
+		break;
+	}
+
+	// 文字列の連結
+	fpass = fpassCoupling + fname;
+	int stageWidth;
+	int stageHeight;
+	int stageData;
+	std::ifstream file(fpass.c_str());
+	if (file)
+	{
+		file >> stageWidth;
+		file >> stageHeight;
+		for (int i = 0; i < stageHeight; i++)
+		{
+			for (int j = 0; j < stageWidth; j++)
+			{
+				file >> stageData;
+				switch (stageData)
+				{
+				case 0:
+				case 1:
+				case 2:
+					case 3:
+
+				default:
+					break;
+				}
+			}
+		}
+	}
 }
