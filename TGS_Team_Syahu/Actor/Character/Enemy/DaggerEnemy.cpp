@@ -8,6 +8,7 @@ daggerEnemyAnim{NULL},enemyAnimInterval(0),correctLocX(0.f),correctLocY(0.f),ani
 animCountDown(false),attackEndCount(0)
 {
 }
+
 //デストラクタ
 DaggerEnemy::~DaggerEnemy()
 {
@@ -76,6 +77,12 @@ void DaggerEnemy::Initialize()
 	daggerEnemyAnimNumber = 0;
 	enemyAnimInterval = 0;
 	signToAttack=false;
+	attackWaitingTime = MAX_ATTACK_TIME;
+}
+
+void DaggerEnemy::Finalize()
+{
+	delete dagger;
 }
 
 //更新処理
@@ -240,12 +247,22 @@ void DaggerEnemy::HitWeapon(ObjectBase* object)
 //攻撃準備
 void DaggerEnemy::AttackStandBy()
 {
-	//抜刀するまでの間、停止する
+	//攻撃準備が完了するまでの間、停止する
 	move.x = 0.f;
-	if (drawnSword == true)
+	if (weaponType == Weapon::Dagger)
 	{
-		//攻撃開始に遷移
-		enemyStatus = EnemyStatus::AttackStart;
+		if (drawnSword == true)
+		{
+			//攻撃開始に遷移
+			enemyStatus = EnemyStatus::AttackStart;
+		}
+	}
+	else if (weaponType == Weapon::None)
+	{
+		if (attackWaitingTime)
+		{
+
+		}
 	}
 }
 
@@ -285,7 +302,7 @@ void DaggerEnemy::EnemyAnimationManager()
 	{
 		if (weaponType == Weapon::Dagger)
 		{
-			DaggerAttackStandByAnim();
+			DaggerEnemyAttackStandByAnim();
 		}
 		else if (weaponType == Weapon::None)
 		{
@@ -330,16 +347,14 @@ void DaggerEnemy::PatrolAnim()
 }
 
 //攻撃準備時のアニメーション(短剣装備中)
-void DaggerEnemy::DaggerAttackStandByAnim()
+void DaggerEnemy::DaggerEnemyAttackStandByAnim()
 {
-
 	//attackStartに初めて入った場合の画像番号設定
 	if (daggerEnemyAnimNumber <= 6)
 	{
 		daggerEnemyAnimNumber = 6;
 	}
 	
-
 	//アニメーション番号を加算する場合の処理
 	if (daggerEnemyAnimNumber <= 8)
 	{
@@ -358,9 +373,11 @@ void DaggerEnemy::DaggerAttackStandByAnim()
 		daggerEnemyAnimNumber++;
 	}
 }
+
 //攻撃準備時のアニメーション(短剣装備無し)
 void DaggerEnemy::WeaponNoneAttackStandByAnim()
 {
+	
 }
 
 //攻撃開始アニメーション(短剣装備あり)
@@ -381,9 +398,11 @@ void DaggerEnemy::DaggerAttackStartAnim()
 		daggerEnemyAnimNumber++;
 	}
 }
+
 //攻撃開始アニメーション(短剣装備無し)
 void DaggerEnemy::WeaponNoneAttackStartAnim()
 {
+
 }
 
 //攻撃終了アニメーション(短剣装備あり)
@@ -414,4 +433,5 @@ void DaggerEnemy::DaggerAttackEndAnim()
 //攻撃終了時アニメーション(短剣装備無し)
 void DaggerEnemy::WeaponNoneAttackEndAnim()
 {
+
 }

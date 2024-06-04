@@ -3,6 +3,8 @@
 #include "../Player/Player.h"
 
 #define MAX_COOL_TIME 50
+#define MAX_WAITING_TIME 60
+#define MAX_ATTACK_TIME 60
 
 #define DIRECTION_LEFT -1				//左向き
 #define DIRECTION_RIGHT 1				//右向き

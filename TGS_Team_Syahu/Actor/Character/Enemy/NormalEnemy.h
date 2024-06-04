@@ -17,6 +17,8 @@ private:
 
 	int attackTime;		//攻撃時間
 
+	int CountChangeCounter;
+
 	bool once;
 
 	Rapier* rapier;		//レイピアを呼び出す
@@ -47,9 +49,6 @@ private:
 	//攻撃範囲関数
 	void AttackRange()override;
 
-	//エネミーのアニメーション制御関数
-	void EnemyAnimationManager() override;
-
 	//パトロール関数
 	void EnemyPatrol() override;
 
@@ -60,4 +59,16 @@ private:
 	void AttackStart() override;
 
 	void AttackEnd() override;
+
+	//エネミーのアニメーション制御関数
+	void EnemyAnimationManager() override;
+
+	void PatrolAnim();
+	
+	void AttackStandByAnim();
+
+	void NormalEnemyAttackStartAnim();
+	void WeaponNoneAttackStartAnim();
+
+	void AttackEndAnim();
 };

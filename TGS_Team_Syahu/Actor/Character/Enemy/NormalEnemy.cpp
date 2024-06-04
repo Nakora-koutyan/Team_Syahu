@@ -2,13 +2,11 @@
 #include "../Player/Player.h"
 #include "../../Camera/Camera.h"
 
-#define MAX_WAITING_TIME 40
 #define NORMAL_ENEMY_KNOCKBACK 3.f
-#define MAX_ATTACK_TIME 60
 
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
-animTurnFlg(false),attackTime(0),once(false)
+animTurnFlg(false),attackTime(0), CountChangeCounter(0),once(false)
 {
 }
 
@@ -250,6 +248,12 @@ void NormalEnemy::AttackStart()
 		if (signToAttack)
 		{
 			rapier->Attack(this);
+		}
+		if (CountChangeCounter >= 2)
+		{
+			signToAttack = false;
+			CountChangeCounter = 0;
+			//エネミーの状態を攻撃終了に遷移する
 			enemyStatus = EnemyStatus::AttackEnd;
 		}
 	}
@@ -313,92 +317,25 @@ void NormalEnemy::EnemyAnimationManager()
 	//パトロール状態の場合
 	if (enemyStatus == EnemyStatus::Patrol)
 	{
-		//敵画像の番号が2以上でカウントダウンがfalseの場合
-		if (enemyNumber >= 2 && animCountDown == false)
-		{
-			//カウントダウンに切り替える
-			animCountDown = true;
-		}
-		//16フレームごとにアニメーションを切り替える
-		if (animInterval % 12 == 0)
-		{
-			//画像番号を減少する
-			if (animCountDown == true)
-			{
-				enemyNumber--;
-			}
-			//画像番号を増加する
-			if (animCountDown == false)
-			{
-				enemyNumber++;
-			}
-		}
-		//エネミーの画像番号が０以下になった場合
-		if (enemyNumber <= 0 && animCountDown == true)
-		{
-			//カウントダウンをfalseに切り替える
-			animCountDown = false;
-		}
+		PatrolAnim();
 	}
 
 	//攻撃準備状態の場合
 	if (enemyStatus == EnemyStatus::AttackStandBy)
 	{
-		enemyNumber = 2;
-		animCountDown = false;
+		AttackStandByAnim();
 	}
 
 	//攻撃中の場合
 	if (enemyStatus == EnemyStatus::AttackStart)
 	{
-		signToAttack = true;
-		//画像の番号が３以下の場合
-		if (enemyNumber <= 3)
-		{
-			enemyNumber = 3;
-		}
-		//画像番号が5以上でカウントダウンが解除されている場合
-		if (enemyNumber >= 5 && animCountDown == false)
-		{
-			//カウントダウン状態に切り替える
-			animCountDown = true;
-		}
-		//16フレーム毎に画像を切り替える
-		if (animInterval % 8 == 0)
-		{
-			//画像番号を減少する
-			if (animCountDown == true)
-			{
-				enemyNumber--;
-			}
-			//画像番号を増加する
-			if (animCountDown == false)
-			{
-				enemyNumber++;
-			}
-		}
-		//エネミーの画像番号が４以下になった場合
-		if (enemyNumber <= 4 && animCountDown == true)
-		{
-			//カウントダウンをfalseに切り替える
-			animCountDown = false;
-		}
+		NormalEnemyAttackStartAnim();
 	}
 
 	//攻撃終了状態の場合
 	if (enemyStatus == EnemyStatus::AttackEnd)
 	{
-		//8フレーム毎に切り替える
-		if (animInterval % 8 == 0)
-		{
-			//画像番号を減少させる
-			enemyNumber--;
-		}
-		//エネミーの画像番号が０以下になった場合
-		if (enemyNumber <= 0)
-		{
-			enemyNumber = 0;
-		}
+		AttackEndAnim();
 	}
 
 	//ノックバックが発生した場合
@@ -420,4 +357,117 @@ void NormalEnemy::EnemyAnimationManager()
 	{
 		enemyAlpha = 255;
 	}
+}
+
+void NormalEnemy::PatrolAnim()
+{
+	//敵画像の番号が2以上でカウントダウンがfalseの場合
+	if (enemyNumber >= 2 && animCountDown == false)
+	{
+		//カウントダウンに切り替える
+		animCountDown = true;
+	}
+	//16フレームごとにアニメーションを切り替える
+	if (animInterval % 12 == 0)
+	{
+		//画像番号を減少する
+		if (animCountDown == true)
+		{
+			enemyNumber--;
+		}
+		//画像番号を増加する
+		if (animCountDown == false)
+		{
+			enemyNumber++;
+		}
+	}
+	//エネミーの画像番号が０以下になった場合
+	if (enemyNumber <= 0 && animCountDown == true)
+	{
+		//カウントダウンをfalseに切り替える
+		animCountDown = false;
+	}
+}
+
+void NormalEnemy::AttackStandByAnim()
+{
+	enemyNumber = 2;
+	animCountDown = false;
+}
+
+void NormalEnemy::NormalEnemyAttackStartAnim()
+{
+	signToAttack = true;
+	//画像の番号が３以下の場合
+	if (enemyNumber <= 3)
+	{
+		enemyNumber = 3;
+	}
+	//画像番号が5以上でカウントダウンが解除されている場合
+	if (enemyNumber >= 5 && animCountDown == false)
+	{
+		//カウントダウン状態に切り替える
+		animCountDown = true;
+	}
+	//16フレーム毎に画像を切り替える
+	if (animInterval % 8 == 0)
+	{
+		//画像番号を減少する
+		if (animCountDown == true)
+		{
+			enemyNumber--;
+		}
+		//画像番号を増加する
+		if (animCountDown == false)
+		{
+			enemyNumber++;
+		}
+	}
+	//エネミーの画像番号が４以下になった場合
+	if (enemyNumber <= 4 && animCountDown == true)
+	{
+		//カウントダウンをfalseに切り替える
+		animCountDown = false;
+		CountChangeCounter++;
+	}
+}
+
+void NormalEnemy::WeaponNoneAttackStartAnim()
+{
+	//画像の番号が３以下の場合
+	if (enemyNumber <= 3)
+	{
+		enemyNumber = 3;
+	}
+	//画像番号が5以上でカウントダウンが解除されている場合
+	if (enemyNumber >= 5 && animCountDown == false)
+	{
+		//カウントダウン状態に切り替える
+		animCountDown = true;
+	}
+	//16フレーム毎に画像を切り替える
+	if (animInterval % 8 == 0)
+	{
+		//画像番号を減少する
+		if (animCountDown == true)
+		{
+			enemyNumber--;
+		}
+		//画像番号を増加する
+		if (animCountDown == false)
+		{
+			enemyNumber++;
+		}
+	}
+	//エネミーの画像番号が４以下になった場合
+	if (enemyNumber <= 4 && animCountDown == true)
+	{
+		//カウントダウンをfalseに切り替える
+		animCountDown = false;
+	}
+}
+
+void NormalEnemy::AttackEndAnim()
+{
+	enemyNumber = 2;
 }

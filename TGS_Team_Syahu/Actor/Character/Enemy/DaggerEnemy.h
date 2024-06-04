@@ -35,6 +35,9 @@ public:
 	//初期化処理
 	void Initialize();
 
+	//終了時の消去処理
+	void Finalize()override;
+
 	//更新に関する処理
 	void Update()override;
 
@@ -75,7 +78,7 @@ protected:
 	void PatrolAnim();
 
 	//攻撃準備アニメーション
-	void DaggerAttackStandByAnim();
+	void DaggerEnemyAttackStandByAnim();
 	void WeaponNoneAttackStandByAnim();
 
 	//攻撃開始アニメーション
