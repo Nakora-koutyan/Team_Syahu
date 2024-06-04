@@ -46,4 +46,7 @@ private:
     //エネミーの武器のヒットチェック
     void HitCheckEnemyWeapon(const int j);
 
+    //ステージ生成
+    void createStage();
+
 };

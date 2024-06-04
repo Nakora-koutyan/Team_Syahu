@@ -6,6 +6,7 @@ char KeyInput::oldKey[MAX_KEY];
 MOUSE_INPUT KeyInput::nowMouse;
 MOUSE_INPUT KeyInput::oldMouse;
 MOUSE_INPUT KeyInput::mouseVec;
+MOUSE_INPUT KeyInput::mouseWheel;
 float KeyInput::mouseSensitivity = 1.f;
 bool KeyInput::isShowMouse = false;
 
@@ -22,6 +23,7 @@ void KeyInput::Update()
 	GetMousePoint(&nowMouse.x, &nowMouse.y);
 	mouseVec.x = (int)((nowMouse.x - MOUSE_OFFSET_X) * mouseSensitivity);
 	mouseVec.y = (int)((nowMouse.y - MOUSE_OFFSET_Y) * mouseSensitivity);
+	mouseWheel.wheel = GetMouseWheelRotVol();
 
 	if (!isShowMouse)
 	{
@@ -78,6 +80,13 @@ int KeyInput::GetMouseVecX()
 int KeyInput::GetMouseVecY()
 {
 	int ret = mouseVec.y;
+
+	return ret;
+}
+
+int KeyInput::GetMouseWheel()
+{
+	int ret = mouseWheel.wheel;
 
 	return ret;
 }

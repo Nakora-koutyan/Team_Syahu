@@ -27,6 +27,7 @@ void ResourceManager::Initialize()
 	SetImage("UI/bar");
 	SetImage("UI/barBackground");
 	SetImage("UI/healthBar");
+	SetImage("UI/durabilityBar");
 	SetImage("UI/stock");
 	SetImage("UI/selectStock");
 	SetImage("UI/kariSelect");
@@ -50,6 +51,7 @@ void ResourceManager::Initialize()
 	SetImage("Effect/Steal/steal_8");
 	SetImage("Effect/Steal/steal_9");
 	SetImage("Effect/Steal/steal_10");
+	SetDivImage("Effect/transformEffect", 9, 9, 1, 240, 240);
 
 	//BGM
 	

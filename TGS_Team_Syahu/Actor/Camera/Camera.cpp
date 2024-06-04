@@ -1,6 +1,6 @@
 #include"Camera.h"
 #include"../../Scene/GameMain/GameMainScene.h"
-#include"../InputControl/Key/KeyInput.h"
+#include"../../InputControl/Key/KeyInput.h"
 
 Vector2D Camera::cameraPosition;
 Vector2D Camera::screenPosition;
