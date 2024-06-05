@@ -25,6 +25,18 @@ void NormalEnemy::Initialize()
 	//エネミー画像の格納
 	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 6, 1, 120, 130, enemyImage);
 
+	int enemyDeathImageOld[12];
+	LoadDivGraph("Resource/Images/Enemy/RapierEnemyDeath.png", 12, 3, 4, 120, 130, enemyDeathImageOld);
+	for (int i = 0; i < 12; i++)
+	{
+		enemyDeathImage[i] = NULL;
+		if (11 < i)
+		{
+			continue;
+		}
+		enemyDeathImage[i] = enemyDeathImageOld[i];
+	}
+
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
 	//表示座標{ x , y }
@@ -87,6 +99,15 @@ void NormalEnemy::Update()
 	case EnemyStatus::AttackEnd:
 		AttackEnd();
 		break;
+
+	case EnemyStatus::Death:
+		Death();
+		break;
+	}
+
+	if (hp <= 0)
+	{
+		enemyStatus = EnemyStatus::Death;
 	}
 
 	//攻撃範囲
@@ -109,7 +130,8 @@ void NormalEnemy::Draw() const
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, enemyAlpha);
 	DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
-		enemyImage[enemyNumber], TRUE, animTurnFlg);
+		deathFlg ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
+		TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//攻撃範囲用の矩形
 	DrawBoxAA(GetMinScreenLocation().x - (410.f/2.f),GetMinScreenLocation().y - (75.f/2.f),
@@ -310,6 +332,11 @@ void NormalEnemy::AttackEnd()
 	}
 }
 
+void NormalEnemy::Death()
+{
+	move.x = 0.f;
+}
+
 //アニメーション制御関数
 void NormalEnemy::EnemyAnimationManager()
 {
@@ -336,6 +363,12 @@ void NormalEnemy::EnemyAnimationManager()
 	if (enemyStatus == EnemyStatus::AttackEnd)
 	{
 		AttackEndAnim();
+	}
+
+	//死亡した場合
+	if (enemyStatus == EnemyStatus::Death)
+	{
+		EnemyDeathAnim();
 	}
 
 	//ノックバックが発生した場合
@@ -470,4 +503,24 @@ void NormalEnemy::WeaponNoneAttackStartAnim()
 void NormalEnemy::AttackEndAnim()
 {
 	enemyNumber = 2;
+}
+
+void NormalEnemy::EnemyDeathAnim()
+{
+	if (!once)
+	{
+		enemyNumber = 0;
+		once = true;
+	}
+	//死亡したら死亡フラグをtrueにする
+	if (enemyNumber >= 11)
+	{
+		deathFlg = true;
+	}
+
+	//画像番号の更新
+	if (animInterval % 7 == 0)
+	{
+		enemyNumber++;
+	}
 }

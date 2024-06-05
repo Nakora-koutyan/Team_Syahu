@@ -8,6 +8,9 @@ class DaggerEnemy :public EnemyBase
 {
 private:
 
+	//かぎづめ攻撃の当たり判定専用のコリジョンボックス
+	BoxCollision* clawCollisionBox;
+
 	int daggerEnemyAnimNumber;
 	int daggerEnemyAnim[60];
 
@@ -25,6 +28,10 @@ private:
 	bool animCountDown;		//アニメーションの番号の減算をする？
 
 	int attackEndCount;		//攻撃終了時アニメーション関数で使用するカウンター
+
+	bool canAttack;			//攻撃できる？
+
+	bool didAttack;			//攻撃した？
 
 public:
 	//コンストラクタ
@@ -46,6 +53,8 @@ public:
 
 	//Playerを見つけたか？
 	void FindPlayer(const Player* player)override;
+
+	void SuddenApproachToPlayer(const Player* player);
 
 public:
 	Dagger* GetDagger()const { return dagger; }
@@ -72,6 +81,8 @@ protected:
 	//攻撃終了
 	void AttackEnd() override;
 
+	void Death() override;
+
 protected:
 	//ステータスアニメーション用関数
 	//パトロールアニメーション
@@ -88,5 +99,8 @@ protected:
 	//攻撃終了
 	void DaggerAttackEndAnim();
 	void WeaponNoneAttackEndAnim();
+
+	//死亡時のアニメーション
+	void EnemyDeathAnim();
 };
 
