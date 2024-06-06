@@ -127,4 +127,7 @@ protected:
 	//ノックバック処理
 	void KnockBack(const CharaBase* chara, const double time, const float x);
 
+	//重力処理
+	void Gravity();
+
 };
