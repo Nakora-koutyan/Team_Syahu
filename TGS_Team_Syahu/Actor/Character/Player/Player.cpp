@@ -121,13 +121,14 @@ void Player::Update()
 #endif // DEBUG
 
 	if (isEquipment && isAttack && stock[stockCount] != Weapon::None &&
-		(rapier->GetIsHit()))
+		((largeSword->GetIsHit() && !largeSword->GetIsAirAttack()) || rapier->GetIsHit()))
 	{
 		if (actionState == Action::Equipment)
 		{
 			actionState = Action::None;
 		}
 		//当たっている間耐久値が減るのを防ぐため
+		largeSword->SetIsHit(false);
 		rapier->SetIsHit(false);
 		weaponDurability[stockCount] -= GetDurability(stock[stockCount], true);
 		if (daggerCount[stockCount] > 0)
@@ -170,8 +171,6 @@ void Player::Update()
 
 	if (!equipmentAnimFlg)
 	{
-		Gravity();
-
 		Movement();
 
 		Attack();
@@ -506,8 +505,8 @@ void Player::Movement()
 		direction.y = 1.f;
 	}
 
-	////重力
-	//move.y += GRAVITY;
+	//重力
+	Gravity();
 
 	//座標に加算
 	location.x += move.x;
