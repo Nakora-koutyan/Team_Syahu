@@ -2,7 +2,7 @@
 #include "../Player/Player.h"
 #include "../../Camera/Camera.h"
 
-#define MAX_WAITING_TIME		87		//攻撃開始までの待機時間(MAX値)
+#define LARGESWORD_MAX_WAITING_TIME	87	//攻撃開始までの待機時間(MAX値)
 #define LARGE_WALK_SPEED		2.5f	//徘徊時のスピード
 
 #define RUSH_ATTACK_SPEED		5.f		//突進攻撃時の速度
@@ -11,7 +11,7 @@
 #define MAX_ATTACK_COUNT_DOWN	31		//
 #define LARGE_SWORD_KNOCKBACK	5		//ノックバック時間
 
-#define LARGESWORD_MAX_ATTACK_TIME			87		//大剣の攻撃時間
+#define LARGESWORD_MAX_ATTACK_TIME 87	//大剣の攻撃時間
 #define MAX_RUSH_ATTACKTIME		30		//突進攻撃の時間
 
 #define LARGESWORD_ATTACKRANGE_X	60	//大剣の攻撃範囲(X)
@@ -99,7 +99,7 @@ void LargeSwordEnemy::Initialize()
 	damage = 15.f;
 
 	//攻撃時間
-	attackWaitingTime = MAX_WAITING_TIME;
+	attackWaitingTime = LARGESWORD_MAX_WAITING_TIME;
 	statusChangeTime = MAX_COOL_TIME;
 
 	correctLocX = 50.f;
@@ -122,7 +122,7 @@ void LargeSwordEnemy::Initialize()
 	//大剣
 	largeSwordAttackTime = MAX_RUSH_ATTACKTIME;
 	//突進
-	rushAttackTime = MAX_ATTACK_TIME;
+	rushAttackTime = LARGESWORD_MAX_ATTACK_TIME;
 
 	//攻撃開始までの貯め時間の設定
 	attackChargeTime = MAX_ATTACK_CHARGE_TIME;
@@ -437,7 +437,7 @@ void LargeSwordEnemy::AttackStandBy()
 		else if (attackWaitingTime <= 0)
 		{
 			//攻撃までの準備時間をリセット
-			attackWaitingTime = MAX_WAITING_TIME;
+			attackWaitingTime = LARGESWORD_MAX_WAITING_TIME;
 
 			//エネミーの状態を「攻撃開始」に遷移する
 			enemyStatus = EnemyStatus::AttackStart;
@@ -509,7 +509,7 @@ void LargeSwordEnemy::AttackEnd()
 		signToAttack = false;
 		restTime = 0;
 		animInterval = 0;
-		largeSwordAttackTime = MAX_ATTACK_TIME;
+		largeSwordAttackTime = LARGESWORD_MAX_ATTACK_TIME;
 	}
 	if (weaponType == Weapon::None)
 	{
