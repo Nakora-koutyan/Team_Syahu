@@ -48,7 +48,7 @@ public:
 	~Rapier();
 
 	//更新
-	void Update(CharaBase* chara);
+	void Update(CharaBase* chara, float speed);
 
 	//描画
 	void Draw()const override;
