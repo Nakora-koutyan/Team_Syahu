@@ -54,10 +54,10 @@ public:
 	void Finalize()override;
 
 	//更新
-	void Update()override {};
+	void Update()override;
 
 	//描画
-	void Draw()const override {};
+	void Draw()const override;
 
 	//着地
 	virtual void Landing(const float height);

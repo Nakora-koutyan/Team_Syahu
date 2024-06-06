@@ -170,6 +170,8 @@ void Player::Update()
 
 	if (!equipmentAnimFlg)
 	{
+		Gravity();
+
 		Movement();
 
 		Attack();
@@ -504,8 +506,8 @@ void Player::Movement()
 		direction.y = 1.f;
 	}
 
-	//重力
-	move.y += GRAVITY;
+	////重力
+	//move.y += GRAVITY;
 
 	//座標に加算
 	location.x += move.x;
