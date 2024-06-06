@@ -139,6 +139,8 @@ void LargeSwordEnemy::Update()
 	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 0.2);
 	KnockBack(this,FPS * 0.5, knockBackMove);
+	Gravity();
+	Landing(GROUND_LINE);
 
 	//エネミーアニメーション
 	EnemyAnimationManager();
