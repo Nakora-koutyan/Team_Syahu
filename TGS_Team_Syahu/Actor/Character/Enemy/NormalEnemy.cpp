@@ -55,7 +55,7 @@ void NormalEnemy::Initialize()
 	//表示するか?
 	isShow = true;
 
-	damage = 15.f;
+	damage = 2.5f;
 
 	rapier = new Rapier;
 
@@ -130,7 +130,7 @@ void NormalEnemy::Draw() const
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, enemyAlpha);
 	DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
-		deathFlg ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
+		hp <= 0 ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
 		TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//攻撃範囲用の矩形

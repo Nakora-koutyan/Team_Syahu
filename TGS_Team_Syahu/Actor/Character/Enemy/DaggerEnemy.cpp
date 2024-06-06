@@ -124,6 +124,8 @@ void DaggerEnemy::Update()
 		break;
 
 	case EnemyStatus::Death:
+
+		//死亡処理
 		Death();
 		break;
 
@@ -131,6 +133,7 @@ void DaggerEnemy::Update()
 	//攻撃範囲更新
 	AttackRange();
 
+	//HPが０以下になったら死亡状態にする
 	if (hp <= 0)
 	{
 		enemyStatus = EnemyStatus::Death;
