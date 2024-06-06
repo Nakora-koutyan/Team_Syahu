@@ -1,5 +1,5 @@
-#include "ResourceManager.h"
-#include <stdexcept>
+#include"ResourceManager.h"
+#include<stdexcept>
 
 ResourceManager* ResourceManager::manager = nullptr;
 
@@ -94,7 +94,7 @@ void ResourceManager::SetSE(const std::string fileName)
 
 		//キーにSEを読みこむ
 		manager->se[fileName] = LoadSoundMem(filePath.c_str());
-
+		
 		if (manager->se[fileName] == -1)
 		{
 			throw(std::invalid_argument("SEが読み込めません。"));
@@ -136,12 +136,67 @@ void ResourceManager::SetDivImage(const std::string fileName, const int max, con
 		std::string filePath;
 		filePath = std::string("Resource/Images/") + fileName + std::string(".png");
 
+		manager->divImage[fileName].reserve(max);
+
+		for (int i = 0; i < max; i++)
+		{
+			manager->divImage[fileName].push_back(0);
+		}
+
 		//キーにImageを読みこむ
-		LoadDivGraph(filePath.c_str(), max, x, y, sizeX, sizeY, manager->divImage[fileName]);
+		LoadDivGraph(filePath.c_str(), max, x, y, sizeX, sizeY, manager->divImage[fileName].data());
+		//LoadDivGraph(filePath.c_str(), max, x, y, sizeX, sizeY, manager->divImage[fileName]);
 
 		if (manager->divImage[fileName][0] == -1)
 		{
 			throw(std::invalid_argument("Imageが読み込めません。"));
 		}
 	}
+}
+
+void ResourceManager::SetVolumeAllBGM(const int volume)
+{
+
+}
+
+void ResourceManager::SetVolumeAllSE(const int volume)
+{
+
+}
+
+void ResourceManager::SetPositionAllBGM(LONGLONG time)
+{
+}
+
+void ResourceManager::SetPositionAllSE(LONGLONG time)
+{
+}
+
+void ResourceManager::PlayBGM(const std::string fileName, bool isSingleUnit, int playType, int topPositionFlag)
+{
+}
+
+void ResourceManager::PlaySE(const std::string fileName, bool isSingleUnit, int playType, int topPositionFlag)
+{
+
+}
+
+void ResourceManager::StopBGM(const std::string fileName)
+{
+
+}
+
+void ResourceManager::StopSoundAllBGM()
+{
+
+}
+
+void ResourceManager::StopSE(const std::string fileName)
+{
+
+}
+
+void ResourceManager::StopAllSE()
+{
+
 }

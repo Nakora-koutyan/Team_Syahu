@@ -48,7 +48,10 @@ void LargeSword::Update(CharaBase* chara)
 
 		if (effectAnimcount % 3 == 0)
 		{
-			effectAnim++;
+			if (effectAnim < 6)
+			{
+				effectAnim++;
+			}
 		}
 		//右に出す
 		if (direction > 0)
@@ -91,7 +94,7 @@ void LargeSword::Update(CharaBase* chara)
 		airAttackEffectAnimcount++;
 		if (airAttackEffectAnimcount % 5 == 0)
 		{
-			if (airAttackEffectAnim < 7)
+			if (airAttackEffectAnim < 6)
 			{
 				if (airAttackEffectLocation.x == 0.f)
 				{
