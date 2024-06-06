@@ -288,7 +288,7 @@ void DaggerEnemy::EnemyPatrol()
 	{
 		patrolCounter -= DAGGER_ENEMY_WALK_SPEED;
 		//左に200進んだら右向きにする
-		if (patrolCounter <= -20.f)
+		if (patrolCounter <= -80.f)
 		{
 			direction.x = DIRECTION_RIGHT;
 			animTurnFlg = false;
@@ -299,7 +299,7 @@ void DaggerEnemy::EnemyPatrol()
 	{
 		patrolCounter += DAGGER_ENEMY_WALK_SPEED;
 		//右に200進んだら左向きにする
-		if (patrolCounter >= 20.f)
+		if (patrolCounter >= 80.f)
 		{
 			direction.x = DIRECTION_LEFT;
 			animTurnFlg = true;

@@ -119,7 +119,7 @@ void NormalEnemy::Update()
 	//世界の両端を越えない
 	DontCrossBorder();
 
-	rapier->Update(this);
+	rapier->Update(this, (NORMAL_WALK_SPEED * ATTACK_SPEED));
 
 	location.x += move.x;
 }

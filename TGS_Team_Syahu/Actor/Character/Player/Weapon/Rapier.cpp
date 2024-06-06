@@ -43,7 +43,7 @@ Rapier::~Rapier()
 
 }
 
-void Rapier::Update(CharaBase* chara)
+void Rapier::Update(CharaBase* chara,float speed)
 {
 	//地上での攻撃なら
 	if (isShow && !isAirAttack)
@@ -53,7 +53,7 @@ void Rapier::Update(CharaBase* chara)
 		{
 			framCount++;
 			effectAnimcount++;
-			if (effectAnim < 6)
+			if (effectAnim < 5)
 			{
 				effectAnim++;
 			}
@@ -63,14 +63,14 @@ void Rapier::Update(CharaBase* chara)
 				location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
 				directionVector.x = RAPIER_LENGTH;
 				imageAngle = DEGREE_TO_RADIAN(45.f);
-				chara->SetMove({ RAPIER_MOVE ,chara->GetMove().y });
+				chara->SetMove({ speed * 1.5f ,chara->GetMove().y });
 			}
 			else
 			{
 				location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
 				directionVector.x = -RAPIER_LENGTH;
 				imageAngle = DEGREE_TO_RADIAN(-45.f);
-				chara->SetMove({ -RAPIER_MOVE ,chara->GetMove().y });
+				chara->SetMove({ -speed * 1.5f ,chara->GetMove().y });
 			}
 		}
 	}

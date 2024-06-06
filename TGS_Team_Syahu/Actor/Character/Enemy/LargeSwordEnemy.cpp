@@ -11,7 +11,7 @@
 #define MAX_ATTACK_COUNT_DOWN	31		//
 #define LARGE_SWORD_KNOCKBACK	5		//ノックバック時間
 
-#define MAX_ATTACK_TIME			87		//大剣の攻撃時間
+#define LARGESWORD_MAX_ATTACK_TIME			87		//大剣の攻撃時間
 #define MAX_RUSH_ATTACKTIME		30		//突進攻撃の時間
 
 #define LARGESWORD_ATTACKRANGE_X	60	//大剣の攻撃範囲(X)

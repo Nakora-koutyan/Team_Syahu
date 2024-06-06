@@ -185,7 +185,7 @@ void Player::Update()
 	{
 		dagger[i]->Update(this);
 	}
-	rapier->Update(this);
+	rapier->Update(this, PLAYER_MAX_MOVE_SPEED);
 
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
