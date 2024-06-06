@@ -38,7 +38,7 @@ void ResourceManager::Initialize()
 	SetImage("Weapon/largeSword");
 	SetImage("Weapon/rapier");
 	SetDivImage("Effect/jumpEffect", 14, 14, 1, 60, 32);
-	SetDivImage("Effect/rapierEffect", 6, 1, 6, 239, 60);
+	SetDivImage("Effect/rapierEffect", 7, 1, 7, 312, 78);
 	SetDivImage("Effect/slashEffect", 7, 7, 1, 224, 208);
 	SetDivImage("Effect/fallAttackEffect", 7, 7, 1, 200, 224);
 	SetImage("Effect/Steal/steal_1");
