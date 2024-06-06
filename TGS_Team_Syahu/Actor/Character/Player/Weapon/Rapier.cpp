@@ -22,7 +22,7 @@ Rapier::Rapier()
 	chargeTime = 0;
 	effectAnim = 0;
 	effectAnimcount = 0;
-	airAttackEffectAnim = 0;
+	airAttackEffectAnim = 3;
 	airAttackEffectAnimcount = 0;
 
 	angle = 0.f;
@@ -104,7 +104,7 @@ void Rapier::Update(CharaBase* chara)
 		airAttackEffectAnimcount++;
 		if (airAttackEffectAnimcount % 5 == 0)
 		{
-			if (airAttackEffectAnim < 7)
+			if (airAttackEffectAnim < 6)
 			{
 				airAttackEffectAnim++;
 			}
@@ -112,7 +112,7 @@ void Rapier::Update(CharaBase* chara)
 			{
 				airAttackAnimFlg = false;
 				airAttackEffectLocation = { 0.f,0.f };
-				airAttackEffectAnim = 0;
+				airAttackEffectAnim = 3;
 			}
 		}
 	}
@@ -148,7 +148,6 @@ void Rapier::Update(CharaBase* chara)
 		isAirAttack = false;
 		airAttackAnimFlg = true;
 		chara->SetIsAttack(false);
-		chara->SetInvincibleFlg(false);
 	}
 
 	damage = chara->GetDamage() + RAPIER_DAMAGE;
@@ -221,14 +220,16 @@ void Rapier::Attack(const CharaBase* chara)
 	if (direction > 0)
 	{
 		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
-		effectLocation = location;
+		effectLocation.x = location.x + 15.f;
+		effectLocation.y = location.y;
 		directionVector.x = RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(45.f);
 	}
 	else
 	{
 		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
-		effectLocation = location;
+		effectLocation.x = location.x - 15.f;
+		effectLocation.y = location.y;
 		directionVector.x = -RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(-45.f);
 	}
