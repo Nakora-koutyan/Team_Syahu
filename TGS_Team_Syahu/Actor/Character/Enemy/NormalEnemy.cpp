@@ -75,7 +75,8 @@ void NormalEnemy::Update()
 	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 0.2);
 	KnockBack(this, FPS * 0.5f, knockBackMove);
-
+	Gravity();
+	Landing(GROUND_LINE);
 	
 	//状態遷移
 	switch (enemyStatus)
@@ -511,6 +512,7 @@ void NormalEnemy::EnemyDeathAnim()
 	{
 		enemyNumber = 0;
 		once = true;
+		isKnockBack = false;
 	}
 	//死亡したら死亡フラグをtrueにする
 	if (enemyNumber >= 11)
@@ -519,8 +521,9 @@ void NormalEnemy::EnemyDeathAnim()
 	}
 
 	//画像番号の更新
-	if (animInterval % 7 == 0)
+	if (animInterval % 4 == 0)
 	{
 		enemyNumber++;
+		location.y -= (enemyNumber * 0.45f);
 	}
 }
