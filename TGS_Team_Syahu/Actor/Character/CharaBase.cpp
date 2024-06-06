@@ -47,6 +47,16 @@ void CharaBase::Finalize()
 
 }
 
+void CharaBase::Update()
+{
+	Gravity();
+}
+
+void CharaBase::Draw() const
+{
+
+}
+
 void CharaBase::Landing(const float height)
 {
 	//地面を超えない
@@ -112,11 +122,10 @@ void CharaBase::KnockBack(const CharaBase* chara, const double time, const float
 			move.y = 0.f;
 		}
 	}
-	/*else
-	{
-		if (hp <= 0 && objectType == ObjectType::Enemy)
-		{
-			deathFlg = true;
-		}
-	}*/
+}
+
+void CharaBase::Gravity()
+{
+	//重力
+	move.y += GRAVITY;
 }
