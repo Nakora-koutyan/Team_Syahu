@@ -3,6 +3,8 @@
 #include "../Player/Player.h"
 
 #define MAX_COOL_TIME 50
+#define MAX_WAITING_TIME 60
+#define MAX_ATTACK_TIME 60
 
 #define DIRECTION_LEFT -1				//左向き
 #define DIRECTION_RIGHT 1				//右向き
@@ -10,10 +12,11 @@
 
 enum EnemyStatus
 {
-	Patrol,
-	AttackStandBy,
-	AttackStart,
-	AttackEnd
+	Patrol,				//パトロール
+	AttackStandBy,		//攻撃準備
+	AttackStart,		//攻撃開始
+	AttackEnd,			//攻撃終了
+	Death				//死亡時
 };
 
 enum class EnemyType
@@ -106,5 +109,8 @@ protected:
 
 	//攻撃終了
 	virtual void AttackEnd() = 0;
+
+	//死亡時に呼び出される関数
+	virtual void Death() = 0;
 };
 

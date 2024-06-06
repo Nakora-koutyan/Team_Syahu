@@ -112,11 +112,11 @@ void CharaBase::KnockBack(const CharaBase* chara, const double time, const float
 			move.y = 0.f;
 		}
 	}
-	else
+	/*else
 	{
 		if (hp <= 0 && objectType == ObjectType::Enemy)
 		{
 			deathFlg = true;
 		}
-	}
+	}*/
 }

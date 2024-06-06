@@ -2,13 +2,11 @@
 #include "../Player/Player.h"
 #include "../../Camera/Camera.h"
 
-#define MAX_WAITING_TIME 40
 #define NORMAL_ENEMY_KNOCKBACK 3.f
-#define MAX_ATTACK_TIME 60
 
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
-animTurnFlg(false),attackTime(0),once(false)
+animTurnFlg(false),attackTime(0), CountChangeCounter(0),once(false)
 {
 }
 
@@ -26,6 +24,18 @@ void NormalEnemy::Initialize()
 	}
 	//エネミー画像の格納
 	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 6, 1, 120, 130, enemyImage);
+
+	int enemyDeathImageOld[12];
+	LoadDivGraph("Resource/Images/Enemy/RapierEnemyDeath.png", 12, 3, 4, 120, 130, enemyDeathImageOld);
+	for (int i = 0; i < 12; i++)
+	{
+		enemyDeathImage[i] = NULL;
+		if (11 < i)
+		{
+			continue;
+		}
+		enemyDeathImage[i] = enemyDeathImageOld[i];
+	}
 
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
@@ -89,6 +99,15 @@ void NormalEnemy::Update()
 	case EnemyStatus::AttackEnd:
 		AttackEnd();
 		break;
+
+	case EnemyStatus::Death:
+		Death();
+		break;
+	}
+
+	if (hp <= 0)
+	{
+		enemyStatus = EnemyStatus::Death;
 	}
 
 	//攻撃範囲
@@ -111,7 +130,8 @@ void NormalEnemy::Draw() const
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, enemyAlpha);
 	DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
-		enemyImage[enemyNumber], TRUE, animTurnFlg);
+		deathFlg ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
+		TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//攻撃範囲用の矩形
 	DrawBoxAA(GetMinScreenLocation().x - (410.f/2.f),GetMinScreenLocation().y - (75.f/2.f),
@@ -250,6 +270,12 @@ void NormalEnemy::AttackStart()
 		if (signToAttack)
 		{
 			rapier->Attack(this);
+		}
+		if (CountChangeCounter >= 2)
+		{
+			signToAttack = false;
+			CountChangeCounter = 0;
+			//エネミーの状態を攻撃終了に遷移する
 			enemyStatus = EnemyStatus::AttackEnd;
 		}
 	}
@@ -306,6 +332,11 @@ void NormalEnemy::AttackEnd()
 	}
 }
 
+void NormalEnemy::Death()
+{
+	move.x = 0.f;
+}
+
 //アニメーション制御関数
 void NormalEnemy::EnemyAnimationManager()
 {
@@ -313,92 +344,31 @@ void NormalEnemy::EnemyAnimationManager()
 	//パトロール状態の場合
 	if (enemyStatus == EnemyStatus::Patrol)
 	{
-		//敵画像の番号が2以上でカウントダウンがfalseの場合
-		if (enemyNumber >= 2 && animCountDown == false)
-		{
-			//カウントダウンに切り替える
-			animCountDown = true;
-		}
-		//16フレームごとにアニメーションを切り替える
-		if (animInterval % 12 == 0)
-		{
-			//画像番号を減少する
-			if (animCountDown == true)
-			{
-				enemyNumber--;
-			}
-			//画像番号を増加する
-			if (animCountDown == false)
-			{
-				enemyNumber++;
-			}
-		}
-		//エネミーの画像番号が０以下になった場合
-		if (enemyNumber <= 0 && animCountDown == true)
-		{
-			//カウントダウンをfalseに切り替える
-			animCountDown = false;
-		}
+		PatrolAnim();
 	}
 
 	//攻撃準備状態の場合
 	if (enemyStatus == EnemyStatus::AttackStandBy)
 	{
-		enemyNumber = 2;
-		animCountDown = false;
+		AttackStandByAnim();
 	}
 
 	//攻撃中の場合
 	if (enemyStatus == EnemyStatus::AttackStart)
 	{
-		signToAttack = true;
-		//画像の番号が３以下の場合
-		if (enemyNumber <= 3)
-		{
-			enemyNumber = 3;
-		}
-		//画像番号が5以上でカウントダウンが解除されている場合
-		if (enemyNumber >= 5 && animCountDown == false)
-		{
-			//カウントダウン状態に切り替える
-			animCountDown = true;
-		}
-		//16フレーム毎に画像を切り替える
-		if (animInterval % 8 == 0)
-		{
-			//画像番号を減少する
-			if (animCountDown == true)
-			{
-				enemyNumber--;
-			}
-			//画像番号を増加する
-			if (animCountDown == false)
-			{
-				enemyNumber++;
-			}
-		}
-		//エネミーの画像番号が４以下になった場合
-		if (enemyNumber <= 4 && animCountDown == true)
-		{
-			//カウントダウンをfalseに切り替える
-			animCountDown = false;
-		}
+		NormalEnemyAttackStartAnim();
 	}
 
 	//攻撃終了状態の場合
 	if (enemyStatus == EnemyStatus::AttackEnd)
 	{
-		//8フレーム毎に切り替える
-		if (animInterval % 8 == 0)
-		{
-			//画像番号を減少させる
-			enemyNumber--;
-		}
-		//エネミーの画像番号が０以下になった場合
-		if (enemyNumber <= 0)
-		{
-			enemyNumber = 0;
-		}
+		AttackEndAnim();
+	}
+
+	//死亡した場合
+	if (enemyStatus == EnemyStatus::Death)
+	{
+		EnemyDeathAnim();
 	}
 
 	//ノックバックが発生した場合
@@ -419,5 +389,138 @@ void NormalEnemy::EnemyAnimationManager()
 	else
 	{
 		enemyAlpha = 255;
+	}
+}
+
+void NormalEnemy::PatrolAnim()
+{
+	//敵画像の番号が2以上でカウントダウンがfalseの場合
+	if (enemyNumber >= 2 && animCountDown == false)
+	{
+		//カウントダウンに切り替える
+		animCountDown = true;
+	}
+	//16フレームごとにアニメーションを切り替える
+	if (animInterval % 12 == 0)
+	{
+		//画像番号を減少する
+		if (animCountDown == true)
+		{
+			enemyNumber--;
+		}
+		//画像番号を増加する
+		if (animCountDown == false)
+		{
+			enemyNumber++;
+		}
+	}
+	//エネミーの画像番号が０以下になった場合
+	if (enemyNumber <= 0 && animCountDown == true)
+	{
+		//カウントダウンをfalseに切り替える
+		animCountDown = false;
+	}
+}
+
+void NormalEnemy::AttackStandByAnim()
+{
+	enemyNumber = 2;
+	animCountDown = false;
+}
+
+void NormalEnemy::NormalEnemyAttackStartAnim()
+{
+	signToAttack = true;
+	//画像の番号が３以下の場合
+	if (enemyNumber <= 3)
+	{
+		enemyNumber = 3;
+	}
+	//画像番号が5以上でカウントダウンが解除されている場合
+	if (enemyNumber >= 5 && animCountDown == false)
+	{
+		//カウントダウン状態に切り替える
+		animCountDown = true;
+	}
+	//16フレーム毎に画像を切り替える
+	if (animInterval % 8 == 0)
+	{
+		//画像番号を減少する
+		if (animCountDown == true)
+		{
+			enemyNumber--;
+		}
+		//画像番号を増加する
+		if (animCountDown == false)
+		{
+			enemyNumber++;
+		}
+	}
+	//エネミーの画像番号が４以下になった場合
+	if (enemyNumber <= 4 && animCountDown == true)
+	{
+		//カウントダウンをfalseに切り替える
+		animCountDown = false;
+		CountChangeCounter++;
+	}
+}
+
+void NormalEnemy::WeaponNoneAttackStartAnim()
+{
+	//画像の番号が３以下の場合
+	if (enemyNumber <= 3)
+	{
+		enemyNumber = 3;
+	}
+	//画像番号が5以上でカウントダウンが解除されている場合
+	if (enemyNumber >= 5 && animCountDown == false)
+	{
+		//カウントダウン状態に切り替える
+		animCountDown = true;
+	}
+	//16フレーム毎に画像を切り替える
+	if (animInterval % 8 == 0)
+	{
+		//画像番号を減少する
+		if (animCountDown == true)
+		{
+			enemyNumber--;
+		}
+		//画像番号を増加する
+		if (animCountDown == false)
+		{
+			enemyNumber++;
+		}
+	}
+	//エネミーの画像番号が４以下になった場合
+	if (enemyNumber <= 4 && animCountDown == true)
+	{
+		//カウントダウンをfalseに切り替える
+		animCountDown = false;
+	}
+}
+
+void NormalEnemy::AttackEndAnim()
+{
+	enemyNumber = 2;
+}
+
+void NormalEnemy::EnemyDeathAnim()
+{
+	if (!once)
+	{
+		enemyNumber = 0;
+		once = true;
+	}
+	//死亡したら死亡フラグをtrueにする
+	if (enemyNumber >= 11)
+	{
+		deathFlg = true;
+	}
+
+	//画像番号の更新
+	if (animInterval % 7 == 0)
+	{
+		enemyNumber++;
 	}
 }

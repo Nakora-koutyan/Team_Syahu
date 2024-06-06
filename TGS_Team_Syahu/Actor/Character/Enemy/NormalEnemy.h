@@ -9,17 +9,21 @@ class Player;
 class NormalEnemy :public EnemyBase
 {
 private:
-	int enemyImage[6];	//敵画像
-	int enemyNumber;	//画像番号
-	int animInterval;	//画像のインターバル
-	bool animCountDown;	//画像インターバルのカウントダウン
-	bool animTurnFlg;	//アニメーションを左右反転する？(yes：true,no：false)
+	int enemyImage[6];			//敵画像
+	int enemyDeathImage[11];	//死亡時の画像
+	int enemyNumber;			//画像番号
 
-	int attackTime;		//攻撃時間
+	int animInterval;			//画像のインターバル
+	bool animCountDown;			//画像インターバルのカウントダウン
+	bool animTurnFlg;			//アニメーションを左右反転する？(yes：true,no：false)
+
+	int attackTime;				//攻撃時間
+
+	int CountChangeCounter;
 
 	bool once;
 
-	Rapier* rapier;		//レイピアを呼び出す
+	Rapier* rapier;				//レイピアを呼び出す
 
 public:
 	//コンストラクタ
@@ -47,9 +51,6 @@ private:
 	//攻撃範囲関数
 	void AttackRange()override;
 
-	//エネミーのアニメーション制御関数
-	void EnemyAnimationManager() override;
-
 	//パトロール関数
 	void EnemyPatrol() override;
 
@@ -60,4 +61,20 @@ private:
 	void AttackStart() override;
 
 	void AttackEnd() override;
+
+	void Death() override;
+
+	//エネミーのアニメーション制御関数
+	void EnemyAnimationManager() override;
+
+	void PatrolAnim();
+	
+	void AttackStandByAnim();
+
+	void NormalEnemyAttackStartAnim();
+	void WeaponNoneAttackStartAnim();
+
+	void AttackEndAnim();
+
+	void EnemyDeathAnim();
 };

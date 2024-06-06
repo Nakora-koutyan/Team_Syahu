@@ -5,9 +5,10 @@
 //コンストラクタ
 DaggerEnemy::DaggerEnemy() :drawnSword(false), dagger(nullptr), daggerEnemyAnimNumber{(0)}, 
 daggerEnemyAnim{NULL},enemyAnimInterval(0),correctLocX(0.f),correctLocY(0.f),animTurnFlg(TRUE),
-animCountDown(false),attackEndCount(0)
+animCountDown(false),attackEndCount(0),canAttack(false),clawCollisionBox(nullptr),didAttack(false)
 {
 }
+
 //デストラクタ
 DaggerEnemy::~DaggerEnemy()
 {
@@ -36,7 +37,7 @@ void DaggerEnemy::Initialize()
 	}
 
 	//サイズ{ x , y }
-	area = { 80.f,85.f };
+	area = { 90.f,85.f };
 	//表示座標{ x , y }
 	location = { 500,GROUND_LINE - area.height };
 
@@ -76,6 +77,16 @@ void DaggerEnemy::Initialize()
 	daggerEnemyAnimNumber = 0;
 	enemyAnimInterval = 0;
 	signToAttack=false;
+	attackWaitingTime = MAX_ATTACK_TIME;
+
+	//大剣を呼び出す
+	clawCollisionBox = new BoxCollision;
+	clawCollisionBox->SetArea({ 80,140 });
+}
+
+void DaggerEnemy::Finalize()
+{
+	delete dagger;
 }
 
 //更新処理
@@ -112,15 +123,43 @@ void DaggerEnemy::Update()
 		AttackEnd();
 		break;
 
+	case EnemyStatus::Death:
+		Death();
+		break;
+
 	}
 	//攻撃範囲更新
 	AttackRange();
+
+	if (hp <= 0)
+	{
+		enemyStatus = EnemyStatus::Death;
+	}
 
 	//アニメーション処理
 	EnemyAnimationManager();
 
 	//画面端を越えない
 	DontCrossBorder();
+
+	//アニメーションの画像のX座標のずれを修正
+	if (animTurnFlg)
+	{
+		//左向き
+		correctLocX = 45.f;
+		clawCollisionBox->SetLocationX(GetMinLocation().x - GetArea().width);
+	}
+	else
+	{
+		//右向き
+		correctLocX = 30.f;
+		clawCollisionBox->SetLocationX(GetMaxLocation().x);
+	}
+	//Y座標の設定
+	clawCollisionBox->SetLocationY(location.y - 60.f);
+	//カメラ座標の設定
+	clawCollisionBox->SetScreenLocation(Camera::ConvertScreenPosition(clawCollisionBox->GetLocation()));
+
 
 	//短剣の更新処理の呼び出し
 	dagger->Update(this);
@@ -140,6 +179,15 @@ void DaggerEnemy::Draw() const
 
 	DrawFormatString(500, 600, 0xffff00, "%lf PatrolCounter", patrolCounter);
 	DrawFormatString(500, 620, 0xffff00, "%d daggerEnemyAnimNumber", daggerEnemyAnimNumber);
+	DrawBoxAA(clawCollisionBox->GetMinScreenLocation().x, clawCollisionBox->GetMinScreenLocation().y,
+		clawCollisionBox->GetMaxScreenLocation().x, clawCollisionBox->GetMaxScreenLocation().y,
+		0xff00ff, FALSE);
+	DrawBoxAA
+	(
+		GetMinScreenLocation().x, GetMinScreenLocation().y,
+		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
+		0xffff00, FALSE
+	);
 }
 
 //プレイヤーをみつけた？
@@ -177,6 +225,44 @@ void DaggerEnemy::FindPlayer(const Player* player)
 			isFind = false;
 		}
 	}
+	/* 条件：武器無し・攻撃準備段階
+	プレイヤーがダメージを受けていない状態 */
+	if (weaponType == Weapon::None &&
+		enemyStatus == EnemyStatus::AttackStandBy &&
+		player->GetIsHit() == false)
+	{
+		SuddenApproachToPlayer(player);
+	}
+}
+
+void DaggerEnemy::SuddenApproachToPlayer(const Player* player)
+{
+	float distance;
+	//プレイヤーと自身の距離を計算
+	distance = abs(player->GetCenterLocation().x - GetCenterLocation().x);
+
+	if (abs(distance) >= 130.f)
+	{
+		//向いている方向に向かって接近処理を行う
+		if (direction.x == DIRECTION_LEFT)
+		{
+			//画像：左方向
+			animTurnFlg = true;
+			//速度：5
+			move.x = -5.f;
+		}
+		else if (direction.x == DIRECTION_RIGHT)
+		{
+			//画像：右方向
+			animTurnFlg = false;
+			//速度：5
+			move.x = 5.f;
+		}
+	}
+	if (abs(distance) <= 130.f)
+	{
+		canAttack = true;
+	}
 }
 
 //攻撃の範囲
@@ -193,26 +279,27 @@ void DaggerEnemy::AttackRange()
 //パトロール処理
 void DaggerEnemy::EnemyPatrol()
 {
+	move.x = 0.f;
 	//左向き
 	if (direction.x == DIRECTION_LEFT)
 	{
-		move.x = -DAGGER_ENEMY_WALK_SPEED;
 		patrolCounter -= DAGGER_ENEMY_WALK_SPEED;
 		//左に200進んだら右向きにする
 		if (patrolCounter <= -20.f)
 		{
 			direction.x = DIRECTION_RIGHT;
+			animTurnFlg = false;
 		}
 	}
 	//右向き
 	else if (direction.x == DIRECTION_RIGHT)
 	{
-		move.x = DAGGER_ENEMY_WALK_SPEED;
 		patrolCounter += DAGGER_ENEMY_WALK_SPEED;
 		//右に200進んだら左向きにする
 		if (patrolCounter >= 20.f)
 		{
 			direction.x = DIRECTION_LEFT;
+			animTurnFlg = true;
 		}
 	}
 
@@ -240,27 +327,63 @@ void DaggerEnemy::HitWeapon(ObjectBase* object)
 //攻撃準備
 void DaggerEnemy::AttackStandBy()
 {
-	//抜刀するまでの間、停止する
+	//攻撃準備が完了するまでの間、停止する
 	move.x = 0.f;
-	if (drawnSword == true)
+	if (weaponType == Weapon::Dagger)
 	{
-		//攻撃開始に遷移
-		enemyStatus = EnemyStatus::AttackStart;
+		if (drawnSword == true)
+		{
+			//攻撃開始に遷移
+			enemyStatus = EnemyStatus::AttackStart;
+		}
+	}
+	else if (weaponType == Weapon::None)
+	{
+		//攻撃できる？：Yes
+		if (canAttack == true)
+		{
+			canAttack = false;
+			//攻撃開始に遷移
+			enemyStatus = EnemyStatus::AttackStart;
+		}
 	}
 }
 
 //攻撃開始
 void DaggerEnemy::AttackStart()
 {
+	//攻撃の間は動かない
 	move.x = 0;
+
+	//短剣を装備している場合
 	if (weaponType == Weapon::Dagger)
 	{
+		//攻撃の瞬間になったら
 		if (signToAttack)
 		{
+			//短剣の攻撃関数を生成
 			dagger->Attack(this);
+			//攻撃終了に遷移
 			enemyStatus = EnemyStatus::AttackEnd;
 		}
 	}
+
+	if (weaponType == Weapon::None)
+	{
+		//手を振り上げる動作になったら
+		if (daggerEnemyAnimNumber == 12)
+		{
+			//攻撃の瞬間の合図
+			signToAttack = true;
+		}
+		//攻撃を行った場合、攻撃終了に遷移
+		if (didAttack)
+		{
+			didAttack = false;
+			enemyStatus = EnemyStatus::AttackEnd;
+		}
+	}
+
 }
 
 //攻撃終了
@@ -271,12 +394,23 @@ void DaggerEnemy::AttackEnd()
 	{
 		enemyStatus = EnemyStatus::Patrol;
 	}
+	if (weaponType == Weapon::None)
+	{
+		enemyStatus = EnemyStatus::Patrol;
+	}
+}
+
+//死亡
+void DaggerEnemy::Death()
+{
+	move.x = 0.f;
 }
 
 //アニメーションマネージャー
 void DaggerEnemy::EnemyAnimationManager()
 {
 	enemyAnimInterval++;
+	
 	if (enemyStatus == EnemyStatus::Patrol)
 	{
 		PatrolAnim();
@@ -285,7 +419,7 @@ void DaggerEnemy::EnemyAnimationManager()
 	{
 		if (weaponType == Weapon::Dagger)
 		{
-			DaggerAttackStandByAnim();
+			DaggerEnemyAttackStandByAnim();
 		}
 		else if (weaponType == Weapon::None)
 		{
@@ -314,6 +448,11 @@ void DaggerEnemy::EnemyAnimationManager()
 			WeaponNoneAttackEndAnim();
 		}
 	}
+	if (enemyStatus == EnemyStatus::Death)
+	{
+		//死亡時のアニメーション
+		EnemyDeathAnim();
+	}
 }
 
 //パトロールアニメーション
@@ -330,16 +469,14 @@ void DaggerEnemy::PatrolAnim()
 }
 
 //攻撃準備時のアニメーション(短剣装備中)
-void DaggerEnemy::DaggerAttackStandByAnim()
+void DaggerEnemy::DaggerEnemyAttackStandByAnim()
 {
-
 	//attackStartに初めて入った場合の画像番号設定
 	if (daggerEnemyAnimNumber <= 6)
 	{
 		daggerEnemyAnimNumber = 6;
 	}
 	
-
 	//アニメーション番号を加算する場合の処理
 	if (daggerEnemyAnimNumber <= 8)
 	{
@@ -358,9 +495,21 @@ void DaggerEnemy::DaggerAttackStandByAnim()
 		daggerEnemyAnimNumber++;
 	}
 }
+
 //攻撃準備時のアニメーション(短剣装備無し)
 void DaggerEnemy::WeaponNoneAttackStandByAnim()
 {
+	//0～７番を繰り返し続ける
+	if (daggerEnemyAnimNumber>=7)
+	{
+		daggerEnemyAnimNumber = 0;
+	}
+
+	//画像番号の更新
+	if (enemyAnimInterval % 6 == 0)
+	{
+		daggerEnemyAnimNumber++;
+	}
 }
 
 //攻撃開始アニメーション(短剣装備あり)
@@ -370,7 +519,7 @@ void DaggerEnemy::DaggerAttackStartAnim()
 	{
 		daggerEnemyAnimNumber = 13;
 	}
-	else if (daggerEnemyAnimNumber >= 17)
+	else if (daggerEnemyAnimNumber > 18)
 	{
 		daggerEnemyAnimNumber = 13;
 		signToAttack = true;
@@ -381,9 +530,23 @@ void DaggerEnemy::DaggerAttackStartAnim()
 		daggerEnemyAnimNumber++;
 	}
 }
+
 //攻撃開始アニメーション(短剣装備無し)
 void DaggerEnemy::WeaponNoneAttackStartAnim()
 {
+	if (daggerEnemyAnimNumber <= 8 || daggerEnemyAnimNumber >= 18)
+	{
+		daggerEnemyAnimNumber = 8;
+	}
+	else if (daggerEnemyAnimNumber >= 17)
+	{
+		didAttack = true;
+	}
+	
+	if (enemyAnimInterval % 6 == 0)
+	{
+		daggerEnemyAnimNumber++;
+	}
 }
 
 //攻撃終了アニメーション(短剣装備あり)
@@ -414,4 +577,23 @@ void DaggerEnemy::DaggerAttackEndAnim()
 //攻撃終了時アニメーション(短剣装備無し)
 void DaggerEnemy::WeaponNoneAttackEndAnim()
 {
+
+}
+
+void DaggerEnemy::EnemyDeathAnim()
+{
+	if (daggerEnemyAnimNumber <= 24 || daggerEnemyAnimNumber >= 34)
+	{
+		daggerEnemyAnimNumber = 24;
+	}
+	else if (daggerEnemyAnimNumber == 33)
+	{
+		//死亡した？：yes
+		deathFlg = true;
+	}
+
+	if (enemyAnimInterval % 9 == 0)
+	{
+		daggerEnemyAnimNumber++;
+	}
 }

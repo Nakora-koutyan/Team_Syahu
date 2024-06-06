@@ -89,6 +89,8 @@ protected:
 	//攻撃終了
 	void AttackEnd() override;
 
+	void Death() override;
+
 protected:
 	//ステータスアニメーション用関数
 	//パトロールアニメーション
@@ -106,5 +108,9 @@ protected:
 	//攻撃終了
 	void LargeSwordAttackEndAnim();
 	void WeaponNoneAttackEndAnim();
+
+	//死亡時のアニメーション
+	void EnemyDeathAnim();
+	void WeaponNoneEnemyDeathAnim();
 };
 
