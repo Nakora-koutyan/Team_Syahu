@@ -101,6 +101,7 @@ void NormalEnemy::Update()
 		AttackEnd();
 		break;
 
+		//死亡
 	case EnemyStatus::Death:
 		Death();
 		break;
@@ -109,6 +110,7 @@ void NormalEnemy::Update()
 	if (hp <= 0)
 	{
 		enemyStatus = EnemyStatus::Death;
+		isShow = false;
 	}
 
 	//攻撃範囲
@@ -120,6 +122,7 @@ void NormalEnemy::Update()
 	//世界の両端を越えない
 	DontCrossBorder();
 
+	//レイピアの呼び出し (引数：(装備対象,攻撃時の速度))
 	rapier->Update(this, (NORMAL_WALK_SPEED * ATTACK_SPEED));
 
 	location.x += move.x;
@@ -134,6 +137,7 @@ void NormalEnemy::Draw() const
 		hp <= 0 ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
 		TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	
 	//攻撃範囲用の矩形
 	DrawBoxAA(GetMinScreenLocation().x - (410.f/2.f),GetMinScreenLocation().y - (75.f/2.f),
 			GetMaxScreenLocation().x + (410.f/2.f),GetMaxScreenLocation().y + (75.f/2.f),
@@ -508,15 +512,20 @@ void NormalEnemy::AttackEndAnim()
 
 void NormalEnemy::EnemyDeathAnim()
 {
+	//Deathに遷移した際一度だけ呼ばれる処理
 	if (!once)
 	{
+		//番号をリセット
 		enemyNumber = 0;
 		once = true;
+
+		//ノックバックを解除
 		isKnockBack = false;
 	}
 	//死亡したら死亡フラグをtrueにする
 	if (enemyNumber >= 11)
 	{
+		//死亡した?：yes
 		deathFlg = true;
 	}
 
@@ -524,6 +533,7 @@ void NormalEnemy::EnemyDeathAnim()
 	if (animInterval % 4 == 0)
 	{
 		enemyNumber++;
+		//４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
 		location.y -= (enemyNumber * 0.45f);
 	}
 }
