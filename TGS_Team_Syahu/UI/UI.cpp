@@ -56,6 +56,8 @@ void UI::Draw() const
 	PlayerHPBar();
 
 	PlayerStock();
+
+	PlayerEquipmentWeapon();
 }
 
 void UI::PlayerHPBar() const
@@ -85,28 +87,10 @@ void UI::PlayerStock() const
 		else if (stockIcon[i] == Weapon::LargeSword)
 		{
 			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/largeSword"), TRUE);
-			if (decisionFlg)
-			{
-				DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/largeSword"), TRUE);
-				DrawExtendGraphF
-				(playerLocation.x - 25.f, playerLocation.y - 18.f,
-					(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
-					ResourceManager::GetImage("UI/barBackground"), FALSE);
-				DrawExtendGraphF
-				(playerLocation.x - 25.f, playerLocation.y - 18.f,
-					(playerLocation.x + playerWeaponDurability[selectCount]) - 25.f, (playerLocation.y + 11.f) - 18.f,
-					ResourceManager::GetImage("UI/durabilityBar"), TRUE);
-
-			}
 		}
 		else if (stockIcon[i] == Weapon::Dagger)
 		{
 			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/dagger"), TRUE);
-			if (decisionFlg) 
-			{
-				DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/dagger"), TRUE);
-				DrawFormatStringF(playerLocation.x - 5.f, playerLocation.y - 20.f, 0xffffff, "%d", playerDaggerCnt[i] + 1);
-			}
 			SetFontSize(14);
 			DrawFormatString(20 + (i * 50) + 23, 66, 0xffffff, "%d", playerDaggerCnt[i] + 1);
 			SetFontSize(16);
@@ -114,18 +98,6 @@ void UI::PlayerStock() const
 		else if (stockIcon[i] == Weapon::Rapier)
 		{
 			DrawGraph(20 + (i * 50), 48, ResourceManager::GetImage("UI/rapier"), TRUE);
-			if (decisionFlg)
-			{
-				DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/rapier"), TRUE);
-				DrawExtendGraphF
-				(playerLocation.x - 25.f, playerLocation.y - 18.f,
-					(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
-					ResourceManager::GetImage("UI/barBackground"), FALSE);
-				DrawExtendGraphF
-				(playerLocation.x - 25.f, playerLocation.y - 18.f,
-					(playerLocation.x + playerWeaponDurability[selectCount]) - 25.f, (playerLocation.y + 11.f) - 18.f,
-					ResourceManager::GetImage("UI/durabilityBar"), TRUE);
-			}
 		}
 	}
 
@@ -144,4 +116,40 @@ void UI::EnemyHPBar(const Vector2D location, const float hp) const
 	(location.x - 20.f, location.y - 20.f,
 		(location.x + hp) - 20.f, (location.y + 11.f) - 20.f,
 		ResourceManager::GetImage("UI/healthBar"), TRUE);
+}
+
+void UI::PlayerEquipmentWeapon() const
+{
+	if (decisionFlg)
+	{
+		if (stockIcon[selectCount] == Weapon::LargeSword)
+		{
+			DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/largeSword"), TRUE);
+			DrawExtendGraphF
+			(playerLocation.x - 25.f, playerLocation.y - 18.f,
+				(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
+				ResourceManager::GetImage("UI/barBackground"), FALSE);
+			DrawExtendGraphF
+			(playerLocation.x - 25.f, playerLocation.y - 18.f,
+				(playerLocation.x + playerWeaponDurability[selectCount]) - 25.f, (playerLocation.y + 11.f) - 18.f,
+				ResourceManager::GetImage("UI/durabilityBar"), TRUE);
+		}
+		else if (stockIcon[selectCount] == Weapon::Dagger)
+		{
+			DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/dagger"), TRUE);
+			DrawFormatStringF(playerLocation.x - 5.f, playerLocation.y - 20.f, 0xffffff, "%d", playerDaggerCnt[selectCount] + 1);
+		}
+		else if (stockIcon[selectCount] == Weapon::Rapier)
+		{
+			DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/rapier"), TRUE);
+			DrawExtendGraphF
+			(playerLocation.x - 25.f, playerLocation.y - 18.f,
+				(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
+				ResourceManager::GetImage("UI/barBackground"), FALSE);
+			DrawExtendGraphF
+			(playerLocation.x - 25.f, playerLocation.y - 18.f,
+				(playerLocation.x + playerWeaponDurability[selectCount]) - 25.f, (playerLocation.y + 11.f) - 18.f,
+				ResourceManager::GetImage("UI/durabilityBar"), TRUE);
+		}
+	}
 }

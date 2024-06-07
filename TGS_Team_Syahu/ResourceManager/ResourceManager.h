@@ -7,9 +7,9 @@
 class ResourceManager
 {
 private:
-	static ResourceManager* manager;						//オブジェクト
+	static ResourceManager* manager;								//オブジェクト
 
-	std::string path;										//パス
+	std::string path;												//パス
 
 	std::map<std::string, int> bgm;									//BGM
 	std::map<std::string, int> se;									//SE

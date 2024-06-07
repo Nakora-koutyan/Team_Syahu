@@ -53,7 +53,7 @@ void Rapier::Update(CharaBase* chara,float speed)
 		{
 			framCount++;
 			effectAnimcount++;
-			if (effectAnim < 5)
+			if (effectAnim < 6)
 			{
 				effectAnim++;
 			}
@@ -220,7 +220,7 @@ void Rapier::Attack(const CharaBase* chara)
 	if (direction > 0)
 	{
 		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
-		effectLocation.x = location.x + 15.f;
+		effectLocation.x = chara->GetMinLocation().x + (312 / 2);
 		effectLocation.y = location.y;
 		directionVector.x = RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(45.f);
@@ -228,7 +228,7 @@ void Rapier::Attack(const CharaBase* chara)
 	else
 	{
 		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
-		effectLocation.x = location.x - 15.f;
+		effectLocation.x = chara->GetMaxLocation().x - (312 / 2);
 		effectLocation.y = location.y;
 		directionVector.x = -RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(-45.f);

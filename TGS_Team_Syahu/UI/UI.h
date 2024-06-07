@@ -42,6 +42,9 @@ public:
 	//プレイヤーのストック
 	void PlayerStock()const;
 
+	//プレイヤーの装備している武器
+	void PlayerEquipmentWeapon()const;
+
 	//エネミーのHPバー
 	void EnemyHPBar(const Vector2D location, const float hp)const;
 };
