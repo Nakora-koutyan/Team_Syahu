@@ -22,7 +22,7 @@ private:
 	int CountChangeCounter;
 
 	bool isFirst;				//初めて死亡処理に入った時に使われるbool変数
-	bool OnlyOnce;				//死亡時に一度だけ呼ばれる変数
+	bool onlyOnce;				//死亡時に一度だけ呼ばれる変数
 
 	float locYCorrect;			//画像のY座標の補正
 

@@ -6,7 +6,7 @@
 
 //コンストラクタ
 NormalEnemy::NormalEnemy(float x, float y):enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
-animTurnFlg(false),attackTime(0), CountChangeCounter(0),once(false),isFirst(false), OnlyOnce(false), locYCorrect(0)
+animTurnFlg(false),attackTime(0), CountChangeCounter(0),onlyOnce(false),isFirst(false), locYCorrect(0)
 {
 	//表示座標{ x , y }
 	location = { x,y };
