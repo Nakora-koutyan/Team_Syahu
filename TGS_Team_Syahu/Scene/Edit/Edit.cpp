@@ -178,20 +178,14 @@ SceneBase* Edit::Update() {
 }
 
 void Edit::Draw()const {
-	for (int i = 0; i <= WORLD_WIDTH / BLOCK_WIDTH; i++)
-	{
-		DrawLineAA(BLOCK_WIDTH * i - move.x, 0 - move.y, BLOCK_WIDTH * i - move.x, WORLD_HEIGHT - move.y, 0xffffff, 0);
-	}
-	for (int i = 0; i <= WORLD_HEIGHT / BLOCK_HEIGHT; i++)
-	{
-		DrawLineAA(0 - move.x, BLOCK_HEIGHT * i - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * i - move.y, 0xffffff, 0);
-	}
 
 	for (int i = 0; i < WORLD_WIDTH / BLOCK_WIDTH; i++)
 	{
+		DrawLineAA(BLOCK_WIDTH * i - move.x, 0 - move.y, BLOCK_WIDTH * i - move.x, WORLD_HEIGHT - move.y, 0xffffff, 0);
 		for (int j = 0; j < WORLD_HEIGHT / BLOCK_HEIGHT; j++)
 		{
-			DrawFormatStringF(50 * i + 2 - move.x, 50 * j + 2 - move.y, 0x606000, "%d", stageData[j][i]);
+			DrawLineAA(0 - move.x, BLOCK_HEIGHT * i - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * i - move.y, 0xffffff, 0);
+			DrawFormatStringF(50 * i + 2 - move.x, 50 * j + 2 - move.y, color[stageData[j][i]], "%d", stageData[j][i]);
 		}
 	}
 

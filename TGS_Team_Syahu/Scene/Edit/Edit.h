@@ -14,8 +14,8 @@ static char objString[OBJECT_TYPE_MAX][256] =
     "None",
     "Block",
     "Sword",
-    "Dagger",
     "Rapier",
+    "Dagger",
 };
 
 enum MODE {
@@ -36,6 +36,7 @@ private:
     int blockX, blockY;
     int rSelectX, rSelectY;
     bool rangeflg;
+    const int color[5]{ 0xDDDDDD,0x000000,0x8524F4,0xAF2F3E,0x49FFF3 };
     int stageWidth, stageHeight;
     int stageNum;
     int stageData[100][100];
