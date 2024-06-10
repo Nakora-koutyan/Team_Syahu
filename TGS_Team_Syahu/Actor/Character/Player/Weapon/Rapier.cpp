@@ -134,6 +134,7 @@ void Rapier::Update(CharaBase* chara,float speed)
 	//空中攻撃が地面に着地したら
 	else if (isAirAttack && !chara->GetIsAir())
 	{
+		ResourceManager::PlaySE("fallAttack", FALSE);
 		framCount = 0;
 		direction = 0;
 		angle = 0.f;
@@ -207,6 +208,8 @@ void Rapier::Draw() const
 
 void Rapier::Attack(const CharaBase* chara)
 {
+	ResourceManager::PlaySE("rapier", FALSE);
+
 	isShow = true;
 
 	//まだ方向が決まってないなら

@@ -7,6 +7,7 @@
 #include "../../Actor/Character/Enemy/DaggerEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../Edit/Edit.h"
+#include"../ResourceManager/ResourceManager.h"
 
 GameMainScene::GameMainScene() :ui(nullptr), debugModeFlg(false)
 {
@@ -61,6 +62,8 @@ SceneBase* GameMainScene::Update()
 {
 	if (KeyInput::GetKey(KEY_INPUT_G))debugModeFlg = !debugModeFlg;
 
+	ResourceManager::PlayBGM("GameMain");
+
 	HitCheck();
 
 	for (auto i = 0; i < object.size(); i++)
@@ -79,7 +82,7 @@ SceneBase* GameMainScene::Update()
 
 			if (object[i]->GetObjectType() == ObjectType::Enemy && player->GetEquipmentAnimFlg())
 			{
-
+				//プレイヤーの装備アニメーション中は敵の更新をしない
 			}
 			else
 			{
@@ -101,10 +104,9 @@ SceneBase* GameMainScene::Update()
 					//プレイヤーならゲームオーバーに遷移（今はゲームメイン）
 					if (chara->GetObjectType() == ObjectType::Player)
 					{
+						ResourceManager::SetPositionAllBGM(0);
 						return new GameMainScene();
 					}
-					delete object[i];
-					object[i] = nullptr;
 				}
 			}
 		}
@@ -117,7 +119,6 @@ SceneBase* GameMainScene::Update()
 	}
 
 #endif // DEBUG
-
 
 	return this;
 }
@@ -168,7 +169,7 @@ void GameMainScene::HitCheck()
 				//j番目がエネミーなら武器の当たり判定
 				if (object[j]->GetObjectType() == ObjectType::Enemy)
 				{
-					HitCheckEnemyWeapon(j);
+					HitCheckEnemyWeapon(i, j);
 				}
 				
 				//ゲームメインにあるオブジェクトの当たり判定
@@ -235,7 +236,7 @@ void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
 	}
 }
 
-void GameMainScene::HitCheckEnemyWeapon(const int j)
+void GameMainScene::HitCheckEnemyWeapon(const int i, const int j)
 {
 	EnemyBase* enemy = static_cast<EnemyBase*>(object[j]);
 	Player* player = static_cast<Player*>(object[0]);
@@ -258,6 +259,18 @@ void GameMainScene::HitCheckEnemyWeapon(const int j)
 		{
 			daggerEnemy->HitWeapon(player);
 			player->Hit(daggerEnemy, daggerEnemy->GetDamage() * 3);
+		}
+
+		//短剣とオブジェクトの当たり判定
+		if (object[i]->GetObjectType() == ObjectType::Object)
+		{
+			for (int k = 0; k < PLAYER_MAX_DAGGER; k++)
+			{
+				if (daggerEnemy->GetDagger()->CollisionCheck(object[i]))
+				{
+					daggerEnemy->GetDagger()->Init();
+				}
+			}
 		}
 	}
 	if (enemy->GetEnemyType() == EnemyType::RapierEnemy)

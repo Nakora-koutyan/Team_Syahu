@@ -323,6 +323,8 @@ void Player::Hit(ObjectBase* object, const float damage)
 	//すでに当たってないならかつ同じオブジェクトじゃないなら
 	if (!isHit && objectType != chara->GetObjectType() && hp > 0 && !invincibleFlg)
 	{
+		ResourceManager::PlaySE("damage", FALSE);
+
 		isHit = true;
 
 		if (hp > 0)hp -= damage;
@@ -689,6 +691,10 @@ void Player::Animation()
 		if (playerAnimFramCount % 8 == 0)
 		{
 			playerAnim++;
+			if (playerAnim == 9 || playerAnim == 11 || playerAnim == 15)
+			{
+				ResourceManager::PlaySE("walk", FALSE);
+			}
 			if (playerAnim >= 16)
 			{
 				playerAnim = 8;
@@ -726,6 +732,10 @@ void Player::Animation()
 	{
 		if (playerAnimFramCount % 8 == 0)
 		{
+			if (playerAnim == 27)
+			{
+				ResourceManager::PlaySE("walk", FALSE);
+			}
 			if (playerAnim < 30)
 			{
 				playerAnim++;
@@ -743,6 +753,8 @@ void Player::Animation()
 	{
 		if (playerAnim <= 16 || playerAnim >= 22)
 		{
+			ResourceManager::PlaySE("equipment", FALSE);
+
 			playerAnim = 17;
 		}
 		if (playerAnimFramCount % 8 == 0)

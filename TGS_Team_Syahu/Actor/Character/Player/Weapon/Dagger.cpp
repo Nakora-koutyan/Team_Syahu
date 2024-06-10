@@ -104,6 +104,8 @@ void Dagger::Draw() const
 
 void Dagger::Attack(const CharaBase* chara)
 {
+	ResourceManager::PlaySE("dagger", FALSE);
+
 	isShow = true;
 
 	//まだ方向が決まってないなら

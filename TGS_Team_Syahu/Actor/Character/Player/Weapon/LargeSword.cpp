@@ -126,8 +126,10 @@ void LargeSword::Update(CharaBase* chara)
 		isHit = false;
 		chara->SetIsAttack(false);
 	}
+	//空中攻撃が地面に着地したら
 	else if (isAirAttack && !chara->GetIsAir())
 	{
+		ResourceManager::PlaySE("fallAttack", FALSE);
 		framCount = 0;
 		direction = 0;
 		angle = 0.f;
@@ -194,6 +196,8 @@ void LargeSword::Draw() const
 
 void LargeSword::Attack(CharaBase* chara)
 {
+	ResourceManager::PlaySE("largeSword", FALSE);
+
 	isShow = true;
 
 	//まだ方向が決まってないなら
