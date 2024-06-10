@@ -1,5 +1,5 @@
-#include "ResourceManager.h"
-#include <stdexcept>
+#include"ResourceManager.h"
+#include<stdexcept>
 
 ResourceManager* ResourceManager::manager = nullptr;
 
@@ -27,6 +27,7 @@ void ResourceManager::Initialize()
 	SetImage("UI/bar");
 	SetImage("UI/barBackground");
 	SetImage("UI/healthBar");
+	SetImage("UI/durabilityBar");
 	SetImage("UI/stock");
 	SetImage("UI/selectStock");
 	SetImage("UI/kariSelect");
@@ -37,7 +38,7 @@ void ResourceManager::Initialize()
 	SetImage("Weapon/largeSword");
 	SetImage("Weapon/rapier");
 	SetDivImage("Effect/jumpEffect", 14, 14, 1, 60, 32);
-	SetDivImage("Effect/rapierEffect", 6, 1, 6, 239, 60);
+	SetDivImage("Effect/rapierEffect", 7, 1, 7, 312, 78);
 	SetDivImage("Effect/slashEffect", 7, 7, 1, 224, 208);
 	SetDivImage("Effect/fallAttackEffect", 7, 7, 1, 200, 224);
 	SetImage("Effect/Steal/steal_1");
@@ -50,6 +51,7 @@ void ResourceManager::Initialize()
 	SetImage("Effect/Steal/steal_8");
 	SetImage("Effect/Steal/steal_9");
 	SetImage("Effect/Steal/steal_10");
+	SetDivImage("Effect/transformEffect", 9, 9, 1, 240, 240);
 
 	//BGM
 	
@@ -92,7 +94,7 @@ void ResourceManager::SetSE(const std::string fileName)
 
 		//キーにSEを読みこむ
 		manager->se[fileName] = LoadSoundMem(filePath.c_str());
-
+		
 		if (manager->se[fileName] == -1)
 		{
 			throw(std::invalid_argument("SEが読み込めません。"));
@@ -134,12 +136,67 @@ void ResourceManager::SetDivImage(const std::string fileName, const int max, con
 		std::string filePath;
 		filePath = std::string("Resource/Images/") + fileName + std::string(".png");
 
+		manager->divImage[fileName].reserve(max);
+
+		for (int i = 0; i < max; i++)
+		{
+			manager->divImage[fileName].push_back(0);
+		}
+
 		//キーにImageを読みこむ
-		LoadDivGraph(filePath.c_str(), max, x, y, sizeX, sizeY, manager->divImage[fileName]);
+		LoadDivGraph(filePath.c_str(), max, x, y, sizeX, sizeY, manager->divImage[fileName].data());
+		//LoadDivGraph(filePath.c_str(), max, x, y, sizeX, sizeY, manager->divImage[fileName]);
 
 		if (manager->divImage[fileName][0] == -1)
 		{
 			throw(std::invalid_argument("Imageが読み込めません。"));
 		}
 	}
+}
+
+void ResourceManager::SetVolumeAllBGM(const int volume)
+{
+
+}
+
+void ResourceManager::SetVolumeAllSE(const int volume)
+{
+
+}
+
+void ResourceManager::SetPositionAllBGM(LONGLONG time)
+{
+}
+
+void ResourceManager::SetPositionAllSE(LONGLONG time)
+{
+}
+
+void ResourceManager::PlayBGM(const std::string fileName, bool isSingleUnit, int playType, int topPositionFlag)
+{
+}
+
+void ResourceManager::PlaySE(const std::string fileName, bool isSingleUnit, int playType, int topPositionFlag)
+{
+
+}
+
+void ResourceManager::StopBGM(const std::string fileName)
+{
+
+}
+
+void ResourceManager::StopSoundAllBGM()
+{
+
+}
+
+void ResourceManager::StopSE(const std::string fileName)
+{
+
+}
+
+void ResourceManager::StopAllSE()
+{
+
 }

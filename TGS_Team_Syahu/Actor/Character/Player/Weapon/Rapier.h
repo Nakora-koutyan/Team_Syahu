@@ -3,7 +3,7 @@
 
 #define RAPIER_ATTACK_TIME				FPS * 0.4		//レイピア攻撃の時間
 #define RAPIER_CHARGE_TIME				FPS * 0.2		//レイピアの溜め時間
-#define RAPIER_MOVE						15.5f			//レイピアの移動量/f
+#define RAPIER_MOVE						12.5f			//レイピアの移動量/f
 #define RAPIER_AIR_MOVE					12.5f			//レイピアの空中での移動量/f
 #define RAPIER_LENGTH					100.f			//レイピアの長さ
 #define RAPIER_WEIGHT					0.35f			//レイピアの重さ
@@ -48,7 +48,7 @@ public:
 	~Rapier();
 
 	//更新
-	void Update(CharaBase* chara);
+	void Update(CharaBase* chara, float speed);
 
 	//描画
 	void Draw()const override;

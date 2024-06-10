@@ -2,13 +2,11 @@
 #include "../Player/Player.h"
 #include "../../Camera/Camera.h"
 
-#define MAX_WAITING_TIME 40
 #define NORMAL_ENEMY_KNOCKBACK 3.f
-#define MAX_ATTACK_TIME 60
 
 //コンストラクタ
 NormalEnemy::NormalEnemy(float x, float y):enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
-animTurnFlg(false),attackTime(0),once(false)
+animTurnFlg(false),attackTime(0), CountChangeCounter(0),once(false)
 {
 	//表示座標{ x , y }
 	location = { x,y };
@@ -29,6 +27,18 @@ void NormalEnemy::Initialize()
 	//エネミー画像の格納
 	LoadDivGraph("Resource/Images/Enemy/rapier.png", 6, 6, 1, 120, 130, enemyImage);
 
+	int enemyDeathImageOld[12];
+	LoadDivGraph("Resource/Images/Enemy/RapierEnemyDeath.png", 12, 3, 4, 120, 130, enemyDeathImageOld);
+	for (int i = 0; i < 12; i++)
+	{
+		enemyDeathImage[i] = NULL;
+		if (11 < i)
+		{
+			continue;
+		}
+		enemyDeathImage[i] = enemyDeathImageOld[i];
+	}
+
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
 	//表示座標{ x , y }
@@ -47,7 +57,7 @@ void NormalEnemy::Initialize()
 	//表示するか?
 	isShow = true;
 
-	damage = 15.f;
+	damage = 2.5f;
 
 	rapier = new Rapier;
 
@@ -67,7 +77,8 @@ void NormalEnemy::Update()
 	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 0.2);
 	KnockBack(this, FPS * 0.5f, knockBackMove);
-
+	Gravity();
+	Landing(GROUND_LINE);
 	
 	//状態遷移
 	switch (enemyStatus)
@@ -91,6 +102,17 @@ void NormalEnemy::Update()
 	case EnemyStatus::AttackEnd:
 		AttackEnd();
 		break;
+
+		//死亡
+	case EnemyStatus::Death:
+		Death();
+		break;
+	}
+
+	if (hp <= 0)
+	{
+		enemyStatus = EnemyStatus::Death;
+		isShow = false;
 	}
 
 	//攻撃範囲
@@ -102,7 +124,8 @@ void NormalEnemy::Update()
 	//世界の両端を越えない
 	DontCrossBorder();
 
-	rapier->Update(this);
+	//レイピアの呼び出し (引数：(装備対象,攻撃時の速度))
+	rapier->Update(this, (NORMAL_WALK_SPEED * ATTACK_SPEED));
 
 	location.x += move.x;
 }
@@ -113,8 +136,10 @@ void NormalEnemy::Draw() const
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, enemyAlpha);
 	DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
-		enemyImage[enemyNumber], TRUE, animTurnFlg);
+		hp <= 0 ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
+		TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	
 	//攻撃範囲用の矩形
 	DrawBoxAA(GetMinScreenLocation().x - (410.f/2.f),GetMinScreenLocation().y - (75.f/2.f),
 			GetMaxScreenLocation().x + (410.f/2.f),GetMaxScreenLocation().y + (75.f/2.f),
@@ -252,6 +277,12 @@ void NormalEnemy::AttackStart()
 		if (signToAttack)
 		{
 			rapier->Attack(this);
+		}
+		if (CountChangeCounter >= 2)
+		{
+			signToAttack = false;
+			CountChangeCounter = 0;
+			//エネミーの状態を攻撃終了に遷移する
 			enemyStatus = EnemyStatus::AttackEnd;
 		}
 	}
@@ -308,6 +339,11 @@ void NormalEnemy::AttackEnd()
 	}
 }
 
+void NormalEnemy::Death()
+{
+	move.x = 0.f;
+}
+
 //アニメーション制御関数
 void NormalEnemy::EnemyAnimationManager()
 {
@@ -315,92 +351,31 @@ void NormalEnemy::EnemyAnimationManager()
 	//パトロール状態の場合
 	if (enemyStatus == EnemyStatus::Patrol)
 	{
-		//敵画像の番号が2以上でカウントダウンがfalseの場合
-		if (enemyNumber >= 2 && animCountDown == false)
-		{
-			//カウントダウンに切り替える
-			animCountDown = true;
-		}
-		//16フレームごとにアニメーションを切り替える
-		if (animInterval % 12 == 0)
-		{
-			//画像番号を減少する
-			if (animCountDown == true)
-			{
-				enemyNumber--;
-			}
-			//画像番号を増加する
-			if (animCountDown == false)
-			{
-				enemyNumber++;
-			}
-		}
-		//エネミーの画像番号が０以下になった場合
-		if (enemyNumber <= 0 && animCountDown == true)
-		{
-			//カウントダウンをfalseに切り替える
-			animCountDown = false;
-		}
+		PatrolAnim();
 	}
 
 	//攻撃準備状態の場合
 	if (enemyStatus == EnemyStatus::AttackStandBy)
 	{
-		enemyNumber = 2;
-		animCountDown = false;
+		AttackStandByAnim();
 	}
 
 	//攻撃中の場合
 	if (enemyStatus == EnemyStatus::AttackStart)
 	{
-		signToAttack = true;
-		//画像の番号が３以下の場合
-		if (enemyNumber <= 3)
-		{
-			enemyNumber = 3;
-		}
-		//画像番号が5以上でカウントダウンが解除されている場合
-		if (enemyNumber >= 5 && animCountDown == false)
-		{
-			//カウントダウン状態に切り替える
-			animCountDown = true;
-		}
-		//16フレーム毎に画像を切り替える
-		if (animInterval % 8 == 0)
-		{
-			//画像番号を減少する
-			if (animCountDown == true)
-			{
-				enemyNumber--;
-			}
-			//画像番号を増加する
-			if (animCountDown == false)
-			{
-				enemyNumber++;
-			}
-		}
-		//エネミーの画像番号が４以下になった場合
-		if (enemyNumber <= 4 && animCountDown == true)
-		{
-			//カウントダウンをfalseに切り替える
-			animCountDown = false;
-		}
+		NormalEnemyAttackStartAnim();
 	}
 
 	//攻撃終了状態の場合
 	if (enemyStatus == EnemyStatus::AttackEnd)
 	{
-		//8フレーム毎に切り替える
-		if (animInterval % 8 == 0)
-		{
-			//画像番号を減少させる
-			enemyNumber--;
-		}
-		//エネミーの画像番号が０以下になった場合
-		if (enemyNumber <= 0)
-		{
-			enemyNumber = 0;
-		}
+		AttackEndAnim();
+	}
+
+	//死亡した場合
+	if (enemyStatus == EnemyStatus::Death)
+	{
+		EnemyDeathAnim();
 	}
 
 	//ノックバックが発生した場合
@@ -421,5 +396,146 @@ void NormalEnemy::EnemyAnimationManager()
 	else
 	{
 		enemyAlpha = 255;
+	}
+}
+
+void NormalEnemy::PatrolAnim()
+{
+	//敵画像の番号が2以上でカウントダウンがfalseの場合
+	if (enemyNumber >= 2 && animCountDown == false)
+	{
+		//カウントダウンに切り替える
+		animCountDown = true;
+	}
+	//16フレームごとにアニメーションを切り替える
+	if (animInterval % 12 == 0)
+	{
+		//画像番号を減少する
+		if (animCountDown == true)
+		{
+			enemyNumber--;
+		}
+		//画像番号を増加する
+		if (animCountDown == false)
+		{
+			enemyNumber++;
+		}
+	}
+	//エネミーの画像番号が０以下になった場合
+	if (enemyNumber <= 0 && animCountDown == true)
+	{
+		//カウントダウンをfalseに切り替える
+		animCountDown = false;
+	}
+}
+
+void NormalEnemy::AttackStandByAnim()
+{
+	enemyNumber = 2;
+	animCountDown = false;
+}
+
+void NormalEnemy::NormalEnemyAttackStartAnim()
+{
+	signToAttack = true;
+	//画像の番号が３以下の場合
+	if (enemyNumber <= 3)
+	{
+		enemyNumber = 3;
+	}
+	//画像番号が5以上でカウントダウンが解除されている場合
+	if (enemyNumber >= 5 && animCountDown == false)
+	{
+		//カウントダウン状態に切り替える
+		animCountDown = true;
+	}
+	//16フレーム毎に画像を切り替える
+	if (animInterval % 8 == 0)
+	{
+		//画像番号を減少する
+		if (animCountDown == true)
+		{
+			enemyNumber--;
+		}
+		//画像番号を増加する
+		if (animCountDown == false)
+		{
+			enemyNumber++;
+		}
+	}
+	//エネミーの画像番号が４以下になった場合
+	if (enemyNumber <= 4 && animCountDown == true)
+	{
+		//カウントダウンをfalseに切り替える
+		animCountDown = false;
+		CountChangeCounter++;
+	}
+}
+
+void NormalEnemy::WeaponNoneAttackStartAnim()
+{
+	//画像の番号が３以下の場合
+	if (enemyNumber <= 3)
+	{
+		enemyNumber = 3;
+	}
+	//画像番号が5以上でカウントダウンが解除されている場合
+	if (enemyNumber >= 5 && animCountDown == false)
+	{
+		//カウントダウン状態に切り替える
+		animCountDown = true;
+	}
+	//16フレーム毎に画像を切り替える
+	if (animInterval % 8 == 0)
+	{
+		//画像番号を減少する
+		if (animCountDown == true)
+		{
+			enemyNumber--;
+		}
+		//画像番号を増加する
+		if (animCountDown == false)
+		{
+			enemyNumber++;
+		}
+	}
+	//エネミーの画像番号が４以下になった場合
+	if (enemyNumber <= 4 && animCountDown == true)
+	{
+		//カウントダウンをfalseに切り替える
+		animCountDown = false;
+	}
+}
+
+void NormalEnemy::AttackEndAnim()
+{
+	enemyNumber = 2;
+}
+
+void NormalEnemy::EnemyDeathAnim()
+{
+	//Deathに遷移した際一度だけ呼ばれる処理
+	if (!once)
+	{
+		//番号をリセット
+		enemyNumber = 0;
+		once = true;
+
+		//ノックバックを解除
+		isKnockBack = false;
+	}
+	//死亡したら死亡フラグをtrueにする
+	if (enemyNumber >= 11)
+	{
+		//死亡した?：yes
+		deathFlg = true;
+	}
+
+	//画像番号の更新
+	if (animInterval % 4 == 0)
+	{
+		enemyNumber++;
+		//４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
+		location.y -= (enemyNumber * 0.45f);
 	}
 }

@@ -11,10 +11,12 @@ class UI
 private:
 	Weapon stockIcon[5];								//ストックのアイコン
 	Vector2D playerHpBarLocation;						//プレイヤーのHPバーの座標
+	Vector2D playerLocation;							//プレイヤーの座標
 
 	short selectCount;									//選択しているストックの番号
 
-	int playerDaggerCnt[5] = {};						//ダガーの本数
+	int playerDaggerCnt[5];								//ダガーの本数
+	int playerWeaponDurability[5];						//耐久値
 
 	float playerHp;										//プレイヤーのHP
 
@@ -39,6 +41,9 @@ public:
 
 	//プレイヤーのストック
 	void PlayerStock()const;
+
+	//プレイヤーの装備している武器
+	void PlayerEquipmentWeapon()const;
 
 	//エネミーのHPバー
 	void EnemyHPBar(const Vector2D location, const float hp)const;

@@ -56,6 +56,8 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	}
 	jumpEffectAnimCount = 0;
 	jumpEffectAnim = 0;
+	equipmentEffectAnimCount = 0;
+	equipmentEffectAnim = 0;
 
 	attackCoolTime = 0.f;
 	stealCoolTime = 0.f;
@@ -66,6 +68,7 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	blinkingFlg = false;
 	jumpEffectInversionFlg = false;
 	equipmentAnimFlg = false;
+	equipmentEffectFlg = false;
 }
 
 Player::~Player()
@@ -118,7 +121,7 @@ void Player::Update()
 #endif // DEBUG
 
 	if (isEquipment && isAttack && stock[stockCount] != Weapon::None &&
-		(largeSword->GetIsHit() || rapier->GetIsHit()))
+		((largeSword->GetIsHit() && !largeSword->GetIsAirAttack()) || rapier->GetIsHit()))
 	{
 		if (actionState == Action::Equipment)
 		{
@@ -127,7 +130,7 @@ void Player::Update()
 		//当たっている間耐久値が減るのを防ぐため
 		largeSword->SetIsHit(false);
 		rapier->SetIsHit(false);
-		weaponDurability[stockCount] -= GetWeaponDurability(stock[stockCount], true);
+		weaponDurability[stockCount] -= GetDurability(stock[stockCount], true);
 		if (daggerCount[stockCount] > 0)
 		{
 			daggerCount[stockCount]--;
@@ -183,7 +186,7 @@ void Player::Update()
 	{
 		dagger[i]->Update(this);
 	}
-	rapier->Update(this);
+	rapier->Update(this, PLAYER_MAX_MOVE_SPEED);
 
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
@@ -234,6 +237,13 @@ void Player::Draw() const
 	//画像反転フラグ
 	if (imageInversionFlg)
 	{
+		if (equipmentEffectFlg)
+		{
+			DrawRotaGraphF
+			(GetCenterScreenLocation().x, GetCenterScreenLocation().y, 1, 0,
+				ResourceManager::GetDivImage("Effect/transformEffect", 
+					equipmentEffectAnim), TRUE, TRUE);
+		}
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
 		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
@@ -243,6 +253,13 @@ void Player::Draw() const
 	}
 	else
 	{
+		if (equipmentEffectFlg)
+		{
+			DrawRotaGraphF
+			(GetCenterScreenLocation().x, GetCenterScreenLocation().y, 1, 0,
+				ResourceManager::GetDivImage("Effect/transformEffect",
+					equipmentEffectAnim), TRUE);
+		}
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
 		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X,
@@ -335,7 +352,7 @@ void Player::Hit(ObjectBase* object, const float damage)
 		length += RAPIER_LENGTH;
 	}
 
-	if (abs(disX) < length)
+	if (abs(disX) < length && !invincibleFlg)
 	{
 		float dif = length - abs(disX);
 
@@ -489,7 +506,7 @@ void Player::Movement()
 	}
 
 	//重力
-	move.y += GRAVITY;
+	Gravity();
 
 	//座標に加算
 	location.x += move.x;
@@ -541,7 +558,7 @@ void Player::Attack()
 				largeSword->Attack(this);
 				if (largeSword->GetIsAirAttack())
 				{
-					weaponDurability[stockCount] -= GetWeaponDurability(stock[stockCount], true);
+					weaponDurability[stockCount] -= GetDurability(stock[stockCount], true);
 				}
 			}
 			//短剣
@@ -595,7 +612,7 @@ void Player::Attack()
 				stock[j] = steal->GetKeepType();
 				steal->SetKeepType(Weapon::None);
 				weaponType = stock[stockCount];
-				weaponDurability[stockCount] = GetWeaponDurability(stock[stockCount]);
+				weaponDurability[stockCount] = GetDurability(stock[stockCount]);
 				if (!isEquipment)
 				{
 					stockCount = j;
@@ -733,6 +750,10 @@ void Player::Animation()
 			if (playerAnim < 22)
 			{
 				playerAnim++;
+				if (playerAnim == 19)
+				{
+					equipmentEffectFlg = true;
+				}
 			}
 		}
 		//装備のアニメーションが終わったら
@@ -740,6 +761,25 @@ void Player::Animation()
 		{
 			equipmentAnimFlg = false;
 			invincibleFlg = false;
+		}
+	}
+
+	//装備のエフェクト
+	if (equipmentEffectFlg)
+	{
+		equipmentEffectAnimCount++;
+		if (equipmentEffectAnimCount % 5 == 0)
+		{
+			if (equipmentEffectAnim < 8)
+			{
+				equipmentEffectAnim++;
+			}
+			else
+			{
+				equipmentEffectFlg = false;
+				equipmentEffectAnim = 0;
+				equipmentEffectAnimCount = 0;
+			}
 		}
 	}
 
@@ -833,7 +873,7 @@ void Player::Animation()
 	{
 		if (jumpEffectAnimCount % 15 == 0)
 		{
-			if (jumpEffectAnim < 14)
+			if (jumpEffectAnim < 13)
 			{
 				jumpEffectAnim++;
 			}
@@ -875,14 +915,16 @@ void Player::BackStep(const float angle, const float speed, const float gravityV
 	if (isBackStep && !isKnockBack)
 	{
 		move.y += gravityVelocity;
+		invincibleFlg = true;
 		if (isAir)
 		{
 			isBackStep = false;
+			invincibleFlg = false;
 		}
 	}
 }
 
-int Player::GetWeaponDurability(const Weapon type, const bool useFlg)
+int Player::GetDurability(const Weapon type, const bool useFlg)
 {
 	Weapon checkType = type;
 	bool flg = useFlg;

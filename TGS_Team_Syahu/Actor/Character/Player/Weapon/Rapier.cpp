@@ -22,7 +22,7 @@ Rapier::Rapier()
 	chargeTime = 0;
 	effectAnim = 0;
 	effectAnimcount = 0;
-	airAttackEffectAnim = 0;
+	airAttackEffectAnim = 3;
 	airAttackEffectAnimcount = 0;
 
 	angle = 0.f;
@@ -43,7 +43,7 @@ Rapier::~Rapier()
 
 }
 
-void Rapier::Update(CharaBase* chara)
+void Rapier::Update(CharaBase* chara,float speed)
 {
 	//地上での攻撃なら
 	if (isShow && !isAirAttack)
@@ -63,14 +63,14 @@ void Rapier::Update(CharaBase* chara)
 				location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
 				directionVector.x = RAPIER_LENGTH;
 				imageAngle = DEGREE_TO_RADIAN(45.f);
-				chara->SetMove({ RAPIER_MOVE ,chara->GetMove().y });
+				chara->SetMove({ speed * 1.5f ,chara->GetMove().y });
 			}
 			else
 			{
 				location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
 				directionVector.x = -RAPIER_LENGTH;
 				imageAngle = DEGREE_TO_RADIAN(-45.f);
-				chara->SetMove({ -RAPIER_MOVE ,chara->GetMove().y });
+				chara->SetMove({ -speed * 1.5f ,chara->GetMove().y });
 			}
 		}
 	}
@@ -104,7 +104,7 @@ void Rapier::Update(CharaBase* chara)
 		airAttackEffectAnimcount++;
 		if (airAttackEffectAnimcount % 5 == 0)
 		{
-			if (airAttackEffectAnim < 7)
+			if (airAttackEffectAnim < 6)
 			{
 				airAttackEffectAnim++;
 			}
@@ -112,7 +112,7 @@ void Rapier::Update(CharaBase* chara)
 			{
 				airAttackAnimFlg = false;
 				airAttackEffectLocation = { 0.f,0.f };
-				airAttackEffectAnim = 0;
+				airAttackEffectAnim = 3;
 			}
 		}
 	}
@@ -148,7 +148,6 @@ void Rapier::Update(CharaBase* chara)
 		isAirAttack = false;
 		airAttackAnimFlg = true;
 		chara->SetIsAttack(false);
-		chara->SetInvincibleFlg(false);
 	}
 
 	damage = chara->GetDamage() + RAPIER_DAMAGE;
@@ -221,14 +220,16 @@ void Rapier::Attack(const CharaBase* chara)
 	if (direction > 0)
 	{
 		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
-		effectLocation = location;
+		effectLocation.x = chara->GetMinLocation().x + (312 / 2);
+		effectLocation.y = location.y;
 		directionVector.x = RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(45.f);
 	}
 	else
 	{
 		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
-		effectLocation = location;
+		effectLocation.x = chara->GetMaxLocation().x - (312 / 2);
+		effectLocation.y = location.y;
 		directionVector.x = -RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(-45.f);
 	}

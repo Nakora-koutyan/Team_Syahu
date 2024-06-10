@@ -2,7 +2,7 @@
 #include "../Player/Player.h"
 #include "../../Camera/Camera.h"
 
-#define MAX_WAITING_TIME		87		//攻撃開始までの待機時間(MAX値)
+#define LARGESWORD_MAX_WAITING_TIME	87	//攻撃開始までの待機時間(MAX値)
 #define LARGE_WALK_SPEED		2.5f	//徘徊時のスピード
 
 #define RUSH_ATTACK_SPEED		5.f		//突進攻撃時の速度
@@ -11,7 +11,7 @@
 #define MAX_ATTACK_COUNT_DOWN	31		//
 #define LARGE_SWORD_KNOCKBACK	5		//ノックバック時間
 
-#define MAX_ATTACK_TIME			87		//大剣の攻撃時間
+#define LARGESWORD_MAX_ATTACK_TIME 87	//大剣の攻撃時間
 #define MAX_RUSH_ATTACKTIME		30		//突進攻撃の時間
 
 #define LARGESWORD_ATTACKRANGE_X	60	//大剣の攻撃範囲(X)
@@ -99,7 +99,7 @@ void LargeSwordEnemy::Initialize()
 	damage = 15.f;
 
 	//攻撃時間
-	attackWaitingTime = MAX_WAITING_TIME;
+	attackWaitingTime = LARGESWORD_MAX_WAITING_TIME;
 	statusChangeTime = MAX_COOL_TIME;
 
 	correctLocX = 50.f;
@@ -122,7 +122,7 @@ void LargeSwordEnemy::Initialize()
 	//大剣
 	largeSwordAttackTime = MAX_RUSH_ATTACKTIME;
 	//突進
-	rushAttackTime = MAX_ATTACK_TIME;
+	rushAttackTime = LARGESWORD_MAX_ATTACK_TIME;
 
 	//攻撃開始までの貯め時間の設定
 	attackChargeTime = MAX_ATTACK_CHARGE_TIME;
@@ -139,6 +139,8 @@ void LargeSwordEnemy::Update()
 	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 0.2);
 	KnockBack(this,FPS * 0.5, knockBackMove);
+	Gravity();
+	Landing(GROUND_LINE);
 
 	//エネミーアニメーション
 	EnemyAnimationManager();
@@ -169,12 +171,21 @@ void LargeSwordEnemy::Update()
 		
 		AttackEnd();
 		break;
+
+	case EnemyStatus::Death:
+		Death();
+		break;
 	}
 	//攻撃範囲更新
 	AttackRange();
 
 	//攻撃センサー更新
 	AttackCenser();
+
+	if (hp <= 0)
+	{
+		enemyStatus = EnemyStatus::Death;
+	}
 
 	//アニメーションの画像のX座標のずれを修正
 	if (animTurnFlg)
@@ -428,7 +439,7 @@ void LargeSwordEnemy::AttackStandBy()
 		else if (attackWaitingTime <= 0)
 		{
 			//攻撃までの準備時間をリセット
-			attackWaitingTime = MAX_WAITING_TIME;
+			attackWaitingTime = LARGESWORD_MAX_WAITING_TIME;
 
 			//エネミーの状態を「攻撃開始」に遷移する
 			enemyStatus = EnemyStatus::AttackStart;
@@ -500,7 +511,7 @@ void LargeSwordEnemy::AttackEnd()
 		signToAttack = false;
 		restTime = 0;
 		animInterval = 0;
-		largeSwordAttackTime = MAX_ATTACK_TIME;
+		largeSwordAttackTime = LARGESWORD_MAX_ATTACK_TIME;
 	}
 	if (weaponType == Weapon::None)
 	{
@@ -516,58 +527,80 @@ void LargeSwordEnemy::AttackEnd()
 	}
 }
 
+//死亡
+void LargeSwordEnemy::Death()
+{
+	move.x = 0.f;
+}
+
 //アニメーション制御関数
 void LargeSwordEnemy::EnemyAnimationManager()
 {
-	//パトロール時のアニメーション
-	if (enemyStatus == EnemyStatus::Patrol)
+	if (hp > 0)
 	{
-		//大剣を持っている場合のアニメーション
-		if (weaponType == Weapon::LargeSword)
+		//パトロール時のアニメーション
+		if (enemyStatus == EnemyStatus::Patrol)
 		{
-			LargeSwordPatrolAnim();
+			//大剣を持っている場合のアニメーション
+			if (weaponType == Weapon::LargeSword)
+			{
+				LargeSwordPatrolAnim();
+			}
+			//武器がないときのアニメーション
+			if (weaponType == Weapon::None)
+			{
+				WeaponNonePatrolAnim();
+			}
 		}
-		//武器がないときのアニメーション
-		if (weaponType == Weapon::None)
+		//攻撃準備中のアニメーション
+		if (enemyStatus == EnemyStatus::AttackStandBy)
 		{
-			WeaponNonePatrolAnim();
+			//大剣を持っている場合のアニメーション
+			if (weaponType == Weapon::LargeSword)
+			{
+				LargeSwordAttackStandByAnim();
+			}
+			//武器がないときのアニメーション
+			if (weaponType == Weapon::None)
+			{
+				WeaponNoneAttackStandByAnim();
+			}
+		}
+		//攻撃開始時のアニメーション
+		if (enemyStatus == EnemyStatus::AttackStart)
+		{
+			if (weaponType == Weapon::LargeSword)
+			{
+				LargeSwordAttackStartAnim();
+			}
+			if (weaponType == Weapon::None)
+			{
+				WeaponNoneAttackStartAnim();
+			}
+		}
+		if (enemyStatus == EnemyStatus::AttackEnd)
+		{
+			if (weaponType == Weapon::LargeSword)
+			{
+				LargeSwordAttackEndAnim();
+			}
+			if (weaponType == Weapon::None)
+			{
+				WeaponNoneAttackEndAnim();
+			}
 		}
 	}
-	//攻撃準備中のアニメーション
-	if (enemyStatus == EnemyStatus::AttackStandBy)
-	{
-		//大剣を持っている場合のアニメーション
-		if (weaponType == Weapon::LargeSword)
-		{
-			LargeSwordAttackStandByAnim();
-		}
-		//武器がないときのアニメーション
-		if (weaponType == Weapon::None)
-		{
-			WeaponNoneAttackStandByAnim();
-		}
-	}
-	//攻撃開始時のアニメーション
-	if (enemyStatus == EnemyStatus::AttackStart)
+	else if (hp <= 0)
 	{
 		if (weaponType == Weapon::LargeSword)
 		{
-			LargeSwordAttackStartAnim();
+			//死亡時のアニメーション
+			EnemyDeathAnim();
 		}
-		if (weaponType == Weapon::None)
+		else if (weaponType == Weapon::None)
 		{
-			WeaponNoneAttackStartAnim();
-		}
-	}
-	if (enemyStatus == EnemyStatus::AttackEnd)
-	{
-		if (weaponType == Weapon::LargeSword)
-		{
-			LargeSwordAttackEndAnim();
-		}
-		if (weaponType == Weapon::None)
-		{
-			WeaponNoneAttackEndAnim();
+			//武器無しの時の死亡時アニメーション
+			WeaponNoneEnemyDeathAnim();
 		}
 	}
 	animInterval++;
@@ -745,4 +778,42 @@ void LargeSwordEnemy::LargeSwordAttackEndAnim()
 //武器を持っていない場合の攻撃終了アニメーション
 void LargeSwordEnemy::WeaponNoneAttackEndAnim()
 {
+}
+
+//死亡時のアニメーション
+void LargeSwordEnemy::EnemyDeathAnim()
+{
+	if (largeSwordEnemyImageNumber <= 32)
+	{
+		largeSwordEnemyImageNumber = 32;
+	}
+	else if (largeSwordEnemyImageNumber == 53)
+	{
+		//死亡した？：yes
+		deathFlg = true;
+	}
+
+	if (animInterval % 7 == 0)
+	{
+		largeSwordEnemyImageNumber++;
+	}
+}
+
+//32～54
+void LargeSwordEnemy::WeaponNoneEnemyDeathAnim()
+{
+	if (weaponNoneEnemyImageNumber <= 32)
+	{
+		weaponNoneEnemyImageNumber = 32;
+	}
+	else if (weaponNoneEnemyImageNumber == 53)
+	{
+		//死亡した？：yes
+		deathFlg = true;
+	}
+
+	if (animInterval % 7 == 0)
+	{
+		weaponNoneEnemyImageNumber++;
+	}
 }
