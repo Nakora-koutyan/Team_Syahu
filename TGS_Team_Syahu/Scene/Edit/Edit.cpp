@@ -8,7 +8,7 @@ Edit::Edit()
 
 	KeyInput::SetIsShowMouse(TRUE);
 
-	move.x = 0.f; move.y = 0.f;
+	move.x = 0.f; move.y = WORLD_HEIGHT - SCREEN_HEIGHT;
 	mouseX = 0; mouseY = 0;
 	toolSelect = 1;
 	LoadStage(0);
@@ -178,20 +178,14 @@ SceneBase* Edit::Update() {
 }
 
 void Edit::Draw()const {
-	for (int i = 0; i <= WORLD_WIDTH / BLOCK_WIDTH; i++)
-	{
-		DrawLineAA(BLOCK_WIDTH * i - move.x, 0 - move.y, BLOCK_WIDTH * i - move.x, WORLD_HEIGHT - move.y, 0xffffff, 0);
-	}
-	for (int i = 0; i <= WORLD_HEIGHT / BLOCK_HEIGHT; i++)
-	{
-		DrawLineAA(0 - move.x, BLOCK_HEIGHT * i - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * i - move.y, 0xffffff, 0);
-	}
 
 	for (int i = 0; i < WORLD_WIDTH / BLOCK_WIDTH; i++)
 	{
+		DrawLineAA(BLOCK_WIDTH * i - move.x, 0 - move.y, BLOCK_WIDTH * i - move.x, WORLD_HEIGHT - move.y, 0xffffff, 0);
 		for (int j = 0; j < WORLD_HEIGHT / BLOCK_HEIGHT; j++)
 		{
-			DrawFormatStringF(50 * i + 2 - move.x, 50 * j + 2 - move.y, 0x606000, "%d", stageData[j][i]);
+			DrawLineAA(0 - move.x, BLOCK_HEIGHT * i - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * i - move.y, 0xffffff, 0);
+			DrawFormatStringF(50 * i + 2 - move.x, 50 * j + 2 - move.y, color[stageData[j][i]], "%d", stageData[j][i]);
 		}
 	}
 
@@ -218,7 +212,6 @@ void Edit::Draw()const {
 
 	DrawFormatString(0, 0, 0xffff00, "X:%d,Y:%d", mouseX, mouseY);
 	DrawFormatString(150, 0, 0x00ffff, "SelectObject:%s", objString[toolSelect]);
-	DrawFormatString(300, 0, 0x00ffff, "%d", mode);
 
 	if (resultDisplay > 0) {
 		if (success) {
@@ -262,10 +255,8 @@ void Edit::LoadStage(int stage)
 	{
 		file >> stageWidth;
 		file >> stageHeight;
-		for (int i = 0; i < stageHeight; i++)
-		{
-			for (int j = 0; j < stageWidth; j++)
-			{
+		for (int i = 0; i < stageHeight; i++) {
+			for (int j = 0; j < stageWidth; j++) {
 				file >> stageData[i][j];
 				stageOldData[i][j] = stageData[i][j];
 			}
@@ -295,12 +286,12 @@ void Edit::SaveStage() {
 	std::ofstream file(fpass);
 	if (file)
 	{
-		file << stageWidth << "\n";
-		file << stageHeight << "\n";
-		for (int i = 0; i < stageHeight; i++)
-		{
-			for (int j = 0; j < stageWidth; j++)
-			{
+		int newStageHeight = WORLD_BLOCK_Y;
+		int newStageWidth = WORLD_BLOCK_X;
+		file << newStageWidth << "\n";
+		file << newStageHeight << "\n";
+		for (int i = 0; i < newStageHeight; i++) {
+			for (int j = 0; j < newStageWidth; j++) {
 				file << stageData[i][j] << "\n";
 			}
 		}

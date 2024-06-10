@@ -25,25 +25,26 @@ void GameMainScene::Initialize()
 
 	object.push_back(new Player);
 	object.push_back(new Camera);
-	for (int i = 0; i < 5; i++)	object.push_back(new NormalEnemy);
+	/*for (int i = 0; i < 5; i++)	object.push_back(new NormalEnemy);
 	for (int i = 0; i < 5; i++)object.push_back(new LargeSwordEnemy);
 	object.push_back(new DaggerEnemy);
-	object.push_back(new StageBlock);
+	object.push_back(new StageBlock);*/
+	createStage();
 
 	for (ObjectBase* ob : object)
 	{
 		ob->Initialize();
 	}
 
-	for (auto i = 0; i < object.size(); i++)
-	{
-		if (object[i]->GetObjectType() == ObjectType::Enemy)
-		{
-			object[i]->SetLocationX(300.f * i);
-		}
-	}
+	//for (auto i = 0; i < object.size(); i++)
+	//{
+	//	if (object[i]->GetObjectType() == ObjectType::Enemy)
+	//	{
+	//		object[i]->SetLocationX(300.f * i);
+	//	}
+	//}
 
-	object[object.size()-2]->SetLocationX(500);
+	//object[object.size()-2]->SetLocationX(500);
 }
 
 void GameMainScene::Finalize()
@@ -308,7 +309,7 @@ void GameMainScene::createStage() {
 	fpass = fpassCoupling + fname;
 	int stageWidth;
 	int stageHeight;
-	int stageData;
+	int stageData[WORLD_BLOCK_X][WORLD_BLOCK_Y];
 	std::ifstream file(fpass.c_str());
 	if (file)
 	{
@@ -318,17 +319,31 @@ void GameMainScene::createStage() {
 		{
 			for (int j = 0; j < stageWidth; j++)
 			{
-				file >> stageData;
-				switch (stageData)
+				file >> stageData[j][i];
+				switch (stageData[j][i])
 				{
 				case 0:
+					break;
 				case 1:
+					// ブロック生成
+					object.push_back(new StageBlock(BLOCK_WIDTH * j, BLOCK_HEIGHT * i, 0, 1));
+					break;
 				case 2:
-					case 3:
-
+					// 敵(ソード)生成
+					object.push_back(new LargeSwordEnemy(BLOCK_WIDTH * j, BLOCK_HEIGHT * i));
+					break;
+				case 3:
+					// 敵(レイピア)生成
+					object.push_back(new NormalEnemy(BLOCK_WIDTH * j, BLOCK_HEIGHT * i));
+					break;
+				case 4:
+					// 敵(ダガー)生成
+					object.push_back(new DaggerEnemy(BLOCK_WIDTH * j, BLOCK_HEIGHT * i));
+					break;
 				default:
 					break;
 				}
+				//stageblock->CopyStageData(j, i, stageData[j][i]);
 			}
 		}
 	}

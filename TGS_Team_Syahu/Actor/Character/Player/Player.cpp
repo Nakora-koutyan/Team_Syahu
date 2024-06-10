@@ -6,10 +6,10 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 {
 	objectType = ObjectType::Player;
 
-	location.x = 300.f;
-	location.y = GROUND_LINE;
 	area.width = 56.f;
 	area.height = 84.f;
+	location.x = 300.f;
+	location.y = GROUND_LINE - area.height;
 	direction.x = 1.f;
 	direction.y = 0.f;
 	hp = PLAYER_MAX_HP;
@@ -534,7 +534,7 @@ void Player::Movement()
 		move.y = 0.f;
 	}
 
-	Landing(GROUND_LINE);
+	Landing(WORLD_HEIGHT);
 }
 
 void Player::Attack()

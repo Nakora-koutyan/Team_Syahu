@@ -5,9 +5,11 @@
 #define NORMAL_ENEMY_KNOCKBACK 3.f
 
 //コンストラクタ
-NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
-animTurnFlg(false),attackTime(0), CountChangeCounter(0),once(false)
+NormalEnemy::NormalEnemy(float x, float y):enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
+animTurnFlg(false),attackTime(0), CountChangeCounter(0),onlyOnce(false),isFirst(false), locYCorrect(0)
 {
+	//表示座標{ x , y }
+	location = { x,y };
 }
 
 //デストラクタ
@@ -39,8 +41,6 @@ void NormalEnemy::Initialize()
 
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
-	//表示座標{ x , y }
-	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
 	weaponType = Weapon::Rapier;	//突進(武器無し)
 	enemyType = EnemyType::RapierEnemy;
@@ -76,7 +76,7 @@ void NormalEnemy::Update()
 	DamageInterval(FPS * 0.2);
 	KnockBack(this, FPS * 0.5f, knockBackMove);
 	Gravity();
-	Landing(GROUND_LINE);
+	Landing(WORLD_HEIGHT);
 	
 	//状態遷移
 	switch (enemyStatus)
@@ -126,6 +126,7 @@ void NormalEnemy::Update()
 	rapier->Update(this, (NORMAL_WALK_SPEED * ATTACK_SPEED));
 
 	location.x += move.x;
+	location.y += move.y;
 }
 
 //描画に関する更新
@@ -513,11 +514,11 @@ void NormalEnemy::AttackEndAnim()
 void NormalEnemy::EnemyDeathAnim()
 {
 	//Deathに遷移した際一度だけ呼ばれる処理
-	if (!once)
+	if (!isFirst)
 	{
 		//番号をリセット
 		enemyNumber = 0;
-		once = true;
+		isFirst = true;
 
 		//ノックバックを解除
 		isKnockBack = false;
@@ -530,10 +531,23 @@ void NormalEnemy::EnemyDeathAnim()
 	}
 
 	//画像番号の更新
-	if (animInterval % 4 == 0)
+	if (animInterval % 5 == 0)
 	{
 		enemyNumber++;
-		//４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
-		location.y -= (enemyNumber * 0.45f);
+		
+		if (!onlyOnce)
+		{
+			//４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
+			location.y -= (enemyNumber * locYCorrect);
+		}
+
+		if (enemyNumber <= 7)
+		{
+			locYCorrect += 0.9f;
+		}
+		else
+		{
+			onlyOnce = true;
+		}
 	}
 }
