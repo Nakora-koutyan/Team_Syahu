@@ -3,16 +3,16 @@
 #include "../Actor/Character/Player/Player.h"
 #include "../Actor/Camera/Camera.h"
 
-StageBlock::StageBlock() 
+StageBlock::StageBlock(int x, int y, int type, bool show)
 {
-	location.x = 1000.f;
-	location.y = 1140.f;
+	location.x = x;
+	location.y = y;
 
-	area.width = 200.f;
-	area.height = 100.f;
+	area.width = BLOCK_WIDTH;
+	area.height = BLOCK_HEIGHT;
 
-	DrawType = 0;
-	IsDraw = TRUE;
+	DrawType = type;
+	IsDraw = show;
 };
 
 StageBlock::~StageBlock() 
@@ -56,8 +56,8 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 	Area blockSize = GetArea();
 	int dropWidth = 21;
 	// 上から
-	if ((objectLoc.y + objectSize.height - 20) <= blockLoc.y && chara->GetDirection().y >= 0.f &&
-		(move.x != 0 || (objectLoc.x + objectSize.width - dropWidth <= blockLoc.x + blockSize.width && objectLoc.x + dropWidth >= blockLoc.x))) {
+	if ((objectLoc.y + objectSize.height - 20) <= blockLoc.y && chara->GetDirection().y >= 0.f /* &&
+		(move.x != 0 || (objectLoc.x + objectSize.width - dropWidth <= blockLoc.x + blockSize.width && objectLoc.x + dropWidth >= blockLoc.x))*/) {
 		chara->Landing(blockLoc.y);
 	}
 	// 下から
@@ -83,7 +83,7 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 		}
 	}
 	else {
-		// 右から
+		//右から
 		if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
 			objectLoc.x = blockLoc.x + blockSize.width;
 		}
@@ -96,4 +96,3 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 		chara->SetMove(move);
 	}
 }
-;

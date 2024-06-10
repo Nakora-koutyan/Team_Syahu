@@ -5,9 +5,11 @@
 #define NORMAL_ENEMY_KNOCKBACK 3.f
 
 //コンストラクタ
-NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
-animTurnFlg(false),attackTime(0), CountChangeCounter(0),isFirst(false),OnlyOnce(false),locYCorrect(0)
+NormalEnemy::NormalEnemy(float x, float y):enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
+animTurnFlg(false),attackTime(0), CountChangeCounter(0),once(false),isFirst(false), OnlyOnce(false), locYCorrect(0)
 {
+	//表示座標{ x , y }
+	location = { x,y };
 }
 
 //デストラクタ
@@ -39,8 +41,6 @@ void NormalEnemy::Initialize()
 
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
-	//表示座標{ x , y }
-	location = { 1200,GROUND_LINE - area.height };
 	//キャラクターの能力
 	weaponType = Weapon::Rapier;	//突進(武器無し)
 	enemyType = EnemyType::RapierEnemy;

@@ -6,10 +6,10 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 {
 	objectType = ObjectType::Player;
 
-	location.x = 300.f;
-	location.y = GROUND_LINE;
 	area.width = 56.f;
 	area.height = 84.f;
+	location.x = 300.f;
+	location.y = GROUND_LINE - area.height;
 	direction.x = 1.f;
 	direction.y = 0.f;
 	hp = PLAYER_MAX_HP;
@@ -481,7 +481,7 @@ void Player::Movement()
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack && !isBackStep && hp > 0)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && /*!isAir &&*/ !isKnockBack && !isAttack && !isBackStep && hp > 0)
 	{
 		move.y = -JUMP_POWER;
 		isAir = true;

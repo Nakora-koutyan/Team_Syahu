@@ -8,7 +8,7 @@ Edit::Edit()
 
 	KeyInput::SetIsShowMouse(TRUE);
 
-	move.x = 0.f; move.y = 0.f;
+	move.x = 0.f; move.y = WORLD_HEIGHT - SCREEN_HEIGHT;
 	mouseX = 0; mouseY = 0;
 	toolSelect = 1;
 	LoadStage(0);
@@ -218,7 +218,6 @@ void Edit::Draw()const {
 
 	DrawFormatString(0, 0, 0xffff00, "X:%d,Y:%d", mouseX, mouseY);
 	DrawFormatString(150, 0, 0x00ffff, "SelectObject:%s", objString[toolSelect]);
-	DrawFormatString(300, 0, 0x00ffff, "%d", mode);
 
 	if (resultDisplay > 0) {
 		if (success) {
@@ -262,10 +261,8 @@ void Edit::LoadStage(int stage)
 	{
 		file >> stageWidth;
 		file >> stageHeight;
-		for (int i = 0; i < stageHeight; i++)
-		{
-			for (int j = 0; j < stageWidth; j++)
-			{
+		for (int i = 0; i < stageHeight; i++) {
+			for (int j = 0; j < stageWidth; j++) {
 				file >> stageData[i][j];
 				stageOldData[i][j] = stageData[i][j];
 			}
@@ -295,12 +292,12 @@ void Edit::SaveStage() {
 	std::ofstream file(fpass);
 	if (file)
 	{
-		file << stageWidth << "\n";
-		file << stageHeight << "\n";
-		for (int i = 0; i < stageHeight; i++)
-		{
-			for (int j = 0; j < stageWidth; j++)
-			{
+		int newStageHeight = WORLD_BLOCK_Y;
+		int newStageWidth = WORLD_BLOCK_X;
+		file << newStageWidth << "\n";
+		file << newStageHeight << "\n";
+		for (int i = 0; i < newStageHeight; i++) {
+			for (int j = 0; j < newStageWidth; j++) {
 				file << stageData[i][j] << "\n";
 			}
 		}
