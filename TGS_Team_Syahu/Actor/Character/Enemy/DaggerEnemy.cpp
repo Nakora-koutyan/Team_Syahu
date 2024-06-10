@@ -5,7 +5,8 @@
 //コンストラクタ
 DaggerEnemy::DaggerEnemy(float x, float y) :drawnSword(false), dagger(nullptr), daggerEnemyAnimNumber{(0)},
 daggerEnemyAnim{NULL},enemyAnimInterval(0),correctLocX(0.f),correctLocY(0.f),animTurnFlg(TRUE),
-animCountDown(false),attackEndCount(0),canAttack(false),clawCollisionBox(nullptr),didAttack(false)
+animCountDown(false),attackEndCount(0),canAttack(false),clawCollisionBox(nullptr),didAttack(false),
+onlyOnce(false),locYCorrect(0)
 {
 	//表示座標{ x , y }
 	location = { x,y };
@@ -139,6 +140,7 @@ void DaggerEnemy::Update()
 	if (hp <= 0)
 	{
 		enemyStatus = EnemyStatus::Death;
+		isShow = false;
 	}
 
 	//アニメーション処理
@@ -601,5 +603,21 @@ void DaggerEnemy::EnemyDeathAnim()
 	if (enemyAnimInterval % 9 == 0)
 	{
 		daggerEnemyAnimNumber++;
+
+		if (!onlyOnce)
+		{
+			//４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
+			location.y -= (locYCorrect);
+		}
+
+		if (daggerEnemyAnimNumber >= 29 && daggerEnemyAnimNumber <= 31)
+		{
+			onlyOnce = false;
+			locYCorrect += 2.5f;
+		}
+		else
+		{
+			onlyOnce = true;
+		}
 	}
 }
