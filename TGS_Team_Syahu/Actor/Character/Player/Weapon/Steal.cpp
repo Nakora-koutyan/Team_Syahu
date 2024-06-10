@@ -100,6 +100,8 @@ void Steal::Draw() const
 
 void Steal::Attack(const CharaBase* chara)
 {
+	ResourceManager::PlaySE("steal", FALSE);
+
 	//出現させる
 	isShow = true;
 

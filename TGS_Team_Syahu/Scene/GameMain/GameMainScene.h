@@ -48,7 +48,7 @@ private:
     void HitCheckPlayerWeapon(const int i, const int j);
 
     //エネミーの武器のヒットチェック
-    void HitCheckEnemyWeapon(const int j);
+    void HitCheckEnemyWeapon(const int i, const int j);
 
     //ステージ生成
     void createStage();
