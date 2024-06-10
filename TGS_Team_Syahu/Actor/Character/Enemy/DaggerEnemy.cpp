@@ -170,6 +170,7 @@ void DaggerEnemy::Update()
 	dagger->Update(this);
 
 	location.x += move.x;
+	location.y += move.y;
 }
 
 //描画

@@ -207,6 +207,7 @@ void LargeSwordEnemy::Update()
 
 	//移動処理
 	location.x += move.x;
+	location.y += move.y;
 
 	//画面端を越えない
 	DontCrossBorder();

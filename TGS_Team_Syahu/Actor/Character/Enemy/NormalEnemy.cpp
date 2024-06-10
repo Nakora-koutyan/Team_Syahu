@@ -6,7 +6,7 @@
 
 //コンストラクタ
 NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
-animTurnFlg(false),attackTime(0), CountChangeCounter(0),once(false)
+animTurnFlg(false),attackTime(0), CountChangeCounter(0),isFirst(false),OnlyOnce(false),locYCorrect(0)
 {
 }
 
@@ -126,6 +126,7 @@ void NormalEnemy::Update()
 	rapier->Update(this, (NORMAL_WALK_SPEED * ATTACK_SPEED));
 
 	location.x += move.x;
+	location.y += move.y;
 }
 
 //描画に関する更新
@@ -513,11 +514,11 @@ void NormalEnemy::AttackEndAnim()
 void NormalEnemy::EnemyDeathAnim()
 {
 	//Deathに遷移した際一度だけ呼ばれる処理
-	if (!once)
+	if (!isFirst)
 	{
 		//番号をリセット
 		enemyNumber = 0;
-		once = true;
+		isFirst = true;
 
 		//ノックバックを解除
 		isKnockBack = false;
@@ -533,7 +534,26 @@ void NormalEnemy::EnemyDeathAnim()
 	if (animInterval % 4 == 0)
 	{
 		enemyNumber++;
-		//４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
-		location.y -= (enemyNumber * 0.45f);
+		
+		////４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
+		//location.y -= (enemyNumber * locYCorrect);
+
+		//if (enemyNumber <= 5)
+		//{
+		//	OnlyOnce = true;
+		//}
+		//else
+		//{
+		//	OnlyOnce = false;
+		//}
+
+		//if (OnlyOnce)
+		//{
+		//	locYCorrect -= 0.3f;
+		//}
+		//else if (!OnlyOnce)
+		//{
+		//	locYCorrect -= 0.3f;
+		//}
 	}
 }
