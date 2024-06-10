@@ -76,7 +76,7 @@ void NormalEnemy::Update()
 	DamageInterval(FPS * 0.2);
 	KnockBack(this, FPS * 0.5f, knockBackMove);
 	Gravity();
-	Landing(GROUND_LINE);
+	Landing(WORLD_HEIGHT);
 	
 	//状態遷移
 	switch (enemyStatus)
@@ -531,29 +531,23 @@ void NormalEnemy::EnemyDeathAnim()
 	}
 
 	//画像番号の更新
-	if (animInterval % 4 == 0)
+	if (animInterval % 5 == 0)
 	{
 		enemyNumber++;
 		
-		////４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
-		//location.y -= (enemyNumber * locYCorrect);
+		if (!onlyOnce)
+		{
+			//４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
+			location.y -= (enemyNumber * locYCorrect);
+		}
 
-		//if (enemyNumber <= 5)
-		//{
-		//	OnlyOnce = true;
-		//}
-		//else
-		//{
-		//	OnlyOnce = false;
-		//}
-
-		//if (OnlyOnce)
-		//{
-		//	locYCorrect -= 0.3f;
-		//}
-		//else if (!OnlyOnce)
-		//{
-		//	locYCorrect -= 0.3f;
-		//}
+		if (enemyNumber <= 7)
+		{
+			locYCorrect += 0.9f;
+		}
+		else
+		{
+			onlyOnce = true;
+		}
 	}
 }

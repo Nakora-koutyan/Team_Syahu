@@ -532,7 +532,7 @@ void Player::Movement()
 		move.y = 0.f;
 	}
 
-	Landing(GROUND_LINE);
+	Landing(WORLD_HEIGHT);
 }
 
 void Player::Attack()

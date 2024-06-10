@@ -140,7 +140,7 @@ void LargeSwordEnemy::Update()
 	DamageInterval(FPS * 0.2);
 	KnockBack(this,FPS * 0.5, knockBackMove);
 	Gravity();
-	Landing(GROUND_LINE);
+	Landing(WORLD_HEIGHT);
 
 	//エネミーアニメーション
 	EnemyAnimationManager();
