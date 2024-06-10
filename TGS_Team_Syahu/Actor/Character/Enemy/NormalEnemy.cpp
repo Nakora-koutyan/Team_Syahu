@@ -41,8 +41,6 @@ void NormalEnemy::Initialize()
 
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
-	//表示座標{ x , y }
-	location = { 100,100 };
 	//キャラクターの能力
 	weaponType = Weapon::Rapier;	//突進(武器無し)
 	enemyType = EnemyType::RapierEnemy;
