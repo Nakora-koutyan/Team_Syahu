@@ -23,7 +23,7 @@ private:
 
 public:
 	//コンストラクタ
-	NormalEnemy();
+	NormalEnemy(float x, float y);
 	//デストラクタ
 	~NormalEnemy();
 

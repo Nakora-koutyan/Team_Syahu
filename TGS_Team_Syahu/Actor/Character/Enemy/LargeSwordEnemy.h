@@ -40,12 +40,12 @@ private:
 
 public:
 	//コンストラクタ
-	LargeSwordEnemy();
+	LargeSwordEnemy(float x, float y);
 	//デストラクタ
 	~LargeSwordEnemy();
 
 	//初期化処理
-	void Initialize();
+	void Initialize()override;
 
 	//描画以外の更新
 	void Update()override;

@@ -28,7 +28,7 @@ private:
 
 public:
 	//コンストラクタ
-	DaggerEnemy();
+	DaggerEnemy(float x, float y);
 	//デストラクタ
 	~DaggerEnemy();
 

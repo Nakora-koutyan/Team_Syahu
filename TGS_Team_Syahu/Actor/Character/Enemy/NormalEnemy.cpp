@@ -7,9 +7,11 @@
 #define MAX_ATTACK_TIME 60
 
 //コンストラクタ
-NormalEnemy::NormalEnemy():enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
+NormalEnemy::NormalEnemy(float x, float y):enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
 animTurnFlg(false),attackTime(0),once(false)
 {
+	//表示座標{ x , y }
+	location = { x,y };
 }
 
 //デストラクタ
@@ -30,7 +32,7 @@ void NormalEnemy::Initialize()
 	//サイズ{ x , y }
 	area = { 80.f,90.f };
 	//表示座標{ x , y }
-	location = { 1200,GROUND_LINE - area.height };
+	location = { 100,100 };
 	//キャラクターの能力
 	weaponType = Weapon::Rapier;	//突進(武器無し)
 	enemyType = EnemyType::RapierEnemy;

@@ -3,10 +3,12 @@
 #include "../../Camera/Camera.h"
 
 //コンストラクタ
-DaggerEnemy::DaggerEnemy() :drawnSword(false), dagger(nullptr), daggerEnemyAnimNumber{(0)}, 
+DaggerEnemy::DaggerEnemy(float x, float y) :drawnSword(false), dagger(nullptr), daggerEnemyAnimNumber{(0)},
 daggerEnemyAnim{NULL},enemyAnimInterval(0),correctLocX(0.f),correctLocY(0.f),animTurnFlg(TRUE),
 animCountDown(false),attackEndCount(0)
 {
+	//表示座標{ x , y }
+	location = { x,y };
 }
 //デストラクタ
 DaggerEnemy::~DaggerEnemy()
@@ -37,8 +39,6 @@ void DaggerEnemy::Initialize()
 
 	//サイズ{ x , y }
 	area = { 80.f,85.f };
-	//表示座標{ x , y }
-	location = { 500,GROUND_LINE - area.height };
 
 	//武器の種類：短剣
 	weaponType = Weapon::Dagger;

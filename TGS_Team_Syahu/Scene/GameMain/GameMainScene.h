@@ -13,7 +13,11 @@ private:
 
     UI* ui;                             //UIのオブジェクト
 
+    //StageBlock* stageblock;             //ブロックのオブジェクト
+
     int kari;                           //かり
+
+    int blockMax;
 
     bool debugModeFlg;                  //デバッグ状態にする？ 
 

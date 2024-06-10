@@ -20,11 +20,13 @@
 #define MAX_ATTACK_CHARGE_TIME		60	//攻撃までの最大の貯め時間
 
 //コンストラクタ
-LargeSwordEnemy::LargeSwordEnemy():largeSwordEnemyImage(),largeSwordEnemyImageNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
+LargeSwordEnemy::LargeSwordEnemy(float x, float y):largeSwordEnemyImage(),largeSwordEnemyImageNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
 distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0), largeSwordCollisionBox(nullptr),once(false),
 rushAttackTime(0),largeSwordAttackTime(0),weaponNoneEnemyImage{NULL},weaponNoneEnemyImageNumber(0),closeToPlayer(false), attackEndCounter(0),
 attackChargeTime(0)
 {
+	//表示座標{ x , y }
+	location = { x, y };
 }
 
 //デストラクタ
@@ -79,9 +81,7 @@ void LargeSwordEnemy::Initialize()
 
 	//サイズ{ x , y }
 	area = { 80.f,85.f };
-	//表示座標{ x , y }
-	location = { 1100,GROUND_LINE - area.height };
-	
+
 	//自身の持つ武器
 	weaponType = Weapon::LargeSword;	//大剣
 	enemyType = EnemyType::LargeSwordEnemy;
