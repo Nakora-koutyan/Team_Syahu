@@ -636,6 +636,7 @@ void Player::StockSelect()
 	//stockカウントを減らす
 	if ((KeyInput::GetKey(KEY_INPUT_Q)) || PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER))
 	{
+		ResourceManager::PlaySE("stockSelect", FALSE);
 		isEquipment = false;
 		stockCount--;
 		weaponType = Weapon::None;
@@ -648,6 +649,7 @@ void Player::StockSelect()
 	//stockカウントを増やす
 	if ((KeyInput::GetKey(KEY_INPUT_E)) || PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER))
 	{
+		ResourceManager::PlaySE("stockSelect", FALSE);
 		isEquipment = false;
 		stockCount++;
 		weaponType = Weapon::None;

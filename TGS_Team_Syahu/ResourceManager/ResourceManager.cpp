@@ -67,11 +67,13 @@ void ResourceManager::Initialize()
 	SetSE("steal");
 	SetSE("damage");
 	SetSE("walk");
+	SetSE("stockSelect");
 
 	ChangeVolumeSoundMem((255 * 70) / 100, manager->se["equipment"]);
 	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["steal"]);
 	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["damage"]);
 	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["walk"]);
+	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["stockSelect"]);
 
 }
 

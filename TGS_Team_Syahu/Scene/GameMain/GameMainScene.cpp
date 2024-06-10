@@ -108,6 +108,8 @@ SceneBase* GameMainScene::Update()
 						ResourceManager::SetPositionAllBGM(0);
 						return new GameMainScene();
 					}
+					delete object[i];
+					object[i] = nullptr;
 				}
 			}
 		}
