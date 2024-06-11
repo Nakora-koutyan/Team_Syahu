@@ -1,6 +1,6 @@
 #pragma once
 #include"../SceneBase.h"
-#include"../Utility/Vector2D.h" 
+#include"../../Utility/Vector2D.h" 
 
 #define CURSOR_INTERVAL		15		//カーソルのインターバル
 
