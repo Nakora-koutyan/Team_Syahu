@@ -20,7 +20,7 @@ Edit::~Edit()
 
 void Edit::Initialize()
 {
-	
+	blockImg[0] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_2.png");
 }
 
 void Edit::Finalize()
@@ -184,8 +184,11 @@ void Edit::Draw()const {
 		DrawLineAA(BLOCK_WIDTH * i - move.x, 0 - move.y, BLOCK_WIDTH * i - move.x, WORLD_HEIGHT - move.y, 0xffffff, 0);
 		for (int j = 0; j < WORLD_HEIGHT / BLOCK_HEIGHT; j++)
 		{
-			DrawLineAA(0 - move.x, BLOCK_HEIGHT * i - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * i - move.y, 0xffffff, 0);
+			DrawLineAA(0 - move.x, BLOCK_HEIGHT * j - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * j - move.y, 0xffffff, 0);
 			DrawFormatStringF(50 * i + 2 - move.x, 50 * j + 2 - move.y, color[stageData[j][i]], "%d", stageData[j][i]);
+			if (stageData[j][i] >= 4) {
+				DrawExtendGraph(50 * i - move.x, 50 * j - move.y, 50 * (i + 1) - move.x, 50 * (j + 1) - move.y, blockImg[0], 0);
+			}
 		}
 	}
 
@@ -258,6 +261,7 @@ void Edit::LoadStage(int stage)
 		for (int i = 0; i < stageHeight; i++) {
 			for (int j = 0; j < stageWidth; j++) {
 				file >> stageData[i][j];
+				ObjectExchange(stageData[i][j], 1, 4);
 				stageOldData[i][j] = stageData[i][j];
 			}
 		}
@@ -295,5 +299,11 @@ void Edit::SaveStage() {
 				file << stageData[i][j] << "\n";
 			}
 		}
+	}
+}
+
+void Edit::ObjectExchange(int watch, int target, int exchange) {
+	if (watch == target) {
+		watch = exchange;
 	}
 }
