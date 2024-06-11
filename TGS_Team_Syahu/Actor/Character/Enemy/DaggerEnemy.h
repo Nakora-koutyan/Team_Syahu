@@ -33,6 +33,10 @@ private:
 
 	bool didAttack;			//攻撃した？
 
+
+	bool onlyOnce;			//死亡時アニメーションに一度だけ呼ばれる
+	float locYCorrect;		//画像座標修正用変数
+
 public:
 	//コンストラクタ
 	DaggerEnemy(float x, float y);
