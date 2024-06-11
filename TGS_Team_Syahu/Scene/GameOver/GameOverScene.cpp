@@ -1,8 +1,8 @@
 #include"GameOverScene.h"
-#include"../InputControl/Key/KeyInput.h"
-#include"../InputControl/Pad/PadInput.h"
-#include"../ResourceManager/ResourceManager.h"
-#include"../Scene/Title/TitleScene.h"
+#include"../../InputControl/Key/KeyInput.h"
+#include"../../InputControl/Pad/PadInput.h"
+#include"../../ResourceManager/ResourceManager.h"
+#include"../../Scene/Title/TitleScene.h"
 
 GameOverScene::GameOverScene()
 {

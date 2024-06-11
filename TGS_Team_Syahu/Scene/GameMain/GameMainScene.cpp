@@ -8,9 +8,9 @@
 #include"../../Map/StageBlock.h"
 #include"../Edit/Edit.h"
 #include"../Help/HelpScene.h"
-#include"../ResourceManager/ResourceManager.h"
-#include"../Scene/GameOver/GameOverScene.h"
-#include"../Scene/GameClear/GameClearScene.h"
+#include"../../ResourceManager/ResourceManager.h"
+#include"../../Scene/GameOver/GameOverScene.h"
+#include"../../Scene/GameClear/GameClearScene.h"
 
 GameMainScene::GameMainScene() :ui(nullptr)
 {
