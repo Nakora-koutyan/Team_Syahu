@@ -4,6 +4,7 @@
 #include"../ResourceManager/ResourceManager.h"
 #include"../GameMain/GameMainScene.h"
 #include"../End/EndScene.h"
+#include"../Help/HelpScene.h"
 
 TitleScene::TitleScene()
 {
@@ -83,7 +84,7 @@ SceneBase* TitleScene::Update()
 		}
 		else if (cursorNum == 1)
 		{
-			
+			return new HelpScene();
 		}
 		else if (cursorNum == 2)
 		{
