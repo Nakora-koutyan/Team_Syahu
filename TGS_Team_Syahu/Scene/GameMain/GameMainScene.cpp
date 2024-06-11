@@ -312,20 +312,20 @@ void GameMainScene::createStage() {
 				case 0:
 					break;
 				case 1:
-					// ブロック生成
-					object.push_back(new StageBlock(BLOCK_WIDTH * j, BLOCK_HEIGHT * i, 0, 1));
-					break;
-				case 2:
 					// 敵(ソード)生成
 					object.push_back(new LargeSwordEnemy(BLOCK_WIDTH * j, BLOCK_HEIGHT * i));
 					break;
-				case 3:
+				case 2:
 					// 敵(レイピア)生成
 					object.push_back(new NormalEnemy(BLOCK_WIDTH * j, BLOCK_HEIGHT * i));
 					break;
-				case 4:
+				case 3:
 					// 敵(ダガー)生成
 					object.push_back(new DaggerEnemy(BLOCK_WIDTH * j, BLOCK_HEIGHT * i));
+					break;
+				case 4:
+					// ブロック生成
+					object.push_back(new StageBlock(BLOCK_WIDTH * j, BLOCK_HEIGHT * i, 0, 1));
 					break;
 				default:
 					break;

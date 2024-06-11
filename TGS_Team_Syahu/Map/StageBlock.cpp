@@ -13,6 +13,8 @@ StageBlock::StageBlock(int x, int y, int type, bool show)
 
 	DrawType = type;
 	IsDraw = show;
+
+	blockImg = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_2.png");
 };
 
 StageBlock::~StageBlock() 
@@ -31,11 +33,11 @@ void StageBlock::Update()
 void StageBlock::Draw()const 
 {
 	//ブロックの描画
-	DrawBoxAA
+	DrawExtendGraph
 	(
 		screenLocation.x, screenLocation.y,
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
-		0x00ff00 , TRUE
+		blockImg , TRUE
 	);
 
 	//タイプ表示(仮)
