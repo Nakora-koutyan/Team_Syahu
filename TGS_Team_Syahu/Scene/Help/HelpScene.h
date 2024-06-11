@@ -1,5 +1,6 @@
 #pragma once
 #include "../SceneBase.h"
+#include "../Utility/common.h"
 class HelpScene :public SceneBase
 {
 private:
@@ -11,6 +12,12 @@ private:
 	int operationTextImage;
 	//テキスト：「Close」
 	int closeTextImage;
+
+	//カーソル表示
+	int cursorImage;
+
+	float cursorLocX;
+	float cursorLocY;
 
 public:
 	//コンストラクタ
