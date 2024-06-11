@@ -484,7 +484,7 @@ void Player::Movement()
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack && !isBackStep && hp > 0)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && /*!isAir &&*/ !isKnockBack && !isAttack && !isBackStep && hp > 0)
 	{
 		ResourceManager::PlaySE("jump", FALSE);
 		move.y = -JUMP_POWER;
