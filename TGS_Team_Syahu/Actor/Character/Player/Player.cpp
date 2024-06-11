@@ -212,6 +212,7 @@ void Player::Draw() const
 	DrawFormatString(600, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
 	DrawFormatString(600, 120, 0x000000, "location x:%f location y:%f", location.x, location.y);
 	DrawFormatString(600, 135, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
+	DrawFormatString(600, 150, 0x000000, "isAttack :%s", isAttack ? "true" : "false");
 	if (weaponType == Weapon::None)
 	{
 		DrawFormatString(600, 45, 0x000000, "WeaponType:None");
@@ -485,6 +486,7 @@ void Player::Movement()
 		KeyInput::GetKey(KEY_INPUT_W) ||
 		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack && !isBackStep && hp > 0)
 	{
+		ResourceManager::PlaySE("jump", FALSE);
 		move.y = -JUMP_POWER;
 		isAir = true;
 		isJump = true;

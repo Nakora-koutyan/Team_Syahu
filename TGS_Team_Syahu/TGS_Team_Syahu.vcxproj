@@ -27,6 +27,9 @@
     <ClCompile Include="Actor\Character\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Actor\Character\Enemy\DaggerEnemy.cpp" />
     <ClCompile Include="Actor\Character\Player\Weapon\Dagger.cpp" />
+    <ClCompile Include="Scene\End\EndScene.cpp" />
+    <ClCompile Include="Scene\GameClear\GameClearScene.cpp" />
+    <ClCompile Include="Scene\GameOver\GameOverScene.cpp" />
     <ClCompile Include="Scene\Help\HelpScene.cpp" />
     <ClCompile Include="Scene\Edit\Edit.cpp" />
     <ClCompile Include="InputControl\Key\KeyInput.cpp" />
@@ -43,6 +46,7 @@
     <ClCompile Include="Collision\Sphere\SphereCollision.cpp" />
     <ClCompile Include="Actor\Character\Player\Weapon\Steal.cpp" />
     <ClCompile Include="Actor\Character\Player\Weapon\LargeSword.cpp" />
+    <ClCompile Include="Scene\Title\TitleScene.cpp" />
     <ClCompile Include="UI\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +58,9 @@
     <ClInclude Include="Actor\Character\Enemy\EnemyBase.h" />
     <ClInclude Include="Actor\Character\Enemy\DaggerEnemy.h" />
     <ClInclude Include="Actor\Character\Player\Weapon\Dagger.h" />
+    <ClInclude Include="Scene\End\EndScene.h" />
+    <ClInclude Include="Scene\GameClear\GameClearScene.h" />
+    <ClInclude Include="Scene\GameOver\GameOverScene.h" />
     <ClInclude Include="Scene\Help\HelpScene.h" />
     <ClInclude Include="Scene\Edit\Edit.h" />
     <ClInclude Include="InputControl\Key\KeyInput.h" />
@@ -70,6 +77,7 @@
     <ClInclude Include="Collision\Sphere\SphereCollision.h" />
     <ClInclude Include="Actor\Character\Player\Weapon\Steal.h" />
     <ClInclude Include="Actor\Character\Player\Weapon\LargeSword.h" />
+    <ClInclude Include="Scene\Title\TitleScene.h" />
     <ClInclude Include="UI\UI.h" />
     <ClInclude Include="Utility\Area.h" />
     <ClInclude Include="Utility\common.h" />

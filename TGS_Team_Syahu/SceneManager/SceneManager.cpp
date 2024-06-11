@@ -1,6 +1,6 @@
 #include"SceneManager.h"
-#include"../Scene/GameMain/GameMainScene.h"
 #include"../ResourceManager/ResourceManager.h"
+#include"../Scene/Title/TitleScene.h"
 
 void SceneManager::Update()
 {
@@ -12,7 +12,10 @@ void SceneManager::Update()
 
 	//ゲームループ
 	while ((ProcessMessage() == 0) && !(CheckHitKey(KEY_INPUT_ESCAPE)))
-	{	//画面の初期化
+	{			
+		if (now_sceen == nullptr)break;
+
+		//画面の初期化
 		ClearDrawScreen();
 
 		KeyInput::Update();
@@ -95,7 +98,7 @@ void SceneManager::Initialize()
 
 	if (now_sceen == nullptr)
 	{
-		now_sceen = dynamic_cast<SceneBase*>(new GameMainScene());
+		now_sceen = dynamic_cast<SceneBase*>(new TitleScene());
 	}
 
 	ResourceManager::CreateManager();

@@ -1,6 +1,5 @@
 #pragma once
 #include"../SceneBase.h"
-#include"../../Actor/ObjectBase.h" 
 #include"../../UI/UI.h"
 #include"vector"
 
@@ -13,13 +12,9 @@ private:
 
     UI* ui;                             //UIのオブジェクト
 
-    //StageBlock* stageblock;             //ブロックのオブジェクト
-
     int kari;                           //かり
 
     int blockMax;
-
-    bool debugModeFlg;                  //デバッグ状態にする？ 
 
 public:
     //コンストラクタ

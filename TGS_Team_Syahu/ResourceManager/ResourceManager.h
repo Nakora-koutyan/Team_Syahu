@@ -101,7 +101,7 @@ public:
 	static void StopBGM(const std::string fileName);
 
 	//すべてのBGMを停止
-	static void StopSoundAllBGM();
+	static void StopAllBGM();
 
 	//SEを停止
 	static void StopSE(const std::string fileName);

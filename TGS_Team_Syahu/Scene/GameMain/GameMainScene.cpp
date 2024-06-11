@@ -1,16 +1,18 @@
 #include"../../Utility/common.h"
-#include "GameMainScene.h"
+#include"GameMainScene.h"
 #include"../../Actor/Character/Player/Player.h"
 #include"../../Actor/Camera/Camera.h"
 #include"../../Actor/Character/Enemy/NormalEnemy.h"
 #include"../../Actor/Character/Enemy/LargeSwordEnemy.h"
-#include "../../Actor/Character/Enemy/DaggerEnemy.h"
+#include"../../Actor/Character/Enemy/DaggerEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../Edit/Edit.h"
 #include"../Help/HelpScene.h"
 #include"../ResourceManager/ResourceManager.h"
+#include"../Scene/GameOver/GameOverScene.h"
+#include"../Scene/GameClear/GameClearScene.h"
 
-GameMainScene::GameMainScene() :ui(nullptr), debugModeFlg(false)
+GameMainScene::GameMainScene() :ui(nullptr)
 {
 	kari = LoadGraph("Resource/Images/kari.png");
 }
@@ -26,26 +28,13 @@ void GameMainScene::Initialize()
 
 	object.push_back(new Player);
 	object.push_back(new Camera);
-	/*for (int i = 0; i < 5; i++)	object.push_back(new NormalEnemy);
-	for (int i = 0; i < 5; i++)object.push_back(new LargeSwordEnemy);
-	object.push_back(new DaggerEnemy);
-	object.push_back(new StageBlock);*/
+
 	createStage();
 
 	for (ObjectBase* ob : object)
 	{
 		ob->Initialize();
 	}
-
-	//for (auto i = 0; i < object.size(); i++)
-	//{
-	//	if (object[i]->GetObjectType() == ObjectType::Enemy)
-	//	{
-	//		object[i]->SetLocationX(300.f * i);
-	//	}
-	//}
-
-	//object[object.size()-2]->SetLocationX(500);
 }
 
 void GameMainScene::Finalize()
@@ -62,9 +51,7 @@ void GameMainScene::Finalize()
 
 SceneBase* GameMainScene::Update()
 {
-	if (KeyInput::GetKey(KEY_INPUT_G))debugModeFlg = !debugModeFlg;
-
-	ResourceManager::PlayBGM("GameMain");
+	ResourceManager::PlayBGM("gamemain");
 
 	HitCheck();
 
@@ -79,7 +66,7 @@ SceneBase* GameMainScene::Update()
 			{
 				Camera* camera = static_cast<Camera*>(object[i]);
 				ui->Update(player);
-				camera->SetTarget(object[i - 1]->GetLocation(), debugModeFlg);
+				camera->SetTarget(object[i - 1]->GetLocation());
 			}
 
 			if (object[i]->GetObjectType() == ObjectType::Enemy && player->GetEquipmentAnimFlg())
@@ -94,6 +81,15 @@ SceneBase* GameMainScene::Update()
 			if (object[i]->GetObjectType() == ObjectType::Player || object[i]->GetObjectType() == ObjectType::Enemy)
 			{
 				const CharaBase* chara = static_cast<const CharaBase*>(object[i]);
+				//プレイヤーなら
+				if (object[i]->GetObjectType() == ObjectType::Player)
+				{
+					const Player* player = static_cast<const Player*>(object[i]);
+					if (player->GetMaxLocation().x >= WORLD_WIDTH)
+					{
+						return new GameClearScene();
+					}
+				}
 				//敵なら
 				if (object[i]->GetObjectType() == ObjectType::Enemy)
 				{
@@ -107,7 +103,7 @@ SceneBase* GameMainScene::Update()
 					if (chara->GetObjectType() == ObjectType::Player)
 					{
 						ResourceManager::SetPositionAllBGM(0);
-						return new GameMainScene();
+						return new GameOverScene();
 					}
 					delete object[i];
 					object[i] = nullptr;
@@ -135,15 +131,6 @@ SceneBase* GameMainScene::Update()
 void GameMainScene::Draw() const
 {
 	DrawGraphF(Camera::ConvertScreenPosition({ 0,0 }).x, Camera::ConvertScreenPosition({ 0,0 }).y, kari, TRUE);
-
-	//x軸
-	Vector2D pos1 = { 0.f, GROUND_LINE };
-	Vector2D pos2 = { WORLD_WIDTH, GROUND_LINE };
-	DrawLineAA
-	(Camera::ConvertScreenPosition(pos1).x, Camera::ConvertScreenPosition(pos1).y,
-		Camera::ConvertScreenPosition(pos2).x, Camera::ConvertScreenPosition(pos2).y,
-		0xffffff
-	);
 
 	ui->Draw();
 
