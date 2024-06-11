@@ -7,6 +7,7 @@
 #include "../../Actor/Character/Enemy/DaggerEnemy.h"
 #include"../../Map/StageBlock.h"
 #include"../Edit/Edit.h"
+#include"../Help/HelpScene.h"
 #include"../ResourceManager/ResourceManager.h"
 
 GameMainScene::GameMainScene() :ui(nullptr), debugModeFlg(false)
@@ -119,6 +120,11 @@ SceneBase* GameMainScene::Update()
 
 	if (KeyInput::GetKey(KEY_INPUT_L)) {
 		return new Edit();
+	}
+
+	if (KeyInput::GetKey(KEY_INPUT_H))
+	{
+		return new HelpScene();
 	}
 
 #endif // DEBUG

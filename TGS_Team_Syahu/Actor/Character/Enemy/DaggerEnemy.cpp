@@ -98,7 +98,7 @@ void DaggerEnemy::Update()
 	DamageInterval(FPS * 0.2);
 	KnockBack(this, FPS * 0.5, knockBackMove);
 	Gravity();
-	Landing(WORLD_HEIGHT - 100);
+	Landing(WORLD_HEIGHT);
 
 	switch (enemyStatus)
 	{
