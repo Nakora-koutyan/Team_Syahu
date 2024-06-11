@@ -5,6 +5,7 @@ class StageBlock : public BoxCollision
 {
 private:
 	int stageData[WORLD_BLOCK_X][WORLD_BLOCK_Y];
+	int blockImg;
 	int DrawType;
 	bool IsDraw;
 public:

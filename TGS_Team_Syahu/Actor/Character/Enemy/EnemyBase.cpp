@@ -1,5 +1,5 @@
 #include "EnemyBase.h"
-#include "../ResourceManager/ResourceManager.h"
+#include "../../../ResourceManager/ResourceManager.h"
 
 EnemyBase::EnemyBase() :isClash(false), statusChangeTime(0), attackWaitingTime(0), noMove(false),patrolCounter(0.f), 
 enemyStatus{},attackRange{}, attackCenser{0},isBlink(false),blinkCounter(0),enemyAlpha(255),isFind(false)
