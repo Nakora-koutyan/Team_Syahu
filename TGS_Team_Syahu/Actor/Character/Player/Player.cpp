@@ -478,10 +478,17 @@ void Player::Movement()
 		}
 	}
 
+#ifdef DEBUG
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
 		PadInput::OnButton(XINPUT_BUTTON_A)) && /*!isAir &&*/ !isKnockBack && !isAttack && !isBackStep && hp > 0)
+#else
+	//ジャンプ
+	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
+		KeyInput::GetKey(KEY_INPUT_W) ||
+		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack && !isBackStep && hp > 0)
+#endif // DEBUG
 	{
 		ResourceManager::PlaySE("jump", FALSE);
 		move.y = -JUMP_POWER;

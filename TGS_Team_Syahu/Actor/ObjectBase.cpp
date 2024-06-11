@@ -68,3 +68,16 @@ float ObjectBase::MakeHypotenuse(const float x1, const float y1, const float x2,
 
 	return (dX * dX) + (dY * dY);
 }
+
+bool ObjectBase::InScreen() const
+{
+	bool flg = false;
+
+	if ((screenLocation.x > 0 && screenLocation.x < SCREEN_WIDTH) &&
+		(screenLocation.y > 0 || screenLocation.y < SCREEN_HEIGHT))
+	{
+		flg = true;
+	}
+
+	return flg;
+}

@@ -63,6 +63,9 @@ public:
 	//四角と円の当たり判定に必要な斜辺の作成
 	float MakeHypotenuse(const float x1, const float y1, const float x2, const float y2)const;
 
+	//オブジェクトの原点が画面内にいるかどうか
+	bool InScreen()const;
+
 public:
 	//ワールド座標の取得
 	Vector2D GetLocation()const { return location; }
