@@ -1,8 +1,9 @@
 #include "HelpScene.h"
+#include "../GameMain/GameMainScene.h"
 
 //コンストラクタ
 HelpScene::HelpScene():helpTextImage(NULL),enemyTextImage(NULL),operationTextImage(NULL),
-closeTextImage(NULL)
+closeTextImage(NULL),cursorImage(NULL),cursorLocX(0),cursorLocY(0)
 {
 }
 
@@ -29,6 +30,10 @@ void HelpScene::Finalize()
 //描画以外の更新
 SceneBase* HelpScene::Update()
 {
+	if (KeyInput::GetKey(KEY_INPUT_H))
+	{
+		return new GameMainScene();
+	}
 	return this;
 }
 
