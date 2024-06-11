@@ -1,6 +1,6 @@
 #pragma once
 #include "../SceneBase.h"
-#include "../Utility/common.h"
+#include "../../Utility/common.h"
 class HelpScene :public SceneBase
 {
 private:
