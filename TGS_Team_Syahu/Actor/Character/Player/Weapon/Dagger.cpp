@@ -42,7 +42,7 @@ void Dagger::Update(CharaBase* chara)
 	//攻撃時間を超えたら
 	if (chara->GetIsKnockBack() ||
 		screenLocation.x + directionVector.x < 0 || screenLocation.x > SCREEN_WIDTH ||
-		screenLocation.y < 0 || location.y + directionVector.y > GROUND_LINE)
+		screenLocation.y < 0 || location.y + directionVector.y > WORLD_HEIGHT)
 	{
 		move.x = 0.f;
 		move.y = 0.f;
