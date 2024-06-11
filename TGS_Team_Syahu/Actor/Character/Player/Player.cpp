@@ -131,10 +131,6 @@ void Player::Update()
 		largeSword->SetIsHit(false);
 		rapier->SetIsHit(false);
 		weaponDurability[stockCount] -= GetDurability(stock[stockCount], true);
-		if (daggerCount[stockCount] > 0)
-		{
-			daggerCount[stockCount]--;
-		}
 	}
 
 	//攻撃終了後に耐久値が0以下なら
@@ -208,11 +204,12 @@ void Player::Draw() const
 	DrawFormatString(850, 45, 0x000000, "1:LargeSword 2:Dagger 3:Rapier");
 	DrawFormatString(600, 60, 0x000000, "weaponCount[%d] :%d", stockCount, weaponDurability[stockCount]);
 	DrawFormatString(600, 75, 0x000000, "stock :%d %d %d %d %d", stock[0], stock[1], stock[2], stock[3], stock[4]);
-	DrawFormatString(600, 90, 0x000000, "animCount :%d", playerAnim);
-	DrawFormatString(600, 105, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
-	DrawFormatString(600, 120, 0x000000, "location x:%f location y:%f", location.x, location.y);
-	DrawFormatString(600, 135, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
-	DrawFormatString(600, 150, 0x000000, "isAttack :%s", isAttack ? "true" : "false");
+	DrawFormatString(600, 90, 0x000000, "daggerCount :%d %d %d %d %d", daggerCount[0], daggerCount[1], daggerCount[2], daggerCount[3], daggerCount[4]);
+	DrawFormatString(600, 105, 0x000000, "animCount :%d", playerAnim);
+	DrawFormatString(600, 120, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
+	DrawFormatString(600, 135, 0x000000, "location x:%f location y:%f", location.x, location.y);
+	DrawFormatString(600, 150, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
+	DrawFormatString(600, 165, 0x000000, "isAttack :%s", isAttack ? "true" : "false");
 	if (weaponType == Weapon::None)
 	{
 		DrawFormatString(600, 45, 0x000000, "WeaponType:None");
@@ -481,10 +478,17 @@ void Player::Movement()
 		}
 	}
 
+#ifdef DEBUG
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
 		PadInput::OnButton(XINPUT_BUTTON_A)) && /*!isAir &&*/ !isKnockBack && !isAttack && !isBackStep && hp > 0)
+#else
+	//ジャンプ
+	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
+		KeyInput::GetKey(KEY_INPUT_W) ||
+		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack && !isBackStep && hp > 0)
+#endif // DEBUG
 	{
 		ResourceManager::PlaySE("jump", FALSE);
 		move.y = -JUMP_POWER;
@@ -639,25 +643,40 @@ void Player::StockSelect()
 	if ((KeyInput::GetKey(KEY_INPUT_Q)) || PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER))
 	{
 		ResourceManager::PlaySE("stockSelect", FALSE);
-		isEquipment = false;
 		stockCount--;
-		weaponType = Weapon::None;
 		if (stockCount < 0)
 		{
 			stockCount = PLAYER_MAX_STOCK - 1;
+		}	
+		if (stock[stockCount] == Weapon::None)
+		{
+			isEquipment = false;
+			weaponType = Weapon::None;
 		}
+		else if (stock[stockCount] != Weapon::None && isEquipment)
+		{
+			weaponType = stock[stockCount];
+		}
+
 	}
 
 	//stockカウントを増やす
 	if ((KeyInput::GetKey(KEY_INPUT_E)) || PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER))
 	{
 		ResourceManager::PlaySE("stockSelect", FALSE);
-		isEquipment = false;
 		stockCount++;
-		weaponType = Weapon::None;
 		if (stockCount >= PLAYER_MAX_STOCK)
 		{
 			stockCount = 0;
+		}
+		if (stock[stockCount] == Weapon::None)
+		{
+			isEquipment = false;
+			weaponType = Weapon::None;
+		}
+		else if (stock[stockCount] != Weapon::None && isEquipment)
+		{
+			weaponType = stock[stockCount];
 		}
 	}
 }
