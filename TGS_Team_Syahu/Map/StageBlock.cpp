@@ -58,12 +58,12 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 	Area blockSize = GetArea();
 	int dropWidth = 21;
 	// 上から
-	if ((objectLoc.y + objectSize.height - 20) <= blockLoc.y && chara->GetDirection().y >= 0.f /* &&
+	if ((objectLoc.y + objectSize.height - 40) <= blockLoc.y && chara->GetDirection().y >= 0.f /* &&
 		(move.x != 0 || (objectLoc.x + objectSize.width - dropWidth <= blockLoc.x + blockSize.width && objectLoc.x + dropWidth >= blockLoc.x))*/) {
 		chara->Landing(blockLoc.y);
 	}
 	// 下から
-	else if (objectLoc.y >= (blockLoc.y + blockSize.height - 20) && chara->GetDirection().y <= 0.f) {
+	else if (objectLoc.y >= (blockLoc.y + blockSize.height - 40) && chara->GetDirection().y <= 0.f) {
 		// Dropwidth以上ブロックからはみ出してないか
 		if (objectLoc.x + objectSize.width - dropWidth <= blockLoc.x + blockSize.width && objectLoc.x + dropWidth >= blockLoc.x) {
 			objectLoc.y = blockLoc.y + blockSize.height;
