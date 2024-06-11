@@ -33,7 +33,8 @@ void ResourceManager::Initialize()
 	SetImage("UI/kariSelect");
 	SetImage("UI/dagger");
 	SetImage("UI/largeSword");
-	SetImage("UI/rapier");
+	SetImage("UI/rapier");	
+	SetImage("UI/cursor");
 	SetImage("Weapon/dagger");
 	SetImage("Weapon/largeSword");
 	SetImage("Weapon/rapier");
@@ -54,9 +55,13 @@ void ResourceManager::Initialize()
 	SetDivImage("Effect/transformEffect", 9, 9, 1, 240, 240);
 
 	//BGM
-	SetBGM("GameMain");
+	SetBGM("gamemain");
+	SetBGM("title");
+	SetBGM("gameover");
+	SetBGM("gameclear");
 
-	SetLoopPosSoundMem(25900, manager->bgm["GameMain"]);
+	SetLoopPosSoundMem(25900, manager->bgm["gamemain"]);
+	SetLoopPosSoundMem(58320, manager->bgm["gameover"]);
 	
 	//SE
 	SetSE("dagger");
@@ -68,12 +73,18 @@ void ResourceManager::Initialize()
 	SetSE("damage");
 	SetSE("walk");
 	SetSE("stockSelect");
+	SetSE("jump");
+	SetSE("cursorMove");
+	SetSE("cursorSelect");
 
 	ChangeVolumeSoundMem((255 * 70) / 100, manager->se["equipment"]);
 	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["steal"]);
 	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["damage"]);
 	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["walk"]);
 	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["stockSelect"]);
+	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["jump"]);
+	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["cursorMove"]);
+	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["cursorSelect"]);
 
 }
 
@@ -256,7 +267,7 @@ void ResourceManager::StopBGM(const std::string fileName)
 	StopSoundMem(manager->bgm[fileName]);
 }
 
-void ResourceManager::StopSoundAllBGM()
+void ResourceManager::StopAllBGM()
 {
 	for (auto iterator = manager->bgm.begin(); iterator != manager->bgm.end(); ++iterator)
 	{
