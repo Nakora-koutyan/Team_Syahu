@@ -12,6 +12,14 @@ EnemyBase::~EnemyBase()
 {
 }
 
+void EnemyBase::Initialize()
+{
+}
+
+void EnemyBase::Finalize()
+{
+}
+
 void EnemyBase::Update()
 {
 }

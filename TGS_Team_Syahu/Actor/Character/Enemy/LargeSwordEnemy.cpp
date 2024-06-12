@@ -132,6 +132,11 @@ void LargeSwordEnemy::Initialize()
 	largeSwordCollisionBox->SetArea({ 60,150 });
 }
 
+void LargeSwordEnemy::Finalize()
+{
+	delete largeSwordCollisionBox;
+}
+
 //描画以外の更新
 void LargeSwordEnemy::Update()
 {
@@ -236,8 +241,9 @@ void LargeSwordEnemy::Draw() const
 	DrawFormatStringF(50.f, 400.f, 0xff00ff, "enemyStatus %d", enemyStatus);
 	DrawFormatStringF(50.f, 420.f, 0x00ff00, "weaponNoneImageNumber %d", weaponNoneEnemyImageNumber);
 	DrawBoxAA(largeSwordCollisionBox->GetMinScreenLocation().x, largeSwordCollisionBox->GetMinScreenLocation().y,
-		largeSwordCollisionBox->GetMaxScreenLocation().x, largeSwordCollisionBox->GetMaxScreenLocation().y,
-		0xff00ff, FALSE);
+		largeSwordCollisionBox->GetMaxScreenLocation().x, largeSwordCollisionBox->GetMaxScreenLocation().y,0xff00ff, FALSE);
+	DrawBoxAA(GetMinScreenLocation().x - 600.f, GetMinScreenLocation().y - 200.f,
+		GetMaxScreenLocation().x + 600.f, GetMaxScreenLocation().y + 25, 0xff00ff, FALSE);
 }
 
 //プレイヤーを見つけた？
@@ -298,10 +304,10 @@ void LargeSwordEnemy::AttackRange()
 void LargeSwordEnemy::AttackCenser()
 {
 	//プレイヤーに攻撃を仕掛ける範囲
-	attackCenser[0].x = GetMinLocation().x - 270.f;
-	attackCenser[0].y = GetMinLocation().y - 25;
-	attackCenser[1].x = GetMaxLocation().x + 270.f;
-	attackCenser[1].y = GetMaxLocation().y + 25;
+	attackCenser[0].x = GetMinLocation().x - 400.f;
+	attackCenser[0].y = GetMinLocation().y - 200;
+	attackCenser[1].x = GetMaxLocation().x + 400.f;
+	attackCenser[1].y = GetMaxLocation().y + 100;
 }
 
 void LargeSwordEnemy::HitWeapon(ObjectBase* object)

@@ -44,7 +44,7 @@ public:
 	~DaggerEnemy();
 
 	//初期化処理
-	void Initialize();
+	void Initialize()override;
 
 	//終了時の消去処理
 	void Finalize()override;
