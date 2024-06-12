@@ -63,7 +63,7 @@ void ResourceManager::Initialize()
 	SetBGM("gameclear");
 
 	SetLoopPosSoundMem(25900, manager->bgm["gamemain"]);
-	SetLoopPosSoundMem(58320, manager->bgm["gameover"]);
+	SetLoopPosSoundMem(56400, manager->bgm["gameclear"]);
 
 	SetVolumeAllBGM(50);
 	
