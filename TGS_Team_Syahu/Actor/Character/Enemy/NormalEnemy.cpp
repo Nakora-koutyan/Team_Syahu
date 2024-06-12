@@ -127,7 +127,7 @@ void NormalEnemy::Update()
 	//世界の両端を越えない
 	DontCrossBorder();
 
-	if (weaponType == Weapon::None)
+	if (weaponType == Weapon::Rapier)
 	{
 		//レイピアの呼び出し (引数：(装備対象,攻撃時の速度))
 		rapier->Update(this, (NORMAL_WALK_SPEED * ATTACK_SPEED));
