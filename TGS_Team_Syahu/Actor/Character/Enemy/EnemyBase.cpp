@@ -54,11 +54,12 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 
 				hp -= damage;
 			}
-			else
-			{
-				hp = 0;
-			}
 		}
+	}
+
+	if (hp < 0)
+	{
+		hp = 0;
 	}
 
 	if (isKnockBack && !chara->GetIsKnockBack() && chara->GetObjectType() == ObjectType::Enemy)
