@@ -6,6 +6,7 @@
 Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 {
 	objectType = ObjectType::Player;
+	actionState = Action::None;
 
 	area.width = 56.f;
 	area.height = 84.f;
@@ -31,7 +32,7 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	jumpEffectLocation.y = 0.f;
 
 	stockCount = 0;
-	actionState = Action::None;
+	jumpCount = 0;
 
 	framCount = 0;
 	playerAnimFramCount = 0;
@@ -267,7 +268,7 @@ void Player::Draw() const
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
-	if (isJump)
+	if (isJump && jumpCount == 1)
 	{
 		if (jumpEffectInversionFlg)
 		{
@@ -377,6 +378,7 @@ void Player::Landing(const float height)
 	{
 		location.y = height - area.height;
 		jumpEffectLocation.y = height;
+		jumpCount = 0;
 		move.y = 0.f;
 		isAir = false;
 		//空中の画像かつ動いていないなら
@@ -483,16 +485,19 @@ void Player::Movement()
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && /*!isAir &&*/ !isKnockBack && !isAttack && !isBackStep && hp > 0)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && /*!isAir &&*/ !isKnockBack && !isAttack && 
+		!isBackStep && hp > 0)
 #else
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && !isAir && !isKnockBack && !isAttack && !isBackStep && hp > 0)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && jumpCount < 2 && !isKnockBack && !isAttack && 
+		!isBackStep && hp > 0)
 #endif // DEBUG
 	{
 		ResourceManager::PlaySE("jump", FALSE);
 		move.y = -JUMP_POWER;
+		jumpCount++;
 		isAir = true;
 		isJump = true;
 		direction.y = -1.f;
