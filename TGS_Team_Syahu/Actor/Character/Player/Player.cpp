@@ -1,6 +1,7 @@
 #include"Player.h"
 #include"../../Camera/Camera.h"
 #include"../../../ResourceManager/ResourceManager.h"
+#include"../Enemy/EnemyBase.h"
 
 Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 {
@@ -302,7 +303,7 @@ void Player::Draw() const
 
 void Player::Hit(ObjectBase* object, const float damage)
 {
-	CharaBase* chara = static_cast<CharaBase*>(object);
+	EnemyBase* chara = static_cast<EnemyBase*>(object);
 
 	if (!isKnockBack && !isHit && hp > 0 && !invincibleFlg)
 	{

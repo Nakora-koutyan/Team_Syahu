@@ -7,7 +7,7 @@
 GameClearScene::GameClearScene()
 {
 	intervalCount = 0;
-	animCoun = 0;
+	animCount = 0;
 	playerIdle = 0;
 }
 
@@ -30,9 +30,9 @@ SceneBase* GameClearScene::Update()
 {
 	ResourceManager::PlayBGM("gameclear");
 
-	animCoun++;
+	animCount++;
 
-	if (animCoun % 14 == 0)
+	if (animCount % 14 == 0)
 	{
 		playerIdle++;
 		if (playerIdle >= 2)

@@ -7,7 +7,7 @@ class GameClearScene :public SceneBase
 {
 private:
     int intervalCount;                  //インターバル
-    int animCoun;                       //アニメーションカウント
+    int animCount;                       //アニメーションカウント
     int playerIdle;                     //プレイヤーのアイドル番号
 
 public:

@@ -184,7 +184,14 @@ void GameMainScene::HitCheck()
 					//ステージじゃないなら
 					else
 					{
-						object[i]->Hit(object[j], object[j]->GetDamage());
+						if (object[j]->GetObjectType() != ObjectType::Player)
+						{
+							object[i]->Hit(object[j], object[j]->GetDamage());
+						}
+						else
+						{
+							object[i]->Hit(object[j], 0);
+						}
 					}
 				}
 			}
@@ -275,7 +282,8 @@ void GameMainScene::HitCheckEnemyWeapon(const int i, const int j)
 	if (enemy->GetEnemyType() == EnemyType::RapierEnemy)
 	{
 		NormalEnemy* normalEnemy = static_cast<NormalEnemy* > (object[j]);
-		if (normalEnemy->GetRapier()->CollisionCheck(player) && normalEnemy->GetSignToAttack())
+		if (normalEnemy->GetRapier()->CollisionCheck(player) && normalEnemy->GetSignToAttack() &&
+			normalEnemy->GetWeaponType() == Weapon::Rapier)
 		{
 			normalEnemy->HitWeapon(player);
 			player->Hit(normalEnemy, normalEnemy->GetDamage() * 3);
