@@ -211,7 +211,7 @@ void Player::Draw() const
 	DrawFormatString(600, 120, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
 	DrawFormatString(600, 135, 0x000000, "location x:%f location y:%f", location.x, location.y);
 	DrawFormatString(600, 150, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
-	DrawFormatString(600, 165, 0x000000, "isAttack :%s", isAttack ? "true" : "false");
+	DrawFormatString(600, 165, 0x000000, "isAir :%s", isAir ? "true" : "false");
 	if (weaponType == Weapon::None)
 	{
 		DrawFormatString(600, 45, 0x000000, "WeaponType:None");
@@ -949,6 +949,8 @@ void Player::BackStep(const float angle, const float speed, const float gravityV
 		}
 
 		move.y = -speed * sin(DEGREE_TO_RADIAN(angle));
+		direction.y = -1;
+		isAir = true;
 
 		rapier->SetStepFlg(false);
 	}
@@ -957,7 +959,7 @@ void Player::BackStep(const float angle, const float speed, const float gravityV
 	{
 		move.y += gravityVelocity;
 		invincibleFlg = true;
-		if (isAir)
+		if (!isAir)
 		{
 			isBackStep = false;
 			invincibleFlg = false;
