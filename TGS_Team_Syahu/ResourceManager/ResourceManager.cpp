@@ -53,6 +53,8 @@ void ResourceManager::Initialize()
 	SetImage("Effect/Steal/steal_9");
 	SetImage("Effect/Steal/steal_10");
 	SetDivImage("Effect/transformEffect", 9, 9, 1, 240, 240);
+	SetImage("Stage/Background/layer_1");
+	SetImage("Stage/Background/layer_2");
 
 	//BGM
 	SetBGM("gamemain");
@@ -62,6 +64,8 @@ void ResourceManager::Initialize()
 
 	SetLoopPosSoundMem(25900, manager->bgm["gamemain"]);
 	SetLoopPosSoundMem(58320, manager->bgm["gameover"]);
+
+	SetVolumeAllBGM(50);
 	
 	//SE
 	SetSE("dagger");
@@ -77,14 +81,7 @@ void ResourceManager::Initialize()
 	SetSE("cursorMove");
 	SetSE("cursorSelect");
 
-	ChangeVolumeSoundMem((255 * 70) / 100, manager->se["equipment"]);
-	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["steal"]);
-	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["damage"]);
-	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["walk"]);
-	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["stockSelect"]);
-	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["jump"]);
-	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["cursorMove"]);
-	ChangeVolumeSoundMem((255 * 100) / 100, manager->se["cursorSelect"]);
+	SetVolumeAllSE(50);
 
 }
 
@@ -186,7 +183,7 @@ void ResourceManager::SetDivImage(const std::string fileName, const int max, con
 
 void ResourceManager::SetVolumeAllBGM(const int volume)
 {
-	for (auto iterator = manager->bgm.begin(); iterator != manager->bgm.end(); iterator)
+	for (auto iterator = manager->bgm.begin(); iterator != manager->bgm.end(); ++iterator)
 	{
 		ChangeVolumeSoundMem((255 * volume) / 100, manager->bgm[iterator->first]);
 	}

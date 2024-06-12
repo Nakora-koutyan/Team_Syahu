@@ -24,37 +24,40 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 {
 	CharaBase* chara = static_cast<CharaBase*>(target);
 
-	if (!isKnockBack && !isHit && objectType != chara->GetObjectType())
+	if (damage > 0)
 	{
-		isKnockBack = true;
-		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		if (!isKnockBack && !isHit && objectType != chara->GetObjectType())
 		{
-			knockBackDirection = -1;
-		}
-		else
-		{
-			knockBackDirection = 1;
-		}
-	}
-
-	//すでに当たってないならかつ同じオブジェクトじゃないなら
-	if ((!isHit && objectType != chara->GetObjectType()) || chara->GetIsKnockBack())
-	{
-		isHit = true;
-		if (chara->GetIsKnockBack())
-		{
-			chara->SetIsKnockBack(false);
+			isKnockBack = true;
+			if (GetCenterLocation().x < chara->GetCenterLocation().x)
+			{
+				knockBackDirection = -1;
+			}
+			else
+			{
+				knockBackDirection = 1;
+			}
 		}
 
-		if (hp > 0)
+		//すでに当たってないならかつ同じオブジェクトじゃないなら
+		if ((!isHit && objectType != chara->GetObjectType()) || chara->GetIsKnockBack())
 		{
-			ResourceManager::PlaySE("damage", FALSE);
+			isHit = true;
+			if (chara->GetIsKnockBack())
+			{
+				chara->SetIsKnockBack(false);
+			}
 
-			hp -= damage;
-		}
-		else
-		{
-			hp = 0;
+			if (hp > 0)
+			{
+				ResourceManager::PlaySE("damage", FALSE);
+
+				hp -= damage;
+			}
+			else
+			{
+				hp = 0;
+			}
 		}
 	}
 

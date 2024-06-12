@@ -184,7 +184,14 @@ void GameMainScene::HitCheck()
 					//ステージじゃないなら
 					else
 					{
-						object[i]->Hit(object[j], object[j]->GetDamage());
+						if (object[j]->GetObjectType() != ObjectType::Player)
+						{
+							object[i]->Hit(object[j], object[j]->GetDamage());
+						}
+						else
+						{
+							object[i]->Hit(object[j], 0);
+						}
 					}
 				}
 			}
