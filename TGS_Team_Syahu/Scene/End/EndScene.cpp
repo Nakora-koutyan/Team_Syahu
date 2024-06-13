@@ -24,7 +24,7 @@ void EndScene::Finalize()
 
 SceneBase* EndScene::Update()
 {
-	if (intervaSceneCount < SCENE_INTERVAL + 30)
+	if (intervaSceneCount < SCENE_INTERVAL * 4)
 	{
 		intervaSceneCount++;
 	}
@@ -38,6 +38,16 @@ SceneBase* EndScene::Update()
 
 void EndScene::Draw() const
 {
+	//背景
 	DrawGraph(0, 0, ResourceManager::GetImage("Stage/Background/layer_1"), TRUE);
-	DrawString(300, 500, "credit", 0xffffff);
+	DrawGraph(0, 198, ResourceManager::GetImage("Stage/Background/layer_2"), TRUE);
+	
+	if (intervaSceneCount < SCENE_INTERVAL * 2)
+	{
+		DrawGraph(0, 0, ResourceManager::GetImage("End/credit"), TRUE);
+	}
+	else
+	{
+		DrawGraph(400, 340, ResourceManager::GetImage("End/thanks"), TRUE);
+	}
 }

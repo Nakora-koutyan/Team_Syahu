@@ -82,6 +82,8 @@ void ResourceManager::Initialize()
 	SetImage("Stage/Tiles/brick_14");
 	SetImage("Stage/Tiles/brick_15");
 	SetImage("Stage/Tiles/brick_16");
+	SetImage("End/credit");
+	SetImage("End/thanks");
 
 	//BGM
 	SetBGM("gamemain");

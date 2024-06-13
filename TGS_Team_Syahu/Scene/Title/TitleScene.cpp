@@ -98,7 +98,7 @@ SceneBase* TitleScene::Update()
 void TitleScene::Draw() const
 {
 	DrawGraph(0, 0, ResourceManager::GetImage("Stage/Background/layer_1"), TRUE);
-	DrawGraph(0, 200, ResourceManager::GetImage("Stage/Background/layer_2"), TRUE);
+	DrawGraph(0, 198, ResourceManager::GetImage("Stage/Background/layer_2"), TRUE);
 	DrawGraph(340, 60, ResourceManager::GetImage("Title/TitleText"), TRUE);
 
 	DrawRotaGraphF(470, 360 + cursorLocation.y, 1, DEGREE_TO_RADIAN(90.f), ResourceManager::GetImage("UI/cursor"), TRUE);
