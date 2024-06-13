@@ -192,8 +192,8 @@ void DaggerEnemy::Draw() const
 		0xff00ff, FALSE);
 	DrawBoxAA
 	(
-		GetMinScreenLocation().x, GetMinScreenLocation().y,
-		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
+		GetMinScreenLocation().x - 275, GetCenterScreenLocation().y,
+		GetMaxScreenLocation().x + 275, GetMaxScreenLocation().y,
 		0xffff00, FALSE
 	);
 }
@@ -206,10 +206,10 @@ void DaggerEnemy::FindPlayer(const Player* player)
 		player->GetIsHit() == false)
 	{
 		//playerが一定の範囲にいるかどうか判定
-		if (attackCenser[0].x <= player->GetMaxLocation().x &&
-			attackCenser[1].x >= player->GetMinLocation().x &&
-			attackCenser[0].y <= player->GetCenterLocation().y &&
-			attackCenser[1].y >= player->GetCenterLocation().y)
+		if (attackRange[0].x <= player->GetMaxLocation().x &&
+			attackRange[1].x >= player->GetMinLocation().x &&
+			attackRange[0].y <= player->GetMaxLocation().y &&
+			attackRange[1].y >= player->GetMinLocation().y)
 		{
 			//playerのいる方向を向く
 			if (location.x >= player->GetCenterLocation().x)
@@ -280,7 +280,7 @@ void DaggerEnemy::AttackRange()
 	attackRange[0].x = GetMinLocation().x - 275.f;
 	attackRange[0].y = GetCenterLocation().y;
 	attackRange[1].x = GetMaxLocation().x + 275.f;
-	attackRange[1].y = GetCenterLocation().y;
+	attackRange[1].y = GetMaxLocation().y;
 }
 
 
@@ -571,7 +571,7 @@ void DaggerEnemy::DaggerAttackEndAnim()
 	}
 
 	//drawnSwordをfalse(この処理が通るとPatrolになる)
-	if (attackEndCount >= 2)
+	if (attackEndCount >= 3)
 	{
 		drawnSword = false;
 		attackEndCount = 0;

@@ -78,7 +78,7 @@ void SceneManager::Initialize()
 	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);
 
 	//サウンドの再生にWASAPIを使用する
-	SetEnableWASAPIFlag(TRUE);
+	//SetEnableWASAPIFlag(TRUE);
 
 	//DXライブラリの初期化処理
 	if (DxLib_Init() == -1)throw ("初期化失敗");

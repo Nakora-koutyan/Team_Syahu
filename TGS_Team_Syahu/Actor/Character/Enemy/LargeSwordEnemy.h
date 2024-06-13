@@ -47,6 +47,9 @@ public:
 	//初期化処理
 	void Initialize()override;
 
+	//終了処理
+	void Finalize()override;
+
 	//描画以外の更新
 	void Update()override;
 	//描画に関する更新

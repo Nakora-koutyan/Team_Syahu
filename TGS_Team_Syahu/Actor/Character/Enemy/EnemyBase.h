@@ -2,9 +2,9 @@
 #include "../CharaBase.h"
 #include "../Player/Player.h"
 
-#define MAX_COOL_TIME 50
+#define MAX_COOL_TIME 90
 #define MAX_WAITING_TIME 60
-#define MAX_ATTACK_TIME 60
+#define MAX_ATTACK_TIME 90
 
 #define DIRECTION_LEFT -1				//左向き
 #define DIRECTION_RIGHT 1				//右向き
@@ -69,6 +69,12 @@ public:
 	EnemyBase();
 	//デストラクタ
 	~EnemyBase();
+
+	//初期化処理
+	void Initialize()override;
+
+	//終了処理
+	void Finalize()override;
 
 	//更新処理
 	void Update();

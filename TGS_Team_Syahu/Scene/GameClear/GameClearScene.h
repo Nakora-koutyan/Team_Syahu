@@ -1,13 +1,11 @@
 #pragma once
 #include "../SceneBase.h"
 
-#define SCENE_INTERVAL		60		//カーソルのインターバル
-
 class GameClearScene :public SceneBase
 {
 private:
-    int intervalCount;                  //インターバル
-    int animCoun;                       //アニメーションカウント
+    int intervaSceneCount;              //シーンインターバル
+    int animCount;                      //アニメーションカウント
     int playerIdle;                     //プレイヤーのアイドル番号
 
 public:

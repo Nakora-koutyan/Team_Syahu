@@ -12,6 +12,14 @@ EnemyBase::~EnemyBase()
 {
 }
 
+void EnemyBase::Initialize()
+{
+}
+
+void EnemyBase::Finalize()
+{
+}
+
 void EnemyBase::Update()
 {
 }
@@ -24,38 +32,42 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 {
 	CharaBase* chara = static_cast<CharaBase*>(target);
 
-	if (!isKnockBack && !isHit && objectType != chara->GetObjectType())
+	if (damage > 0)
 	{
-		isKnockBack = true;
-		if (GetCenterLocation().x < chara->GetCenterLocation().x)
+		if (!isKnockBack && !isHit && objectType != chara->GetObjectType())
 		{
-			knockBackDirection = -1;
+			isKnockBack = true;
+			if (GetCenterLocation().x < chara->GetCenterLocation().x)
+			{
+				knockBackDirection = -1;
+			}
+			else
+			{
+				knockBackDirection = 1;
+			}
 		}
-		else
+
+		//すでに当たってないならかつ同じオブジェクトじゃないなら
+		if ((!isHit && objectType != chara->GetObjectType()) || chara->GetIsKnockBack())
 		{
-			knockBackDirection = 1;
+			isHit = true;
+			if (chara->GetIsKnockBack())
+			{
+				chara->SetIsKnockBack(false);
+			}
+
+			if (hp > 0)
+			{
+				ResourceManager::PlaySE("damage", FALSE);
+
+				hp -= damage;
+			}
 		}
 	}
 
-	//すでに当たってないならかつ同じオブジェクトじゃないなら
-	if ((!isHit && objectType != chara->GetObjectType()) || chara->GetIsKnockBack())
+	if (hp < 0)
 	{
-		isHit = true;
-		if (chara->GetIsKnockBack())
-		{
-			chara->SetIsKnockBack(false);
-		}
-
-		if (hp > 0)
-		{
-			ResourceManager::PlaySE("damage", FALSE);
-
-			hp -= damage;
-		}
-		else
-		{
-			hp = 0;
-		}
+		hp = 0;
 	}
 
 	if (isKnockBack && !chara->GetIsKnockBack() && chara->GetObjectType() == ObjectType::Enemy)

@@ -2,7 +2,7 @@
 #include"EnemyBase.h"
 
 #define NORMAL_WALK_SPEED 0.5f			//徘徊時のスピード
-#define ATTACK_SPEED 8.f				//攻撃時のスピード
+#define ATTACK_SPEED 14.f				//攻撃時のスピード
 
 class Player;
 
@@ -35,7 +35,10 @@ public:
 	~NormalEnemy();
 
 	//初期化処理
-	void Initialize();
+	void Initialize()override;
+	//終了処理
+	void Finalize()override;
+
 	//更新処理
 	void Update()override;
 	//描画更新処理

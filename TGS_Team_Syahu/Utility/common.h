@@ -21,6 +21,9 @@
 #define DEGREE_TO_RADIAN(_deg)	_deg * (DX_PI_F / 180.f)		//角度からラジアンへ
 #define RADIAN_TO_DEGREE(_rad)	_rad * (180.f / DX_PI_F)		//ラジアンから角度へ
 
+#define CURSOR_INTERVAL		15									//カーソルのインターバル
+#define SCENE_INTERVAL		30									//シーン切り替えを行うインターバル
+
 #define _USE_MATH_DEFINES
 #include<math.h>
 
@@ -33,3 +36,10 @@
 #include<string>		//文字列
 #include<sstream>		//文字ストリーム
 #include<fstream>		//ファイルストリーム
+
+//中心線を描画する
+inline void DrawCenterLine()
+{
+	DrawLine(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT, 0xffffff);
+	DrawLine(0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2, 0xffffff);
+}

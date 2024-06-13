@@ -1,12 +1,10 @@
 #pragma once
 #include "../SceneBase.h"
 
-#define SCENE_INTERVAL  120          //シーン切り替えを行うインターバル
-
 class EndScene :public SceneBase
 {
 private:
-    int intervalCount;                  //インターバル
+    int intervaSceneCount;                  //インターバル
 
 public:
     //コンストラクタ

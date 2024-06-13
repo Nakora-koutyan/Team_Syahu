@@ -2,14 +2,12 @@
 #include"../SceneBase.h"
 #include"../../Utility/Vector2D.h" 
 
-#define CURSOR_INTERVAL		15		//カーソルのインターバル
-
 class TitleScene :public SceneBase
 {
 private:
     Vector2D cursorLocation;            //カーソルの座標
 
-    int intervalCount;                  //インターバル
+    int intervalCursorCount;            //カーソルインターバル
     int cursorNum;                      //カーソルの番号                    
 
 public:

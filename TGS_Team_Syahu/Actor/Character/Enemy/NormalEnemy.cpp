@@ -39,8 +39,8 @@ void NormalEnemy::Initialize()
 		enemyDeathImage[i] = enemyDeathImageOld[i];
 	}
 
-	//サイズ{ x , y }
-	area = { 80.f,90.f };
+	//当たり判定のサイズ{ x , y }
+	area = { 60.f,90.f };
 	//キャラクターの能力
 	weaponType = Weapon::Rapier;	//突進(武器無し)
 	enemyType = EnemyType::RapierEnemy;
@@ -66,6 +66,11 @@ void NormalEnemy::Initialize()
 	enemyStatus = Patrol;
 	enemyNumber = 0;
 	attackTime = MAX_ATTACK_TIME;
+}
+
+void NormalEnemy::Finalize()
+{
+	delete rapier;
 }
 
 //描画以外の内容を更新
@@ -122,9 +127,11 @@ void NormalEnemy::Update()
 	//世界の両端を越えない
 	DontCrossBorder();
 
-	//レイピアの呼び出し (引数：(装備対象,攻撃時の速度))
-	rapier->Update(this, (NORMAL_WALK_SPEED * ATTACK_SPEED));
-
+	if (weaponType == Weapon::Rapier)
+	{
+		//レイピアの呼び出し (引数：(装備対象,攻撃時の速度))
+		rapier->Update(this, (NORMAL_WALK_SPEED * ATTACK_SPEED));
+	}
 	location.x += move.x;
 	location.y += move.y;
 }
@@ -138,10 +145,12 @@ void NormalEnemy::Draw() const
 		hp <= 0 ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
 		TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DrawBoxAA(GetMinScreenLocation().x, GetMinScreenLocation().y,
+		GetMaxScreenLocation().x, GetMaxScreenLocation().y, 0xff00ff, FALSE);
 	
 	//攻撃範囲用の矩形
-	DrawBoxAA(GetMinScreenLocation().x - (410.f/2.f),GetMinScreenLocation().y - (75.f/2.f),
-			GetMaxScreenLocation().x + (410.f/2.f),GetMaxScreenLocation().y + (75.f/2.f),
+	DrawBoxAA(GetMinScreenLocation().x - 310.f,GetMinScreenLocation().y - 75.f,
+			GetMaxScreenLocation().x + 310.f,GetMaxScreenLocation().y + 75.f,
 			0x00ffff, FALSE, 1.f);
 	//体力表示用のデバッグ表示
 	DrawFormatString(250, 300, 0xff0f0f, "HP　%d", hp);
@@ -152,9 +161,9 @@ void NormalEnemy::Draw() const
 void NormalEnemy::AttackRange()
 {
 	//攻撃状態に入る範囲
-	attackRange[0].x = GetMinLocation().x - 410.f;
+	attackRange[0].x = GetMinLocation().x - 310.f;
 	attackRange[0].y = GetMinLocation().y - 75;
-	attackRange[1].x = GetMaxLocation().x + 410.f;
+	attackRange[1].x = GetMaxLocation().x + 310.f;
 	attackRange[1].y = GetMaxLocation().y + 75;
 }
 
@@ -271,15 +280,21 @@ void NormalEnemy:: AttackStandBy()
 
 void NormalEnemy::AttackStart()
 {
+	//レイピアの攻撃
 	if (weaponType == Weapon::Rapier)
 	{
+		//攻撃の瞬間に呼び出される
 		if (signToAttack)
 		{
+			//レイピアの攻撃関数を呼び出す
 			rapier->Attack(this);
 		}
+		//アニメーションを繰り返した回数が２回以上なら
 		if (CountChangeCounter >= 2)
 		{
+			//攻撃関数の呼び出しを停止
 			signToAttack = false;
+			//カウンターのリセット
 			CountChangeCounter = 0;
 			//エネミーの状態を攻撃終了に遷移する
 			enemyStatus = EnemyStatus::AttackEnd;

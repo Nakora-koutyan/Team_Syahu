@@ -155,7 +155,9 @@ void GameMainScene::HitCheck()
 		for (auto j = 0; j < object.size(); j++)
 		{
 			//i,j番目がnullじゃないかつコリジョンがあるなら
-			if (object[i] && object[j] != nullptr && object[j]->GetCollisionType() != CollisionType::None)
+			if (object[i] != nullptr && object[j] != nullptr &&
+				object[i]->GetCollisionType() != CollisionType::None &&
+				object[j]->GetCollisionType() != CollisionType::None)
 			{
 				//i番目がプレイヤーなら武器の当たり判定
 				if (object[i]->GetObjectType() == ObjectType::Player)
@@ -170,6 +172,7 @@ void GameMainScene::HitCheck()
 				
 				//ゲームメインにあるオブジェクトの当たり判定
 				if (object[i] != object[j] &&
+					//object[i]->InScreen() && object[j]->InScreen() &&
 					object[i]->CollisionCheck(object[j]))
 				{
 					//ステージの場合
@@ -181,7 +184,14 @@ void GameMainScene::HitCheck()
 					//ステージじゃないなら
 					else
 					{
-						object[i]->Hit(object[j], object[j]->GetDamage());
+						if (object[j]->GetObjectType() != ObjectType::Player)
+						{
+							object[i]->Hit(object[j], object[j]->GetDamage());
+						}
+						else
+						{
+							object[i]->Hit(object[j], 0);
+						}
 					}
 				}
 			}
@@ -272,7 +282,8 @@ void GameMainScene::HitCheckEnemyWeapon(const int i, const int j)
 	if (enemy->GetEnemyType() == EnemyType::RapierEnemy)
 	{
 		NormalEnemy* normalEnemy = static_cast<NormalEnemy* > (object[j]);
-		if (normalEnemy->GetRapier()->CollisionCheck(player) && normalEnemy->GetSignToAttack())
+		if (normalEnemy->GetRapier()->CollisionCheck(player) && normalEnemy->GetSignToAttack() &&
+			normalEnemy->GetWeaponType() == Weapon::Rapier)
 		{
 			normalEnemy->HitWeapon(player);
 			player->Hit(normalEnemy, normalEnemy->GetDamage() * 3);

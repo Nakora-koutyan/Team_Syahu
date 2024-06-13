@@ -50,6 +50,7 @@ private:
 	Vector2D jumpEffectLocation;				//ジャンプのエフェクト座標
 
 	short stockCount;							//現在のストックの番号
+	short jumpCount;							//ジャンプのカウント
 
 	int weaponDurability[PLAYER_MAX_STOCK];		//武器の耐久値
 	int playerAnimFramCount;					//プレイヤーのアニメーションフレームカウント

@@ -3,11 +3,12 @@
 #include"../../InputControl/Pad/PadInput.h"
 #include"../../ResourceManager/ResourceManager.h"
 #include"../../Scene/Title/TitleScene.h"
+#include"../Utility/common.h"
 
 GameClearScene::GameClearScene()
 {
-	intervalCount = 0;
-	animCoun = 0;
+	intervaSceneCount = 0;
+	animCount = 0;
 	playerIdle = 0;
 }
 
@@ -30,9 +31,9 @@ SceneBase* GameClearScene::Update()
 {
 	ResourceManager::PlayBGM("gameclear");
 
-	animCoun++;
+	animCount++;
 
-	if (animCoun % 14 == 0)
+	if (animCount % 14 == 0)
 	{
 		playerIdle++;
 		if (playerIdle >= 2)
@@ -41,9 +42,9 @@ SceneBase* GameClearScene::Update()
 		}
 	}
 
-	if (intervalCount < SCENE_INTERVAL)
+	if (intervaSceneCount < SCENE_INTERVAL)
 	{
-		intervalCount++;
+		intervaSceneCount++;
 	}
 	else
 	{
