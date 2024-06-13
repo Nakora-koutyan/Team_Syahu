@@ -66,6 +66,8 @@ void ResourceManager::Initialize()
 	SetImage("GameOver/ContinueText");
 	SetImage("GameOver/GameOverText");
 	SetImage("GameOver/GameOverBackGround");
+	SetImage("End/credit");
+	SetImage("End/thanks");
 
 	//BGM
 	SetBGM("gamemain");
