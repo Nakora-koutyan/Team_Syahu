@@ -62,7 +62,6 @@ void ResourceManager::Initialize()
 	SetImage("GameClear/BackTitleText");
 	SetImage("GameClear/CongratulationsText");
 	SetImage("GameClear/GameClearText");
-	SetImage("GameClear/GameClearBackGround");
 	SetImage("GameOver/BackTitleText");
 	SetImage("GameOver/ContinueText");
 	SetImage("GameOver/GameOverText");
