@@ -2,8 +2,9 @@
 #include "../Scene/GameMain/GameMainScene.h"
 #include "../Actor/Character/Player/Player.h"
 #include "../Actor/Camera/Camera.h"
+#include "../ResourceManager/ResourceManager.h"
 
-StageBlock::StageBlock(int x, int y, int type, bool show)
+StageBlock::StageBlock(int x, int y, int type)
 {
 	location.x = x;
 	location.y = y;
@@ -12,14 +13,65 @@ StageBlock::StageBlock(int x, int y, int type, bool show)
 	area.height = BLOCK_HEIGHT;
 
 	DrawType = type;
-	IsDraw = show;
+	IsDraw = true;
 
-	blockImg = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_2.png");
+	switch (DrawType)
+	{
+	case 0:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_1");
+		break;
+	case 1:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_2");
+		break;
+	case 2:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_3");
+		break;
+	case 3:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_4");
+		break;
+	case 4:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_5");
+		break;
+	case 5:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_6");
+		break;
+	case 6:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_7");
+		break;
+	case 7:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_8");
+		break;
+	case 8:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_9");
+		break;
+	case 9:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_10");
+		break;
+	case 10:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_11");
+		break;
+	case 11:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_12");
+		break;
+	case 12:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_13");
+		break;
+	case 13:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_14");
+		break;
+	case 14:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_15");
+		break;
+	case 15:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_16");
+		break;
+	default:
+		break;
+	}
 };
 
 StageBlock::~StageBlock() 
 {
-
 };
 
 void StageBlock::Update() 
@@ -37,7 +89,7 @@ void StageBlock::Draw()const
 	(
 		screenLocation.x, screenLocation.y,
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
-		blockImg , TRUE
+		blockImg, TRUE
 	);
 
 	//タイプ表示(仮)

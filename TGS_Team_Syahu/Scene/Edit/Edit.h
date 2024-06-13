@@ -7,15 +7,14 @@
 
 class GameMainScene;
 
-#define OBJECT_TYPE_MAX 5
+#define OBJECT_TYPE_MAX 4+15
 
-static char objString[OBJECT_TYPE_MAX][256] =
+static char objString[20][256] =
 {
     "None",
     "Sword",
     "Rapier",
     "Dagger",
-    "Block",
 };
 
 enum MODE {
@@ -26,8 +25,6 @@ enum MODE {
 class Edit : public SceneBase
 {
 private:
-    Camera* camera;
-
     Vector2D move;
 
     MODE mode = Normal;
@@ -36,7 +33,7 @@ private:
     int blockX, blockY;
     int rSelectX, rSelectY;
     bool rangeflg;
-    const int color[5]{ 0xDDDDDD,0x8524F4,0xAF2F3E,0x49FFF3,0x000000, };
+    const int color[4]{ 0xDDDDDD,0x8524F4,0xAF2F3E,0x49FFF3, };
     int stageWidth, stageHeight;
     int stageNum;
     int stageData[100][100];
@@ -44,7 +41,7 @@ private:
 
     int toolSelect;
 
-    int blockImg[157];
+    int blockImg[16];
     
     bool success;
     int resultDisplay;

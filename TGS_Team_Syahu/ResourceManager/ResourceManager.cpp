@@ -53,6 +53,22 @@ void ResourceManager::Initialize()
 	SetImage("Effect/Steal/steal_9");
 	SetImage("Effect/Steal/steal_10");
 	SetDivImage("Effect/transformEffect", 9, 9, 1, 240, 240);
+	SetImage("Stage/Tiles/brick_1");
+	SetImage("Stage/Tiles/brick_2");
+	SetImage("Stage/Tiles/brick_3");
+	SetImage("Stage/Tiles/brick_4");
+	SetImage("Stage/Tiles/brick_5");
+	SetImage("Stage/Tiles/brick_6");
+	SetImage("Stage/Tiles/brick_7");
+	SetImage("Stage/Tiles/brick_8");
+	SetImage("Stage/Tiles/brick_9");
+	SetImage("Stage/Tiles/brick_10");
+	SetImage("Stage/Tiles/brick_11");
+	SetImage("Stage/Tiles/brick_12");
+	SetImage("Stage/Tiles/brick_13");
+	SetImage("Stage/Tiles/brick_14");
+	SetImage("Stage/Tiles/brick_15");
+	SetImage("Stage/Tiles/brick_16");
 
 	//BGM
 	SetBGM("gamemain");

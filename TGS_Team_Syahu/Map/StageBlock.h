@@ -4,13 +4,13 @@
 class StageBlock : public BoxCollision
 {
 private:
-	int stageData[WORLD_BLOCK_X][WORLD_BLOCK_Y];
+	//int stageData[WORLD_BLOCK_X][WORLD_BLOCK_Y];
 	int blockImg;
 	int DrawType;
 	bool IsDraw;
 public:
 	//コンストラクタ
-	StageBlock(int x, int y, int type, bool show);
+	StageBlock(int x, int y, int type);
 
 	//デストラクタ
 	~StageBlock();
@@ -23,10 +23,6 @@ public:
 
 	//ヒット処理
 	void Hit(ObjectBase* object, const float damage)override;
-
-	void CopyStageData(int x, int y, int data) {
-		stageData[x][y] = data;
-	}
 
 	//画像タイプ取得
 	int GetDrawType()
