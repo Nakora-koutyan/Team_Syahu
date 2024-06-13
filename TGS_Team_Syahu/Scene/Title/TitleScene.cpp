@@ -11,7 +11,7 @@ TitleScene::TitleScene()
 	cursorLocation.x = 0.f;
 	cursorLocation.y = 0.f;
 
-	intervalCount = 0;
+	intervalCursorCount = 0;
 	cursorNum = 0;
 
 }
@@ -37,20 +37,20 @@ SceneBase* TitleScene::Update()
 
 	cursorLocation.y = (float)cursorNum * 100;
 
-	if (intervalCount < CURSOR_INTERVAL)
+	if (intervalCursorCount < CURSOR_INTERVAL)
 	{
-		intervalCount++;
+		intervalCursorCount++;
 	}
 
 	//上
 	if ((KeyInput::GetKeyDown(KEY_INPUT_W) || KeyInput::GetKeyDown(KEY_INPUT_UP) ||
 		PadInput::GetLStickRationY() > 0.2 || PadInput::OnPressed(XINPUT_BUTTON_DPAD_UP)) &&
-		intervalCount >= CURSOR_INTERVAL)
+		intervalCursorCount >= CURSOR_INTERVAL)
 	{
 		ResourceManager::PlaySE("cursorMove", FALSE);
 
 		cursorNum--;
-		intervalCount = 0;
+		intervalCursorCount = 0;
 
 		if (cursorNum < 0)
 		{
@@ -61,12 +61,12 @@ SceneBase* TitleScene::Update()
 	else 
 	if ((KeyInput::GetKeyDown(KEY_INPUT_S) || KeyInput::GetKeyDown(KEY_INPUT_DOWN) ||
 		PadInput::GetLStickRationY() < -0.2 || PadInput::OnPressed(XINPUT_BUTTON_DPAD_DOWN)) &&
-		intervalCount >= CURSOR_INTERVAL)
+		intervalCursorCount >= CURSOR_INTERVAL)
 	{
 		ResourceManager::PlaySE("cursorMove", FALSE);
 
 		cursorNum++;
-		intervalCount = 0;
+		intervalCursorCount = 0;
 
 		if (cursorNum > 2)
 		{

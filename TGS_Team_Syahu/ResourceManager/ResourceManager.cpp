@@ -59,6 +59,14 @@ void ResourceManager::Initialize()
 	SetImage("Title/StartText");
 	SetImage("Title/HelpText");
 	SetImage("Title/EndText");
+	SetImage("GameClear/BackTitleText");
+	SetImage("GameClear/CongratulationsText");
+	SetImage("GameClear/GameClearText");
+	SetImage("GameClear/GameClearBackGround");
+	SetImage("GameOver/BackTitleText");
+	SetImage("GameOver/ContinueText");
+	SetImage("GameOver/GameOverText");
+	SetImage("GameOver/GameOverBackGround");
 
 	//BGM
 	SetBGM("gamemain");

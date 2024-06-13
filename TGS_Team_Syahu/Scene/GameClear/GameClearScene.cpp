@@ -3,10 +3,11 @@
 #include"../../InputControl/Pad/PadInput.h"
 #include"../../ResourceManager/ResourceManager.h"
 #include"../../Scene/Title/TitleScene.h"
+#include"../Utility/common.h"
 
 GameClearScene::GameClearScene()
 {
-	intervalCount = 0;
+	intervaSceneCount = 0;
 	animCount = 0;
 	playerIdle = 0;
 }
@@ -41,9 +42,9 @@ SceneBase* GameClearScene::Update()
 		}
 	}
 
-	if (intervalCount < SCENE_INTERVAL)
+	if (intervaSceneCount < SCENE_INTERVAL)
 	{
-		intervalCount++;
+		intervaSceneCount++;
 	}
 	else
 	{
@@ -58,6 +59,9 @@ SceneBase* GameClearScene::Update()
 
 void GameClearScene::Draw() const
 {
+	//背景
+	DrawGraph(0, 0, ResourceManager::GetImage("GameClear/GameClearBackGround"), TRUE);
+
 	SetFontSize(64);
 	DrawString(500, 200, "GameClear", 0xffffff);
 	SetFontSize(16);
