@@ -55,6 +55,10 @@ void ResourceManager::Initialize()
 	SetDivImage("Effect/transformEffect", 9, 9, 1, 240, 240);
 	SetImage("Stage/Background/layer_1");
 	SetImage("Stage/Background/layer_2");
+	SetImage("Title/TitleText");
+	SetImage("Title/StartText");
+	SetImage("Title/HelpText");
+	SetImage("Title/EndText");
 
 	//BGM
 	SetBGM("gamemain");

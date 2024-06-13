@@ -62,6 +62,7 @@ SceneBase* HelpScene::Update()
 	}
 	if (manualType != Manual::None)
 	{
+		GetDrawScreenGraph(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, nowHelpScene);
 		GraphFilter(nowHelpScene, DX_GRAPH_FILTER_MONO, -60, 7);
 	}
 
