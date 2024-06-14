@@ -47,6 +47,7 @@ void GameMainScene::Finalize()
 			delete ob;
 		}
 	}
+	delete ui;
 }
 
 SceneBase* GameMainScene::Update()
@@ -132,8 +133,6 @@ void GameMainScene::Draw() const
 {
 	DrawGraphF(Camera::ConvertScreenPosition({ 0,0 }).x, Camera::ConvertScreenPosition({ 0,0 }).y, kari, TRUE);
 
-	ui->Draw();
-
 	for (ObjectBase* ob : object)
 	{
 		if (ob != nullptr)
@@ -146,6 +145,8 @@ void GameMainScene::Draw() const
 			}
 		}
 	}
+
+	ui->Draw();
 }
 
 void GameMainScene::HitCheck()
@@ -234,7 +235,8 @@ void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
 	{
 		for (int i = 0; i < PLAYER_MAX_DAGGER; i++)
 		{
-			if (player->GetDagger(i)->CollisionCheck(object[j]))
+			if (player->GetDagger(i)->GetIsShow() &&
+				player->GetDagger(i)->CollisionCheck(object[j]))
 			{
 				player->GetDagger(i)->Init();
 			}

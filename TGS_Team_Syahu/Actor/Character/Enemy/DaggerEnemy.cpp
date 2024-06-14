@@ -88,6 +88,7 @@ void DaggerEnemy::Initialize()
 void DaggerEnemy::Finalize()
 {
 	delete dagger;
+	delete clawCollisionBox;
 }
 
 //更新処理

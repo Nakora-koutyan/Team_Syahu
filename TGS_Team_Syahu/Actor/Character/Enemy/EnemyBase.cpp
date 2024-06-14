@@ -46,24 +46,25 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 				knockBackDirection = 1;
 			}
 		}
+	}
 
-		//すでに当たってないならかつ同じオブジェクトじゃないなら
-		if ((!isHit && objectType != chara->GetObjectType()) || chara->GetIsKnockBack())
+	//すでに当たってないならかつ同じオブジェクトじゃないなら
+	if ((!isHit && objectType != chara->GetObjectType()) || chara->GetIsKnockBack())
+	{
+		isHit = true;
+		if (chara->GetIsKnockBack())
 		{
-			isHit = true;
-			if (chara->GetIsKnockBack())
-			{
-				chara->SetIsKnockBack(false);
-			}
+			chara->SetIsKnockBack(false);
+		}
 
-			if (hp > 0)
-			{
-				ResourceManager::PlaySE("damage", FALSE);
+		if (hp > 0)
+		{
+			ResourceManager::PlaySE("damage", FALSE);
 
-				hp -= damage;
-			}
+			hp -= damage;
 		}
 	}
+
 
 	if (hp < 0)
 	{

@@ -16,7 +16,7 @@ LargeSword::LargeSword()
 	direction = 0;
 	effectAnim = 3;
 	effectAnimcount = 0;
-	airAttackEffectAnim = 0;
+	airAttackEffectAnim = 3;
 	airAttackEffectAnimcount = 0;
 
 	framCount = 0;
@@ -107,7 +107,7 @@ void LargeSword::Update(CharaBase* chara)
 			{
 				airAttackAnimFlg = false;
 				airAttackEffectLocation = { 0.f,0.f };
-				airAttackEffectAnim = 0;
+				airAttackEffectAnim = 3;
 			}
 		}
 	}

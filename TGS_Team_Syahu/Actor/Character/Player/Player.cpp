@@ -379,6 +379,10 @@ void Player::Landing(const float height)
 		location.y = height - area.height;
 		jumpEffectLocation.y = height;
 		jumpCount = 0;
+		if (move.y > 30)
+		{
+			hp -= move.y;
+		}
 		move.y = 0.f;
 		isAir = false;
 		//空中の画像かつ動いていないなら
@@ -646,7 +650,7 @@ void Player::Attack()
 void Player::StockSelect()
 {
 	//stockカウントを減らす
-	if ((KeyInput::GetKey(KEY_INPUT_Q)) || PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER))
+	if (!isAttack && (KeyInput::GetKey(KEY_INPUT_Q)) || PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER))
 	{
 		ResourceManager::PlaySE("stockSelect", FALSE);
 		stockCount--;
@@ -667,7 +671,7 @@ void Player::StockSelect()
 	}
 
 	//stockカウントを増やす
-	if ((KeyInput::GetKey(KEY_INPUT_E)) || PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER))
+	if (!isAttack && (KeyInput::GetKey(KEY_INPUT_E)) || PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER))
 	{
 		ResourceManager::PlaySE("stockSelect", FALSE);
 		stockCount++;
