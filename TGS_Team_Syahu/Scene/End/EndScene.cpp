@@ -1,6 +1,6 @@
 #include"EndScene.h"
 #include"../../ResourceManager/ResourceManager.h"
-#include"../Utility/common.h"
+#include"../../Utility/common.h"
 
 EndScene::EndScene()
 {

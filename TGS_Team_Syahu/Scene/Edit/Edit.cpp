@@ -10,6 +10,7 @@ Edit::Edit()
 	move.x = 0.f; move.y = WORLD_HEIGHT - SCREEN_HEIGHT;
 	mouseX = 0; mouseY = 0;
 	toolSelect = 1;
+	rangeflg = false;
 	LoadStage(0);
 }
 
@@ -19,22 +20,45 @@ Edit::~Edit()
 
 void Edit::Initialize()
 {
-	blockImg[0] = LoadGraph("Resource/Images/Stage/Tiles/brick_1.png");
-	blockImg[1] = LoadGraph("Resource/Images/Stage/Tiles/brick_2.png");
-	blockImg[2] = LoadGraph("Resource/Images/Stage/Tiles/brick_3.png");
-	blockImg[3] = LoadGraph("Resource/Images/Stage/Tiles/brick_4.png");
-	blockImg[4] = LoadGraph("Resource/Images/Stage/Tiles/brick_5.png");
-	blockImg[5] = LoadGraph("Resource/Images/Stage/Tiles/brick_6.png");
-	blockImg[6] = LoadGraph("Resource/Images/Stage/Tiles/brick_7.png"); 
-	blockImg[7] = LoadGraph("Resource/Images/Stage/Tiles/brick_8.png");
-	blockImg[8] = LoadGraph("Resource/Images/Stage/Tiles/brick_9.png");
-	blockImg[9] = LoadGraph("Resource/Images/Stage/Tiles/brick_10.png");
-	blockImg[10] = LoadGraph("Resource/Images/Stage/Tiles/brick_11.png");
-	blockImg[11] = LoadGraph("Resource/Images/Stage/Tiles/brick_12.png");
-	blockImg[12] = LoadGraph("Resource/Images/Stage/Tiles/brick_13.png");
-	blockImg[13] = LoadGraph("Resource/Images/Stage/Tiles/brick_14.png");
-	blockImg[14] = LoadGraph("Resource/Images/Stage/Tiles/brick_15.png");
-	blockImg[15] = LoadGraph("Resource/Images/Stage/Tiles/brick_16.png");
+	blockImg[0] = LoadGraph("Resource/Images/Stage/Tiles/blank.png");
+	blockImg[1] = LoadGraph("Resource/Images/Stage/Tiles/ceiling_1.png");
+	blockImg[2] = LoadGraph("Resource/Images/Stage/Tiles/ceiling_2.png");
+	blockImg[3] = LoadGraph("Resource/Images/Stage/Tiles/ceiling_3.png");
+	blockImg[4] = LoadGraph("Resource/Images/Stage/Tiles/ceiling_4.png");
+	blockImg[5] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_1.png");
+	blockImg[6] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_2.png");
+	blockImg[7] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_3.png");
+	blockImg[8] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_4.png");
+	blockImg[9] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_corner_left.png");
+	blockImg[10] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_corner_right.png");
+	blockImg[11] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_carpet_1.png");
+	blockImg[12] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_carpet_2.png");
+	blockImg[13] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_carpet_3.png");
+	blockImg[14] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_carpet_4.png");
+	blockImg[15] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_carpet_corner_left.png");
+	blockImg[16] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_carpet_corner_right.png");
+	blockImg[17] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_carpet_transition_1.png");
+	blockImg[18] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_carpet_transition_2.png");
+	blockImg[19] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_wood_carpet_transition_1.png");
+	blockImg[20] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_wood_carpet_transition_2.png");
+	blockImg[21] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_wood_transition_1.png");
+	blockImg[22] = LoadGraph("Resource/Images/Stage/Tiles/floor_tile_wood_transition_2.png");
+	blockImg[23] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_1.png");
+	blockImg[24] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_2.png");
+	blockImg[25] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_3.png");
+	blockImg[26] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_4.png");
+	blockImg[27] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_corner_left.png");
+	blockImg[28] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_corner_right.png");
+	blockImg[29] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_carpet_1.png");
+	blockImg[30] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_carpet_2.png");
+	blockImg[31] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_carpet_3.png");
+	blockImg[32] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_carpet_4.png");
+	blockImg[33] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_carpet_corner_left.png");
+	blockImg[34] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_carpet_corner_right.png");
+	blockImg[35] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_carpet_transition_1.png");
+	blockImg[36] = LoadGraph("Resource/Images/Stage/Tiles/floor_wood_carpet_transition_2.png");
+	blockImg[37] = LoadGraph("Resource/Images/Stage/Tiles/tile_side_left.png");
+	blockImg[38] = LoadGraph("Resource/Images/Stage/Tiles/tile_side_right.png");
 	//blockImg[16] = LoadGraph("Resource/Images/Stage/Tiles/brick_9.png");
 	//blockImg[17] = LoadGraph("Resource/Images/Stage/Tiles/brick_10.png");
 	//blockImg[18] = LoadGraph("Resource/Images/Stage/Tiles/brick_11.png");
@@ -180,7 +204,7 @@ void Edit::Initialize()
 
 void Edit::Finalize()
 {
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < BLOCK_TYPE; i++)
 	{
 		DeleteGraph(blockImg[i]);
 	}

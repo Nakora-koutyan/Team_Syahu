@@ -7,7 +7,8 @@
 
 class GameMainScene;
 
-#define OBJECT_TYPE_MAX 4+15
+#define BLOCK_TYPE 39
+#define OBJECT_TYPE_MAX 4+BLOCK_TYPE
 
 static char objString[20][256] =
 {
@@ -41,7 +42,7 @@ private:
 
     int toolSelect;
 
-    int blockImg[16];
+    int blockImg[BLOCK_TYPE];
     
     bool success;
     int resultDisplay;

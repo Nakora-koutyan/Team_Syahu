@@ -3,7 +3,7 @@
 #include"../../InputControl/Pad/PadInput.h"
 #include"../../ResourceManager/ResourceManager.h"
 #include"../../Scene/Title/TitleScene.h"
-#include"../Utility/common.h"
+#include"../../Utility/common.h"
 
 GameClearScene::GameClearScene()
 {
