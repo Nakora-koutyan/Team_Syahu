@@ -4,22 +4,20 @@
 
 enum Manual
 {
-	Enemy,
 	Operation,
-	None
+	Enemy
 };
 
 class HelpScene :public SceneBase
 {
 private:
-	//テキスト：「HELP」
-	int helpTextImage;
 	//テキスト：「Enemy」
 	int enemyTextImage;
 	//テキスト：「Operation」
 	int operationTextImage;
-	//テキスト：「Close」
-	int closeTextImage;
+	
+	//現在の説明対象を示すテキスト
+	int nowManualText;
 
 	//敵の説明書画像
 	int enemyManualImage;
@@ -28,18 +26,34 @@ private:
 	//現在の説明書画像
 	int nowManualImage;
 
-
-	//カーソル表示
-	int cursorImage;
-	
 	//カーソルの座標
 	float cursorLocX;
 	float cursorLocY;
 
 	//メニュー番号
 	int menuNum;
-	//ヘルプ画面の現在の画面を格納する画像
-	int nowHelpScene;
+
+	//ボタンガイド画像01
+	int buttonGuideImage01;
+	//ボタンガイド画像02
+	int buttonGuideImage02;
+	//現在のボタンガイドの画像状態
+	int nowButton;
+	//画像切り替えのインターバル
+	int buttonMoveInterval;
+	//ボタン画像の切り替えフラグ
+	bool buttonImageFlg;
+
+	//「Back」の表示
+	int backToHelp;
+
+	//ヘルプ画面の最初の画面を格納する画像
+	int helpScreen;
+
+	int allowImage01;
+	int allowImage02;
+	int leftNowAllowImage;
+	int rightNowAllowImage;
 
 	//説明書の種類
 	Manual manualType;
@@ -64,11 +78,13 @@ public:
 	void Draw()const override;
 
 private:
-	void CursolControl();
+	
+	//カーソルコントロールに関する処理
+	void ButtonControl();
 
-	void EnemyManual();
+	//ボタンガイドに関する処理
+	void ButtonGuide();
 
-	void OperationManual();
-
+	void AllowControl();
 };
 

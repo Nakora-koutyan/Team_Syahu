@@ -3,11 +3,14 @@
 #include"../../InputControl/Pad/PadInput.h"
 #include "../GameMain/GameMainScene.h"
 #include "../Title/TitleScene.h"
+#include "../ResourceManager/ResourceManager.h"
 
 //コンストラクタ
-HelpScene::HelpScene() :helpTextImage(NULL), enemyTextImage(NULL), operationTextImage(NULL),
-closeTextImage(NULL), cursorImage(NULL), cursorLocX(0), cursorLocY(0), menuNum(0), manualType{},
-nowHelpScene(NULL), enemyManualImage(NULL), operationManualImage(NULL), nowManualImage(NULL)
+HelpScene::HelpScene() :enemyTextImage(NULL), operationTextImage(NULL), nowManualText(NULL), 
+cursorLocX(0), cursorLocY(0), menuNum(0), manualType{},helpScreen(NULL), enemyManualImage(NULL), 
+operationManualImage(NULL), nowManualImage(NULL),buttonGuideImage01(NULL),buttonGuideImage02(NULL),
+nowButton(NULL),buttonMoveInterval(0),buttonImageFlg(false),backToHelp(NULL),allowImage01(NULL),
+allowImage02(NULL),leftNowAllowImage(NULL),rightNowAllowImage(NULL)
 {
 }
 
@@ -19,17 +22,31 @@ HelpScene::~HelpScene()
 //初期化関数
 void HelpScene::Initialize()
 {
-	helpTextImage = LoadGraph("Resource/Images/Help/HelpText.png");
+	//テキスト画像
 	enemyTextImage = LoadGraph("Resource/Images/Help/EnemyText.png");
 	operationTextImage = LoadGraph("Resource/Images/Help/OperationText.png");
-	closeTextImage = LoadGraph("Resource/Images/Help/CloseText.png");
 
-	enemyManualImage = LoadGraph("Resource/Images/Help/ManualScreen.png");
-	operationManualImage = LoadGraph("Resource/Images/Help/ManualScreen02.png");
+	//説明画像
+	enemyManualImage = LoadGraph("Resource/Images/Help/EnemyManual.png");
+	operationManualImage = LoadGraph("Resource/Images/Help/OperationManual.png");
 
-	cursorImage = LoadGraph("Resource/Images/UI/cursor.png");
+	//ボタン画像
+	buttonGuideImage01 = LoadGraph("Resource/Images/Help/ButtonGuide01.png");
+	buttonGuideImage02 = LoadGraph("Resource/Images/Help/ButtonGuide02.png");
 
-	manualType = Manual::None;
+	//「戻る」画像
+	backToHelp = LoadGraph("Resource/Images/Help/BackToHelp.png");
+
+	//矢印画像
+	allowImage01 = LoadGraph("Resource/Images/Help/Allow01.png");
+	allowImage02 = LoadGraph("Resource/Images/Help/Allow02.png");
+
+	manualType = Manual::Operation;
+	helpScreen = MakeScreen(SCREEN_WIDTH, SCREEN_HEIGHT);
+	nowManualText = operationTextImage;
+	nowManualImage = operationManualImage;
+	leftNowAllowImage = allowImage02;
+	rightNowAllowImage = allowImage01;
 }
 
 void HelpScene::Finalize()
@@ -39,38 +56,39 @@ void HelpScene::Finalize()
 //描画以外の更新
 SceneBase* HelpScene::Update()
 {
-	CursolControl();
-	if(PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::GetKey(KEY_INPUT_SPACE))
+	ButtonControl();
+	switch (menuNum)
 	{
-		switch (menuNum)
+	case 0:
+		if (PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::GetKey(KEY_INPUT_SPACE))
 		{
-		case 0:
-			nowHelpScene = MakeScreen(SCREEN_WIDTH, SCREEN_HEIGHT, TRUE);
-			manualType = Manual::Enemy;
-			EnemyManual();
-			break;
-
-		case 1:
-			nowHelpScene = MakeScreen(SCREEN_WIDTH, SCREEN_HEIGHT, TRUE);
 			manualType = Manual::Operation;
-			break;
-
-		case 2:
-			return new TitleScene();
+			//表示する説明書画像を操作方法の説明書画像にする
+			nowManualImage = operationManualImage;
+			nowManualText = operationTextImage;
 			break;
 		}
+
+	case 1:
+		if (PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::GetKey(KEY_INPUT_SPACE))
+		{
+			manualType = Manual::Enemy;
+			//表示する説明書画像を敵の説明書画像にする
+			nowManualImage = enemyManualImage;
+			nowManualText = enemyTextImage;
+		}
+		break;
 	}
-	if (manualType != Manual::None)
-	{
-		GetDrawScreenGraph(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, nowHelpScene);
-		GraphFilter(nowHelpScene, DX_GRAPH_FILTER_MONO, -60, 7);
-	}
+	//ボタンガイドの表示と画像の繰り返し
+	ButtonGuide();
+	//矢印画像の制御
+	AllowControl();
 
 	//ゲームメインシーンに戻る
-	if (KeyInput::GetKey(KEY_INPUT_H))
+	if (KeyInput::GetKey(KEY_INPUT_B)|| PadInput::OnButton(XINPUT_BUTTON_B))
 	{
 		//ゲームメインシーンに遷移
-		return new GameMainScene();
+		return new TitleScene();
 	}
 
 	//この画面を維持
@@ -80,45 +98,53 @@ SceneBase* HelpScene::Update()
 //描画に関する更新
 void HelpScene::Draw() const
 {
-	//「HELP」の表示
-	DrawGraph(415, 90, helpTextImage, TRUE);
-	//「Enemy」の表示
-	DrawGraph(500, 350, enemyTextImage, TRUE);
-	//「Operation」の表示
-	DrawGraph(460, 450, operationTextImage, TRUE);
-	//「Close」の表示
-	DrawGraph(500, 550, closeTextImage, TRUE);
+	//仮背景の表示
+	DrawGraphF(0.f, 0.f, ResourceManager::GetImage("Stage/Background/layer_1"), TRUE);
+	DrawGraphF(0.f, 200.f, ResourceManager::GetImage("Stage/Background/layer_2"), TRUE);
+	//現在の画面を一枚のデータとして保存
+	GetDrawScreenGraph(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, helpScreen);
+	//画面を初期化
+	ClearDrawScreen();
+	//保存した画像に「ぼかし」を加える
+	GraphFilter(helpScreen, DX_GRAPH_FILTER_GAUSS, 16, 1200);
+	//「ぼかし」を加えた画像を現在のシーンとして描画する
+	DrawGraphF(0.f, 0.f, helpScreen, TRUE);
 
-	//カーソルの表示
-	DrawRotaGraphF(450.f + cursorLocX, 375.f + cursorLocY, 1, DEGREE_TO_RADIAN(90.f), cursorImage, TRUE);
-	//現在説明書がなしの状態でない場合
-	if (manualType != Manual::None)
-	{
-		DrawGraph(0, 0, nowHelpScene, TRUE);
-		DrawGraph(90, 60, nowManualImage, TRUE);
-	}
+	//現在の説明対象の表示
+	DrawGraphF(450.f, 30.f, nowManualText, TRUE);
+
+	//矢印画像の表示
+	DrawRotaGraphF(50.f,60.f , 1, 0, leftNowAllowImage,TRUE,TRUE,FALSE);
+	DrawRotaGraphF(1220, 60.f, 1, 0, rightNowAllowImage, TRUE, FALSE, FALSE);
+
+	//現在の説明書画像を表示
+	DrawGraphF(90.f, 110.f, nowManualImage, TRUE);
+
+	//現在のボタン画像を表示
+	DrawGraph(500, 670, nowButton, TRUE);
+	DrawGraph(555, 670, backToHelp, TRUE);
 }
 
-void HelpScene::CursolControl()
+void HelpScene::ButtonControl()
 {
-	//カーソルの上移動
-	if ((KeyInput::GetKeyDown(KEY_INPUT_W) || KeyInput::GetKey(KEY_INPUT_UP) ||
-		PadInput::GetLStickRationY() > 0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_UP)))
+	//カーソルの右移動
+	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || KeyInput::GetKey(KEY_INPUT_RIGHT) ||
+		PadInput::GetLStickRationX() > 0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_RIGHT)))
+	{
+		menuNum++;
+		if (menuNum > 1)
+		{
+			menuNum = 0;
+		}
+	}
+	//カーソルの左移動
+	else if ((KeyInput::GetKeyDown(KEY_INPUT_A) || KeyInput::GetKey(KEY_INPUT_LEFT) ||
+		PadInput::GetLStickRationX() < -0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_LEFT)))
 	{
 		menuNum--;
 		if (menuNum <= -1)
 		{
-			menuNum = 2;
-		}
-	}
-	//カーソルの下移動
-	else if ((KeyInput::GetKeyDown(KEY_INPUT_S) || KeyInput::GetKey(KEY_INPUT_DOWN) ||
-		PadInput::GetLStickRationY() < -0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_DOWN)))
-	{
-		menuNum++;
-		if (menuNum > 2)
-		{
-			menuNum = 0;
+			menuNum = 1;
 		}
 	}
 	//カーソルの動く範囲
@@ -126,8 +152,36 @@ void HelpScene::CursolControl()
 	cursorLocY = (float)menuNum * 100.f;
 }
 
-void HelpScene::EnemyManual()
+void HelpScene::ButtonGuide()
 {
-	//表示する説明書画像を敵の説明書画像にする
-	nowManualImage = enemyManualImage;
+	buttonMoveInterval++;
+	//3フレーム毎に画像を切り替える
+	if (buttonMoveInterval % 30 == 0)
+	{
+		buttonImageFlg = !buttonImageFlg;
+	}
+
+	//画像切り替え
+	if (buttonImageFlg)
+	{
+		nowButton = buttonGuideImage01;
+	}
+	else if (buttonGuideImage02)
+	{
+		nowButton = buttonGuideImage02;
+	}
+}
+
+void HelpScene::AllowControl()
+{
+	if (menuNum == 0)
+	{
+		leftNowAllowImage = allowImage02;
+		rightNowAllowImage = allowImage01;
+	}
+	else if (menuNum != 0)
+	{
+		leftNowAllowImage = allowImage01;
+		rightNowAllowImage = allowImage02;
+	}
 }
