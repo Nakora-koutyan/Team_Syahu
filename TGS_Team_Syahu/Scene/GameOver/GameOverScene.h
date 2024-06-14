@@ -1,12 +1,15 @@
 #pragma once
 #include"../SceneBase.h"
-
-#define SCENE_INTERVAL  60          //シーン切り替えを行うインターバル
+#include"../Utility/Vector2D.h"
 
 class GameOverScene :public SceneBase
 {
 private:
-    int intervalCount;                  //インターバル
+    Vector2D cursorLocation;            //カーソルの座標
+
+    int intervaSceneCount;              //シーンインターバル
+    int intervalCursorCount;            //カーソルインターバル
+    int cursorNum;                      //カーソルの番号                    
 
 public:
     //コンストラクタ

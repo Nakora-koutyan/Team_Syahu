@@ -59,6 +59,35 @@ void ResourceManager::Initialize()
 	SetImage("Title/StartText");
 	SetImage("Title/HelpText");
 	SetImage("Title/EndText");
+	SetImage("GameClear/BackTitleText");
+	SetImage("GameClear/CongratulationsText");
+	SetImage("GameClear/GameClearText");
+	SetImage("GameClear/BackGround1");
+	SetImage("GameClear/BackGround2");
+	SetImage("GameClear/BackGround3");
+	SetImage("GameClear/Tile");
+	SetImage("GameOver/BackTitleText");
+	SetImage("GameOver/ContinueText");
+	SetImage("GameOver/GameOverText");
+	SetImage("GameOver/GameOverBackGround");
+	SetImage("Stage/Tiles/brick_1");
+	SetImage("Stage/Tiles/brick_2");
+	SetImage("Stage/Tiles/brick_3");
+	SetImage("Stage/Tiles/brick_4");
+	SetImage("Stage/Tiles/brick_5");
+	SetImage("Stage/Tiles/brick_6");
+	SetImage("Stage/Tiles/brick_7");
+	SetImage("Stage/Tiles/brick_8");
+	SetImage("Stage/Tiles/brick_9");
+	SetImage("Stage/Tiles/brick_10");
+	SetImage("Stage/Tiles/brick_11");
+	SetImage("Stage/Tiles/brick_12");
+	SetImage("Stage/Tiles/brick_13");
+	SetImage("Stage/Tiles/brick_14");
+	SetImage("Stage/Tiles/brick_15");
+	SetImage("Stage/Tiles/brick_16");
+	SetImage("End/credit");
+	SetImage("End/thanks");
 
 	//BGM
 	SetBGM("gamemain");

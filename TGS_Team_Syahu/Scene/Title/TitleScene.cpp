@@ -5,13 +5,14 @@
 #include"../GameMain/GameMainScene.h"
 #include"../End/EndScene.h"
 #include"../Help/HelpScene.h"
+#include"../Utility/common.h"
 
 TitleScene::TitleScene()
 {
 	cursorLocation.x = 0.f;
 	cursorLocation.y = 0.f;
 
-	intervalCount = 0;
+	intervalCursorCount = 0;
 	cursorNum = 0;
 
 }
@@ -37,20 +38,20 @@ SceneBase* TitleScene::Update()
 
 	cursorLocation.y = (float)cursorNum * 100;
 
-	if (intervalCount < CURSOR_INTERVAL)
+	if (intervalCursorCount < CURSOR_INTERVAL)
 	{
-		intervalCount++;
+		intervalCursorCount++;
 	}
 
 	//上
 	if ((KeyInput::GetKeyDown(KEY_INPUT_W) || KeyInput::GetKeyDown(KEY_INPUT_UP) ||
 		PadInput::GetLStickRationY() > 0.2 || PadInput::OnPressed(XINPUT_BUTTON_DPAD_UP)) &&
-		intervalCount >= CURSOR_INTERVAL)
+		intervalCursorCount >= CURSOR_INTERVAL)
 	{
 		ResourceManager::PlaySE("cursorMove", FALSE);
 
 		cursorNum--;
-		intervalCount = 0;
+		intervalCursorCount = 0;
 
 		if (cursorNum < 0)
 		{
@@ -61,12 +62,12 @@ SceneBase* TitleScene::Update()
 	else 
 	if ((KeyInput::GetKeyDown(KEY_INPUT_S) || KeyInput::GetKeyDown(KEY_INPUT_DOWN) ||
 		PadInput::GetLStickRationY() < -0.2 || PadInput::OnPressed(XINPUT_BUTTON_DPAD_DOWN)) &&
-		intervalCount >= CURSOR_INTERVAL)
+		intervalCursorCount >= CURSOR_INTERVAL)
 	{
 		ResourceManager::PlaySE("cursorMove", FALSE);
 
 		cursorNum++;
-		intervalCount = 0;
+		intervalCursorCount = 0;
 
 		if (cursorNum > 2)
 		{
@@ -98,12 +99,12 @@ SceneBase* TitleScene::Update()
 void TitleScene::Draw() const
 {
 	DrawGraph(0, 0, ResourceManager::GetImage("Stage/Background/layer_1"), TRUE);
-	DrawGraph(0, 200, ResourceManager::GetImage("Stage/Background/layer_2"), TRUE);
+	DrawGraph(0, 198, ResourceManager::GetImage("Stage/Background/layer_2"), TRUE);
 	DrawGraph(340, 60, ResourceManager::GetImage("Title/TitleText"), TRUE);
 
 	DrawRotaGraphF(470, 360 + cursorLocation.y, 1, DEGREE_TO_RADIAN(90.f), ResourceManager::GetImage("UI/cursor"), TRUE);
 
-	DrawGraph(500, (300 + 28), ResourceManager::GetImage("Title/StartText"), TRUE);
-	DrawGraph(500, (300 + 28) + 100, ResourceManager::GetImage("Title/HelpText"), TRUE);
-	DrawGraph(500, (300 + 26) + 200, ResourceManager::GetImage("Title/EndText"), TRUE);
+	DrawGraph(530, (300 + 28), ResourceManager::GetImage("Title/StartText"), TRUE);
+	DrawGraph(530, (300 + 28) + 100, ResourceManager::GetImage("Title/HelpText"), TRUE);
+	DrawGraph(520, (300 + 26) + 200, ResourceManager::GetImage("Title/EndText"), TRUE);
 }

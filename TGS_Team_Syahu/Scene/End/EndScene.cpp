@@ -1,8 +1,10 @@
-#include "EndScene.h"
+#include"EndScene.h"
+#include"../../ResourceManager/ResourceManager.h"
+#include"../Utility/common.h"
 
 EndScene::EndScene()
 {
-	intervalCount = 0;
+	intervaSceneCount = 0;
 }
 
 EndScene::~EndScene()
@@ -22,9 +24,9 @@ void EndScene::Finalize()
 
 SceneBase* EndScene::Update()
 {
-	if (intervalCount < SCENE_INTERVAL)
+	if (intervaSceneCount < SCENE_INTERVAL * 4)
 	{
-		intervalCount++;
+		intervaSceneCount++;
 	}
 	else
 	{
@@ -36,5 +38,16 @@ SceneBase* EndScene::Update()
 
 void EndScene::Draw() const
 {
-	DrawString(300, 500, "credit", 0xffffff);
+	//背景
+	DrawGraph(0, 0, ResourceManager::GetImage("Stage/Background/layer_1"), TRUE);
+	DrawGraph(0, 198, ResourceManager::GetImage("Stage/Background/layer_2"), TRUE);
+	
+	if (intervaSceneCount < SCENE_INTERVAL * 2)
+	{
+		DrawGraph(0, 0, ResourceManager::GetImage("End/credit"), TRUE);
+	}
+	else
+	{
+		DrawGraph(400, 340, ResourceManager::GetImage("End/thanks"), TRUE);
+	}
 }

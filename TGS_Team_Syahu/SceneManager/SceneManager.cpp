@@ -29,7 +29,6 @@ void SceneManager::Update()
 		}
 
 		next_scene = now_sceen->Update();
-
 		Draw();
 
 		if (next_scene != now_sceen)

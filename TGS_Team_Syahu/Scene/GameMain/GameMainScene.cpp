@@ -342,11 +342,9 @@ void GameMainScene::createStage() {
 					// 敵(ダガー)生成
 					object.push_back(new DaggerEnemy(BLOCK_WIDTH * j, BLOCK_HEIGHT * i));
 					break;
-				case 4:
-					// ブロック生成
-					object.push_back(new StageBlock(BLOCK_WIDTH * j, BLOCK_HEIGHT * i, 0, 1));
-					break;
 				default:
+					// ブロック生成
+					object.push_back(new StageBlock(BLOCK_WIDTH * j, BLOCK_HEIGHT * i, stageData[j][i] - 4));
 					break;
 				}
 				//stageblock->CopyStageData(j, i, stageData[j][i]);
