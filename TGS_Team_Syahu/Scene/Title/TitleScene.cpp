@@ -107,5 +107,4 @@ void TitleScene::Draw() const
 	DrawGraph(530, (300 + 28), ResourceManager::GetImage("Title/StartText"), TRUE);
 	DrawGraph(530, (300 + 28) + 100, ResourceManager::GetImage("Title/HelpText"), TRUE);
 	DrawGraph(520, (300 + 26) + 200, ResourceManager::GetImage("Title/EndText"), TRUE);
-	DrawCenterLine();
 }
