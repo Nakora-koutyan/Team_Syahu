@@ -18,52 +18,121 @@ StageBlock::StageBlock(int x, int y, int type)
 	switch (DrawType)
 	{
 	case 0:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_1");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/blank");
 		break;
 	case 1:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_2");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/ceiling_1");
 		break;
 	case 2:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_3");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/ceiling_2");
 		break;
 	case 3:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_4");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/ceiling_3");
 		break;
 	case 4:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_5");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/ceiling_4");
 		break;
 	case 5:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_6");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_1");
 		break;
 	case 6:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_7");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_2");
 		break;
 	case 7:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_8");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_3");
 		break;
 	case 8:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_9");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_4");
 		break;
 	case 9:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_10");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_corner_left");
 		break;
 	case 10:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_11");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_corner_right");
 		break;
 	case 11:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_12");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_carpet_1");
 		break;
 	case 12:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_13");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_carpet_2");
 		break;
 	case 13:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_14");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_carpet_3");
 		break;
 	case 14:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_15");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_carpet_4");
 		break;
 	case 15:
-		blockImg = ResourceManager::GetImage("Stage/Tiles/brick_16");
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_carpet_corner_left");
+		break;
+	case 16:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_carpet_corner_right");
+		break;
+	case 17:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_carpet_transition_1");
+		break;
+	case 18:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_carpet_transition_2");
+		break;
+	case 19:
+		blockImg = ResourceManager::GetImage("floor_tile_wood_carpet_transition_1");
+		break;
+	case 20:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_carpet_transition_2");
+		break;
+	case 21:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_wood_transition_1");
+		break;
+	case 22:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_tile_wood_transition_2");
+		break;
+	case 23:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_1");
+		break;
+	case 24:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_2");
+		break;
+	case 25:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_3");
+		break;
+	case 26:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_4");
+		break;
+	case 27:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_corner_left");
+		break;
+	case 28:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_corner_right");
+		break;
+	case 29:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_carpet_1");
+		break;
+	case 30:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_carpet_2");
+		break;
+	case 31:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_carpet_3");
+		break;
+	case 32:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_carpet_4");
+		break;
+	case 33:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_carpet_corner_left");
+		break;
+	case 34:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_carpet_corner_right");
+		break;
+	case 35:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_carpet_transition_1");
+		break;
+	case 36:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/floor_wood_carpet_transition_2");
+		break;
+	case 37:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/tile_side_left");
+		break;
+	case 38:
+		blockImg = ResourceManager::GetImage("Stage/Tiles/tile_side_right");
 		break;
 	default:
 		break;

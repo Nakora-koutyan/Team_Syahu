@@ -4,7 +4,7 @@
 #include"../../ResourceManager/ResourceManager.h"
 #include"../../Scene/Title/TitleScene.h"
 #include"../../Scene/GameMain/GameMainScene.h"
-#include"../Utility/common.h"
+#include"../../Utility/common.h"
 
 GameOverScene::GameOverScene()
 {

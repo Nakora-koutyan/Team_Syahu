@@ -5,7 +5,7 @@
 #include"../GameMain/GameMainScene.h"
 #include"../End/EndScene.h"
 #include"../Help/HelpScene.h"
-#include"../Utility/common.h"
+#include"../../Utility/common.h"
 
 TitleScene::TitleScene()
 {
