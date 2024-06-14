@@ -193,8 +193,8 @@ void DaggerEnemy::Draw() const
 		0xff00ff, FALSE);
 	DrawBoxAA
 	(
-		GetMinScreenLocation().x - 275, GetCenterScreenLocation().y,
-		GetMaxScreenLocation().x + 275, GetMaxScreenLocation().y,
+		GetMinScreenLocation().x - 500, GetCenterScreenLocation().y,
+		GetMaxScreenLocation().x + 500, GetMaxScreenLocation().y,
 		0xffff00, FALSE
 	);
 }
@@ -278,9 +278,9 @@ void DaggerEnemy::SuddenApproachToPlayer(const Player* player)
 void DaggerEnemy::AttackRange()
 {
 	//攻撃状態に入る範囲
-	attackRange[0].x = GetMinLocation().x - 275.f;
+	attackRange[0].x = GetMinLocation().x - 700.f;
 	attackRange[0].y = GetCenterLocation().y;
-	attackRange[1].x = GetMaxLocation().x + 275.f;
+	attackRange[1].x = GetMaxLocation().x + 700.f;
 	attackRange[1].y = GetMaxLocation().y;
 }
 

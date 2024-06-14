@@ -55,7 +55,7 @@ void NormalEnemy::Initialize()
 	//表示するか?
 	isShow = true;
 
-	damage = 5.f;
+	damage = 10.f;
 
 	rapier = new Rapier;
 
@@ -130,7 +130,7 @@ void NormalEnemy::Update()
 	if (weaponType == Weapon::Rapier)
 	{
 		//レイピアの呼び出し (引数：(装備対象,攻撃時の速度))
-		rapier->Update(this, (NORMAL_WALK_SPEED * ATTACK_SPEED));
+		rapier->Update(this, ATTACK_SPEED);
 	}
 	location.x += move.x;
 	location.y += move.y;
