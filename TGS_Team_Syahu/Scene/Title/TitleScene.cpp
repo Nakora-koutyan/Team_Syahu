@@ -5,6 +5,7 @@
 #include"../GameMain/GameMainScene.h"
 #include"../End/EndScene.h"
 #include"../Help/HelpScene.h"
+#include"../Utility/common.h"
 
 TitleScene::TitleScene()
 {
@@ -103,7 +104,8 @@ void TitleScene::Draw() const
 
 	DrawRotaGraphF(470, 360 + cursorLocation.y, 1, DEGREE_TO_RADIAN(90.f), ResourceManager::GetImage("UI/cursor"), TRUE);
 
-	DrawGraph(500, (300 + 28), ResourceManager::GetImage("Title/StartText"), TRUE);
-	DrawGraph(500, (300 + 28) + 100, ResourceManager::GetImage("Title/HelpText"), TRUE);
-	DrawGraph(500, (300 + 26) + 200, ResourceManager::GetImage("Title/EndText"), TRUE);
+	DrawGraph(530, (300 + 28), ResourceManager::GetImage("Title/StartText"), TRUE);
+	DrawGraph(530, (300 + 28) + 100, ResourceManager::GetImage("Title/HelpText"), TRUE);
+	DrawGraph(520, (300 + 26) + 200, ResourceManager::GetImage("Title/EndText"), TRUE);
+	DrawCenterLine();
 }
