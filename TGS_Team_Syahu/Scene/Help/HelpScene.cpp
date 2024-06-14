@@ -3,7 +3,7 @@
 #include"../../InputControl/Pad/PadInput.h"
 #include "../GameMain/GameMainScene.h"
 #include "../Title/TitleScene.h"
-#include "../ResourceManager/ResourceManager.h"
+#include "../../ResourceManager/ResourceManager.h"
 
 //コンストラクタ
 HelpScene::HelpScene() :enemyTextImage(NULL), operationTextImage(NULL), nowManualText(NULL), 
