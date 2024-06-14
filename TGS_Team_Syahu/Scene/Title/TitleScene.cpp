@@ -5,6 +5,7 @@
 #include"../GameMain/GameMainScene.h"
 #include"../End/EndScene.h"
 #include"../Help/HelpScene.h"
+#include"../Utility/common.h"
 
 TitleScene::TitleScene()
 {
@@ -98,12 +99,12 @@ SceneBase* TitleScene::Update()
 void TitleScene::Draw() const
 {
 	DrawGraph(0, 0, ResourceManager::GetImage("Stage/Background/layer_1"), TRUE);
-	DrawGraph(0, 200, ResourceManager::GetImage("Stage/Background/layer_2"), TRUE);
+	DrawGraph(0, 198, ResourceManager::GetImage("Stage/Background/layer_2"), TRUE);
 	DrawGraph(340, 60, ResourceManager::GetImage("Title/TitleText"), TRUE);
 
 	DrawRotaGraphF(470, 360 + cursorLocation.y, 1, DEGREE_TO_RADIAN(90.f), ResourceManager::GetImage("UI/cursor"), TRUE);
 
-	DrawGraph(500, (300 + 28), ResourceManager::GetImage("Title/StartText"), TRUE);
-	DrawGraph(500, (300 + 28) + 100, ResourceManager::GetImage("Title/HelpText"), TRUE);
-	DrawGraph(500, (300 + 26) + 200, ResourceManager::GetImage("Title/EndText"), TRUE);
+	DrawGraph(530, (300 + 28), ResourceManager::GetImage("Title/StartText"), TRUE);
+	DrawGraph(530, (300 + 28) + 100, ResourceManager::GetImage("Title/HelpText"), TRUE);
+	DrawGraph(520, (300 + 26) + 200, ResourceManager::GetImage("Title/EndText"), TRUE);
 }

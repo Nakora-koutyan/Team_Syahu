@@ -59,10 +59,19 @@ SceneBase* GameClearScene::Update()
 
 void GameClearScene::Draw() const
 {
-	SetFontSize(64);
-	DrawString(500, 200, "GameClear", 0xffffff);
-	SetFontSize(16);
+	//背景
+	DrawGraph(0, 0, ResourceManager::GetImage("GameClear/BackGround1"), TRUE);
+	DrawGraph(0, 0, ResourceManager::GetImage("GameClear/BackGround2"), TRUE);
+	DrawGraph(0, 0, ResourceManager::GetImage("GameClear/BackGround3"), TRUE);
+	//地面
+	for (int i = 0; i < 14; i++)
+	{
+		DrawGraph(0 + (i * 96), SCREEN_HEIGHT - 48, ResourceManager::GetImage("GameClear/Tile"), TRUE);
+	}
 
-	DrawRotaGraph(650, 600, 1, 0, ResourceManager::GetDivImage("Player/player", playerIdle), TRUE);
+	//おめでとうテキスト
+	DrawGraph(360, 120, ResourceManager::GetImage("GameClear/CongratulationsText"), TRUE);
 
+	//プレイヤー
+	DrawRotaGraph(650, 625, 1, 0, ResourceManager::GetDivImage("Player/player", playerIdle), TRUE);
 }

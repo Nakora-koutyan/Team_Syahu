@@ -107,9 +107,9 @@ void GameOverScene::Draw() const
 	//ゲームオーバー
 	DrawGraph(340, 130, ResourceManager::GetImage("GameOver/GameOverText"), TRUE);
 	//コンティニュー
-	DrawGraph(490, 340, ResourceManager::GetImage("GameOver/ContinueText"), TRUE);
+	DrawGraph(490, 360, ResourceManager::GetImage("GameOver/ContinueText"), TRUE);
 	//タイトルへ戻る
-	DrawGraph(475, 440, ResourceManager::GetImage("GameOver/BackTitleText"), TRUE);
+	DrawGraph(475, 460, ResourceManager::GetImage("GameOver/BackTitleText"), TRUE);
 	//カーソル
-	DrawRotaGraphF(420, 390 + cursorLocation.y, 1, DEGREE_TO_RADIAN(90.f), ResourceManager::GetImage("UI/cursor"), TRUE);
+	DrawRotaGraphF(420, 410 + cursorLocation.y, 1, DEGREE_TO_RADIAN(90.f), ResourceManager::GetImage("UI/cursor"), TRUE);
 }

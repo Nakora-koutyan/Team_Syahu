@@ -55,7 +55,7 @@ void NormalEnemy::Initialize()
 	//表示するか?
 	isShow = true;
 
-	damage = 2.5f;
+	damage = 5.f;
 
 	rapier = new Rapier;
 
