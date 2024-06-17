@@ -102,8 +102,7 @@ protected:
 
 	//攻撃終了
 	void DaggerAttackEndAnim();
-	void WeaponNoneAttackEndAnim();
-
+	
 	//死亡時のアニメーション
 	void EnemyDeathAnim();
 };

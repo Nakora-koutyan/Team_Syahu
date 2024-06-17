@@ -38,6 +38,8 @@ private:
 
 	int attackEndCounter;				//attackEnd時に呼ばれるカウンター変数
 
+	int largeSwordAttackCoolTime;		//攻撃終了後のクールタイム
+
 public:
 	//コンストラクタ
 	LargeSwordEnemy(float x, float y);

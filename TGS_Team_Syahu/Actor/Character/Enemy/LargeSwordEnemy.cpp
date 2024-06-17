@@ -17,13 +17,14 @@
 #define LARGESWORD_ATTACKRANGE_X	60	//大剣の攻撃範囲(X)
 #define LARGESWORD_ATTACKRANGE_Y	60	//大剣の攻撃範囲(Y)
 
-#define MAX_ATTACK_CHARGE_TIME		60	//攻撃までの最大の貯め時間
+#define MAX_ATTACK_CHARGE_TIME		45	//攻撃までの最大の貯め時間
+#define LARGESWORD_MAX_ATTACK_COOL_TIME 60	//攻撃後のクールタイム
 
 //コンストラクタ
 LargeSwordEnemy::LargeSwordEnemy(float x, float y):largeSwordEnemyImage(),largeSwordEnemyImageNumber(0),animInterval(0),animCountDown(false),animTurnFlg(true),
 distance(0),restTime(0),attackCountDown(0),didAttack(false),canAttack(false),correctLocX(0), largeSwordCollisionBox(nullptr),once(false),
 rushAttackTime(0),largeSwordAttackTime(0),weaponNoneEnemyImage{NULL},weaponNoneEnemyImageNumber(0),closeToPlayer(false), attackEndCounter(0),
-attackChargeTime(0)
+attackChargeTime(0),largeSwordAttackCoolTime(0)
 {
 	//表示座標{ x , y }
 	location = { x, y };
@@ -126,6 +127,7 @@ void LargeSwordEnemy::Initialize()
 
 	//攻撃開始までの貯め時間の設定
 	attackChargeTime = MAX_ATTACK_CHARGE_TIME;
+	largeSwordAttackCoolTime = LARGESWORD_MAX_ATTACK_COOL_TIME;
 
 	//大剣を呼び出す
 	largeSwordCollisionBox = new BoxCollision;
@@ -234,7 +236,7 @@ void LargeSwordEnemy::Draw() const
 		DrawRotaGraphF(screenLocation.x + correctLocX, screenLocation.y + 15.f, 1, 0,
 			weaponNoneEnemyImage[weaponNoneEnemyImageNumber], TRUE, animTurnFlg);
 	}
-
+#ifdef DEBUG
 	//デバッグ用文字列
 	DrawFormatStringF(50.f, 360.f, 0xffff00, "enemyImage %d", largeSwordEnemyImageNumber);
 	DrawFormatStringF(50.f, 380.f, 0xff00ff, "animInterval %d", animInterval);
@@ -242,8 +244,9 @@ void LargeSwordEnemy::Draw() const
 	DrawFormatStringF(50.f, 420.f, 0x00ff00, "weaponNoneImageNumber %d", weaponNoneEnemyImageNumber);
 	DrawBoxAA(largeSwordCollisionBox->GetMinScreenLocation().x, largeSwordCollisionBox->GetMinScreenLocation().y,
 		largeSwordCollisionBox->GetMaxScreenLocation().x, largeSwordCollisionBox->GetMaxScreenLocation().y,0xff00ff, FALSE);
-	DrawBoxAA(GetMinScreenLocation().x - 600.f, GetMinScreenLocation().y - 200.f,
-		GetMaxScreenLocation().x + 600.f, GetMaxScreenLocation().y + 25, 0xff00ff, FALSE);
+	DrawBoxAA(GetMinScreenLocation().x - 400.f, GetMinScreenLocation().y - 200.f,
+		GetMaxScreenLocation().x + 400.f, GetMaxScreenLocation().y + 25, 0xff00ff, FALSE);
+#endif
 }
 
 //プレイヤーを見つけた？
@@ -507,6 +510,7 @@ void LargeSwordEnemy::AttackStart()
 	{
 		//攻撃をしていれば状態を「攻撃終了」に遷移する
 		enemyStatus = EnemyStatus::AttackEnd;
+		signToAttack = false;
 	}
 }
 
@@ -515,10 +519,15 @@ void LargeSwordEnemy::AttackEnd()
 {
 	if (weaponType == Weapon::LargeSword)
 	{
-		signToAttack = false;
-		restTime = 0;
-		animInterval = 0;
-		largeSwordAttackTime = LARGESWORD_MAX_ATTACK_TIME;
+		largeSwordAttackCoolTime--;
+		if (largeSwordAttackCoolTime <= 0)
+		{
+			didAttack = false;
+			largeSwordAttackCoolTime = LARGESWORD_MAX_ATTACK_COOL_TIME;
+			restTime = 0;
+			animInterval = 0;
+			largeSwordAttackTime = LARGESWORD_MAX_ATTACK_TIME;
+		}
 	}
 	if (weaponType == Weapon::None)
 	{
@@ -526,6 +535,8 @@ void LargeSwordEnemy::AttackEnd()
 		weaponNoneEnemyImageNumber = 0;
 		//カウントダウンをリセット
 		rushAttackTime = MAX_RUSH_ATTACKTIME;
+		signToAttack = false;
+		didAttack = false;
 	}
 
 	if (didAttack == false)
@@ -771,9 +782,8 @@ void LargeSwordEnemy::LargeSwordAttackEndAnim()
 		largeSwordEnemyImageNumber = 6;
 		attackEndCounter++;
 	}
-	if (attackEndCounter > 3)
+	if (attackEndCounter > 15)
 	{
-		didAttack = false;
 		attackEndCounter = 0;
 	}
 
