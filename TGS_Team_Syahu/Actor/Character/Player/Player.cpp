@@ -14,7 +14,11 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	location.y = GROUND_LINE - area.height;
 	direction.x = 1.f;
 	direction.y = 0.f;
+#ifdef DEBUG
+	hp = 1000.f;
+#else
 	hp = PLAYER_MAX_HP;
+#endif // DEBUG
 	damage = PLAYER_DAMAGE;
 
 	for (int i = 0; i < PLAYER_MAX_STOCK; i++)
@@ -212,6 +216,7 @@ void Player::Draw() const
 	DrawFormatString(600, 135, 0x000000, "location x:%f location y:%f", location.x, location.y);
 	DrawFormatString(600, 150, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
 	DrawFormatString(600, 165, 0x000000, "isAir :%s", isAir ? "true" : "false");
+
 	if (weaponType == Weapon::None)
 	{
 		DrawFormatString(600, 45, 0x000000, "WeaponType:None");
@@ -232,7 +237,7 @@ void Player::Draw() const
 		}
 	}
 
-#endif // DEBUG
+	SetDrawBright(255, 0, 0);
 
 	//画像反転フラグ
 	if (imageInversionFlg)
@@ -241,7 +246,44 @@ void Player::Draw() const
 		{
 			DrawRotaGraphF
 			(GetCenterScreenLocation().x, GetCenterScreenLocation().y, 1, 0,
-				ResourceManager::GetDivImage("Effect/transformEffect", 
+				ResourceManager::GetDivImage("Effect/transformEffect",
+					equipmentEffectAnim), TRUE, TRUE);
+		}
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
+		DrawRotaGraphF
+		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+			1, 0, playerImage[playerAnim], TRUE, TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+	else
+	{
+		if (equipmentEffectFlg)
+		{
+			DrawRotaGraphF
+			(GetCenterScreenLocation().x, GetCenterScreenLocation().y, 1, 0,
+				ResourceManager::GetDivImage("Effect/transformEffect",
+					equipmentEffectAnim), TRUE);
+		}
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
+		DrawRotaGraphF
+		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+			1, 0, playerImage[playerAnim], TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+
+	SetDrawBright(255, 255, 255);
+
+#else
+	//画像反転フラグ
+	if (imageInversionFlg)
+	{
+		if (equipmentEffectFlg)
+		{
+			DrawRotaGraphF
+			(GetCenterScreenLocation().x, GetCenterScreenLocation().y, 1, 0,
+				ResourceManager::GetDivImage("Effect/transformEffect",
 					equipmentEffectAnim), TRUE, TRUE);
 		}
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
@@ -267,6 +309,7 @@ void Player::Draw() const
 			1, 0, playerImage[playerAnim], TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
+#endif // DEBUG
 
 	if (isJump && jumpCount == 1)
 	{

@@ -1,5 +1,4 @@
 #include"UI.h"
-#include"DxLib.h"
 #include"../Actor/Character/Player/Player.h"
 #include"../ResourceManager/ResourceManager.h"
 
@@ -58,6 +57,8 @@ void UI::Draw() const
 	PlayerStock();
 
 	PlayerEquipmentWeapon();
+
+	Button();
 }
 
 void UI::PlayerHPBar() const
@@ -152,4 +153,14 @@ void UI::PlayerEquipmentWeapon() const
 				ResourceManager::GetImage("UI/durabilityBar"), TRUE);
 		}
 	}
+}
+
+void UI::Button() const
+{
+	DrawGraph(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 300, ResourceManager::GetImage("UI/ButtonA"), TRUE);
+	DrawGraph(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 240, ResourceManager::GetImage("UI/ButtonB"), TRUE);
+	DrawGraph(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 180, ResourceManager::GetImage("UI/ButtonX"), TRUE);
+	DrawGraph(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 120, ResourceManager::GetImage("UI/ButtonY"), TRUE);
+	DrawGraph(10, SCREEN_HEIGHT - 120, ResourceManager::GetImage("UI/ButtonLB"), TRUE);
+	DrawGraph(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 120, ResourceManager::GetImage("UI/ButtonRB"), TRUE);
 }
