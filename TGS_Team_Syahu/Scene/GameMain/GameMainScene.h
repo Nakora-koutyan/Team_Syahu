@@ -4,16 +4,12 @@
 #include"../../Map/StageBlock.h"
 #include"vector"
 
-#define LINE_NUM 12                     //ラインの数
-
 class GameMainScene :public SceneBase
 {
 private:
     std::vector<ObjectBase*>object;     //オブジェクト
 
     UI* ui;                             //UIのオブジェクト
-
-    int kari;                           //かり
 
 public:
     //コンストラクタ

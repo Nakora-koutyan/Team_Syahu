@@ -4,7 +4,7 @@
 #define RAPIER_ATTACK_TIME				FPS * 0.4		//レイピア攻撃の時間
 #define RAPIER_CHARGE_TIME				FPS * 0.2		//レイピアの溜め時間
 #define RAPIER_MOVE						12.5f			//レイピアの移動量/f
-#define RAPIER_AIR_MOVE					12.5f			//レイピアの空中での移動量/f
+#define RAPIER_AIR_MOVE					26.5f			//レイピアの空中での移動量/f
 #define RAPIER_LENGTH					100.f			//レイピアの長さ
 #define RAPIER_WEIGHT					0.35f			//レイピアの重さ
 #define RAPIER_DAMAGE					50.f			//レイピアのダメージ
@@ -13,6 +13,7 @@
 
 class CharaBase;
 class Player;
+class NormalEnemy;
 
 class Rapier :public LineCollision
 {
@@ -39,6 +40,7 @@ private:
 	bool stepFlg;						//飛ばす？
 	bool isAirAttack;					//空中攻撃？
 	bool airAttackAnimFlg;				//空中攻撃のアニメーションフラグ
+	bool attackEndFlg;					//攻撃終了フラグ
 
 public:
 	//コンストラクタ
@@ -48,7 +50,7 @@ public:
 	~Rapier();
 
 	//更新
-	void Update(CharaBase* chara, float speed);
+	void Update(CharaBase* chara, float speed, Vector2D shiftLocation = { 0,0 });
 
 	//描画
 	void Draw()const override;
@@ -77,6 +79,5 @@ public:
 
 	//空中攻撃かどうかを取得
 	bool GetIsAirAttack()const { return isAirAttack; }
-
 };
 

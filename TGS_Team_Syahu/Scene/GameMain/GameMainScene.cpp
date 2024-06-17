@@ -14,7 +14,7 @@
 
 GameMainScene::GameMainScene() :ui(nullptr)
 {
-	kari = LoadGraph("Resource/Images/kari.png");
+
 }
 
 GameMainScene::~GameMainScene()
@@ -131,7 +131,19 @@ SceneBase* GameMainScene::Update()
 
 void GameMainScene::Draw() const
 {
-	DrawGraphF(Camera::ConvertScreenPosition({ 0,0 }).x, Camera::ConvertScreenPosition({ 0,0 }).y, kari, TRUE);
+	//背景
+	for (int i = 0; i < 2; i++)
+	{
+		DrawGraphF(Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).x,
+			Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).y,
+			ResourceManager::GetImage("GameClear/BackGround1"), TRUE);
+		DrawGraphF(Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).x,
+			Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).y,
+			ResourceManager::GetImage("GameClear/BackGround2"), TRUE);
+		DrawGraphF(Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).x,
+			Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).y,
+			ResourceManager::GetImage("GameClear/BackGround3"), TRUE);
+	}
 
 	for (ObjectBase* ob : object)
 	{
