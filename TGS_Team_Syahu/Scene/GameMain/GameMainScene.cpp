@@ -298,7 +298,7 @@ void GameMainScene::createStage() {
 	std::string fpassCoupling = "Resource/StageData/";
 	std::string fpass;
 
-	switch (0)
+	switch (NOW_LOAD_STAGE)
 	{
 	case 0:
 		fname = "FirstStage.txt";
@@ -349,7 +349,6 @@ void GameMainScene::createStage() {
 					object.push_back(new StageBlock(BLOCK_WIDTH * j, BLOCK_HEIGHT * i, stageData[j][i] - 4));
 					break;
 				}
-				//stageblock->CopyStageData(j, i, stageData[j][i]);
 			}
 		}
 	}
