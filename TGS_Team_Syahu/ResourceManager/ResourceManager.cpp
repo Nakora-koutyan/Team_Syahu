@@ -35,6 +35,12 @@ void ResourceManager::Initialize()
 	SetImage("UI/largeSword");
 	SetImage("UI/rapier");	
 	SetImage("UI/cursor");
+	SetImage("UI/ButtonA");
+	SetImage("UI/ButtonB");
+	SetImage("UI/ButtonX");
+	SetImage("UI/ButtonY");
+	SetImage("UI/ButtonLB");
+	SetImage("UI/ButtonRB");
 	SetImage("Weapon/dagger");
 	SetImage("Weapon/largeSword");
 	SetImage("Weapon/rapier");
@@ -59,9 +65,7 @@ void ResourceManager::Initialize()
 	SetImage("Title/StartText");
 	SetImage("Title/HelpText");
 	SetImage("Title/EndText");
-	SetImage("GameClear/BackTitleText");
 	SetImage("GameClear/CongratulationsText");
-	SetImage("GameClear/GameClearText");
 	SetImage("GameClear/BackGround1");
 	SetImage("GameClear/BackGround2");
 	SetImage("GameClear/BackGround3");
