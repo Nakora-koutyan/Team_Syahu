@@ -6,7 +6,7 @@
 
 //コンストラクタ
 NormalEnemy::NormalEnemy(float x, float y):enemyImage{NULL},enemyNumber(0),animInterval(0),animCountDown(false),
-animTurnFlg(false),attackTime(0), CountChangeCounter(0),onlyOnce(false),isFirst(false), locYCorrect(0)
+animTurnFlg(false),attackTime(0), CountChangeCounter(0),onlyOnce(false),isFirst(false),locXCorrect(0), locYCorrect(0)
 {
 	//表示座標{ x , y }
 	location = { x,y };
@@ -66,6 +66,10 @@ void NormalEnemy::Initialize()
 	enemyStatus = Patrol;
 	enemyNumber = 0;
 	attackTime = MAX_ATTACK_TIME;
+
+	//画像のX・Y座標それぞれの補正
+	locXCorrect = 35.f;
+	locYCorrect = 45.f;
 }
 
 void NormalEnemy::Finalize()
@@ -151,7 +155,7 @@ void NormalEnemy::Draw() const
 {
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, enemyAlpha);
-	DrawRotaGraphF(screenLocation.x + 35.f, screenLocation.y + 45.f, 1, 0,
+	DrawRotaGraphF(screenLocation.x + locXCorrect, screenLocation.y + locYCorrect, 1, 0,
 		hp <= 0 ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
 		TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -565,19 +569,9 @@ void NormalEnemy::EnemyDeathAnim()
 	{
 		enemyNumber++;
 		
-		if (!onlyOnce)
-		{
-			//４フレーム毎に上方向に画像をずらす(地面にめり込まないように)
-			location.y -= (enemyNumber * locYCorrect);
-		}
-
 		if (enemyNumber <= 7)
 		{
-			locYCorrect += 0.9f;
-		}
-		else
-		{
-			onlyOnce = true;
+			locYCorrect -= 3.f;
 		}
 	}
 }
