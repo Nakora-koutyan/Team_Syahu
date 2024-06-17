@@ -4,7 +4,7 @@
 #include"../../ResourceManager/ResourceManager.h"
 #include"../../Scene/Title/TitleScene.h"
 #include"../../Utility/common.h"
-#include"../Actor/Camera/Camera.h"
+#include"../../Actor/Camera/Camera.h"
 
 GameClearScene::GameClearScene()
 {
