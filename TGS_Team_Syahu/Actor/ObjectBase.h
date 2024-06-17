@@ -25,6 +25,7 @@ class ObjectBase
 {
 protected:
 	Vector2D location;					//ワールド座標
+	Vector2D oldLocation;				//1つ前のワールド座標
 	Vector2D screenLocation;			//スクリーン座標
 
 	CollisionType collisionType;		//コリジョンの種類
@@ -78,6 +79,15 @@ public:
 
 	//ワールド座標yの設定
 	void SetLocationY(const float y) { this->location.y = y; }
+
+	//1つ前の座標に戻す
+	void SetOldLocation() { this->location = this->oldLocation; }
+
+	//1つ前の座標に戻すX
+	void SetOldLocationX() { this->location.x = this->oldLocation.x; }
+
+	//1つ前の座標に戻すY
+	void SetOldLocationY() { this->location.y = this->oldLocation.y; }
 
 	//スクリーン座標の取得
 	Vector2D GetScreenLocation()const { return screenLocation; }

@@ -178,6 +178,8 @@ void DaggerEnemy::Update()
 	//短剣の更新処理の呼び出し
 	dagger->Update(this);
 
+	oldLocation = location;
+
 	//座標更新
 	location.x += move.x;
 	location.y += move.y;

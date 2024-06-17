@@ -63,6 +63,12 @@ public:
 	virtual void Landing(const float height);
 
 public:
+	//ノックバックカウントを取得
+	int GetKnockBackCount()const { return knockBackCount; }
+
+	//ノックバックカウントを設定
+	void SetKnockBackCount(const int time) { knockBackCount = time; }
+
 	//HPを取得
 	float GetHp()const { return hp; }
 

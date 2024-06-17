@@ -265,8 +265,8 @@ SceneBase* Edit::Update() {
 	GetMousePoint(&mouseX, &mouseY);
 	mouseX += (int)move.x;
 	mouseY += (int)move.y;
-	blockX = mouseX / BLOCK_WIDTH;
-	blockY = mouseY / BLOCK_HEIGHT;
+	blockX = mouseX / (int)BLOCK_WIDTH;
+	blockY = mouseY / (int)BLOCK_HEIGHT;
 
 	switch (mode)
 	{
@@ -370,7 +370,7 @@ void Edit::Draw()const {
 			DrawLineAA(0 - move.x, BLOCK_HEIGHT * j - move.y, WORLD_WIDTH - move.x, BLOCK_HEIGHT * j - move.y, 0xffffff, 0);
 			DrawFormatStringF(50 * i + 2 - move.x, 50 * j + 2 - move.y, color[stageData[j][i]], "%d", stageData[j][i]);
 			if (stageData[j][i] >= 4) {
-				DrawExtendGraph(50 * i - move.x, 50 * j - move.y, 50 * (i + 1) - move.x, 50 * (j + 1) - move.y, blockImg[stageData[j][i]-4], 0);
+				DrawExtendGraph(50 * i - (int)move.x, 50 * j - (int)move.y, 50 * (i + 1) - (int)move.x, 50 * (j + 1) - (int)move.y, blockImg[stageData[j][i]-4], 0);
 			}
 		}
 	}
@@ -378,17 +378,17 @@ void Edit::Draw()const {
 	switch (mode)
 	{
 	case Normal:
-		DrawBox(BLOCK_WIDTH * blockX - move.x, BLOCK_HEIGHT * blockY - move.y, BLOCK_WIDTH * (blockX + 1) - move.x + 1, BLOCK_HEIGHT * (blockY + 1) - move.y + 1, 0xFFFF00, 0);
+		DrawBox((int)BLOCK_WIDTH * blockX - (int)move.x, (int)BLOCK_HEIGHT * blockY - (int)move.y, (int)BLOCK_WIDTH * (blockX + 1) - (int)move.x + 1, (int)BLOCK_HEIGHT * (blockY + 1) - (int)move.y + 1, 0xFFFF00, 0);
 		break;
 	case Range:
 		if (rangeflg) {
 			bool showX = false, showY = false;
 			if (rSelectX > blockX) showX = true;
 			if (rSelectY > blockY) showY = true;
-			DrawBox(BLOCK_WIDTH * rSelectX - move.x + (showX * BLOCK_WIDTH), BLOCK_HEIGHT * rSelectY - move.y + (showY * BLOCK_HEIGHT), BLOCK_WIDTH * (blockX + 1) - move.x-(showX * BLOCK_WIDTH), BLOCK_HEIGHT * (blockY + 1) - move.y-(showY * BLOCK_HEIGHT), 0x00FF00, 0);
+			DrawBox((int)BLOCK_WIDTH * rSelectX - (int)move.x + (showX * (int)BLOCK_WIDTH), (int)BLOCK_HEIGHT * rSelectY - (int)move.y + (showY * (int)BLOCK_HEIGHT), (int)BLOCK_WIDTH * (blockX + 1) - (int)move.x-(showX * (int)BLOCK_WIDTH), (int)BLOCK_HEIGHT * (blockY + 1) - (int)move.y-(showY * (int)BLOCK_HEIGHT), 0x00FF00, 0);
 		}
 		else {
-			DrawBox(BLOCK_WIDTH * blockX - move.x, BLOCK_HEIGHT * blockY - move.y, BLOCK_WIDTH * (blockX + 1) - move.x + 1, BLOCK_HEIGHT * (blockY + 1) - move.y + 1, 0x00FF00, 0);
+			DrawBox((int)BLOCK_WIDTH * blockX - (int)move.x, (int)BLOCK_HEIGHT * blockY - (int)move.y, (int)BLOCK_WIDTH * (blockX + 1) - (int)move.x + 1, (int)BLOCK_HEIGHT * (blockY + 1) - (int)move.y + 1, 0x00FF00, 0);
 		}
 		break;
 	}

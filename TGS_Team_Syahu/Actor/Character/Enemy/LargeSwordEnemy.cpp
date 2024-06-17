@@ -212,6 +212,8 @@ void LargeSwordEnemy::Update()
 
 	largeSwordCollisionBox->SetScreenLocation(Camera::ConvertScreenPosition(largeSwordCollisionBox->GetLocation()));
 
+	oldLocation = location;
+
 	//移動処理
 	location.x += move.x;
 	location.y += move.y;

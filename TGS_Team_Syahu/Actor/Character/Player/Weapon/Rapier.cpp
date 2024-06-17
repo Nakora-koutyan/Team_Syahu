@@ -36,6 +36,7 @@ Rapier::Rapier()
 	stepFlg = false;
 	isAirAttack = false;
 	airAttackAnimFlg = false;
+	attackEndFlg = false;
 }
 
 Rapier::~Rapier()
@@ -118,7 +119,7 @@ void Rapier::Update(CharaBase* chara,float speed)
 	}
 
 	//地上攻撃の時間を超えたら
-	if ((framCount > RAPIER_ATTACK_TIME || chara->GetIsKnockBack()) && !isAirAttack)
+	if ((framCount > RAPIER_ATTACK_TIME || chara->GetIsKnockBack() || attackEndFlg) && !isAirAttack)
 	{
 		framCount = 0;
 		chargeTime = 0;
@@ -129,6 +130,7 @@ void Rapier::Update(CharaBase* chara,float speed)
 		isHit = false;
 		isUnable = false;
 		stepFlg = true;
+		attackEndFlg = false;
 		chara->SetIsAttack(false);
 	}
 	//空中攻撃が地面に着地したら
@@ -261,6 +263,7 @@ void Rapier::Hit(ObjectBase* target, const float damage)
 			}
 			else
 			{
+				attackEndFlg = true;
 				enemy->SetKnockBackMove(RAPIER_KNOCKBACK);
 			}
 		}

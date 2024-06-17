@@ -213,16 +213,13 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 	}
 	else {
 		//右から
-		if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) 
-		{
-			objectLoc.x = blockLoc.x + blockSize.width;
+		if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
+			object->SetOldLocationX();
 		}
 		// 左から
-		else
-		{
-			objectLoc.x = blockLoc.x - objectSize.width;
+		else {
+			object->SetOldLocationX();
 		}
-		object->SetLocation(objectLoc);
 		move.x = 0;
 		chara->SetMove(move);
 	}

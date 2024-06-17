@@ -132,6 +132,9 @@ void NormalEnemy::Update()
 		//レイピアの呼び出し (引数：(装備対象,攻撃時の速度))
 		rapier->Update(this, ATTACK_SPEED);
 	}
+
+	oldLocation = location;
+
 	location.x += move.x;
 	location.y += move.y;
 }
