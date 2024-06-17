@@ -295,7 +295,7 @@ void NormalEnemy::AttackStart()
 			rapier->Attack(this);
 		}
 		//アニメーションを繰り返した回数が２回以上なら
-		if (CountChangeCounter >= 2)
+		if (CountChangeCounter >= 1)
 		{
 			//攻撃関数の呼び出しを停止
 			signToAttack = false;

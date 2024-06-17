@@ -66,8 +66,10 @@ private:
 	//攻撃を行うか？
 	void AttackStart() override;
 
+	//攻撃終了
 	void AttackEnd() override;
 
+	//死亡処理
 	void Death() override;
 
 	//エネミーのアニメーション制御関数
