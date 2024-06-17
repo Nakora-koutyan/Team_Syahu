@@ -13,6 +13,7 @@
 
 class CharaBase;
 class Player;
+class NormalEnemy;
 
 class Rapier :public LineCollision
 {
@@ -77,6 +78,5 @@ public:
 
 	//空中攻撃かどうかを取得
 	bool GetIsAirAttack()const { return isAirAttack; }
-
 };
 
