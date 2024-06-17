@@ -26,10 +26,6 @@ private:
 	//現在の説明書画像
 	int nowManualImage;
 
-	//カーソルの座標
-	float cursorLocX;
-	float cursorLocY;
-
 	//メニュー番号
 	int menuNum;
 

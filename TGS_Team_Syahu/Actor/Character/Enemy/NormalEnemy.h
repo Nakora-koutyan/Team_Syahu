@@ -2,7 +2,7 @@
 #include"EnemyBase.h"
 
 #define NORMAL_WALK_SPEED 0.5f			//徘徊時のスピード
-#define ATTACK_SPEED 14.f				//攻撃時のスピード
+#define ATTACK_SPEED 9.f				//攻撃時のスピード
 
 class Player;
 

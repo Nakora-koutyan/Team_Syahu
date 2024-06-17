@@ -10,7 +10,7 @@ private:
 	bool IsDraw;
 public:
 	//コンストラクタ
-	StageBlock(int x, int y, int type);
+	StageBlock(float x, float y, int type);
 
 	//デストラクタ
 	~StageBlock();
