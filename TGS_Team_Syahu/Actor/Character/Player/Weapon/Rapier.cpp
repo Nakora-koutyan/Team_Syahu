@@ -44,7 +44,7 @@ Rapier::~Rapier()
 
 }
 
-void Rapier::Update(CharaBase* chara,float speed)
+void Rapier::Update(CharaBase* chara, float speed, Vector2D shiftLocation)
 {
 	//地上での攻撃なら
 	if (isShow && !isAirAttack)
@@ -61,14 +61,14 @@ void Rapier::Update(CharaBase* chara,float speed)
 			//右に出す
 			if (direction > 0)
 			{
-				location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
+				location.x = (chara->GetMaxLocation().x + WEAPON_DISTANCE) + shiftLocation.x;;
 				directionVector.x = RAPIER_LENGTH;
 				imageAngle = DEGREE_TO_RADIAN(45.f);
 				chara->SetMove({ speed * 1.5f ,chara->GetMove().y });
 			}
 			else
 			{
-				location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
+				location.x = (chara->GetMinLocation().x - WEAPON_DISTANCE) + shiftLocation.x;;
 				directionVector.x = -RAPIER_LENGTH;
 				imageAngle = DEGREE_TO_RADIAN(-45.f);
 				chara->SetMove({ -speed * 1.5f ,chara->GetMove().y });
@@ -154,7 +154,7 @@ void Rapier::Update(CharaBase* chara,float speed)
 	}
 
 	damage = chara->GetDamage() + RAPIER_DAMAGE;
-	location.y = chara->GetCenterLocation().y;
+	location.y = chara->GetCenterLocation().y + shiftLocation.y;
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
 

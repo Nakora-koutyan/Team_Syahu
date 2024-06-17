@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resource\StageData\FirstStage.txt" />
+    <Text Include="Resource\StageData\SecondStage.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -50,7 +50,7 @@ public:
 	~Rapier();
 
 	//更新
-	void Update(CharaBase* chara, float speed);
+	void Update(CharaBase* chara, float speed, Vector2D shiftLocation = { 0,0 });
 
 	//描画
 	void Draw()const override;

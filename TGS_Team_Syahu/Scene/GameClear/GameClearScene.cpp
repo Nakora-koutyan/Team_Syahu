@@ -4,6 +4,7 @@
 #include"../../ResourceManager/ResourceManager.h"
 #include"../../Scene/Title/TitleScene.h"
 #include"../../Utility/common.h"
+#include"../../Actor/Camera/Camera.h"
 
 GameClearScene::GameClearScene()
 {
@@ -60,9 +61,18 @@ SceneBase* GameClearScene::Update()
 void GameClearScene::Draw() const
 {
 	//背景
-	DrawGraph(0, 0, ResourceManager::GetImage("GameClear/BackGround1"), TRUE);
-	DrawGraph(0, 0, ResourceManager::GetImage("GameClear/BackGround2"), TRUE);
-	DrawGraph(0, 0, ResourceManager::GetImage("GameClear/BackGround3"), TRUE);
+	for (int i = 0; i < 2; i++)
+	{
+		DrawGraphF(Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).x,
+			Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).y,
+			ResourceManager::GetImage("GameClear/BackGround1"), TRUE);
+		DrawGraphF(Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).x,
+			Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).y,
+			ResourceManager::GetImage("GameClear/BackGround2"), TRUE);
+		DrawGraphF(Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).x,
+			Camera::ConvertScreenPosition({ 0.f + (i * 2560),0.f }).y,
+			ResourceManager::GetImage("GameClear/BackGround3"), TRUE);
+	}
 	//地面
 	for (int i = 0; i < 14; i++)
 	{

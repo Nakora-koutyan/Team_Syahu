@@ -7,14 +7,16 @@
 #define SCREEN_WIDTH	1280									//スクリーンの横幅
 #define SCREEN_HEIGHT	720										//スクリーンの縦幅
 
-#define BLOCK_WIDTH     50.f										//1ブロックの横幅
-#define BLOCK_HEIGHT    50.f										//1ブロックの縦幅
+#define BLOCK_WIDTH     50.f									//1ブロックの横幅
+#define BLOCK_HEIGHT    50.f									//1ブロックの縦幅
 
 #define WORLD_BLOCK_X   100										//X座標配置するブロック数
 #define WORLD_BLOCK_Y   28										//Y座標配置するブロック数
 
 #define WORLD_WIDTH		BLOCK_WIDTH * WORLD_BLOCK_X				//ワールドの横幅
 #define WORLD_HEIGHT	BLOCK_HEIGHT * WORLD_BLOCK_Y			//ワールドの縦幅
+
+#define NOW_LOAD_STAGE 1
 
 #define GROUND_LINE		WORLD_HEIGHT - 100						//地面
 

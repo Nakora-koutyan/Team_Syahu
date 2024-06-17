@@ -16,6 +16,10 @@ StageBlock::StageBlock(float x, float y, int type)
 	IsDraw = true;
 	blockImg = NULL;
 
+	int blockLocationX = x / BLOCK_WIDTH;
+	int blockLocationY = y / BLOCK_HEIGHT;
+	stageBlockData[blockLocationX][blockLocationY] = true;
+
 	switch (DrawType)
 	{
 	case 0:
@@ -161,12 +165,6 @@ void StageBlock::Draw()const
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
 		blockImg, TRUE
 	);
-
-	//タイプ表示(仮)
-	DrawFormatStringF(screenLocation.x + 5, screenLocation.y + 5, 0x660066, "%d", DrawType);
-
-	//画面描画(仮)
-	DrawFormatStringF(screenLocation.x + 15, screenLocation.y + 5, 0x660066, "%d", IsDraw);
 }
 
 void StageBlock::Hit(ObjectBase* object, const float damage)
@@ -198,15 +196,21 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 		}
 		else
 		{
-			// 右から
+			int blockLocationX = blockLoc.x / BLOCK_WIDTH;
+			int blockLocationY = blockLoc.y / BLOCK_HEIGHT;
+			// 右にずれる
 			if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2)
 			{
-				objectLoc.x = blockLoc.x + blockSize.width;
+ 				if (stageBlockData[blockLocationX + 1][blockLocationY] != true) {
+					objectLoc.x = blockLoc.x + blockSize.width;
+				}
 			}
-			// 左から
-			else 
+			// 左にずれる
+			else
 			{
-				objectLoc.x = blockLoc.x - objectSize.width;
+				if (stageBlockData[blockLocationX - 1][blockLocationY] != true) {
+					objectLoc.x = blockLoc.x - blockSize.width;
+				}
 			}
 			object->SetLocation(objectLoc);
 		}
@@ -215,10 +219,17 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 		//右から
 		if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
 			object->SetOldLocationX();
+			Vector2D ba = object->GetLocation();
+			if (ba.x) {
+
+			}
 		}
 		// 左から
 		else {
 			object->SetOldLocationX();
+		}
+		if (object ->GetObjectType() == ObjectType::Player&& chara->GetIsKnockBack()); {
+			chara->SetKnockBackCount(PLAYER_KNOCKBACK_TIME);
 		}
 		move.x = 0;
 		chara->SetMove(move);

@@ -11,7 +11,10 @@ Edit::Edit()
 	mouseX = 0; mouseY = 0;
 	toolSelect = 1;
 	rangeflg = false;
-	LoadStage(0);
+	LoadStage(NOW_LOAD_STAGE);
+	for (int i = 0; i < BLOCK_TYPE; i++) {
+		blockImg[i] = NULL;
+	}
 }
 
 Edit::~Edit()
