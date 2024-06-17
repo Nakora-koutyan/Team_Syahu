@@ -674,8 +674,8 @@ void Player::Attack()
 			{
 				stock[j] = steal->GetKeepType();
 				steal->SetKeepType(Weapon::None);
-				weaponType = stock[stockCount];
-				weaponDurability[stockCount] = GetDurability(stock[stockCount]);
+				weaponType = stock[j];
+				weaponDurability[j] = GetDurability(stock[j]);
 				if (!isEquipment)
 				{
 					stockCount = j;
@@ -908,7 +908,7 @@ void Player::Animation()
 			}
 		}
 
-		//かり
+		//レイピアを持っているふうにする
 		if (actionState == Action::WeaponAttack && stock[stockCount] == Weapon::Rapier)
 		{
 			playerAnim = 44;
