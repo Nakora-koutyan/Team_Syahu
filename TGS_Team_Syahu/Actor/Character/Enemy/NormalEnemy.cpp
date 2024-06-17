@@ -145,6 +145,7 @@ void NormalEnemy::Draw() const
 		hp <= 0 ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
 		TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+#ifdef DEBUG
 	DrawBoxAA(GetMinScreenLocation().x, GetMinScreenLocation().y,
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y, 0xff00ff, FALSE);
 	
@@ -154,6 +155,7 @@ void NormalEnemy::Draw() const
 			0x00ffff, FALSE, 1.f);
 	//体力表示用のデバッグ表示
 	DrawFormatString(250, 300, 0xff0f0f, "HP　%d", hp);
+#endif
 	rapier->Draw();
 }
 

@@ -4,7 +4,7 @@
 #include "../Actor/Camera/Camera.h"
 #include "../ResourceManager/ResourceManager.h"
 
-StageBlock::StageBlock(int x, int y, int type)
+StageBlock::StageBlock(float x, float y, int type)
 {
 	location.x = x;
 	location.y = y;
@@ -14,6 +14,7 @@ StageBlock::StageBlock(int x, int y, int type)
 
 	DrawType = type;
 	IsDraw = true;
+	blockImg = NULL;
 
 	switch (DrawType)
 	{
@@ -154,7 +155,7 @@ void StageBlock::Update()
 void StageBlock::Draw()const 
 {
 	//ブロックの描画
-	DrawExtendGraph
+	DrawExtendGraphF
 	(
 		screenLocation.x, screenLocation.y,
 		GetMaxScreenLocation().x, GetMaxScreenLocation().y,
@@ -179,14 +180,17 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 	Area blockSize = GetArea();
 	int dropWidth = 21;
 	// 上から
-	if ((objectLoc.y + objectSize.height - 40) <= blockLoc.y && chara->GetDirection().y >= 0.f /* &&
-		(move.x != 0 || (objectLoc.x + objectSize.width - dropWidth <= blockLoc.x + blockSize.width && objectLoc.x + dropWidth >= blockLoc.x))*/) {
+	if ((objectLoc.y + objectSize.height - 40 <= blockLoc.y) && (chara->GetDirection().y >= 0.f)) 
+	{
 		chara->Landing(blockLoc.y);
 	}
 	// 下から
-	else if (objectLoc.y >= (blockLoc.y + blockSize.height - 40) && chara->GetDirection().y <= 0.f) {
+	else if (objectLoc.y >= (blockLoc.y + blockSize.height - 40) && chara->GetDirection().y <= 0.f) 
+	{
 		// Dropwidth以上ブロックからはみ出してないか
-		if (objectLoc.x + objectSize.width - dropWidth <= blockLoc.x + blockSize.width && objectLoc.x + dropWidth >= blockLoc.x) {
+		if ((objectLoc.x + objectSize.width - dropWidth) <= (blockLoc.x + blockSize.width) 
+			&& objectLoc.x + dropWidth >= blockLoc.x)
+		{
 			objectLoc.y = blockLoc.y + blockSize.height;
 			object->SetLocation(objectLoc);
 			move.y = 0;
@@ -195,11 +199,13 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 		else
 		{
 			// 右から
-			if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
+			if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2)
+			{
 				objectLoc.x = blockLoc.x + blockSize.width;
 			}
 			// 左から
-			else {
+			else 
+			{
 				objectLoc.x = blockLoc.x - objectSize.width;
 			}
 			object->SetLocation(objectLoc);
@@ -207,11 +213,13 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 	}
 	else {
 		//右から
-		if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
+		if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) 
+		{
 			objectLoc.x = blockLoc.x + blockSize.width;
 		}
 		// 左から
-		else {
+		else
+		{
 			objectLoc.x = blockLoc.x - objectSize.width;
 		}
 		object->SetLocation(objectLoc);

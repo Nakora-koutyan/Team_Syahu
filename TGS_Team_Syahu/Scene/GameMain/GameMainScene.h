@@ -14,8 +14,6 @@ private:
 
     int kari;                           //かり
 
-    int blockMax;
-
 public:
     //コンストラクタ
     GameMainScene();
