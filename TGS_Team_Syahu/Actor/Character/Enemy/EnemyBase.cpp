@@ -32,7 +32,7 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 {
 	CharaBase* chara = static_cast<CharaBase*>(target);
 
-	if (damage > 0)
+	if (damage > 0 && GetEnemyStatus()!= EnemyStatus::Death)
 	{
 		if (!isKnockBack && !isHit && objectType != chara->GetObjectType())
 		{
@@ -49,7 +49,8 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 	}
 
 	//すでに当たってないならかつ同じオブジェクトじゃないなら
-	if ((!isHit && objectType != chara->GetObjectType()) || chara->GetIsKnockBack())
+	if (GetEnemyStatus() != EnemyStatus::Death && (!isHit && objectType != chara->GetObjectType()) 
+		|| chara->GetIsKnockBack())
 	{
 		isHit = true;
 		if (chara->GetIsKnockBack())
@@ -94,7 +95,7 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 		}
 	}
 
-	if (abs(disX) < length)
+	if (GetEnemyStatus() != EnemyStatus::Death && (abs(disX) < length))
 	{
 		float dif = length - abs(disX);
 

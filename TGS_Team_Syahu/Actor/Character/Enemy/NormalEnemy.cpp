@@ -118,6 +118,13 @@ void NormalEnemy::Update()
 		isShow = false;
 	}
 
+	//武器がなくなった場合
+	if (weaponType == Weapon::None)
+	{
+		Finalize();
+		rapier = nullptr;
+	}
+
 	//攻撃範囲
 	AttackRange();
 	
@@ -159,7 +166,10 @@ void NormalEnemy::Draw() const
 	//体力表示用のデバッグ表示
 	DrawFormatString(250, 300, 0xff0f0f, "HP　%d", hp);
 #endif
-	rapier->Draw();
+	if (weaponType == Weapon::Rapier)
+	{
+		rapier->Draw();
+	}
 }
 
 //攻撃範囲の指定

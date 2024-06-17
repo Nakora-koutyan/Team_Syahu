@@ -349,7 +349,8 @@ void Player::Hit(ObjectBase* object, const float damage)
 {
 	EnemyBase* chara = static_cast<EnemyBase*>(object);
 
-	if (!isKnockBack && !isHit && hp > 0 && !invincibleFlg)
+	if (chara->GetEnemyStatus() != EnemyStatus::Death &&
+		(!isKnockBack && !isHit) && hp > 0 && !invincibleFlg)
 	{
 		isKnockBack = true;
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
@@ -364,7 +365,9 @@ void Player::Hit(ObjectBase* object, const float damage)
 	}
 
 	//すでに当たってないならかつ同じオブジェクトじゃないなら
-	if (!isHit && objectType != chara->GetObjectType() && hp > 0 && !invincibleFlg)
+	if (chara->GetEnemyStatus() != EnemyStatus::Death && 
+		(!isHit && objectType != chara->GetObjectType() && hp > 0 )&& 
+		!invincibleFlg)
 	{
 		ResourceManager::PlaySE("damage", FALSE);
 
@@ -397,7 +400,7 @@ void Player::Hit(ObjectBase* object, const float damage)
 		length += RAPIER_LENGTH;
 	}
 
-	if (abs(disX) < length && !invincibleFlg)
+	if (chara->GetEnemyStatus() != EnemyStatus::Death && (abs(disX) < length )&& !invincibleFlg)
 	{
 		float dif = length - abs(disX);
 
