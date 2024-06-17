@@ -407,6 +407,8 @@ void Player::Landing(const float height)
 
 void Player::Movement()
 {
+	oldLocation = location;
+
 	//右へ移動
 	if ((KeyInput::GetKeyDown(KEY_INPUT_D) || PadInput::GetLStickRationX() > NEED_STICK_RATIO) &&
 		!isKnockBack && !isAttack && !isBackStep && hp > 0)
