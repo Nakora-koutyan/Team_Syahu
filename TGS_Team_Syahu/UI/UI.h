@@ -47,5 +47,8 @@ public:
 
 	//エネミーのHPバー
 	void EnemyHPBar(const Vector2D location, const float hp)const;
+
+	//ボタンのUI
+	void Button()const;
 };
 

@@ -8,9 +8,15 @@
 
 #define PLAYER_IMAGE_ALIGN_THE_ORIGIN_X	31.f			//画像の原点調整用x
 #define PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y	48.f			//画像の原点調整用y
+#ifdef DEBUG
+#define PLAYER_MOVE_SPEED				5.0f			//移動移動
+#define PLAYER_AIR_MOVE_SPEED			1.0f			//空中移動移動
+#define PLAYER_MAX_MOVE_SPEED			15.f			//最高速度
+#else
 #define PLAYER_MOVE_SPEED				1.0f			//移動移動
 #define PLAYER_AIR_MOVE_SPEED			0.1f			//空中移動移動
 #define PLAYER_MAX_MOVE_SPEED			9.f				//最高速度
+#endif // DEBUG
 #define PLAYER_MAX_HP					100.f			//最大HP
 #define PLAYER_DAMAGE					5.f				//プレイヤーの基礎ダメージ値
 #define PLAYER_DAMAGE_INTERVAL			FPS * 1.0		//プレイヤーが再度ダメージを受けるまでの時間
