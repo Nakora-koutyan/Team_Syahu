@@ -84,4 +84,7 @@ void GameClearScene::Draw() const
 
 	//プレイヤー
 	DrawRotaGraph(650, 625, 1, 0, ResourceManager::GetDivImage("Player/player", playerIdle), TRUE);
+
+	//Button
+	DrawGraph(SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, ResourceManager::GetImage("UI/ButtonA"), TRUE);
 }
