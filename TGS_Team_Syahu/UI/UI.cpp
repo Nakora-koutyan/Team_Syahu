@@ -158,15 +158,15 @@ void UI::PlayerEquipmentWeapon() const
 void UI::Button() const
 {
 	//Button
-	DrawGraph(SCREEN_WIDTH - 180, SCREEN_HEIGHT - 180, ResourceManager::GetImage("UI/ButtonA"), TRUE);
-	DrawGraph(SCREEN_WIDTH - 180, SCREEN_HEIGHT - 120, ResourceManager::GetImage("UI/ButtonB"), TRUE);
-	DrawGraph(SCREEN_WIDTH - 230, SCREEN_HEIGHT - 60, ResourceManager::GetImage("UI/ButtonX"), TRUE);
-	DrawGraph(SCREEN_WIDTH - 180, SCREEN_HEIGHT - 60, ResourceManager::GetImage("UI/ButtonY"), TRUE);
+	DrawGraph(SCREEN_WIDTH - 160, SCREEN_HEIGHT - 160, ResourceManager::GetImage("UI/ButtonA"), TRUE);
+	DrawGraph(SCREEN_WIDTH - 160, SCREEN_HEIGHT - 100, ResourceManager::GetImage("UI/ButtonB"), TRUE);
+	DrawGraph(SCREEN_WIDTH - 210, SCREEN_HEIGHT - 40, ResourceManager::GetImage("UI/ButtonX"), TRUE);
+	DrawGraph(SCREEN_WIDTH - 160, SCREEN_HEIGHT - 40, ResourceManager::GetImage("UI/ButtonY"), TRUE);
 	//String
 	DrawGraph(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 65, ResourceManager::GetImage("UI/Attack"), TRUE);
 	DrawGraph(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 185, ResourceManager::GetImage("UI/Jump"), TRUE);
 	DrawGraph(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 125, ResourceManager::GetImage("UI/Steal"), TRUE);
 	//LR
-	DrawGraph(0, 75, ResourceManager::GetImage("UI/ButtonLB"), TRUE);
-	DrawGraph(225, 75, ResourceManager::GetImage("UI/ButtonRB"), TRUE);
+	DrawGraph(0, 95, ResourceManager::GetImage("UI/ButtonLB"), TRUE);
+	DrawGraph(225, 95, ResourceManager::GetImage("UI/ButtonRB"), TRUE);
 }
