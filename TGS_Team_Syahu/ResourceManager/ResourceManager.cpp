@@ -41,6 +41,9 @@ void ResourceManager::Initialize()
 	SetImage("UI/ButtonY");
 	SetImage("UI/ButtonLB");
 	SetImage("UI/ButtonRB");
+	SetImage("UI/Attack");
+	SetImage("UI/Jump");
+	SetImage("UI/Steal");
 	SetImage("Weapon/dagger");
 	SetImage("Weapon/largeSword");
 	SetImage("Weapon/rapier");
