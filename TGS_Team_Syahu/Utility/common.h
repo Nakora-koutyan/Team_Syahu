@@ -1,6 +1,6 @@
 #pragma once
 
-//#define DEBUG
+#define DEBUG
 
 #define FPS				60										//FPS
 
