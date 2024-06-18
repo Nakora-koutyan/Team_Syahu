@@ -141,7 +141,7 @@ void NormalEnemy::Update()
 	if (weaponType == Weapon::Rapier)
 	{
 		//レイピアの呼び出し (引数：(装備対象,攻撃時の速度))
-		rapier->Update(this, ATTACK_SPEED);
+		rapier->Update(this, ATTACK_SPEED, { 30,15 });
 	}
 
 	oldLocation = location;
