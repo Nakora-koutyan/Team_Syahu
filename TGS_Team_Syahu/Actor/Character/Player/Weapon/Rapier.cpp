@@ -68,7 +68,7 @@ void Rapier::Update(CharaBase* chara, float speed, Vector2D shiftLocation)
 			}
 			else
 			{
-				location.x = (chara->GetMinLocation().x - WEAPON_DISTANCE) + shiftLocation.x;;
+				location.x = (chara->GetMinLocation().x - WEAPON_DISTANCE) - shiftLocation.x;;
 				directionVector.x = -RAPIER_LENGTH;
 				imageAngle = DEGREE_TO_RADIAN(-45.f);
 				chara->SetMove({ -speed * 1.5f ,chara->GetMove().y });
