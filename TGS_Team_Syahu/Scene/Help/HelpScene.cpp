@@ -10,7 +10,7 @@ HelpScene::HelpScene() :enemyTextImage(NULL), operationTextImage(NULL), nowManua
 menuNum(0), manualType{},helpScreen(NULL), enemyManualImage(NULL), operationManualImage(NULL), 
 nowManualImage(NULL),buttonGuideImage01(NULL),buttonGuideImage02(NULL),nowButton(NULL),
 buttonMoveInterval(0),buttonImageFlg(false),backToHelp(NULL),allowImage01(NULL),allowImage02(NULL),
-leftNowAllowImage(NULL),rightNowAllowImage(NULL)
+leftNowAllowImage(NULL),rightNowAllowImage(NULL),cursorInterval(0)
 {
 }
 
@@ -56,6 +56,11 @@ void HelpScene::Finalize()
 //描画以外の更新
 SceneBase* HelpScene::Update()
 {
+	if (cursorInterval < 15)
+	{
+		cursorInterval++;
+	}
+
 	ButtonControl();
 	switch (menuNum)
 	{
@@ -129,23 +134,19 @@ void HelpScene::ButtonControl()
 {
 	//カーソルの右移動
 	if ((KeyInput::GetKey(KEY_INPUT_D) || KeyInput::GetKey(KEY_INPUT_RIGHT) ||
-		PadInput::GetLStickRationX() > 0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_RIGHT)))
+		PadInput::GetLStickRationX() > 0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_RIGHT)) &&
+		cursorInterval >= 15)
 	{
-		menuNum++;
-		if (menuNum >= 2)
-		{
-			menuNum = 0;
-		}
+		menuNum = 1;
+		cursorInterval = 0;
 	}
 	//カーソルの左移動
 	else if ((KeyInput::GetKey(KEY_INPUT_A) || KeyInput::GetKey(KEY_INPUT_LEFT) ||
-		PadInput::GetLStickRationX() < -0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_LEFT)))
+		PadInput::GetLStickRationX() < -0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_LEFT)) &&
+		cursorInterval >= 15)
 	{
-		menuNum--;
-		if (menuNum <= -1)
-		{
-			menuNum = 1;
-		}
+		menuNum = 0;
+		cursorInterval = 0;
 	}
 }
 //ボタンガイドの画像番号の制御

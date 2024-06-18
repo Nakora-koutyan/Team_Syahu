@@ -51,6 +51,9 @@ private:
 	int leftNowAllowImage;
 	int rightNowAllowImage;
 
+	//カーソルのインターバル
+	int cursorInterval;
+
 	//説明書の種類
 	Manual manualType;
 

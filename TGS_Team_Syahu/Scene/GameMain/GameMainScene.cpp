@@ -296,8 +296,8 @@ void GameMainScene::HitCheckEnemyWeapon(const int i, const int j)
 	if (enemy->GetEnemyType() == EnemyType::RapierEnemy)
 	{
 		NormalEnemy* normalEnemy = static_cast<NormalEnemy* > (object[j]);
-		if (normalEnemy->GetRapier()->CollisionCheck(player) && normalEnemy->GetSignToAttack() &&
-			normalEnemy->GetWeaponType() == Weapon::Rapier)
+		if (normalEnemy->GetRapier()!=nullptr && normalEnemy->GetRapier()->CollisionCheck(player) 
+			&& normalEnemy->GetSignToAttack() &&normalEnemy->GetWeaponType() == Weapon::Rapier)
 		{
 			normalEnemy->HitWeapon(player);
 			player->Hit(normalEnemy, normalEnemy->GetDamage() * 3);

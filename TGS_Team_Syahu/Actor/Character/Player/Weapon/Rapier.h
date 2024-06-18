@@ -8,7 +8,7 @@
 #define RAPIER_LENGTH					100.f			//レイピアの長さ
 #define RAPIER_WEIGHT					0.35f			//レイピアの重さ
 #define RAPIER_DAMAGE					50.f			//レイピアのダメージ
-#define RAPIER_KNOCKBACK				0.f				//レイピアのノックバックの量
+#define RAPIER_KNOCKBACK				10.f				//レイピアのノックバックの量
 #define RAPIER_AIR_ATTAK_KNOCKBACK		5.f				//レイピアの空中攻撃のノックバックの量
 
 class CharaBase;

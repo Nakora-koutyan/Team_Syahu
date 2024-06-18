@@ -73,6 +73,7 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	landingAnimFlg = false;
 	blinkingFlg = false;
 	jumpEffectInversionFlg = false;
+	jumpEffectLandFlg = false;
 	equipmentAnimFlg = false;
 	equipmentEffectFlg = false;
 }
@@ -157,7 +158,7 @@ void Player::Update()
 		isEquipment = false;
 	}
 	//捨てる
-	else if ((KeyInput::GetKey(KEY_INPUT_R)) || PadInput::OnButton(XINPUT_BUTTON_Y))
+	else if ((KeyInput::GetKey(KEY_INPUT_R)))
 	{
 		weaponType = Weapon::None;
 		weaponDurability[stockCount] = PLAYER_WEAPON_DURABILITY;
@@ -189,6 +190,11 @@ void Player::Update()
 		dagger[i]->Update(this);
 	}
 	rapier->Update(this, PLAYER_MAX_MOVE_SPEED);
+
+	if (hp < 0)
+	{
+		hp = 0;
+	}
 
 	screenLocation = Camera::ConvertScreenPosition(location);
 }
@@ -311,7 +317,7 @@ void Player::Draw() const
 	}
 #endif // DEBUG
 
-	if (isJump && jumpCount == 1)
+	if (isJump && jumpCount == 1 && jumpEffectLandFlg)
 	{
 		if (jumpEffectInversionFlg)
 		{
@@ -349,7 +355,8 @@ void Player::Hit(ObjectBase* object, const float damage)
 {
 	EnemyBase* chara = static_cast<EnemyBase*>(object);
 
-	if (!isKnockBack && !isHit && hp > 0 && !invincibleFlg)
+	if (chara->GetEnemyStatus() != EnemyStatus::Death &&
+		(!isKnockBack && !isHit) && hp > 0 && !invincibleFlg)
 	{
 		isKnockBack = true;
 		if (GetCenterLocation().x < chara->GetCenterLocation().x)
@@ -364,18 +371,15 @@ void Player::Hit(ObjectBase* object, const float damage)
 	}
 
 	//すでに当たってないならかつ同じオブジェクトじゃないなら
-	if (!isHit && objectType != chara->GetObjectType() && hp > 0 && !invincibleFlg)
+	if (chara->GetEnemyStatus() != EnemyStatus::Death && 
+		(!isHit && objectType != chara->GetObjectType() && hp > 0 )&& 
+		!invincibleFlg)
 	{
 		ResourceManager::PlaySE("damage", FALSE);
 
 		isHit = true;
 
 		if (hp > 0)hp -= damage;
-	}
-
-	if (hp < 0)
-	{
-		hp = 0;
 	}
 
 	if (location.x <= 0 || location.x + area.width >= WORLD_WIDTH)
@@ -397,7 +401,7 @@ void Player::Hit(ObjectBase* object, const float damage)
 		length += RAPIER_LENGTH;
 	}
 
-	if (abs(disX) < length && !invincibleFlg)
+	if (chara->GetEnemyStatus() != EnemyStatus::Death && (abs(disX) < length )&& !invincibleFlg)
 	{
 		float dif = length - abs(disX);
 
@@ -547,7 +551,6 @@ void Player::Movement()
 		ResourceManager::PlaySE("jump", FALSE);
 		move.y = -JUMP_POWER;
 		jumpCount++;
-		isAir = true;
 		isJump = true;
 		direction.y = -1.f;
 		if (direction.x < 0)
@@ -559,6 +562,15 @@ void Player::Movement()
 		{
 			jumpEffectLocation.x = location.x;
 			jumpEffectInversionFlg = false;
+		}
+
+		if (isAir)
+		{
+			jumpEffectLandFlg = false;
+		}
+		else
+		{
+			jumpEffectLandFlg = true;
 		}
 	}
 
@@ -606,7 +618,7 @@ void Player::Attack()
 	}
 
 	//武器攻撃
-	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) || PadInput::OnButton(XINPUT_BUTTON_X)) &&
+	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) || PadInput::OnButton(XINPUT_BUTTON_Y) || PadInput::OnButton(XINPUT_BUTTON_X)) &&
 		attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None && hp > 0)
 	{
 		//武器攻撃

@@ -118,5 +118,9 @@ protected:
 
 	//死亡時に呼び出される関数
 	virtual void Death() = 0;
+
+public:
+
+	int GetEnemyStatus()const { return enemyStatus; }
 };
 

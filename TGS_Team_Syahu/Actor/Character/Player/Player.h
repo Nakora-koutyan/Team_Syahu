@@ -76,6 +76,7 @@ private:
 	bool landingAnimFlg;						//着地アニメーションフラグ
 	bool blinkingFlg;							//点滅フラグ
 	bool jumpEffectInversionFlg;				//ジャンプのエフェクト反転フラグ
+	bool jumpEffectLandFlg;						//ジャンプのエフェクトの地上フラグ
 	bool equipmentAnimFlg;						//装備アニメーションフラグ
 	bool equipmentEffectFlg;					//装備エフェクトフラグ
 

@@ -368,6 +368,7 @@ void DaggerEnemy::AttackStandBy()
 		{
 			//攻撃開始に遷移
 			enemyStatus = EnemyStatus::AttackStart;
+			daggerEnemyAnimNumber = 13;
 		}
 	}
 	//武器がない場合
@@ -416,6 +417,7 @@ void DaggerEnemy::AttackStart()
 		{
 			//フラグのリセット
 			didAttack = false;
+			signToAttack = false;
 			//ステータスを攻撃終了に遷移させる
 			enemyStatus = EnemyStatus::AttackEnd;
 		}
@@ -554,14 +556,13 @@ void DaggerEnemy::WeaponNoneAttackStandByAnim()
 //攻撃開始アニメーション(短剣装備あり)
 void DaggerEnemy::DaggerAttackStartAnim()
 {
-	if (daggerEnemyAnimNumber < 13)
+	if (daggerEnemyAnimNumber >= 15)
 	{
-		daggerEnemyAnimNumber = 13;
+		signToAttack = true;
 	}
 	else if (daggerEnemyAnimNumber > 18)
 	{
 		daggerEnemyAnimNumber = 13;
-		signToAttack = true;
 	}
 
 	if (enemyAnimInterval % 6 == 0)

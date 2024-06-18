@@ -431,6 +431,7 @@ void LargeSwordEnemy::AttackStandBy()
 		{
 			//エネミーの状態を「攻撃開始」に遷移する
 			enemyStatus = EnemyStatus::AttackStart;
+			largeSwordEnemyImageNumber = 24;
 
 			//貯め時間のリセット
 			attackChargeTime = MAX_ATTACK_CHARGE_TIME;
@@ -740,11 +741,6 @@ void LargeSwordEnemy::LargeSwordAttackStartAnim()
 {
 	/** 剣を振り下ろす **/
 	//攻撃待機時間が０以下になった場合
-	//画像番号が26以上なら
-	if (largeSwordEnemyImageNumber < 24)
-	{
-		largeSwordEnemyImageNumber = 24;
-	}
 	if (largeSwordEnemyImageNumber > 26)
 	{
 		//画像の番号を15番に設定

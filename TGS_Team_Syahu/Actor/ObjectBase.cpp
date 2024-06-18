@@ -74,7 +74,7 @@ bool ObjectBase::InScreen() const
 	bool flg = false;
 
 	if ((screenLocation.x > 0 && screenLocation.x < SCREEN_WIDTH) &&
-		(screenLocation.y > 0 || screenLocation.y < SCREEN_HEIGHT))
+		(screenLocation.y > 0 && screenLocation.y < SCREEN_HEIGHT))
 	{
 		flg = true;
 	}

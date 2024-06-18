@@ -66,7 +66,7 @@ void SceneManager::Initialize()
 	SetOutApplicationLogValidFlag(FALSE);
 
 	//タイトル
-	SetMainWindowText("");
+	SetMainWindowText("GhoSteal");
 
 	//ウィンドウモードで起動
 	ChangeWindowMode(TRUE);
