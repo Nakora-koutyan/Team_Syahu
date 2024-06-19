@@ -2,6 +2,7 @@
 #include"../../Player/Player.h"
 #include"../../../Camera/Camera.h"
 #include"../../../../ResourceManager/ResourceManager.h"
+#include"../InputControl/Pad/PadInput.h"
 
 Dagger::Dagger()
 { 
@@ -138,14 +139,39 @@ void Dagger::Attack(const CharaBase* chara)
 	{
 		isAirAttack = true;
 		directionVector.y = DAGGER_LENGTH;
-		move.y = DAGGER_SPEED * sin(DEGREE_TO_RADIAN(150.f));
+		if (PadInput::GetLStick().y < -0.2)
+		{
+			move.y = DAGGER_SPEED * sin(DEGREE_TO_RADIAN(150.f));
+			if (direction > 0)
+			{
+				imageAngle += DEGREE_TO_RADIAN(90.f);
+			}
+			else if (direction < 0)
+			{
+				imageAngle += DEGREE_TO_RADIAN(-90.f);
+			}
+		}
+		else
+		{
+			if (direction > 0)
+			{
+				imageAngle += DEGREE_TO_RADIAN(45.f);
+				directionVector.x = DAGGER_LENGTH;
+				directionVector.y = 0.f;
+			}
+			else if (direction < 0)
+			{
+				imageAngle += DEGREE_TO_RADIAN(-45.f);
+				directionVector.x = -DAGGER_LENGTH;
+				directionVector.y = 0.f;
+			}
+		}
 		//右に出す
 		if (direction > 0)
 		{
 			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
 			directionVector.x = DAGGER_LENGTH;
 			move.x = -10.f * cos(DEGREE_TO_RADIAN(-150.f));
-			imageAngle += DEGREE_TO_RADIAN(90.f);
 		}
 		//左に出す
 		else
@@ -153,7 +179,6 @@ void Dagger::Attack(const CharaBase* chara)
 			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
 			directionVector.x = -DAGGER_LENGTH;
 			move.x = 10.f * cos(DEGREE_TO_RADIAN(-150.f));
-			imageAngle += DEGREE_TO_RADIAN(-90.f);
 		}
 	}
 }

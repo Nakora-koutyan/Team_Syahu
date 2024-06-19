@@ -137,6 +137,8 @@ public:
 	//装備のアニメーションフラグを取得
 	bool GetEquipmentAnimFlg()const { return equipmentAnimFlg; }
 
+	bool GetIsBackStep()const { return isBackStep; }
+
 private:
 	//移動
 	void Movement();

@@ -49,29 +49,33 @@ void Rapier::Update(CharaBase* chara, float speed, Vector2D shiftLocation)
 	//地上での攻撃なら
 	if (isShow && !isAirAttack)
 	{
-		chargeTime++;
-		if (chargeTime > RAPIER_CHARGE_TIME)
+		if (chara->GetObjectType() == ObjectType::Player && chara->GetIsAttack()
+			|| chara->GetObjectType()==ObjectType::Enemy)
 		{
-			framCount++;
-			effectAnimcount++;
-			if (effectAnim < 6)
+			chargeTime++;
+			if (chargeTime > RAPIER_CHARGE_TIME)
 			{
-				effectAnim++;
-			}
-			//右に出す
-			if (direction > 0)
-			{
-				location.x = (chara->GetMaxLocation().x + WEAPON_DISTANCE) + shiftLocation.x;;
-				directionVector.x = RAPIER_LENGTH;
-				imageAngle = DEGREE_TO_RADIAN(45.f);
-				chara->SetMove({ speed * 1.5f ,chara->GetMove().y });
-			}
-			else
-			{
-				location.x = (chara->GetMinLocation().x - WEAPON_DISTANCE) - shiftLocation.x;;
-				directionVector.x = -RAPIER_LENGTH;
-				imageAngle = DEGREE_TO_RADIAN(-45.f);
-				chara->SetMove({ -speed * 1.5f ,chara->GetMove().y });
+				framCount++;
+				effectAnimcount++;
+				if (effectAnim < 6)
+				{
+					effectAnim++;
+				}
+				//右に出す
+				if (direction > 0)
+				{
+					location.x = (chara->GetMaxLocation().x + WEAPON_DISTANCE) + shiftLocation.x;
+					directionVector.x = RAPIER_LENGTH;
+					imageAngle = DEGREE_TO_RADIAN(45.f);
+					chara->SetMove({ speed * 1.5f ,chara->GetMove().y });
+				}
+				else
+				{
+					location.x = (chara->GetMinLocation().x - WEAPON_DISTANCE) - shiftLocation.x;
+					directionVector.x = -RAPIER_LENGTH;
+					imageAngle = DEGREE_TO_RADIAN(-45.f);
+					chara->SetMove({ -speed * 1.5f ,chara->GetMove().y });
+				}
 			}
 		}
 	}
@@ -123,15 +127,17 @@ void Rapier::Update(CharaBase* chara, float speed, Vector2D shiftLocation)
 	{
 		framCount = 0;
 		chargeTime = 0;
-		direction = 0;
 		effectAnim = 0;
 		angle = 0.f;
-		isShow = false;
 		isHit = false;
 		isUnable = false;
 		stepFlg = true;
 		attackEndFlg = false;
 		chara->SetIsAttack(false);
+		if (chara->GetObjectType() == ObjectType::Enemy)
+		{
+			isShow = false;
+		}
 	}
 	//空中攻撃が地面に着地したら
 	else if (isAirAttack && !chara->GetIsAir())
@@ -151,6 +157,30 @@ void Rapier::Update(CharaBase* chara, float speed, Vector2D shiftLocation)
 		isAirAttack = false;
 		airAttackAnimFlg = true;
 		chara->SetIsAttack(false);
+	}
+	if (framCount > RAPIER_ATTACK_TIME && chara->GetIsAir())
+	{
+		chara->SetIsAttack(true);
+	}
+	if (chara->GetObjectType()==ObjectType::Player)
+	{
+		Player* player = static_cast<Player*>(chara);
+		if (player->GetIsBackStep())
+		{
+			//右に出す
+			if (direction > 0)
+			{
+				location.x = (chara->GetMaxLocation().x + WEAPON_DISTANCE) + shiftLocation.x;;
+				directionVector.x = RAPIER_LENGTH;
+				imageAngle = DEGREE_TO_RADIAN(45.f);
+			}
+			else
+			{
+				location.x = (chara->GetMinLocation().x - WEAPON_DISTANCE) - shiftLocation.x;;
+				directionVector.x = -RAPIER_LENGTH;
+				imageAngle = DEGREE_TO_RADIAN(-45.f);
+			}
+		}
 	}
 
 	damage = chara->GetDamage() + RAPIER_DAMAGE;
@@ -214,12 +244,8 @@ void Rapier::Attack(const CharaBase* chara)
 
 	isShow = true;
 
-	//まだ方向が決まってないなら
-	if (direction == 0)
-	{
-		//プレイヤーの方向情報を保持する
-		direction = (short)chara->GetDirection().x;
-	}
+	//プレイヤーの方向情報を保持する
+	direction = (short)chara->GetDirection().x;
 
 	//右に出す
 	if (direction > 0)
