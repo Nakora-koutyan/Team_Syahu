@@ -276,7 +276,7 @@ void Rapier::Hit(ObjectBase* target, const float damage)
 {
 	CharaBase* enemy = static_cast<CharaBase*>(target);
 
-	if (isShow && !isUnable)
+	if (isShow && !isUnable && chargeTime > RAPIER_CHARGE_TIME)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{

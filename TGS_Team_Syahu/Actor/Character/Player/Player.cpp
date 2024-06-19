@@ -618,7 +618,7 @@ void Player::Attack()
 
 	//武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) || PadInput::OnButton(XINPUT_BUTTON_Y) || PadInput::OnButton(XINPUT_BUTTON_X)) &&
-		attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None && hp > 0)
+		attackCoolTime <= 0.f && !isHit && actionState == Action::None && hp > 0)
 	{
 		//武器攻撃
 		if (weaponType != Weapon::None)
@@ -710,6 +710,7 @@ void Player::StockSelect()
 		{
 			stockCount = PLAYER_MAX_STOCK - 1;
 		}	
+
 		if (stock[stockCount] == Weapon::None)
 		{
 			isEquipment = false;
@@ -717,6 +718,14 @@ void Player::StockSelect()
 		}
 		else if (stock[stockCount] != Weapon::None && isEquipment)
 		{
+			weaponType = stock[stockCount];
+		}
+		else if (stock[stockCount] != Weapon::None && !isEquipment)
+		{
+			isEquipment = true;
+			equipmentAnimFlg = true;
+			actionState = Action::Equipment;
+			invincibleFlg = true;
 			weaponType = stock[stockCount];
 		}
 
@@ -738,6 +747,14 @@ void Player::StockSelect()
 		}
 		else if (stock[stockCount] != Weapon::None && isEquipment)
 		{
+			weaponType = stock[stockCount];
+		}
+		else if (stock[stockCount] != Weapon::None && !isEquipment)
+		{
+			isEquipment = true;
+			equipmentAnimFlg = true;
+			actionState = Action::Equipment;
+			invincibleFlg = true;
 			weaponType = stock[stockCount];
 		}
 	}
