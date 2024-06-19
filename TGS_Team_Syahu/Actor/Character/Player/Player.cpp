@@ -220,8 +220,9 @@ void Player::Draw() const
 	DrawFormatString(600, 105, 0x000000, "animCount :%d", playerAnim);
 	DrawFormatString(600, 120, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
 	DrawFormatString(600, 135, 0x000000, "location x:%f location y:%f", location.x, location.y);
-	DrawFormatString(600, 150, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
-	DrawFormatString(600, 165, 0x000000, "isAir :%s", isAir ? "true" : "false");
+	DrawFormatString(600, 150, 0x000000, "movex:%f move y:%f", move.x, move.y);
+	DrawFormatString(600, 165, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
+	DrawFormatString(600, 180, 0x000000, "isAir :%s", isAir ? "true" : "false");
 
 	if (weaponType == Weapon::None)
 	{
