@@ -114,6 +114,12 @@ void NormalEnemy::Update()
 	case EnemyStatus::Death:
 		Death();
 		break;
+
+		//ダメージ処理
+	case EnemyStatus::Damage:
+
+		Damage();
+		break;
 	}
 
 	if (hp <= 0)
@@ -153,10 +159,13 @@ void NormalEnemy::Update()
 //描画に関する更新
 void NormalEnemy::Draw() const
 {
+	//説明変数宣言
+	bool enemyDamageOrDeath = (enemyStatus == EnemyStatus::Death || enemyStatus == EnemyStatus::Damage);
+
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, enemyAlpha);
 	DrawRotaGraphF(screenLocation.x + locXCorrect, screenLocation.y + locYCorrect, 1, 0,
-		hp <= 0 ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
+		enemyDamageOrDeath ? enemyDeathImage[enemyNumber] : enemyImage[enemyNumber],
 		TRUE, animTurnFlg);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 #ifdef DEBUG
@@ -377,6 +386,16 @@ void NormalEnemy::Death()
 	move.x = 0.f;
 }
 
+void NormalEnemy::Damage()
+{
+	move.x = 0.f;
+	if (damageAnimCount >= 10)
+	{
+		damageAnimCount = 0;
+		enemyStatus = EnemyStatus::Patrol;
+	}
+}
+
 //アニメーション制御関数
 void NormalEnemy::EnemyAnimationManager()
 {
@@ -408,7 +427,13 @@ void NormalEnemy::EnemyAnimationManager()
 	//死亡した場合
 	if (enemyStatus == EnemyStatus::Death)
 	{
-		EnemyDeathAnim();
+		NormalEnemyDeathAnim();
+	}
+
+	//ダメージを受けた場合
+	if (enemyStatus == EnemyStatus::Damage)
+	{
+		NormalEnemyDamageAnim();
 	}
 
 	//ノックバックが発生した場合
@@ -545,7 +570,7 @@ void NormalEnemy::AttackEndAnim()
 	enemyNumber = 2;
 }
 
-void NormalEnemy::EnemyDeathAnim()
+void NormalEnemy::NormalEnemyDeathAnim()
 {
 	//Deathに遷移した際一度だけ呼ばれる処理
 	if (!isFirst)
@@ -573,5 +598,26 @@ void NormalEnemy::EnemyDeathAnim()
 		{
 			locYCorrect -= 3.f;
 		}
+	}
+}
+
+void NormalEnemy::NormalEnemyDamageAnim()
+{
+	//boolがtrueの場合
+	if (isChangeDamageAnim)
+	{
+		enemyNumber = 0;
+	}
+	//falseの場合
+	else
+	{
+		enemyNumber = 1;
+	}
+
+	//９フレームに一度、boolを切り替える
+	if (animInterval % 10 == 0)
+	{
+		isChangeDamageAnim = !isChangeDamageAnim;
+		damageAnimCount++;
 	}
 }

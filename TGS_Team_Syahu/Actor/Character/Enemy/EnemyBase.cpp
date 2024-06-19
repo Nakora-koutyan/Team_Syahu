@@ -2,7 +2,8 @@
 #include "../../../ResourceManager/ResourceManager.h"
 
 EnemyBase::EnemyBase() :isClash(false), statusChangeTime(0), attackWaitingTime(0), noMove(false),patrolCounter(0.f), 
-enemyStatus{},attackRange{}, attackCenser{0},isBlink(false),blinkCounter(0),enemyAlpha(255),isFind(false),signToAttack(false)
+enemyStatus{},attackRange{}, attackCenser{0},isBlink(false),blinkCounter(0),enemyAlpha(255),isFind(false),
+signToAttack(false),isChangeDamageAnim(false),damageAnimCount(0)
 {
 	objectType = ObjectType::Enemy;
 	enemyType = EnemyType::None;
@@ -63,6 +64,8 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 			ResourceManager::PlaySE("damage", FALSE);
 
 			hp -= damage;
+			//ダメージ処理に遷移する
+			enemyStatus = EnemyStatus::Damage;
 		}
 	}
 

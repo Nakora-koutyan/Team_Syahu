@@ -164,7 +164,7 @@ void HelpScene::ButtonGuide()
 	{
 		nowButton = buttonGuideImage01;
 	}
-	else if (buttonGuideImage02)
+	else if (!buttonImageFlg)
 	{
 		nowButton = buttonGuideImage02;
 	}

@@ -138,6 +138,12 @@ void DaggerEnemy::Update()
 		Death();
 		break;
 
+		//ダメージ処理
+	case EnemyStatus::Damage:
+
+		Damage();
+		break;
+
 	}
 	//攻撃範囲更新
 	AttackRange();
@@ -448,6 +454,16 @@ void DaggerEnemy::Death()
 	move.x = 0.f;
 }
 
+void DaggerEnemy::Damage()
+{
+	move.x = 0;
+	if (damageAnimCount >= 12)
+	{
+		damageAnimCount = 0;
+		enemyStatus = EnemyStatus::Patrol;
+	}
+}
+
 //アニメーションマネージャー
 void DaggerEnemy::EnemyAnimationManager()
 {
@@ -492,7 +508,11 @@ void DaggerEnemy::EnemyAnimationManager()
 	if (enemyStatus == EnemyStatus::Death)
 	{
 		//死亡時のアニメーション
-		EnemyDeathAnim();
+		DaggerEnemyDeathAnim();
+	}
+	if (enemyStatus == EnemyStatus::Damage)
+	{
+		DaggerEnemyDamageAnim();
 	}
 }
 
@@ -615,7 +635,7 @@ void DaggerEnemy::DaggerAttackEndAnim()
 	}
 }
 
-void DaggerEnemy::EnemyDeathAnim()
+void DaggerEnemy::DaggerEnemyDeathAnim()
 {
 	if (daggerEnemyAnimNumber <= 24 || daggerEnemyAnimNumber >= 34)
 	{
@@ -646,5 +666,21 @@ void DaggerEnemy::EnemyDeathAnim()
 		{
 			onlyOnce = true;
 		}
+	}
+}
+
+void DaggerEnemy::DaggerEnemyDamageAnim()
+{
+	//anim番号が18未満であれば18に設定する
+	if (daggerEnemyAnimNumber < 18 || daggerEnemyAnimNumber > 23)
+	{
+		daggerEnemyAnimNumber = 18;
+	}
+
+	//アニメーション番号の更新
+	if (enemyAnimInterval % 9 == 0)
+	{
+		daggerEnemyAnimNumber++;
+		damageAnimCount++;
 	}
 }

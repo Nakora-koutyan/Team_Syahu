@@ -72,10 +72,10 @@ public:
 	void HitWeapon(ObjectBase* object)override;
 
 protected:
+
 	//攻撃範囲関数
 	void AttackRange()override;
 
-	//武器ありの場合に呼び出される関数
 	//攻撃準備
 	void AttackStandBy() override;
 
@@ -85,10 +85,14 @@ protected:
 	//攻撃終了
 	void AttackEnd() override;
 
+	//死亡時
 	void Death() override;
 
+	//ダメージを受けた時
+	void Damage()override;
+
 protected:
-	//ステータスアニメーション用関数
+	/* ステータスアニメーション用関数 */
 	//パトロールアニメーション
 	void PatrolAnim();
 
@@ -104,6 +108,9 @@ protected:
 	void DaggerAttackEndAnim();
 	
 	//死亡時のアニメーション
-	void EnemyDeathAnim();
+	void DaggerEnemyDeathAnim();
+
+	//ダメージを受けた時
+	void DaggerEnemyDamageAnim();
 };
 

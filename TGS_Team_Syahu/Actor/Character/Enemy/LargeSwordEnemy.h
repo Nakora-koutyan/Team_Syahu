@@ -94,7 +94,11 @@ protected:
 	//攻撃終了
 	void AttackEnd() override;
 
+	//死亡時
 	void Death() override;
+
+	//ダメージを受けた時
+	void Damage() override;
 
 protected:
 	//ステータスアニメーション用関数
@@ -115,7 +119,11 @@ protected:
 	void WeaponNoneAttackEndAnim();
 
 	//死亡時のアニメーション
-	void EnemyDeathAnim();
+	void LargeSwordEnemyDeathAnim();
 	void WeaponNoneEnemyDeathAnim();
+
+	//ダメージを受けた際のアニメーション
+	void LargeSwordEnemyDamageAnim();
+	void WeaponNoneEnemyDamageAnim();
 };
 

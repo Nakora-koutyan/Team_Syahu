@@ -73,6 +73,10 @@ private:
 	//死亡処理
 	void Death() override;
 
+	//ダメージを受けた時
+	void Damage()override;
+
+private:
 	//エネミーのアニメーション制御関数
 	void EnemyAnimationManager() override;
 
@@ -85,5 +89,7 @@ private:
 
 	void AttackEndAnim();
 
-	void EnemyDeathAnim();
+	void NormalEnemyDeathAnim();
+
+	void NormalEnemyDamageAnim();
 };

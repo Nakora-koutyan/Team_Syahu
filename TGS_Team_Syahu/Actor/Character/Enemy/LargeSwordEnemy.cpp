@@ -182,6 +182,12 @@ void LargeSwordEnemy::Update()
 	case EnemyStatus::Death:
 		Death();
 		break;
+
+		//ダメージ処理
+	case EnemyStatus::Damage:
+
+		Damage();
+		break;
 	}
 	//攻撃範囲更新
 	AttackRange();
@@ -554,6 +560,16 @@ void LargeSwordEnemy::Death()
 	move.x = 0.f;
 }
 
+void LargeSwordEnemy::Damage()
+{
+	move.x = 0.f;
+	if (damageAnimCount >= 15)
+	{
+		damageAnimCount = 0;
+		enemyStatus = EnemyStatus::Patrol;
+	}
+}
+
 //アニメーション制御関数
 void LargeSwordEnemy::EnemyAnimationManager()
 {
@@ -616,12 +632,25 @@ void LargeSwordEnemy::EnemyAnimationManager()
 		if (weaponType == Weapon::LargeSword)
 		{
 			//死亡時のアニメーション
-			EnemyDeathAnim();
+			LargeSwordEnemyDeathAnim();
 		}
 		else if (weaponType == Weapon::None)
 		{
 			//武器無しの時の死亡時アニメーション
 			WeaponNoneEnemyDeathAnim();
+		}
+	}
+	if (enemyStatus == EnemyStatus::Damage)
+	{
+		if (weaponType == Weapon::LargeSword)
+		{
+			//死亡時のアニメーション
+			LargeSwordEnemyDamageAnim();
+		}
+		else if (weaponType == Weapon::None)
+		{
+			//武器無しの時の死亡時アニメーション
+			WeaponNoneEnemyDamageAnim();
 		}
 	}
 	animInterval++;
@@ -793,10 +822,28 @@ void LargeSwordEnemy::LargeSwordAttackEndAnim()
 //武器を持っていない場合の攻撃終了アニメーション
 void LargeSwordEnemy::WeaponNoneAttackEndAnim()
 {
+	if (weaponNoneEnemyImageNumber <= 6)
+	{
+		weaponNoneEnemyImageNumber = 6;
+	}
+	else if (weaponNoneEnemyImageNumber >= 8)
+	{
+		weaponNoneEnemyImageNumber = 6;
+		attackEndCounter++;
+	}
+	if (attackEndCounter > 15)
+	{
+		attackEndCounter = 0;
+	}
+
+	if (animInterval % 4 == 0)
+	{
+		weaponNoneEnemyImageNumber++;
+	}
 }
 
 //死亡時のアニメーション
-void LargeSwordEnemy::EnemyDeathAnim()
+void LargeSwordEnemy::LargeSwordEnemyDeathAnim()
 {
 	if (largeSwordEnemyImageNumber <= 32)
 	{
@@ -814,7 +861,6 @@ void LargeSwordEnemy::EnemyDeathAnim()
 	}
 }
 
-//32～54
 void LargeSwordEnemy::WeaponNoneEnemyDeathAnim()
 {
 	if (weaponNoneEnemyImageNumber <= 32)
@@ -830,5 +876,36 @@ void LargeSwordEnemy::WeaponNoneEnemyDeathAnim()
 	if (animInterval % 7 == 0)
 	{
 		weaponNoneEnemyImageNumber++;
+	}
+}
+
+//大剣を持っている場合
+void LargeSwordEnemy::LargeSwordEnemyDamageAnim()
+{
+	if (largeSwordEnemyImageNumber <= 27 || largeSwordEnemyImageNumber > 31)
+	{
+		largeSwordEnemyImageNumber = 27;
+	}
+
+	//8フレーム毎にアニメーションを更新
+	if (animInterval % 8 == 0)
+	{
+		largeSwordEnemyImageNumber++;
+		damageAnimCount++;
+	}
+}
+//武器を持っていない場合
+void LargeSwordEnemy::WeaponNoneEnemyDamageAnim()
+{
+	if (weaponNoneEnemyImageNumber <= 27 || weaponNoneEnemyImageNumber > 31)
+	{
+		weaponNoneEnemyImageNumber = 27;
+	}
+
+	//8フレーム毎にアニメーションを更新
+	if (animInterval % 8 == 0)
+	{
+		weaponNoneEnemyImageNumber++;
+		damageAnimCount++;
 	}
 }

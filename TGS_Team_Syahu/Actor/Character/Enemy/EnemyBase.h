@@ -16,7 +16,8 @@ enum EnemyStatus
 	AttackStandBy,		//攻撃準備
 	AttackStart,		//攻撃開始
 	AttackEnd,			//攻撃終了
-	Death				//死亡時
+	Death,				//死亡時
+	Damage				//ダメージ状態
 };
 
 enum class EnemyType
@@ -62,7 +63,11 @@ protected:
 	Vector2D attackCenser[2];		//0:左センサー	1:右センサー
 	Vector2D attackRange[2];		//0:左センサー	1:右センサー
 
-	bool signToAttack;					//攻撃の時に呼ばれる変数
+	bool signToAttack;				//攻撃の時に呼ばれる変数
+
+	bool isChangeDamageAnim;		//アニメーションの切り替え用フラグ
+	int damageAnimCount;			//ダメ―ジアニメーション中のカウント用変数
+
 
 public:
 	//コンストラクタ
@@ -118,6 +123,9 @@ protected:
 
 	//死亡時に呼び出される関数
 	virtual void Death() = 0;
+
+	//ダメージを受けた際
+	virtual void Damage() = 0;
 
 public:
 
