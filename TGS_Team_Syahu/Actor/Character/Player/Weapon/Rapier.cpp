@@ -144,6 +144,7 @@ void Rapier::Update(CharaBase* chara, float speed, Vector2D shiftLocation)
 	{
 		ResourceManager::PlaySE("fallAttack", FALSE);
 		framCount = 0;
+		chargeTime = 0;
 		direction = 0;
 		angle = 0.f;
 		directionVector.x = 0.f;
@@ -267,6 +268,7 @@ void Rapier::Attack(const CharaBase* chara)
 
 	if (chara->GetIsAir())
 	{
+		chargeTime = RAPIER_CHARGE_TIME;
 		isAirAttack = true;
 	}
 
@@ -276,7 +278,7 @@ void Rapier::Hit(ObjectBase* target, const float damage)
 {
 	CharaBase* enemy = static_cast<CharaBase*>(target);
 
-	if (isShow && !isUnable)
+	if (isShow && !isUnable && chargeTime >= RAPIER_CHARGE_TIME)
 	{
 		if (enemy->GetIsShow() && !enemy->GetIsHit())
 		{

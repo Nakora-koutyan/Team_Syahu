@@ -220,8 +220,9 @@ void Player::Draw() const
 	DrawFormatString(600, 105, 0x000000, "animCount :%d", playerAnim);
 	DrawFormatString(600, 120, 0x000000, "landingFlg :%s", landingAnimFlg ? "true" : "false");
 	DrawFormatString(600, 135, 0x000000, "location x:%f location y:%f", location.x, location.y);
-	DrawFormatString(600, 150, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
-	DrawFormatString(600, 165, 0x000000, "isAir :%s", isAir ? "true" : "false");
+	DrawFormatString(600, 150, 0x000000, "movex:%f move y:%f", move.x, move.y);
+	DrawFormatString(600, 165, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
+	DrawFormatString(600, 180, 0x000000, "isAir :%s", isAir ? "true" : "false");
 
 	if (weaponType == Weapon::None)
 	{
@@ -618,7 +619,7 @@ void Player::Attack()
 
 	//武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) || PadInput::OnButton(XINPUT_BUTTON_Y) || PadInput::OnButton(XINPUT_BUTTON_X)) &&
-		attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None && hp > 0)
+		attackCoolTime <= 0.f && !isHit && actionState == Action::None && hp > 0)
 	{
 		//武器攻撃
 		if (weaponType != Weapon::None)
@@ -710,6 +711,7 @@ void Player::StockSelect()
 		{
 			stockCount = PLAYER_MAX_STOCK - 1;
 		}	
+
 		if (stock[stockCount] == Weapon::None)
 		{
 			isEquipment = false;
@@ -717,6 +719,14 @@ void Player::StockSelect()
 		}
 		else if (stock[stockCount] != Weapon::None && isEquipment)
 		{
+			weaponType = stock[stockCount];
+		}
+		else if (stock[stockCount] != Weapon::None && !isEquipment)
+		{
+			isEquipment = true;
+			equipmentAnimFlg = true;
+			actionState = Action::Equipment;
+			invincibleFlg = true;
 			weaponType = stock[stockCount];
 		}
 
@@ -738,6 +748,14 @@ void Player::StockSelect()
 		}
 		else if (stock[stockCount] != Weapon::None && isEquipment)
 		{
+			weaponType = stock[stockCount];
+		}
+		else if (stock[stockCount] != Weapon::None && !isEquipment)
+		{
+			isEquipment = true;
+			equipmentAnimFlg = true;
+			actionState = Action::Equipment;
+			invincibleFlg = true;
 			weaponType = stock[stockCount];
 		}
 	}

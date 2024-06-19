@@ -3,6 +3,7 @@
 #include "../Actor/Character/Player/Player.h"
 #include "../Actor/Camera/Camera.h"
 #include "../ResourceManager/ResourceManager.h"
+#include "BlockDeta.h"
 
 StageBlock::StageBlock(float x, float y, int type)
 {
@@ -16,9 +17,11 @@ StageBlock::StageBlock(float x, float y, int type)
 	IsDraw = true;
 	blockImg = NULL;
 
-	int blockLocationX = x / BLOCK_WIDTH;
-	int blockLocationY = y / BLOCK_HEIGHT;
-	stageBlockData[blockLocationX][blockLocationY] = true;
+	blockdeta = new BlockDeta;
+
+	int blockLocationX = (int)x / (int)BLOCK_WIDTH;
+	int blockLocationY = (int)y / (int)BLOCK_HEIGHT;
+	blockdeta->setStageBlockData(blockLocationX, blockLocationY, true);
 
 	switch (DrawType)
 	{
@@ -182,8 +185,7 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 	{
 		chara->Landing(blockLoc.y);
 	}
-	// 下から
-	else if (objectLoc.y >= (blockLoc.y + blockSize.height - 40) && chara->GetDirection().y <= 0.f) 
+	else if (objectLoc.y >= (blockLoc.y + blockSize.height-20) && chara->GetDirection().y <= 0.f) 
 	{
 		// Dropwidth以上ブロックからはみ出してないか
 		if ((objectLoc.x + objectSize.width - dropWidth) <= (blockLoc.x + blockSize.width) 
@@ -196,19 +198,19 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 		}
 		else
 		{
-			int blockLocationX = blockLoc.x / BLOCK_WIDTH;
-			int blockLocationY = blockLoc.y / BLOCK_HEIGHT;
+			int blockLocationX = (int)blockLoc.x / (int)BLOCK_WIDTH;
+			int blockLocationY = (int)blockLoc.y / (int)BLOCK_HEIGHT;
 			// 右にずれる
 			if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2)
 			{
- 				if (stageBlockData[blockLocationX + 1][blockLocationY] != true) {
+				if (blockdeta->getStageBlockData(blockLocationX + 1, blockLocationY) != true) {
 					objectLoc.x = blockLoc.x + blockSize.width;
 				}
 			}
 			// 左にずれる
 			else
 			{
-				if (stageBlockData[blockLocationX - 1][blockLocationY] != true) {
+				if (blockdeta->getStageBlockData(blockLocationX - 1, blockLocationY) != true) {
 					objectLoc.x = blockLoc.x - objectSize.width;
 				}
 			}
@@ -221,25 +223,20 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 			object->SetOldLocationX();
 		}
 		// 左から
-
-
 		else {
  			object->SetOldLocationX();
 		}
-		if (object ->GetObjectType() == ObjectType::Player&& chara->GetIsKnockBack()); {
-			chara->SetKnockBackCount(PLAYER_KNOCKBACK_TIME);
+		if (object ->GetObjectType() == ObjectType::Player&& chara->GetIsKnockBack())
+		{
+			chara->SetKnockBackCount(int (PLAYER_KNOCKBACK_TIME));
 		}
+		// oldLocationがブロック内になってしまった場合強制的に外に出す
 		Vector2D ba = object->GetOldLocation();
-		if (blockLoc.x < ba.x && ba.x < blockLoc.x + (int)BLOCK_WIDTH|| blockLoc.y < ba.y && ba.y < blockLoc.y + (int)BLOCK_HEIGHT ||
-			blockLoc.x < ba.x+objectSize.width && ba.x + objectSize.width < blockLoc.x + (int)BLOCK_WIDTH || blockLoc.y < ba.y + objectSize.height && ba.y + objectSize.height < blockLoc.y + (int)BLOCK_HEIGHT) {
-			
-			if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
-				objectLoc.x = blockLoc.x + blockSize.width;
-			}
-			else {
-				objectLoc.x = blockLoc.x - objectSize.width;
-			}
+		if (blockLoc.x <= ba.x && ba.x <= blockLoc.x + (int)BLOCK_WIDTH|| blockLoc.y <= ba.y && ba.y <= blockLoc.y + (int)BLOCK_HEIGHT ||
+			blockLoc.x <= ba.x+objectSize.width && ba.x + objectSize.width <= blockLoc.x + (int)BLOCK_WIDTH || blockLoc.y <= ba.y + objectSize.height && ba.y + objectSize.height < blockLoc.y + (int)BLOCK_HEIGHT) {
+			objectLoc.x = objectLoc.x + (move.x * -1);
 		}
+		chara->SetLocationX(objectLoc.x);
 		move.x = 0;
 		chara->SetMove(move);
 	}

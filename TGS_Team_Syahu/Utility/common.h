@@ -16,7 +16,7 @@
 #define WORLD_WIDTH		BLOCK_WIDTH * WORLD_BLOCK_X				//ワールドの横幅
 #define WORLD_HEIGHT	BLOCK_HEIGHT * WORLD_BLOCK_Y			//ワールドの縦幅
 
-#define NOW_LOAD_STAGE 0
+#define NOW_LOAD_STAGE 1										//現在読み込んでいるステージ
 
 #define GROUND_LINE		WORLD_HEIGHT - 100						//地面
 

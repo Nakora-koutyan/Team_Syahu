@@ -6,6 +6,7 @@
 #include"../../Actor/Character/Enemy/LargeSwordEnemy.h"
 #include"../../Actor/Character/Enemy/DaggerEnemy.h"
 #include"../../Map/StageBlock.h"
+#include"../../Map/BlockDeta.h"
 #include"../Edit/Edit.h"
 #include"../Help/HelpScene.h"
 #include"../../ResourceManager/ResourceManager.h"
@@ -53,8 +54,6 @@ void GameMainScene::Finalize()
 SceneBase* GameMainScene::Update()
 {
 	ResourceManager::PlayBGM("gamemain");
-
-	HitCheck();
 
 	for (auto i = 0; i < object.size(); i++)
 	{
@@ -112,6 +111,8 @@ SceneBase* GameMainScene::Update()
 			}
 		}
 	}
+
+	HitCheck();
 
 #ifdef DEBUG
 

@@ -50,7 +50,9 @@ SceneBase* GameOverScene::Update()
 	}
 	else
 	{
-		if ((KeyInput::GetKey(KEY_INPUT_SPACE) || PadInput::OnButton(XINPUT_BUTTON_A)))
+		if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
+			PadInput::OnButton(XINPUT_BUTTON_A) || PadInput::OnButton(XINPUT_BUTTON_B) ||
+			PadInput::OnButton(XINPUT_BUTTON_X) || PadInput::OnButton(XINPUT_BUTTON_Y)))
 		{
 			ResourceManager::PlaySE("cursorSelect");
 
@@ -112,6 +114,4 @@ void GameOverScene::Draw() const
 	DrawGraph(475, 460, ResourceManager::GetImage("GameOver/BackTitleText"), TRUE);
 	//カーソル
 	DrawRotaGraphF(420, 410 + cursorLocation.y, 1, DEGREE_TO_RADIAN(90.f), ResourceManager::GetImage("UI/cursor"), TRUE);
-	//Button
-	DrawGraph(SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, ResourceManager::GetImage("UI/ButtonA"), TRUE);
 }
