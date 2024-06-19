@@ -209,7 +209,7 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 			else
 			{
 				if (stageBlockData[blockLocationX - 1][blockLocationY] != true) {
-					objectLoc.x = blockLoc.x - blockSize.width;
+					objectLoc.x = blockLoc.x - objectSize.width;
 				}
 			}
 			object->SetLocation(objectLoc);
@@ -219,17 +219,26 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 		//右から
 		if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
 			object->SetOldLocationX();
-			Vector2D ba = object->GetLocation();
-			if (ba.x) {
-
-			}
 		}
 		// 左から
+
+
 		else {
-			object->SetOldLocationX();
+ 			object->SetOldLocationX();
 		}
 		if (object ->GetObjectType() == ObjectType::Player&& chara->GetIsKnockBack()); {
 			chara->SetKnockBackCount(PLAYER_KNOCKBACK_TIME);
+		}
+		Vector2D ba = object->GetOldLocation();
+		if (blockLoc.x < ba.x && ba.x < blockLoc.x + (int)BLOCK_WIDTH|| blockLoc.y < ba.y && ba.y < blockLoc.y + (int)BLOCK_HEIGHT ||
+			blockLoc.x < ba.x+objectSize.width && ba.x + objectSize.width < blockLoc.x + (int)BLOCK_WIDTH || blockLoc.y < ba.y + objectSize.height && ba.y + objectSize.height < blockLoc.y + (int)BLOCK_HEIGHT) {
+			
+			if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
+				objectLoc.x = blockLoc.x + blockSize.width;
+			}
+			else {
+				objectLoc.x = blockLoc.x - objectSize.width;
+			}
 		}
 		move.x = 0;
 		chara->SetMove(move);

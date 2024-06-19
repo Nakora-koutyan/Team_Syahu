@@ -80,6 +80,9 @@ public:
 	//ワールド座標yの設定
 	void SetLocationY(const float y) { this->location.y = y; }
 
+	//1つ前の座標取得
+	Vector2D GetOldLocation() { return oldLocation; }
+
 	//1つ前の座標に戻す
 	void SetOldLocation() { this->location = this->oldLocation; }
 
