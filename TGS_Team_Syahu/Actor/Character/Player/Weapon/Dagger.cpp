@@ -2,6 +2,8 @@
 #include"../../Player/Player.h"
 #include"../../../Camera/Camera.h"
 #include"../../../../ResourceManager/ResourceManager.h"
+#include"../InputControl/Pad/PadInput.h"
+#include"../InputControl/Key/KeyInput.h"
 
 Dagger::Dagger()
 { 
@@ -133,27 +135,58 @@ void Dagger::Attack(const CharaBase* chara)
 		move.x = -DAGGER_SPEED;
 		imageAngle += DEGREE_TO_RADIAN(-45.f);
 	}
-	//下に出す
+	//空中なら
 	else if (chara->GetIsAir())
 	{
 		isAirAttack = true;
 		directionVector.y = DAGGER_LENGTH;
-		move.y = DAGGER_SPEED * sin(DEGREE_TO_RADIAN(150.f));
+		//下入力をしたら
+		if (PadInput::GetLStick().y < -0.2 || KeyInput::GetKeyDown(KEY_INPUT_S))
+		{
+			//斜めに出す
+			move.y = DAGGER_SPEED * sin(DEGREE_TO_RADIAN(150.f));
+			if (direction > 0)
+			{
+				imageAngle += DEGREE_TO_RADIAN(90.f);
+				move.x = -10.f * cos(DEGREE_TO_RADIAN(-150.f));
+			}
+			else if (direction < 0)
+			{
+				imageAngle += DEGREE_TO_RADIAN(-90.f);
+				move.x = 10.f * cos(DEGREE_TO_RADIAN(-150.f));
+			}
+		}
+		//下入力をしてないなら
+		else
+		{
+			//横に出す
+			if (direction > 0)
+			{
+				imageAngle += DEGREE_TO_RADIAN(45.f);
+				directionVector.x = DAGGER_LENGTH;
+				directionVector.y = 0.f;
+				move.x = DAGGER_SPEED;
+			}
+			else if (direction < 0)
+			{
+				imageAngle += DEGREE_TO_RADIAN(-45.f);
+				directionVector.x = -DAGGER_LENGTH;
+				directionVector.y = 0.f;
+				move.x = -DAGGER_SPEED;
+			}
+		}
+
 		//右に出す
 		if (direction > 0)
 		{
 			location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
 			directionVector.x = DAGGER_LENGTH;
-			move.x = -10.f * cos(DEGREE_TO_RADIAN(-150.f));
-			imageAngle += DEGREE_TO_RADIAN(90.f);
 		}
 		//左に出す
 		else
 		{
 			location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
 			directionVector.x = -DAGGER_LENGTH;
-			move.x = 10.f * cos(DEGREE_TO_RADIAN(-150.f));
-			imageAngle += DEGREE_TO_RADIAN(-90.f);
 		}
 	}
 }

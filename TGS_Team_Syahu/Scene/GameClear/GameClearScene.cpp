@@ -49,7 +49,9 @@ SceneBase* GameClearScene::Update()
 	}
 	else
 	{
-		if ((KeyInput::GetKey(KEY_INPUT_SPACE) || PadInput::OnButton(XINPUT_BUTTON_A)))
+		if ((KeyInput::GetKey(KEY_INPUT_SPACE) || 
+			PadInput::OnButton(XINPUT_BUTTON_A)|| PadInput::OnButton(XINPUT_BUTTON_B)||
+			PadInput::OnButton(XINPUT_BUTTON_X)|| PadInput::OnButton(XINPUT_BUTTON_Y)))
 		{
 			return new TitleScene();
 		}
@@ -84,7 +86,4 @@ void GameClearScene::Draw() const
 
 	//プレイヤー
 	DrawRotaGraph(650, 625, 1, 0, ResourceManager::GetDivImage("Player/player", playerIdle), TRUE);
-
-	//Button
-	DrawGraph(SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, ResourceManager::GetImage("UI/ButtonA"), TRUE);
 }

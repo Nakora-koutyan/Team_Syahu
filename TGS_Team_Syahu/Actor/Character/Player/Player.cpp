@@ -15,7 +15,7 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	direction.x = 1.f;
 	direction.y = 0.f;
 #ifdef DEBUG
-	hp = 10000.f;
+	hp = 100.f;
 #else
 	hp = PLAYER_MAX_HP;
 #endif // DEBUG
@@ -427,10 +427,6 @@ void Player::Landing(const float height)
 		location.y = height - area.height;
 		jumpEffectLocation.y = height;
 		jumpCount = 0;
-		if (move.y > 30)
-		{
-			hp -= move.y;
-		}
 		move.y = 0.f;
 		isAir = false;
 		//空中の画像かつ動いていないなら
@@ -539,14 +535,17 @@ void Player::Movement()
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
-		PadInput::OnButton(XINPUT_BUTTON_A)) && /*!isAir &&*/ !isKnockBack && !isAttack && 
-		!isBackStep && hp > 0)
+		PadInput::OnButton(XINPUT_BUTTON_A)) && 
+		!isKnockBack && !isAttack && 
+		!isBackStep && hp > 0 && 
+		rapier->GetIsShow()==false)
 #else
 	//ジャンプ
 	if ((KeyInput::GetKey(KEY_INPUT_SPACE) ||
 		KeyInput::GetKey(KEY_INPUT_W) ||
 		PadInput::OnButton(XINPUT_BUTTON_A)) && jumpCount < 2 && !isKnockBack && !isAttack && 
-		!isBackStep && hp > 0)
+		!isBackStep && hp > 0 &&
+		rapier->GetIsShow() == false)
 #endif // DEBUG
 	{
 		ResourceManager::PlaySE("jump", FALSE);
@@ -620,7 +619,7 @@ void Player::Attack()
 
 	//武器攻撃
 	if ((KeyInput::GetButton(MOUSE_INPUT_RIGHT) || PadInput::OnButton(XINPUT_BUTTON_Y) || PadInput::OnButton(XINPUT_BUTTON_X)) &&
-		attackCoolTime <= 0.f && !isKnockBack && actionState == Action::None && hp > 0)
+		attackCoolTime <= 0.f && !isHit && actionState == Action::None && hp > 0)
 	{
 		//武器攻撃
 		if (weaponType != Weapon::None)
@@ -632,10 +631,6 @@ void Player::Attack()
 			{
 				attackCoolTime = PLAYER_LARGESWORD_COOLTIME;
 				largeSword->Attack(this);
-				if (largeSword->GetIsAirAttack())
-				{
-					weaponDurability[stockCount] -= GetDurability(stock[stockCount], true);
-				}
 			}
 			//短剣
 			else if (stock[stockCount] == Weapon::Dagger)
@@ -716,6 +711,7 @@ void Player::StockSelect()
 		{
 			stockCount = PLAYER_MAX_STOCK - 1;
 		}	
+
 		if (stock[stockCount] == Weapon::None)
 		{
 			isEquipment = false;
@@ -723,6 +719,14 @@ void Player::StockSelect()
 		}
 		else if (stock[stockCount] != Weapon::None && isEquipment)
 		{
+			weaponType = stock[stockCount];
+		}
+		else if (stock[stockCount] != Weapon::None && !isEquipment)
+		{
+			isEquipment = true;
+			equipmentAnimFlg = true;
+			actionState = Action::Equipment;
+			invincibleFlg = true;
 			weaponType = stock[stockCount];
 		}
 
@@ -744,6 +748,14 @@ void Player::StockSelect()
 		}
 		else if (stock[stockCount] != Weapon::None && isEquipment)
 		{
+			weaponType = stock[stockCount];
+		}
+		else if (stock[stockCount] != Weapon::None && !isEquipment)
+		{
+			isEquipment = true;
+			equipmentAnimFlg = true;
+			actionState = Action::Equipment;
+			invincibleFlg = true;
 			weaponType = stock[stockCount];
 		}
 	}
@@ -996,6 +1008,8 @@ void Player::BackStep(const float angle, const float speed, const float gravityV
 	{
 		isBackStep = false;
 		rapier->SetStepFlg(false);
+		rapier->SetIsShow(false);
+		isAttack = false;
 	}
 
 	if (rapier->GetStepFlg() && !isKnockBack && !isAir)
@@ -1025,6 +1039,8 @@ void Player::BackStep(const float angle, const float speed, const float gravityV
 		{
 			isBackStep = false;
 			invincibleFlg = false;
+			isAttack = false;
+			rapier->SetIsShow(false);
 		}
 	}
 }
@@ -1043,7 +1059,7 @@ int Player::GetDurability(const Weapon type, const bool useFlg)
 
 	case Weapon::LargeSword:
 		durability = PLAYER_WEAPON_DURABILITY;
-		if (flg)durability /= 2;
+		if (flg)durability /= 4;
 		break;
 
 	case Weapon::Dagger:
@@ -1053,7 +1069,7 @@ int Player::GetDurability(const Weapon type, const bool useFlg)
 
 	case Weapon::Rapier:
 		durability = PLAYER_WEAPON_DURABILITY;
-		if (flg)durability /= 4;
+		if (flg)durability /= 7;
 		break;
 
 	default:

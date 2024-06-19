@@ -76,10 +76,10 @@ void UI::PlayerHPBar() const
 
 void UI::PlayerStock() const
 {
-	//50は画像サイズ
+	//i*[50]は画像サイズ
 	for (int i = 0; i < 5; i++)
 	{
-		DrawGraph(20 + (i * 50), 38, ResourceManager::GetImage("UI/stock"), TRUE);
+		DrawGraph(50 + (i * 50), 38, ResourceManager::GetImage("UI/stock"), TRUE);
 
 		if (stockIcon[i] == Weapon::None)
 		{
@@ -87,24 +87,24 @@ void UI::PlayerStock() const
 		}
 		else if (stockIcon[i] == Weapon::LargeSword)
 		{
-			DrawGraph(30 + (i * 50), 48, ResourceManager::GetImage("UI/largeSword"), TRUE);
+			DrawGraph(60 + (i * 50), 48, ResourceManager::GetImage("UI/largeSword"), TRUE);
 		}
 		else if (stockIcon[i] == Weapon::Dagger)
 		{
-			DrawGraph(30 + (i * 50), 48, ResourceManager::GetImage("UI/dagger"), TRUE);
+			DrawGraph(60 + (i * 50), 48, ResourceManager::GetImage("UI/dagger"), TRUE);
 			SetFontSize(14);
-			DrawFormatString(30 + (i * 50) + 23, 66, 0xffffff, "%d", playerDaggerCnt[i] + 1);
+			DrawFormatString(60 + (i * 50) + 23, 66, 0xffffff, "%d", playerDaggerCnt[i] + 1);
 			SetFontSize(16);
 		}
 		else if (stockIcon[i] == Weapon::Rapier)
 		{
-			DrawGraph(30 + (i * 50), 48, ResourceManager::GetImage("UI/rapier"), TRUE);
+			DrawGraph(60 + (i * 50), 48, ResourceManager::GetImage("UI/rapier"), TRUE);
 		}
 	}
 
 	decisionFlg ?
-		DrawGraph(20 + (selectCount * 50), 38, ResourceManager::GetImage("UI/kariSelect"), TRUE) :
-		DrawGraph(20 + (selectCount * 50), 38, ResourceManager::GetImage("UI/selectStock"), TRUE);
+		DrawGraph(50 + (selectCount * 50), 38, ResourceManager::GetImage("UI/kariSelect"), TRUE) :
+		DrawGraph(50 + (selectCount * 50), 38, ResourceManager::GetImage("UI/selectStock"), TRUE);
 }
 
 void UI::EnemyHPBar(const Vector2D location, const float hp) const
@@ -157,16 +157,16 @@ void UI::PlayerEquipmentWeapon() const
 
 void UI::Button() const
 {
-	//Button
+	//ボタン
 	DrawGraph(SCREEN_WIDTH - 160, SCREEN_HEIGHT - 160, ResourceManager::GetImage("UI/ButtonA"), TRUE);
 	DrawGraph(SCREEN_WIDTH - 160, SCREEN_HEIGHT - 100, ResourceManager::GetImage("UI/ButtonB"), TRUE);
 	DrawGraph(SCREEN_WIDTH - 210, SCREEN_HEIGHT - 40, ResourceManager::GetImage("UI/ButtonX"), TRUE);
 	DrawGraph(SCREEN_WIDTH - 160, SCREEN_HEIGHT - 40, ResourceManager::GetImage("UI/ButtonY"), TRUE);
-	//String
+	//文字
 	DrawGraph(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 65, ResourceManager::GetImage("UI/Attack"), TRUE);
 	DrawGraph(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 185, ResourceManager::GetImage("UI/Jump"), TRUE);
 	DrawGraph(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 125, ResourceManager::GetImage("UI/Steal"), TRUE);
 	//LR
-	DrawGraph(0, 95, ResourceManager::GetImage("UI/ButtonLB"), TRUE);
-	DrawGraph(225, 95, ResourceManager::GetImage("UI/ButtonRB"), TRUE);
+	DrawGraph(13, 55, ResourceManager::GetImage("UI/ButtonLB"), TRUE);
+	DrawGraph(305, 55, ResourceManager::GetImage("UI/ButtonRB"), TRUE);
 }
