@@ -142,11 +142,8 @@ void LargeSwordEnemy::Finalize()
 //描画以外の更新
 void LargeSwordEnemy::Update()
 {
-	//現在の座標をスクリーン座標へ変換
-	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 0.2);
 	KnockBack(this,FPS * 0.5, knockBackMove);
-	Gravity();
 	Landing(WORLD_HEIGHT);
 
 	//エネミーアニメーション
@@ -219,10 +216,6 @@ void LargeSwordEnemy::Update()
 	largeSwordCollisionBox->SetScreenLocation(Camera::ConvertScreenPosition(largeSwordCollisionBox->GetLocation()));
 
 	oldLocation = location;
-
-	//移動処理
-	location.x += move.x;
-	location.y += move.y;
 
 	//画面端を越えない
 	DontCrossBorder();

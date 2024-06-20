@@ -136,4 +136,7 @@ protected:
 	//重力処理
 	void Gravity();
 
+	//移動の更新処理
+	void MovementUpdate();
+
 };

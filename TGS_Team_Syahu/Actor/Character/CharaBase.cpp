@@ -1,4 +1,5 @@
-#include "CharaBase.h"
+#include"CharaBase.h"
+#include"../Actor/Camera/Camera.h"
 
 CharaBase::CharaBase()
 {
@@ -49,7 +50,7 @@ void CharaBase::Finalize()
 
 void CharaBase::Update()
 {
-	Gravity();
+
 }
 
 void CharaBase::Draw() const
@@ -73,6 +74,18 @@ void CharaBase::Landing(const float height)
 		isAir = true;
 	}
 
+}
+
+void CharaBase::MovementUpdate()
+{
+	//重力
+	Gravity();
+
+	//座標に加算
+	location.x += move.x;
+	location.y += move.y;
+
+	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void CharaBase::DamageInterval(const double interval)

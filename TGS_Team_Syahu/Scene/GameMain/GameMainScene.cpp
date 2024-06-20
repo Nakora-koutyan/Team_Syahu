@@ -76,6 +76,11 @@ SceneBase* GameMainScene::Update()
 			else
 			{
 				object[i]->Update();
+				if (object[i]->GetObjectType() == ObjectType::Player || object[i]->GetObjectType() == ObjectType::Enemy)
+				{
+					CharaBase* chara = static_cast<CharaBase*>(object[i]);
+					chara->MovementUpdate();
+				}
 			}
 
 			if (object[i]->GetObjectType() == ObjectType::Player || object[i]->GetObjectType() == ObjectType::Enemy)
