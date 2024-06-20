@@ -28,6 +28,9 @@ void ResourceManager::Initialize()
 	SetImage("UI/barBackground");
 	SetImage("UI/healthBar");
 	SetImage("UI/durabilityBar");
+	SetImage("UI/attackCoolTimeBar");
+	SetImage("UI/barFram");
+	SetImage("UI/barFramEnemy");
 	SetImage("UI/stock");
 	SetImage("UI/selectStock");
 	SetImage("UI/kariSelect");

@@ -19,6 +19,7 @@ UI::UI()
 	selectCount = 0;
 	
 	playerHp = 0.f;
+	playerAttackCoolTime = 0.f;
 
 	decisionFlg = false;
 }
@@ -31,6 +32,8 @@ UI::~UI()
 void UI::Update(const Player* player)
 {
 	this->playerHp = player->GetHp() * 3.f;
+	this->playerAttackCoolTime = 50.f - player->GetAttackCoolTime();
+	if (playerAttackCoolTime < 0)playerAttackCoolTime = 0;
 	playerLocation.x = player->GetCenterScreenLocation().x;
 	playerLocation.y = player->GetMinScreenLocation().y;
 
@@ -57,6 +60,8 @@ void UI::Draw() const
 	PlayerStock();
 
 	PlayerEquipmentWeapon();
+
+	PlayerAttackCoolTimeBar();
 
 	Button();
 }
@@ -117,6 +122,10 @@ void UI::EnemyHPBar(const Vector2D location, const float hp) const
 	(location.x - 20.f, location.y - 20.f,
 		(location.x + hp) - 20.f, (location.y + 11.f) - 20.f,
 		ResourceManager::GetImage("UI/healthBar"), TRUE);
+	DrawExtendGraphF
+	(location.x - 20.f, location.y - 20.f,
+		(location.x + hp) - 20.f, (location.y + 11.f) - 20.f,
+		ResourceManager::GetImage("UI/barFramEnemy"), TRUE);
 }
 
 void UI::PlayerEquipmentWeapon() const
@@ -125,7 +134,8 @@ void UI::PlayerEquipmentWeapon() const
 	{
 		if (stockIcon[selectCount] == Weapon::LargeSword)
 		{
-			DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/largeSword"), TRUE);
+			DrawGraphF(playerLocation.x - 25.f, playerLocation.y - 80.f, ResourceManager::GetImage("UI/stock"), TRUE);
+			DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 71.f, ResourceManager::GetImage("UI/largeSword"), TRUE);
 			DrawExtendGraphF
 			(playerLocation.x - 25.f, playerLocation.y - 18.f,
 				(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
@@ -134,15 +144,21 @@ void UI::PlayerEquipmentWeapon() const
 			(playerLocation.x - 25.f, playerLocation.y - 18.f,
 				(playerLocation.x + playerWeaponDurability[selectCount]) - 25.f, (playerLocation.y + 11.f) - 18.f,
 				ResourceManager::GetImage("UI/durabilityBar"), TRUE);
+			DrawExtendGraphF
+			(playerLocation.x - 25.f, playerLocation.y - 18.f,
+				(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
+				ResourceManager::GetImage("UI/barFram"), TRUE);
 		}
 		else if (stockIcon[selectCount] == Weapon::Dagger)
 		{
-			DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/dagger"), TRUE);
-			DrawFormatStringF(playerLocation.x - 5.f, playerLocation.y - 20.f, 0xffffff, "%d", playerDaggerCnt[selectCount] + 1);
+			DrawGraphF(playerLocation.x - 25.f, playerLocation.y - 80.f, ResourceManager::GetImage("UI/stock"), TRUE);
+			DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 71.f, ResourceManager::GetImage("UI/dagger"), TRUE);
+			DrawFormatStringF(playerLocation.x - 5.f, playerLocation.y - 18.f, 0xffffff, "%d", playerDaggerCnt[selectCount] + 1);
 		}
 		else if (stockIcon[selectCount] == Weapon::Rapier)
 		{
-			DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 55.f, ResourceManager::GetImage("UI/rapier"), TRUE);
+			DrawGraphF(playerLocation.x - 25.f, playerLocation.y - 80.f, ResourceManager::GetImage("UI/stock"), TRUE);
+			DrawGraphF(playerLocation.x - 16.f, playerLocation.y - 71.f, ResourceManager::GetImage("UI/rapier"), TRUE);
 			DrawExtendGraphF
 			(playerLocation.x - 25.f, playerLocation.y - 18.f,
 				(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
@@ -151,7 +167,31 @@ void UI::PlayerEquipmentWeapon() const
 			(playerLocation.x - 25.f, playerLocation.y - 18.f,
 				(playerLocation.x + playerWeaponDurability[selectCount]) - 25.f, (playerLocation.y + 11.f) - 18.f,
 				ResourceManager::GetImage("UI/durabilityBar"), TRUE);
+			DrawExtendGraphF
+			(playerLocation.x - 25.f, playerLocation.y - 18.f,
+				(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 18.f,
+				ResourceManager::GetImage("UI/barFram"), TRUE);
+
 		}
+	}
+}
+
+void UI::PlayerAttackCoolTimeBar() const
+{
+	if (decisionFlg)
+	{
+		DrawExtendGraphF
+		(playerLocation.x - 25.f, playerLocation.y - 29.f,
+			(playerLocation.x + 50.f) - 25.f, (playerLocation.y + 11.f) - 29.f,
+			ResourceManager::GetImage("UI/barBackground"), FALSE);
+		DrawExtendGraphF
+		(playerLocation.x - 25.f, playerLocation.y - 29.f,
+			(playerLocation.x + playerAttackCoolTime) - 25.f, (playerLocation.y + 11.f) - 29.f, 
+			ResourceManager::GetImage("UI/attackCoolTimeBar"), TRUE);
+		DrawExtendGraphF
+		(playerLocation.x - 25.f, playerLocation.y - 29.f,
+			(playerLocation.x + 50.f) - 25.f, (playerLocation.y +11.f) - 29.f,
+			ResourceManager::GetImage("UI/barFram"), TRUE);
 	}
 }
 

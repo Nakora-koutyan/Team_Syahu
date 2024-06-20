@@ -154,7 +154,10 @@ void GameMainScene::Draw() const
 			if (ob->GetObjectType() == ObjectType::Enemy)
 			{
 				EnemyBase* enemy = static_cast<EnemyBase*>(ob);
-				ui->EnemyHPBar(enemy->GetScreenLocation(), enemy->GetHp());
+				if (enemy->GetEnemyStatus() != EnemyStatus::Death)
+				{
+					ui->EnemyHPBar(enemy->GetScreenLocation(), enemy->GetHp());
+				}
 			}
 		}
 	}
