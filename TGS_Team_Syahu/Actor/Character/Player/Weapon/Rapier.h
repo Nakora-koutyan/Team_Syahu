@@ -79,5 +79,8 @@ public:
 
 	//空中攻撃かどうかを取得
 	bool GetIsAirAttack()const { return isAirAttack; }
+
+	//攻撃終了フラグの取得
+	bool GetAttackEndFlg()const { return attackEndFlg; }
 };
 
