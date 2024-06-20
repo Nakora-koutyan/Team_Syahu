@@ -31,6 +31,7 @@ CharaBase::CharaBase()
 	imageInversionFlg = false;
 	deathFlg = false;
 	invincibleFlg = false;
+	hitBlockFlg = false;
 }
 
 CharaBase::~CharaBase()
