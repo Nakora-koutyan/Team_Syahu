@@ -5,26 +5,38 @@
 enum Manual
 {
 	Operation,
-	Enemy
+	Enemy,
+	PlayerOperation,
+	PlayerWeapon
+};
+struct AllowDirection
+{
+	
 };
 
 class HelpScene :public SceneBase
 {
 private:
-	//テキスト：「Enemy」
+	//テキスト：「Monsters」
 	int enemyTextImage;
 	//テキスト：「Operation」
 	int operationTextImage;
+	//テキスト：「Player」
+	int playerTextImage;
 	
 	//現在の説明対象を示すテキスト
 	int nowManualText;
+	//現在の説明書画像
+	int nowManualImage;
 
 	//敵の説明書画像
 	int enemyManualImage;
 	//操作方法の説明書画像
 	int operationManualImage;
-	//現在の説明書画像
-	int nowManualImage;
+	//プレイヤーの2段ジャンプに関する説明書画像
+	int playerOperationManualImage;
+	//プレイヤーの武器に関する説明書画像
+	int playerWeaponManualImage;
 
 	//メニュー番号
 	int menuNum;
@@ -39,6 +51,9 @@ private:
 	int buttonMoveInterval;
 	//ボタン画像の切り替えフラグ
 	bool buttonImageFlg;
+
+	//ボタンの切り替えフラグ
+	bool buttonControlFlg;
 
 	//「Back」の表示
 	int backToHelp;
