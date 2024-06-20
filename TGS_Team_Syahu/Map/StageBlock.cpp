@@ -219,9 +219,6 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 	}
 	else {
 		object->SetOldLocationX();
-		objectLoc = object->GetLocation();
-		objectLoc.x = objectLoc.x - move.x;
-		chara->SetLocationX(objectLoc.x);
 
 		if (object ->GetObjectType() == ObjectType::Player&& chara->GetIsKnockBack())
 		{

@@ -1,5 +1,5 @@
 #include"CharaBase.h"
-#include"../Actor/Camera/Camera.h"
+#include"../../Actor/Camera/Camera.h"
 
 CharaBase::CharaBase()
 {
