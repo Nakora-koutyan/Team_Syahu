@@ -19,6 +19,7 @@ private:
 	int playerWeaponDurability[5];						//耐久値
 
 	float playerHp;										//プレイヤーのHP
+	float playerAttackCoolTime;							//プレイヤーの攻撃のクールタイム
 
 	bool decisionFlg;									//決定している？
 
@@ -36,6 +37,10 @@ public:
 	void Draw()const;
 
 public:
+	//エネミーのHPバー
+	void EnemyHPBar(const Vector2D location, const float hp)const;
+
+private:
 	//プレイヤーのHPバー
 	void PlayerHPBar()const;
 
@@ -45,8 +50,8 @@ public:
 	//プレイヤーの装備している武器
 	void PlayerEquipmentWeapon()const;
 
-	//エネミーのHPバー
-	void EnemyHPBar(const Vector2D location, const float hp)const;
+	//プレイヤーの攻撃のクールタイム
+	void PlayerAttackCoolTimeBar()const;
 
 	//ボタンのUI
 	void Button()const;

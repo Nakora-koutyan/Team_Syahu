@@ -20,8 +20,7 @@
 #define PLAYER_MAX_HP					100.f			//最大HP
 #define PLAYER_DAMAGE					5.f				//プレイヤーの基礎ダメージ値
 #define PLAYER_DAMAGE_INTERVAL			FPS * 1.0		//プレイヤーが再度ダメージを受けるまでの時間
-#define PLAYER_NORMALWEAPON_COOLTIME	FPS * 1.f		//投げるのクールタイム
-#define PLAYER_STEAL_COOLTIME			FPS * 1.2f		//奪うのクールタイム
+#define PLAYER_STEAL_COOLTIME			FPS * 0.5f		//奪うのクールタイム
 #define PLAYER_LARGESWORD_COOLTIME		FPS * 1.5f		//大剣のクールタイム
 #define PLAYER_DAGGER_COOLTIME			FPS * 0.3f		//短剣のクールタイム
 #define PLAYER_RAPIER_COOLTIME			FPS * 1.0f		//レイピアのクールタイム
@@ -130,6 +129,9 @@ public:
 
 	//短剣の本数を取得
 	int GetDaggerCount(const int element)const { return daggerCount[element]; }
+
+	//攻撃のクールタイムを取得
+	float GetAttackCoolTime()const { return attackCoolTime; }
 
 	//装備中かどうか取得
 	bool GetIsEquipment()const { return isEquipment; }

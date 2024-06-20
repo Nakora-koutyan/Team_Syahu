@@ -268,7 +268,7 @@ void Rapier::Attack(const CharaBase* chara)
 
 	if (chara->GetIsAir())
 	{
-		chargeTime = RAPIER_CHARGE_TIME;
+		chargeTime = int(RAPIER_CHARGE_TIME);
 		isAirAttack = true;
 	}
 
