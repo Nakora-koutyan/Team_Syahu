@@ -218,26 +218,31 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 		}
 	}
 	else {
-		//右から
-		if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2) {
-			object->SetOldLocationX();
-		}
-		// 左から
-		else {
- 			object->SetOldLocationX();
-		}
+		object->SetOldLocationX();
+		objectLoc = object->GetLocation();
+		objectLoc.x = objectLoc.x - move.x;
+		chara->SetLocationX(objectLoc.x);
+
 		if (object ->GetObjectType() == ObjectType::Player&& chara->GetIsKnockBack())
 		{
 			chara->SetKnockBackCount(int (PLAYER_KNOCKBACK_TIME));
 		}
 		// oldLocationがブロック内になってしまった場合強制的に外に出す
 		Vector2D ba = object->GetOldLocation();
-		if (blockLoc.x <= ba.x && ba.x <= blockLoc.x + (int)BLOCK_WIDTH|| blockLoc.y <= ba.y && ba.y <= blockLoc.y + (int)BLOCK_HEIGHT ||
-			blockLoc.x <= ba.x+objectSize.width && ba.x + objectSize.width <= blockLoc.x + (int)BLOCK_WIDTH || blockLoc.y <= ba.y + objectSize.height && ba.y + objectSize.height < blockLoc.y + (int)BLOCK_HEIGHT) {
-			objectLoc.x = objectLoc.x + (move.x * -1);
+		if (blockLoc.x <= ba.x && ba.x <= blockLoc.x + (int)BLOCK_WIDTH || blockLoc.y <= ba.y && ba.y <= blockLoc.y + (int)BLOCK_HEIGHT ||
+ 			blockLoc.x <= ba.x + objectSize.width && ba.x + objectSize.width <= blockLoc.x + (int)BLOCK_WIDTH || blockLoc.y <= ba.y + objectSize.height && ba.y + objectSize.height < blockLoc.y + (int)BLOCK_HEIGHT) {
+			if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2)
+			{
+				objectLoc.x = blockLoc.x + blockSize.width;
+			}
+			// 左にずれる
+			else
+			{
+				objectLoc.x = blockLoc.x - objectSize.width;
+			}
+			move.x = 0;
 		}
 		chara->SetLocationX(objectLoc.x);
-		move.x = 0;
 		chara->SetMove(move);
 	}
 }
