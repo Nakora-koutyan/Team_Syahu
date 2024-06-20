@@ -196,7 +196,6 @@ void Player::Update()
 		hp = 0;
 	}
 
-	screenLocation = Camera::ConvertScreenPosition(location);
 }
 
 void Player::Draw() const
@@ -580,12 +579,6 @@ void Player::Movement()
 		direction.y = 1.f;
 	}
 
-	//重力
-	Gravity();
-
-	//座標に加算
-	location.x += move.x;
-	location.y += move.y;
 
 	//左端を超えない
 	if (GetMinLocation().x < 0.f)

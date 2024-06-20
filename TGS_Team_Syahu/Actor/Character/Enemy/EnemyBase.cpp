@@ -92,13 +92,15 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 	if (chara->GetObjectType() == ObjectType::Player)
 	{
 		const Player* player = static_cast<const Player*>(chara);
-		if (chara->GetIsAttack() && player->GetIsEquipment() && player->GetStock(player->GetStockCount()) == Weapon::Rapier)
+		if (chara->GetIsAttack() && player->GetIsEquipment() && 
+			player->GetStock(player->GetStockCount()) == Weapon::Rapier && 
+			player->GetActionState() == Action::WeaponAttack)
 		{
 			length += RAPIER_LENGTH;
 		}
 	}
 
-	if (GetEnemyStatus() != EnemyStatus::Death && (abs(disX) < length))
+	if (GetEnemyStatus() != EnemyStatus::Death && (abs(disX) < length) && !chara->GetIsAttack())
 	{
 		float dif = length - abs(disX);
 

@@ -80,11 +80,8 @@ void NormalEnemy::Finalize()
 //描画以外の内容を更新
 void NormalEnemy::Update()
 {
-	//現在の座標をスクリーン座標へ変換
-	screenLocation = Camera::ConvertScreenPosition(location);
 	DamageInterval(FPS * 0.2);
 	KnockBack(this, FPS * 0.5f, knockBackMove);
-	Gravity();
 	Landing(WORLD_HEIGHT);
 	
 	//状態遷移
@@ -152,8 +149,6 @@ void NormalEnemy::Update()
 
 	oldLocation = location;
 
-	location.x += move.x;
-	location.y += move.y;
 }
 
 //描画に関する更新

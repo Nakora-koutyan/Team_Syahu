@@ -39,6 +39,7 @@ protected:
 	bool imageInversionFlg;		//画像反転フラグ
 	bool deathFlg;				//死亡フラグ
 	bool invincibleFlg;			//無敵フラグ
+	bool hitBlockFlg;			//ブロックにヒットした？
 
 public:
 	//コンストラクタ
@@ -61,6 +62,9 @@ public:
 
 	//着地
 	virtual void Landing(const float height);
+
+	//移動の更新処理
+	void MovementUpdate();
 
 public:
 	//ノックバックカウントを取得
@@ -110,6 +114,12 @@ public:
 
 	//無敵フラグを設定
 	void SetInvincibleFlg(const bool flg) { invincibleFlg = flg; }
+
+	//ブロックにヒットしたかどうか取得
+	bool GetHitBlockFlg()const { return hitBlockFlg; }
+
+	//ブロックにヒットしたかどうか設定
+	void SetHitBlockFlg(const bool flg) { hitBlockFlg = flg; }
 
 	//移動量の取得
 	Vector2D GetMove()const { return move; }

@@ -94,14 +94,10 @@ void DaggerEnemy::Finalize()
 //更新処理
 void DaggerEnemy::Update()
 {
-	//現在の座標をスクリーン座標へ変換
-	screenLocation = Camera::ConvertScreenPosition(location);
 	//ダメージ間隔
 	DamageInterval(FPS * 0.2);
 	//ノックバックした時の移動処理
 	KnockBack(this, FPS * 0.5, knockBackMove);
-	//重力を付与
-	Gravity();
 	//引数に指定した値よりも下方向に行けない
 	Landing(WORLD_HEIGHT);
 
@@ -186,9 +182,6 @@ void DaggerEnemy::Update()
 
 	oldLocation = location;
 
-	//座標更新
-	location.x += move.x;
-	location.y += move.y;
 }
 
 //描画

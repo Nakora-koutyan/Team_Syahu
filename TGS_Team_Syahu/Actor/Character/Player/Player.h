@@ -20,7 +20,7 @@
 #define PLAYER_MAX_HP					100.f			//最大HP
 #define PLAYER_DAMAGE					5.f				//プレイヤーの基礎ダメージ値
 #define PLAYER_DAMAGE_INTERVAL			FPS * 1.0		//プレイヤーが再度ダメージを受けるまでの時間
-#define PLAYER_STEAL_COOLTIME			FPS * 0.5f		//奪うのクールタイム
+#define PLAYER_STEAL_COOLTIME			FPS * 1.2f		//奪うのクールタイム
 #define PLAYER_LARGESWORD_COOLTIME		FPS * 1.5f		//大剣のクールタイム
 #define PLAYER_DAGGER_COOLTIME			FPS * 0.3f		//短剣のクールタイム
 #define PLAYER_RAPIER_COOLTIME			FPS * 1.0f		//レイピアのクールタイム
@@ -119,6 +119,9 @@ public:
 
 	//武器の数を取得
 	size_t GetWeaponSize()const { return weapon.size(); }
+
+	//行動状態を取得
+	Action GetActionState()const { return actionState; }
 
 public:
 	//ストックの番号を取得
