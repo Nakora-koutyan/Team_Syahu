@@ -62,6 +62,9 @@ public:
 	//着地
 	virtual void Landing(const float height);
 
+	//移動の更新処理
+	void MovementUpdate();
+
 public:
 	//ノックバックカウントを取得
 	int GetKnockBackCount()const { return knockBackCount; }
@@ -135,8 +138,5 @@ protected:
 
 	//重力処理
 	void Gravity();
-
-	//移動の更新処理
-	void MovementUpdate();
 
 };
