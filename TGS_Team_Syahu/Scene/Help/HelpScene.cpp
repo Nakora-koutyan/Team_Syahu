@@ -10,7 +10,8 @@ HelpScene::HelpScene() :enemyTextImage(NULL), operationTextImage(NULL), nowManua
 menuNum(0), manualType{},helpScreen(NULL), enemyManualImage(NULL), operationManualImage(NULL), 
 nowManualImage(NULL),buttonGuideImage01(NULL),buttonGuideImage02(NULL),nowButton(NULL),
 buttonMoveInterval(0),buttonImageFlg(false),backToHelp(NULL),allowImage01(NULL),allowImage02(NULL),
-leftNowAllowImage(NULL),rightNowAllowImage(NULL),cursorInterval(0)
+leftNowAllowImage(NULL),rightNowAllowImage(NULL),cursorInterval(0),playerOperationManualImage(NULL),
+playerWeaponManualImage(NULL),playerTextImage(NULL), buttonControlFlg(false)
 {
 }
 
@@ -25,10 +26,13 @@ void HelpScene::Initialize()
 	//テキスト画像
 	enemyTextImage = LoadGraph("Resource/Images/Help/EnemyText.png");
 	operationTextImage = LoadGraph("Resource/Images/Help/OperationText.png");
+	playerTextImage = LoadGraph("Resource/Images/Help/PlayerText.png");
 
 	//説明画像
 	enemyManualImage = LoadGraph("Resource/Images/Help/EnemyManual.png");
 	operationManualImage = LoadGraph("Resource/Images/Help/OperationManual.png");
+	playerOperationManualImage = LoadGraph("Resource/Images/Help/PlayerOperationManual.png");
+	playerWeaponManualImage = LoadGraph("Resource/Images/Help/PlayerWeaponManual.png");
 
 	//ボタン画像
 	buttonGuideImage01 = LoadGraph("Resource/Images/Help/ButtonGuide01.png");
@@ -60,29 +64,38 @@ SceneBase* HelpScene::Update()
 	{
 		cursorInterval++;
 	}
-
+	//ボタン操作
 	ButtonControl();
 	switch (menuNum)
 	{
 	case 0:
-		if (PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::GetKey(KEY_INPUT_SPACE))
-		{
-			manualType = Manual::Operation;
-			//表示する説明書画像を操作方法の説明書画像にする
-			nowManualImage = operationManualImage;
-			nowManualText = operationTextImage;
-			break;
-		}
+		manualType = Manual::Operation;
+		//表示する説明書画像を操作方法の説明書画像にする
+		nowManualImage = operationManualImage;
+		nowManualText = operationTextImage;
+		break;
 
 	case 1:
-		if (PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::GetKey(KEY_INPUT_SPACE))
-		{
-			manualType = Manual::Enemy;
-			//表示する説明書画像を敵の説明書画像にする
-			nowManualImage = enemyManualImage;
-			nowManualText = enemyTextImage;
-		}
+		manualType = Manual::Enemy;
+		//表示する説明書画像を敵の説明書画像にする
+		nowManualImage = enemyManualImage;
+		nowManualText = enemyTextImage;
 		break;
+
+	case 2:
+		manualType = Manual::PlayerOperation;
+		//表示する説明書画像を敵の説明書画像にする
+		nowManualImage = playerOperationManualImage;
+		nowManualText = playerTextImage;
+		break;
+
+	case 3:
+		manualType = Manual::PlayerWeapon;
+		//表示する説明書画像を敵の説明書画像にする
+		nowManualImage = playerWeaponManualImage;
+		nowManualText = playerTextImage;
+		break;
+
 	}
 	//ボタンガイドの表示と画像の繰り返し
 	ButtonGuide();
@@ -137,7 +150,8 @@ void HelpScene::ButtonControl()
 		PadInput::GetLStickRationX() > 0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_RIGHT)) &&
 		cursorInterval >= 15)
 	{
-		menuNum = 1;
+		menuNum++;
+		if (menuNum > 3)menuNum = 3;
 		cursorInterval = 0;
 	}
 	//カーソルの左移動
@@ -145,7 +159,8 @@ void HelpScene::ButtonControl()
 		PadInput::GetLStickRationX() < -0.2 || PadInput::OnButton(XINPUT_BUTTON_DPAD_LEFT)) &&
 		cursorInterval >= 15)
 	{
-		menuNum = 0;
+		menuNum--;
+		if (menuNum < 0)menuNum = 0;
 		cursorInterval = 0;
 	}
 }
@@ -172,12 +187,12 @@ void HelpScene::ButtonGuide()
 //矢印の制御
 void HelpScene::AllowControl()
 {
-	if (menuNum == 0)
+	if (buttonControlFlg)
 	{
 		leftNowAllowImage = allowImage02;
 		rightNowAllowImage = allowImage01;
 	}
-	else if (menuNum != 0)
+	else if (!buttonControlFlg)
 	{
 		leftNowAllowImage = allowImage01;
 		rightNowAllowImage = allowImage02;
