@@ -151,8 +151,12 @@ void HelpScene::ButtonControl()
 		cursorInterval >= 15)
 	{
 		menuNum++;
-		if (menuNum > 3)menuNum = 3;
+		if (menuNum > 3)
+		{
+			menuNum = 0;
+		}
 		cursorInterval = 0;
+		buttonControlFlg = false;
 	}
 	//カーソルの左移動
 	else if ((KeyInput::GetKey(KEY_INPUT_A) || KeyInput::GetKey(KEY_INPUT_LEFT) ||
@@ -160,8 +164,12 @@ void HelpScene::ButtonControl()
 		cursorInterval >= 15)
 	{
 		menuNum--;
-		if (menuNum < 0)menuNum = 0;
+		if (menuNum < 0)
+		{
+			menuNum = 3;
+		}
 		cursorInterval = 0;
+		buttonControlFlg = true;
 	}
 }
 //ボタンガイドの画像番号の制御
