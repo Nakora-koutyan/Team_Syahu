@@ -128,7 +128,7 @@ void Player::Update()
 #endif // DEBUG
 
 	if (isEquipment && isAttack && stock[stockCount] != Weapon::None &&
-		((largeSword->GetIsHit() && !largeSword->GetIsAirAttack()) || rapier->GetIsHit()))
+		(largeSword->GetIsHit() || rapier->GetIsHit()))
 	{
 		if (actionState == Action::Equipment)
 		{
@@ -185,15 +185,29 @@ void Player::Update()
 
 	steal->Update(this);
 	largeSword->Update(this);
+
 	for (int i = 0; i < PLAYER_MAX_DAGGER; i++)
 	{
 		dagger[i]->Update(this);
 	}
-	rapier->Update(this, PLAYER_MAX_MOVE_SPEED);
 
-	if (hp < 0)
+	Vector2D rapierShiftLocation;
+	rapierShiftLocation.x = 0.f;
+	rapierShiftLocation.y = 0.f;
+	if (isBackStep)
 	{
-		hp = 0;
+		rapierShiftLocation.x = -20.f;
+	}
+	
+	rapier->Update(this, PLAYER_MAX_MOVE_SPEED, rapierShiftLocation);
+
+	if (hp < 0.f)
+	{
+		hp = 0.f;
+	}
+	else if (hp > 100.f)
+	{
+		hp = 100.f;
 	}
 
 }
@@ -222,6 +236,7 @@ void Player::Draw() const
 	DrawFormatString(600, 150, 0x000000, "movex:%f move y:%f", move.x, move.y);
 	DrawFormatString(600, 165, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
 	DrawFormatString(600, 180, 0x000000, "isAir :%s", isAir ? "true" : "false");
+	DrawFormatString(600, 195, 0x000000, "isAttack :%s", isAttack ? "true" : "false");
 
 	if (weaponType == Weapon::None)
 	{

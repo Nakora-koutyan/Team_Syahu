@@ -111,8 +111,14 @@ public:
 	//奪うを取得
 	Steal* GetSteal()const { return steal; }
 
+	//大剣を取得
+	LargeSword* GetLargeSword()const { return largeSword; }
+
 	//短剣を取得
 	Dagger* GetDagger(const int element)const  { return dagger[element]; }
+
+	//レイピアを取得
+	Rapier* GetRapier()const { return rapier; }
 
 	//武器を取得
 	ObjectBase* GetWeapon(const int element)const { return weapon[element]; }
@@ -142,6 +148,7 @@ public:
 	//装備のアニメーションフラグを取得
 	bool GetEquipmentAnimFlg()const { return equipmentAnimFlg; }
 
+	//バックステップ中かどうか取得
 	bool GetIsBackStep()const { return isBackStep; }
 
 private:

@@ -4,7 +4,6 @@
 #include<vector>
 
 #define STEAL_ATTACK_TIME	FPS * 0.2		//奪う攻撃の時間
-#define STEAL_DAMAGE		10.f			//奪うのダメージ
 #define STEAL_DISTANCE		25.f			//プレイヤーから奪うを出す距離
 #define STEAL_KNOCKBACK		3.5f			//奪うのノックバックの量/f
 
@@ -23,6 +22,8 @@ private:
 	int framCount;						//フレームカウント
 	int effectAnim;						//エフェクトのアニメーション番号
 	int effectAnimcount;				//エフェクトのアニメーションカウント
+
+	float recoveryPoint;				//回復ポイント
 
 
 public:
