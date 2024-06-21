@@ -82,7 +82,7 @@ void DaggerEnemy::Initialize()
 
 	//大剣を呼び出す
 	clawCollisionBox = new BoxCollision;
-	clawCollisionBox->SetArea({ 80,140 });
+	clawCollisionBox->SetArea({ 30,140 });
 }
 
 void DaggerEnemy::Finalize()
@@ -163,7 +163,7 @@ void DaggerEnemy::Update()
 	{
 		//左向き
 		correctLocX = 45.f;
-		clawCollisionBox->SetLocationX(GetMinLocation().x - GetArea().width);
+		clawCollisionBox->SetLocationX(GetCenterLocation().x - GetArea().width);
 	}
 	else
 	{
@@ -204,8 +204,8 @@ void DaggerEnemy::Draw() const
 		0xff00ff, FALSE);
 	DrawBoxAA
 	(
-		GetMinScreenLocation().x - 500, GetCenterScreenLocation().y,
-		GetMaxScreenLocation().x + 500, GetMaxScreenLocation().y,
+		GetMinScreenLocation().x - 300, GetCenterScreenLocation().y,
+		GetMaxScreenLocation().x + 300, GetMaxScreenLocation().y,
 		0xffff00, FALSE
 	);
 #endif
@@ -290,9 +290,9 @@ void DaggerEnemy::SuddenApproachToPlayer(const Player* player)
 void DaggerEnemy::AttackRange()
 {
 	//攻撃状態に入る範囲
-	attackRange[0].x = GetMinLocation().x - 700.f;
+	attackRange[0].x = GetMinLocation().x - 300.f;
 	attackRange[0].y = GetCenterLocation().y;
-	attackRange[1].x = GetMaxLocation().x + 700.f;
+	attackRange[1].x = GetMaxLocation().x + 300.f;
 	attackRange[1].y = GetMaxLocation().y;
 }
 
@@ -452,6 +452,7 @@ void DaggerEnemy::Damage()
 	move.x = 0;
 	if (damageAnimCount >= 12)
 	{
+		signToAttack = false;
 		damageAnimCount = 0;
 		enemyStatus = EnemyStatus::Patrol;
 	}
