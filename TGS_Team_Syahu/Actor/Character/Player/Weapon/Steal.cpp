@@ -22,6 +22,8 @@ Steal::Steal()
 	effectAnim = 0;
 	effectAnimcount = 0;
 
+	recoveryPoint = 0.f;
+
 	isShow = false;
 }
 
@@ -51,6 +53,12 @@ void Steal::Update(CharaBase* chara)
 		sideClaw[0].SetLocation(chara->GetCenterLocation());
 		sideClaw[1].SetLocation(chara->GetCenterLocation());
 
+	}
+
+	if (recoveryPoint > 0.f)
+	{
+		chara->SetHp(chara->GetHp() + recoveryPoint);
+		recoveryPoint = 0.f;
 	}
 
 	//攻撃時間を超えたら
@@ -161,9 +169,11 @@ void Steal::Hit(ObjectBase* target, const float damage)
 				//敵は無能力になる
 				chara->SetWeaponType(Weapon::None);
 
-				chara->SetHp(chara->GetHp() - (damage + STEAL_DAMAGE));
-				chara->SetKnockBackMove(STEAL_KNOCKBACK);
 			}
+			chara->SetHp(chara->GetHp() - (damage));
+			chara->SetKnockBackMove(STEAL_KNOCKBACK);
+			recoveryPoint = damage;
+
 		}
 	}
 

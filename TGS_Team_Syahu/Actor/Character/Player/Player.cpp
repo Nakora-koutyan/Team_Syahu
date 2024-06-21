@@ -128,7 +128,7 @@ void Player::Update()
 #endif // DEBUG
 
 	if (isEquipment && isAttack && stock[stockCount] != Weapon::None &&
-		((largeSword->GetIsHit() && !largeSword->GetIsAirAttack()) || rapier->GetIsHit()))
+		(largeSword->GetIsHit() || rapier->GetIsHit()))
 	{
 		if (actionState == Action::Equipment)
 		{
@@ -191,9 +191,13 @@ void Player::Update()
 	}
 	rapier->Update(this, PLAYER_MAX_MOVE_SPEED);
 
-	if (hp < 0)
+	if (hp < 0.f)
 	{
-		hp = 0;
+		hp = 0.f;
+	}
+	else if (hp > 100.f)
+	{
+		hp = 100.f;
 	}
 
 }
@@ -222,6 +226,7 @@ void Player::Draw() const
 	DrawFormatString(600, 150, 0x000000, "movex:%f move y:%f", move.x, move.y);
 	DrawFormatString(600, 165, 0x000000, "jumpEffectAnim:%d", jumpEffectAnim);
 	DrawFormatString(600, 180, 0x000000, "isAir :%s", isAir ? "true" : "false");
+	DrawFormatString(600, 195, 0x000000, "isAttack :%s", isAttack ? "true" : "false");
 
 	if (weaponType == Weapon::None)
 	{
