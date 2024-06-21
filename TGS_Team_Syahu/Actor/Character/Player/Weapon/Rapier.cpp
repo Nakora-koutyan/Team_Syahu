@@ -123,8 +123,8 @@ void Rapier::Update(CharaBase* chara, float speed, Vector2D shiftLocation)
 	}
 
 	//地上攻撃の時間を超えたら
-	if ((framCount > RAPIER_ATTACK_TIME || chara->GetIsKnockBack() || attackEndFlg||chara->GetHitBlockFlg()) && 
-		!isAirAttack)
+	if ((framCount > RAPIER_ATTACK_TIME || chara->GetIsKnockBack() || attackEndFlg || chara->GetHitBlockFlg()) &&
+		!isAirAttack && !chara->GetIsAir())
 	{
 		framCount = 0;
 		chargeTime = 0;

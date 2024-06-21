@@ -235,7 +235,8 @@ void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
 			if (player->GetWeapon(k)->GetIsShow())
 			{
 				//武器のポインタが格納されている配列の要素を呼ぶ
-				if (player->GetWeapon(k)->CollisionCheck(enemy))
+				if (enemy->GetEnemyStatus() != EnemyStatus::Death &&
+					player->GetWeapon(k)->CollisionCheck(enemy))
 				{
 					player->GetWeapon(k)->Hit(enemy, player->GetDamage());
 					enemy->Hit(object[i], 0);
@@ -243,7 +244,7 @@ void GameMainScene::HitCheckPlayerWeapon(const int i, const int j)
 			}
 		}
 		//奪うだけ特殊なので直接呼ぶ
-		if (player->GetSteal()->GetIsShow()&&
+		if (player->GetSteal()->GetIsShow() && enemy->GetEnemyStatus() != EnemyStatus::Death &&
 			(player->GetSteal()->CollisionCheck(object[j]) ||
 				player->GetSteal()->GetSideClaw(0).CollisionCheck(object[j]) ||
 				player->GetSteal()->GetSideClaw(1).CollisionCheck(object[j])))
