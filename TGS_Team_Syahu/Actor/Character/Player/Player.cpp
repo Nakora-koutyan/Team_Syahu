@@ -185,11 +185,21 @@ void Player::Update()
 
 	steal->Update(this);
 	largeSword->Update(this);
+
 	for (int i = 0; i < PLAYER_MAX_DAGGER; i++)
 	{
 		dagger[i]->Update(this);
 	}
-	rapier->Update(this, PLAYER_MAX_MOVE_SPEED);
+
+	Vector2D rapierShiftLocation;
+	rapierShiftLocation.x = 0.f;
+	rapierShiftLocation.y = 0.f;
+	if (isBackStep)
+	{
+		rapierShiftLocation.x = -20.f;
+	}
+	
+	rapier->Update(this, PLAYER_MAX_MOVE_SPEED, rapierShiftLocation);
 
 	if (hp < 0.f)
 	{
