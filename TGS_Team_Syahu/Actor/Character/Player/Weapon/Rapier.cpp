@@ -192,9 +192,11 @@ void Rapier::Update(CharaBase* chara, float speed, Vector2D shiftLocation)
 
 void Rapier::Draw() const
 {
+#ifdef DEBUG
 	if (isShow)DrawLineAA(screenLocation.x, screenLocation.y,
 		screenLocation.x + directionVector.x, screenLocation.y + directionVector.y,
 		0x000000, 1);
+#endif // DEBUG
 
 	if (isShow)
 	{
