@@ -76,7 +76,8 @@ SceneBase* GameMainScene::Update()
 			else
 			{
 				object[i]->Update();
-				if (object[i]->GetObjectType() == ObjectType::Player || object[i]->GetObjectType() == ObjectType::Enemy)
+				if ((object[i]->GetObjectType() == ObjectType::Player || object[i]->GetObjectType() == ObjectType::Enemy)&&
+					!player->GetEquipmentAnimFlg())
 				{
 					CharaBase* chara = static_cast<CharaBase*>(object[i]);
 					chara->MovementUpdate();

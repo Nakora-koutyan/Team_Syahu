@@ -75,13 +75,13 @@ void EnemyBase::Hit(ObjectBase* target, const float damage)
 		hp = 0;
 	}
 
-	if (isKnockBack && !chara->GetIsKnockBack() && chara->GetObjectType() == ObjectType::Enemy)
-	{
-		if (CollisionCheck(chara))
-		{
-			chara->Hit(this, this->damage);
-		}
-	}
+	//if (isKnockBack && !chara->GetIsKnockBack() && chara->GetObjectType() == ObjectType::Enemy)
+	//{
+	//	if (CollisionCheck(chara))
+	//	{
+	//		chara->Hit(this, this->damage);
+	//	}
+	//}
 
 	//中心の距離
 	float disX = chara->GetCenterLocation().x - GetCenterLocation().x;
