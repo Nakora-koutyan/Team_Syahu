@@ -40,7 +40,7 @@ void DaggerEnemy::Initialize()
 	}
 
 	//サイズ{ x , y }
-	area = { 90.f,85.f };
+	area = { 70.f,80.f };
 
 	//武器の種類：短剣
 	weaponType = Weapon::Dagger;
@@ -163,13 +163,13 @@ void DaggerEnemy::Update()
 	{
 		//左向き
 		correctLocX = 45.f;
-		clawCollisionBox->SetLocationX(GetCenterLocation().x - GetArea().width);
+		clawCollisionBox->SetLocationX(GetCenterLocation().x);
 	}
 	else
 	{
 		//右向き
 		correctLocX = 30.f;
-		clawCollisionBox->SetLocationX(GetMaxLocation().x);
+		clawCollisionBox->SetLocationX(GetCenterLocation().x);
 	}
 	//Y座標の設定
 	clawCollisionBox->SetLocationY(location.y - 60.f);
