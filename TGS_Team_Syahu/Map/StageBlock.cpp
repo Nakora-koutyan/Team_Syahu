@@ -3,7 +3,6 @@
 #include "../Actor/Character/Player/Player.h"
 #include "../Actor/Camera/Camera.h"
 #include "../ResourceManager/ResourceManager.h"
-#include "BlockDeta.h"
 
 StageBlock::StageBlock(float x, float y, int type)
 {
@@ -16,13 +15,8 @@ StageBlock::StageBlock(float x, float y, int type)
 	DrawType = type;
 	IsDraw = true;
 	blockImg = NULL;
-
-	blockdeta = new BlockDeta;
-
-	int blockLocationX = (int)x / (int)BLOCK_WIDTH;
-	int blockLocationY = (int)y / (int)BLOCK_HEIGHT;
-	blockdeta->setStageBlockData(blockLocationX, blockLocationY, true);
-
+	
+	// タイプに応じて読み込む画像を変える
 	switch (DrawType)
 	{
 	case 0:
@@ -179,47 +173,25 @@ void StageBlock::Hit(ObjectBase* object, const float damage)
 	Vector2D move = chara->GetMove();
 	Area objectSize = chara->GetArea();
 	Area blockSize = GetArea();
-	int dropWidth = 21;
-	// 上から
+	// 上
 	if ((objectLoc.y + objectSize.height - 40 <= blockLoc.y) && (chara->GetDirection().y >= 0.f)) 
 	{
 		chara->Landing(blockLoc.y);
 	}
+	// 下
 	else if (objectLoc.y >= (blockLoc.y + blockSize.height-20) && chara->GetDirection().y <= 0.f) 
 	{
-		// Dropwidth以上ブロックからはみ出してないか
-		if ((objectLoc.x + objectSize.width - dropWidth) <= (blockLoc.x + blockSize.width) 
-			&& objectLoc.x + dropWidth >= blockLoc.x)
-		{
-			objectLoc.y = blockLoc.y + blockSize.height;
-			object->SetLocation(objectLoc);
-			move.y = 0;
-			chara->SetMove(move);
-		}
-		else
-		{
-			int blockLocationX = (int)blockLoc.x / (int)BLOCK_WIDTH;
-			int blockLocationY = (int)blockLoc.y / (int)BLOCK_HEIGHT;
-			// 右にずれる
-			if (objectLoc.x + objectSize.width / 2 >= blockLoc.x + blockSize.width / 2)
-			{
-				if (blockdeta->getStageBlockData(blockLocationX + 1, blockLocationY) != true) {
-					objectLoc.x = blockLoc.x + blockSize.width;
-				}
-			}
-			// 左にずれる
-			else
-			{
-				if (blockdeta->getStageBlockData(blockLocationX - 1, blockLocationY) != true) {
-					objectLoc.x = blockLoc.x - objectSize.width;
-				}
-			}
-			object->SetLocation(objectLoc);
-		}
+		objectLoc.y = blockLoc.y + blockSize.height;
+		object->SetLocation(objectLoc);
+		move.y = 0;
+		chara->SetMove(move);
 	}
+	// 左右
 	else {
+		// 1つ前の座標へ
 		object->SetOldLocationX();
 
+		// ノックバックをなくす
 		if (object ->GetObjectType() == ObjectType::Player&& chara->GetIsKnockBack())
 		{
 			chara->SetKnockBackCount(int (PLAYER_KNOCKBACK_TIME));

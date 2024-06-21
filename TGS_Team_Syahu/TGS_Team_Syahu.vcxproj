@@ -27,7 +27,6 @@
     <ClCompile Include="Actor\Character\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Actor\Character\Enemy\DaggerEnemy.cpp" />
     <ClCompile Include="Actor\Character\Player\Weapon\Dagger.cpp" />
-    <ClCompile Include="Map\BlockDeta.cpp" />
     <ClCompile Include="Scene\End\EndScene.cpp" />
     <ClCompile Include="Scene\GameClear\GameClearScene.cpp" />
     <ClCompile Include="Scene\GameOver\GameOverScene.cpp" />
@@ -59,7 +58,6 @@
     <ClInclude Include="Actor\Character\Enemy\EnemyBase.h" />
     <ClInclude Include="Actor\Character\Enemy\DaggerEnemy.h" />
     <ClInclude Include="Actor\Character\Player\Weapon\Dagger.h" />
-    <ClInclude Include="Map\BlockDeta.h" />
     <ClInclude Include="Scene\End\EndScene.h" />
     <ClInclude Include="Scene\GameClear\GameClearScene.h" />
     <ClInclude Include="Scene\GameOver\GameOverScene.h" />

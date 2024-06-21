@@ -1,8 +1,9 @@
 #pragma once
 #include"../SceneBase.h"
 #include"../../UI/UI.h"
-#include"../../Map/StageBlock.h"
 #include"vector"
+
+//class BlockDeta;
 
 class GameMainScene :public SceneBase
 {

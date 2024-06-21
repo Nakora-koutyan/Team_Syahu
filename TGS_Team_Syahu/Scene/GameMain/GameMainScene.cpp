@@ -6,7 +6,6 @@
 #include"../../Actor/Character/Enemy/LargeSwordEnemy.h"
 #include"../../Actor/Character/Enemy/DaggerEnemy.h"
 #include"../../Map/StageBlock.h"
-#include"../../Map/BlockDeta.h"
 #include"../Edit/Edit.h"
 #include"../Help/HelpScene.h"
 #include"../../ResourceManager/ResourceManager.h"
@@ -338,7 +337,7 @@ void GameMainScene::createStage() {
 	fpass = fpassCoupling + fname;
 	int stageWidth;
 	int stageHeight;
-	int stageData[WORLD_BLOCK_X][WORLD_BLOCK_Y];
+	int stageData;
 	std::ifstream file(fpass.c_str());
 	if (file)
 	{
@@ -348,8 +347,8 @@ void GameMainScene::createStage() {
 		{
 			for (int j = 0; j < stageWidth; j++)
 			{
-				file >> stageData[j][i];
-				switch (stageData[j][i])
+				file >> stageData;
+				switch (stageData)
 				{
 				case 0:
 					break;
@@ -367,7 +366,7 @@ void GameMainScene::createStage() {
 					break;
 				default:
 					// ブロック生成
-					object.push_back(new StageBlock(BLOCK_WIDTH * j, BLOCK_HEIGHT * i, stageData[j][i] - 4));
+					object.push_back(new StageBlock(BLOCK_WIDTH * j, BLOCK_HEIGHT * i, stageData - 4));
 					break;
 				}
 			}

@@ -1,13 +1,9 @@
 #pragma once
 #include "../Collision/Box/BoxCollision.h"
 
-class BlockDeta;
-
 class StageBlock : public BoxCollision
 {
 private:
-	BlockDeta* blockdeta;
-
 	int blockImg;
 	int DrawType;
 	bool IsDraw;
