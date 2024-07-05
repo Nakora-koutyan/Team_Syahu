@@ -155,10 +155,11 @@ void LargeSword::Draw() const
 
 	if (isShow)
 	{
+		const float effectImageShift = 30.f;
 		if (direction > 0)
 		{
 			if (!isAirAttack)
-				DrawRotaGraphF(screenLocation.x + 30.f, screenLocation.y, 1, DEGREE_TO_RADIAN(-12.f),
+				DrawRotaGraphF(screenLocation.x + effectImageShift, screenLocation.y, 1, DEGREE_TO_RADIAN(-12.f),
 					ResourceManager::GetDivImage("Effect/slashEffect", effectAnim),
 					TRUE);
 
@@ -169,7 +170,7 @@ void LargeSword::Draw() const
 		else
 		{
 			if (!isAirAttack)
-				DrawRotaGraphF(screenLocation.x - 30.f, screenLocation.y, 1, DEGREE_TO_RADIAN(12.f),
+				DrawRotaGraphF(screenLocation.x - effectImageShift, screenLocation.y, 1, DEGREE_TO_RADIAN(12.f),
 					ResourceManager::GetDivImage("Effect/slashEffect", effectAnim),
 					TRUE, TRUE);
 
@@ -179,11 +180,13 @@ void LargeSword::Draw() const
 		}
 	}
 
+	const float airAttackEffectImageShift = 100.f;
+
 	if (direction > 0)
 	{
 		if (airAttackAnimFlg)
 			DrawRotaGraphF(Camera::ConvertScreenPosition(airAttackEffectLocation).x,
-				Camera::ConvertScreenPosition(airAttackEffectLocation).y - 100.f, 1, 0,
+				Camera::ConvertScreenPosition(airAttackEffectLocation).y - airAttackEffectImageShift, 1, 0,
 				ResourceManager::GetDivImage("Effect/fallAttackEffect",
 					airAttackEffectAnim), TRUE);
 	}
@@ -191,7 +194,7 @@ void LargeSword::Draw() const
 	{
 		if (airAttackAnimFlg)
 			DrawRotaGraphF(Camera::ConvertScreenPosition(airAttackEffectLocation).x,
-				Camera::ConvertScreenPosition(airAttackEffectLocation).y - 100.f, 1, 0,
+				Camera::ConvertScreenPosition(airAttackEffectLocation).y - airAttackEffectImageShift, 1, 0,
 				ResourceManager::GetDivImage("Effect/fallAttackEffect",
 					airAttackEffectAnim), TRUE);
 	}

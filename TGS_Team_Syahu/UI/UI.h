@@ -17,6 +17,7 @@ private:
 
 	int playerDaggerCnt[5];								//ダガーの本数
 	int playerWeaponDurability[5];						//耐久値
+	const int maxIcon = 5;
 
 	float playerHp;										//プレイヤーのHP
 	float playerAttackCoolTime;							//プレイヤーの攻撃のクールタイム

@@ -9,6 +9,8 @@ ObjectBase::ObjectBase()
 	location.y = 0.f;
 	screenLocation.x = 0.f;
 	screenLocation.y = 0.f;
+	oldLocation.x = 0.f;
+	oldLocation.y = 0.f;
 
 	collisionType = CollisionType::None;
 	objectType = ObjectType::None;

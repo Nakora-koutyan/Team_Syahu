@@ -78,21 +78,23 @@ void Dagger::Draw() const
 
 	if (isShow)
 	{
+		float imageShift = 10.f;
 		if (!isAirAttack)
 		{
 			if (direction > 0)
 			{
-				DrawRotaGraph2F(screenLocation.x - 10.f, screenLocation.y, 0, 75,
+				DrawRotaGraph2F(screenLocation.x - imageShift, screenLocation.y, 0, 75,
 					1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE);
 			}
 			else
 			{
-				DrawRotaGraph2F(screenLocation.x + 10.f, screenLocation.y, 75, 75,
+				DrawRotaGraph2F(screenLocation.x + imageShift, screenLocation.y, 75, 75,
 					1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE, TRUE);
 			}
 		}
 		else
 		{
+			imageShift = 5.f;
 			if (direction > 0)
 			{
 				DrawRotaGraph2F(screenLocation.x, screenLocation.y, 0, 75,
@@ -100,7 +102,7 @@ void Dagger::Draw() const
 			}
 			else
 			{
-				DrawRotaGraph2F(screenLocation.x - 5.f, screenLocation.y, 75, 75,
+				DrawRotaGraph2F(screenLocation.x - imageShift, screenLocation.y, 75, 75,
 					1, imageAngle, ResourceManager::GetImage("Weapon/dagger"), TRUE, TRUE);
 			}
 		}
@@ -144,7 +146,7 @@ void Dagger::Attack(const CharaBase* chara)
 		isAirAttack = true;
 		directionVector.y = DAGGER_LENGTH;
 		//下入力をしたら
-		if (PadInput::GetLStick().y < -0.2 || KeyInput::GetKeyDown(KEY_INPUT_S))
+		if (PadInput::GetLStick().y < -QUARTER || KeyInput::GetKeyDown(KEY_INPUT_S))
 		{
 			//斜めに出す
 			move.y = DAGGER_SPEED * sin(DEGREE_TO_RADIAN(150.f));

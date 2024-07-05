@@ -41,7 +41,8 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 	framCount = 0;
 	playerAnimFramCount = 0;
 	playerAnim = 0;
-	for (int i = 0; i < 72; i++)
+	const int playerImageElement = 72;
+	for (int i = 0; i < playerImageElement; i++)
 	{
 		//画像がない部分は読みこまない
 		if ((i >= 2 && i <= 7) ||
@@ -56,9 +57,10 @@ Player::Player() :steal(nullptr), largeSword(nullptr), rapier(nullptr)
 		playerAnim++;
 	}
 	playerAnim = 0;
-	for (int i = 0; i < 5; i++)
+	const int shiftElement = 1;
+	for (int i = 0; i < PLAYER_MAX_DAGGER - shiftElement; i++)
 	{
-		daggerCount[i] = PLAYER_MAX_DAGGER - 1;
+		daggerCount[i] = PLAYER_MAX_DAGGER - shiftElement;
 	}
 	jumpEffectAnimCount = 0;
 	jumpEffectAnim = 0;
@@ -151,7 +153,8 @@ void Player::Update()
 	//短剣の残り本数が0以下なら
 	else if (daggerCount[stockCount] < 0)
 	{
-		daggerCount[stockCount] = PLAYER_MAX_DAGGER - 1;
+		const int shiftElement = 1;
+		daggerCount[stockCount] = PLAYER_MAX_DAGGER - shiftElement;
 		weaponType = Weapon::None;
 		weaponDurability[stockCount] = PLAYER_WEAPON_DURABILITY;
 		stock[stockCount] = Weapon::None;
@@ -191,15 +194,15 @@ void Player::Update()
 		dagger[i]->Update(this);
 	}
 
-	Vector2D rapierShiftLocation;
-	rapierShiftLocation.x = 0.f;
-	rapierShiftLocation.y = 0.f;
+	Vector2D rapierImageShiftLocation;
+	rapierImageShiftLocation.x = 0.f;
+	rapierImageShiftLocation.y = 0.f;
 	if (isBackStep)
 	{
-		rapierShiftLocation.x = -20.f;
+		rapierImageShiftLocation.x = -20.f;
 	}
 	
-	rapier->Update(this, PLAYER_MAX_MOVE_SPEED, rapierShiftLocation);
+	rapier->Update(this, PLAYER_MAX_MOVE_SPEED, rapierImageShiftLocation);
 
 	if (hp < 0.f)
 	{
@@ -260,6 +263,9 @@ void Player::Draw() const
 
 	SetDrawBright(255, 0, 0);
 
+	const float playerImageShiftX = 6.f;
+	const float playerImageShiftY = 12.f;
+
 	//画像反転フラグ
 	if (imageInversionFlg)
 	{
@@ -272,8 +278,8 @@ void Player::Draw() const
 		}
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
-		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
-			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - playerImageShiftX,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - playerImageShiftY,
 			1, 0, playerImage[playerAnim], TRUE, TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
@@ -289,7 +295,7 @@ void Player::Draw() const
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
 		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X,
-			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - playerImageShiftY,
 			1, 0, playerImage[playerAnim], TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
@@ -309,8 +315,8 @@ void Player::Draw() const
 		}
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
-		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - 6.f,
-			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X - playerImageShiftX,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - playerImageShiftY,
 			1, 0, playerImage[playerAnim], TRUE, TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
@@ -326,7 +332,7 @@ void Player::Draw() const
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alphaBlend);
 		DrawRotaGraphF
 		(GetMinScreenLocation().x + PLAYER_IMAGE_ALIGN_THE_ORIGIN_X,
-			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - 12.f,
+			GetMinScreenLocation().y + PLAYER_IMAGE_ALIGN_THE_ORIGIN_Y - playerImageShiftY,
 			1, 0, playerImage[playerAnim], TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
@@ -334,11 +340,14 @@ void Player::Draw() const
 
 	if (isJump && jumpCount == 1 && jumpEffectLandFlg)
 	{
+		const float jumpEffectImageShiftX = 10.f;
+		const float jumpEffectImageShiftY = 15.f;
+
 		if (jumpEffectInversionFlg)
 		{
 			DrawRotaGraphF
-			(Camera::ConvertScreenPosition(jumpEffectLocation).x + 10.f, 
-				Camera::ConvertScreenPosition(jumpEffectLocation).y - 15.f,
+			(Camera::ConvertScreenPosition(jumpEffectLocation).x + jumpEffectImageShiftX,
+				Camera::ConvertScreenPosition(jumpEffectLocation).y - jumpEffectImageShiftY,
 				1, 0,
 				ResourceManager::GetDivImage("Effect/jumpEffect", jumpEffectAnim),
 				TRUE, TRUE);
@@ -346,8 +355,8 @@ void Player::Draw() const
 		else
 		{
 			DrawRotaGraphF
-			(Camera::ConvertScreenPosition(jumpEffectLocation).x - 10.f, 
-				Camera::ConvertScreenPosition(jumpEffectLocation).y - 15.f,
+			(Camera::ConvertScreenPosition(jumpEffectLocation).x - jumpEffectImageShiftX,
+				Camera::ConvertScreenPosition(jumpEffectLocation).y - jumpEffectImageShiftY,
 				1, 0,
 				ResourceManager::GetDivImage("Effect/jumpEffect", jumpEffectAnim),
 				TRUE);
