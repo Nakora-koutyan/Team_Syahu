@@ -1,29 +1,28 @@
 #pragma once
 #include<DxLib.h>
 
-#define MAX_KEY 256
-#define MOUSE_OFFSET_X SCREEN_WIDTH	/ 2
-#define MOUSE_OFFSET_Y SCREEN_HEIGHT / 2
+#define MAX_KEY			256							//キーの数
+#define MOUSE_OFFSET_X	SCREEN_WIDTH	/	2		//スクリーンの中心X
+#define MOUSE_OFFSET_Y	SCREEN_HEIGHT	/	2		//スクリーンの中心Y
 
 struct MOUSE_INPUT
 {
-	int button;
-	int wheel;
-	int x;
-	int y;
+	int button;		//ボタン
+	int wheel;		//マウスホイール
+	int x;			//座標X
+	int y;			//座標Y
 };
 
 class KeyInput
 {
 private:
-	static char nowKey[MAX_KEY];
-	static char oldKey[MAX_KEY];
-	static MOUSE_INPUT nowMouse;
-	static MOUSE_INPUT oldMouse;
-	static MOUSE_INPUT mouseVec;
-	static MOUSE_INPUT mouseWheel;
-	static float mouseSensitivity;
-	static bool isShowMouse;
+	static char nowKey[MAX_KEY];		//現在のキー
+	static char oldKey[MAX_KEY];		//過去のキー
+	static MOUSE_INPUT nowMouse;		//現在のマウス
+	static MOUSE_INPUT oldMouse;		//過去のマウス
+	static MOUSE_INPUT mouseVec;		//マウスのベクトル
+	static float mouseSensitivity;		//マウスの感度
+	static bool isShowMouse;			//マウスを表示する？
 public:
 	//更新
 	static void Update();

@@ -93,14 +93,17 @@ void Steal::Draw() const
 			sideClaw[1].GetScreenLocation().y + sideClaw[1].GetDirectionVector().y,
 			0x00ff00, 1);
 #endif // DEBUG
+		const float imageShiftX = 50.f;
+		const float imageShiftY = 35.f;
+
 		if (direction > 0)
 		{
-			DrawRotaGraphF(screenLocation.x + 50.f, screenLocation.y - 35.f, 1, 0,
+			DrawRotaGraphF(screenLocation.x + imageShiftX, screenLocation.y - imageShiftY, 1, 0,
 				stealEffect[effectAnim], TRUE, TRUE);
 		}
 		else
 		{
-			DrawRotaGraphF(screenLocation.x - 50.f, screenLocation.y - 35.f, 1, 0,
+			DrawRotaGraphF(screenLocation.x - imageShiftX, screenLocation.y - imageShiftY, 1, 0,
 				stealEffect[effectAnim], TRUE);
 		}
 	}
@@ -120,12 +123,16 @@ void Steal::Attack(const CharaBase* chara)
 		direction = (short)chara->GetDirection().x;
 	}
 
+	float stealShiftLocationX = 20.f;
+	const float stealShiftLocationY = 30.f;
+
 	//右に出す
 	if (direction > 0)
 	{
-		location.x = chara->GetMaxLocation().x + (STEAL_DISTANCE - 20.f);
-		sideClaw[0].SetLocationX(chara->GetMaxLocation().x + (STEAL_DISTANCE - 10.f));
-		sideClaw[1].SetLocationX(chara->GetMaxLocation().x + (STEAL_DISTANCE + 10.f));
+		location.x = chara->GetMaxLocation().x + (STEAL_DISTANCE - stealShiftLocationX);
+		stealShiftLocationX = 10.f;
+		sideClaw[0].SetLocationX(chara->GetMaxLocation().x + (STEAL_DISTANCE - stealShiftLocationX));
+		sideClaw[1].SetLocationX(chara->GetMaxLocation().x + (STEAL_DISTANCE + stealShiftLocationX));
 
 		directionVector.x = 100.f;
 		sideClaw[0].SetDirectionVectorX(60.f);
@@ -134,18 +141,20 @@ void Steal::Attack(const CharaBase* chara)
 	//左に出す
 	else
 	{
-		location.x = chara->GetMinLocation().x - (STEAL_DISTANCE - 20.f);
-		sideClaw[0].SetLocationX(chara->GetMinLocation().x - (STEAL_DISTANCE - 10.f));
-		sideClaw[1].SetLocationX(chara->GetMinLocation().x - (STEAL_DISTANCE + 10.f));
+		stealShiftLocationX = 20.f;
+		location.x = chara->GetMinLocation().x - (STEAL_DISTANCE - stealShiftLocationX);
+		stealShiftLocationX = 10.f;
+		sideClaw[0].SetLocationX(chara->GetMinLocation().x - (STEAL_DISTANCE - stealShiftLocationX));
+		sideClaw[1].SetLocationX(chara->GetMinLocation().x - (STEAL_DISTANCE + stealShiftLocationX));
 	
 		directionVector.x = -100.f;
 		sideClaw[0].SetDirectionVectorX(-60.f);
 		sideClaw[1].SetDirectionVectorX(-70.f);
 	}		
 
-	location.y = chara->GetCenterLocation().y + 30.f;
+	location.y = chara->GetCenterLocation().y + stealShiftLocationY;
 	sideClaw[0].SetLocationY(chara->GetCenterLocation().y);
-	sideClaw[1].SetLocationY(chara->GetCenterLocation().y + 30.f);
+	sideClaw[1].SetLocationY(chara->GetCenterLocation().y + stealShiftLocationY);
 
 	directionVector.y = -100.f;
 	sideClaw[0].SetDirectionVectorY(-60.f);

@@ -1,9 +1,9 @@
 #pragma once
 #include"DxLib.h"
 
-#define BUTTON 16				//ボタンの数
-#define STICK_MAX 32767.f		//スティックの最大値
-#define QUARTER 32767*0.25		//スティックの1/4
+#define BUTTON		16				//ボタンの数
+#define STICK_MAX	32767.f			//スティックの最大値
+#define QUARTER		32767*0.25		//スティックの1/4
 
 struct Stick
 {
@@ -14,11 +14,11 @@ struct Stick
 class PadInput
 {
 private:
-	static char nowKey[BUTTON];	//更新前のキー
-	static char oldKey[BUTTON];	//更新後のキー
+	static char nowKey[BUTTON];		//更新前のキー
+	static char oldKey[BUTTON];		//更新後のキー
 	static XINPUT_STATE input;		//入力
-	static Stick l_stick;			//左スティック
-	static Stick r_stick;			//右スティック
+	static Stick lStick;			//左スティック
+	static Stick rStick;			//右スティック
 private:
 	PadInput() = default;
 public:
@@ -35,12 +35,12 @@ public:
 		}
 
 		//左スティック
-		l_stick.x = input.ThumbLX;
-		l_stick.y = input.ThumbLY;
+		lStick.x = input.ThumbLX;
+		lStick.y = input.ThumbLY;
 
 		//右スティック
-		r_stick.x = input.ThumbRX;
-		r_stick.y = input.ThumbRY;
+		rStick.x = input.ThumbRX;
+		rStick.y = input.ThumbRY;
 	}
 
 	//押したボタンを取得
@@ -67,37 +67,37 @@ public:
 	//右スティックの取得
 	static Stick GetRStick()
 	{
-		return r_stick;
+		return rStick;
 	}
 
 	//左スティックの取得
 	static Stick GetLStick()
 	{
-		return l_stick;
+		return lStick;
 	}
 
 	//右スティックのx座標を取得
 	static float GetRStickRationX()
 	{
-		return r_stick.x / STICK_MAX;
+		return rStick.x / STICK_MAX;
 	}
 
 	//右スティックのy座標を取得
 	static float GetRStickRationY()
 	{
-		return r_stick.y / STICK_MAX;
+		return rStick.y / STICK_MAX;
 	}
 
 	//左スティックのx座標を取得
 	static float GetLStickRationX()
 	{
-		return l_stick.x / STICK_MAX;
+		return lStick.x / STICK_MAX;
 	}
 
 	//左スティックのy座標を取得
 	static float GetLStickRationY()
 	{
-		return l_stick.y / STICK_MAX;
+		return lStick.y / STICK_MAX;
 	}
 
 };

@@ -224,11 +224,13 @@ void Rapier::Draw() const
 		}
 	}
 
+	const float airAttackEffecImageShiftY = 100.f;
+
 	if (direction > 0)
 	{
 		if (airAttackAnimFlg)
 			DrawRotaGraphF(Camera::ConvertScreenPosition(airAttackEffectLocation).x,
-				Camera::ConvertScreenPosition(airAttackEffectLocation).y - 100.f, 1, 0,
+				Camera::ConvertScreenPosition(airAttackEffectLocation).y - airAttackEffecImageShiftY, 1, 0,
 				ResourceManager::GetDivImage("Effect/fallAttackEffect",
 					airAttackEffectAnim), TRUE);
 	}
@@ -236,7 +238,7 @@ void Rapier::Draw() const
 	{
 		if (airAttackAnimFlg)
 			DrawRotaGraphF(Camera::ConvertScreenPosition(airAttackEffectLocation).x,
-				Camera::ConvertScreenPosition(airAttackEffectLocation).y - 100.f, 1, 0,
+				Camera::ConvertScreenPosition(airAttackEffectLocation).y - airAttackEffecImageShiftY, 1, 0,
 				ResourceManager::GetDivImage("Effect/fallAttackEffect",
 					airAttackEffectAnim), TRUE);
 	}
@@ -251,11 +253,13 @@ void Rapier::Attack(const CharaBase* chara)
 	//プレイヤーの方向情報を保持する
 	direction = (short)chara->GetDirection().x;
 
+	const float rapierImageSize = 312.f;
+
 	//右に出す
 	if (direction > 0)
 	{
 		location.x = chara->GetMaxLocation().x + WEAPON_DISTANCE;
-		effectLocation.x = chara->GetMinLocation().x + (312 / 2);
+		effectLocation.x = chara->GetMinLocation().x + (rapierImageSize / 2);
 		effectLocation.y = location.y;
 		directionVector.x = RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(45.f);
@@ -263,7 +267,7 @@ void Rapier::Attack(const CharaBase* chara)
 	else
 	{
 		location.x = chara->GetMinLocation().x - WEAPON_DISTANCE;
-		effectLocation.x = chara->GetMaxLocation().x - (312 / 2);
+		effectLocation.x = chara->GetMaxLocation().x - (rapierImageSize / 2);
 		effectLocation.y = location.y;
 		directionVector.x = -RAPIER_LENGTH;
 		imageAngle = DEGREE_TO_RADIAN(-45.f);

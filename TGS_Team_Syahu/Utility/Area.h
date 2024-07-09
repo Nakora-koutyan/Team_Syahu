@@ -2,6 +2,6 @@
 
 typedef struct _Area
 {
-	float width;
-	float height;
+	float width;		//横幅
+	float height;		//縦幅
 }Area;
