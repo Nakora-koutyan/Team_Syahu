@@ -1,6 +1,7 @@
 #pragma once
 
 //#define DEBUG													//デバッグ専用モードのON/OFF(コメントアウトでOFF)
+#define EDIT													//エディタ使用のON/OFF(コメントアウトでOFF)
 
 #define FPS				60										//FPS
 

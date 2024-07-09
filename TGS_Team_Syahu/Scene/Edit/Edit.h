@@ -8,7 +8,9 @@
 class GameMainScene;
 
 #define BLOCK_TYPE 39
-#define OBJECT_TYPE_MAX 4+BLOCK_TYPE
+#define OTHER_OBJECT 4
+#define OBJECT_TYPE_MAX OTHER_OBJECT+BLOCK_TYPE
+#define EDIT_MARGIN 200
 
 static char objString[20][256] =
 {

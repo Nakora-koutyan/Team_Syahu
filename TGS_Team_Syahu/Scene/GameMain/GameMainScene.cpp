@@ -29,7 +29,7 @@ void GameMainScene::Initialize()
 	object.push_back(new Player);
 	object.push_back(new Camera);
 
-	createStage();
+	CreateStage();
 
 	for (ObjectBase* ob : object)
 	{
@@ -119,18 +119,13 @@ SceneBase* GameMainScene::Update()
 
 	HitCheck();
 
-#ifdef DEBUG
+#ifdef EDIT
 
 	if (KeyInput::GetKey(KEY_INPUT_L)) {
 		return new Edit();
 	}
 
-	if (KeyInput::GetKey(KEY_INPUT_H))
-	{
-		return new HelpScene();
-	}
-
-#endif // DEBUG
+#endif // EDIT
 
 	return this;
 }
@@ -315,7 +310,7 @@ void GameMainScene::HitCheckEnemyWeapon(const int i, const int j)
 	}
 }
 
-void GameMainScene::createStage() {
+void GameMainScene::CreateStage() {
 	std::string fname;
 	std::string fpassCoupling = "Resource/StageData/";
 	std::string fpass;
